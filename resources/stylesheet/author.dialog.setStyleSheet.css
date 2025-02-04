@@ -1,0 +1,37 @@
+QWidget {
+    border: none;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+                                stop:0 rgba(227, 240, 255, 255),
+                                stop:0.25 rgba(249, 243, 255, 255),
+                                stop:0.5 rgba(212, 236, 251, 255),
+                                stop:0.75 rgba(223, 244, 255, 255),
+                                stop:1 rgba(227, 240, 255, 255));
+    border-radius: 24px;
+}
+QDialog {
+        background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+                                    stop:0 rgba(227, 240, 255, 255),
+                                    stop:0.25 rgba(249, 243, 255, 255),
+                                    stop:0.5 rgba(212, 236, 251, 255),
+                                    stop:0.75 rgba(223, 244, 255, 255),
+                                    stop:1 rgba(227, 240, 255, 255));
+        border-radius: 24px;
+    }
+QPushButton {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,
+                                stop:0 rgba(0, 150, 255, 255), stop:1 rgba(0, 100, 255, 255));
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 16px;
+    font-family: 'Microsoft YaHei';
+    font-size: 14px;
+}
+    QPushButton:hover {
+        background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,
+                                    stop:0 rgba(0, 120, 255, 255), stop:1 rgba(0, 80, 255, 255));
+    }
+    QPushButton:pressed {
+        background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,
+                                    stop:0 rgba(0, 100, 255, 255), stop:1 rgba(0, 60, 255, 255));
+    }
