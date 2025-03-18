@@ -9451,10 +9451,6 @@ QTextEdit QScrollBar::add-page:vertical, QTextEdit QScrollBar::sub-page:vertical
    </layout>
   </widget>
  </widget>
- <resources>
-  <include location="resources.qrc"/>
-  <include location="../../pyqt5仿交易软件无边框拉伸/Copying_1007/resources.qrc"/>
- </resources>
  <connections>
   <connection>
    <sender>listWidget_base</sender>
