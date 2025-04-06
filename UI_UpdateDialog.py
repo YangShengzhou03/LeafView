@@ -10,12 +10,15 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 
 class Ui_UpdateDialog(object):
-    def setupUi(self, Dialog):
-        Dialog.setObjectName("Dialog")
-        Dialog.resize(450, 280)
-        self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
+    def setupUi(self, UpdateDialog):
+        UpdateDialog.setObjectName("UpdateDialog")
+        UpdateDialog.resize(512, 320)
+        self.verticalLayout = QtWidgets.QVBoxLayout(UpdateDialog)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.frame = QtWidgets.QFrame(parent=Dialog)
+        self.frame = QtWidgets.QFrame(parent=UpdateDialog)
+        self.frame.setMinimumSize(QtCore.QSize(512, 320))
         self.frame.setStyleSheet("QFrame#frame{\n"
 "background-color: rgb(245, 249, 254);\n"
 "border-radius:25px;\n"
@@ -51,18 +54,23 @@ class Ui_UpdateDialog(object):
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.verticalLayout_5 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_5.setSpacing(2)
+        self.verticalLayout_5.setSpacing(0)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
         self.label_title = QtWidgets.QLabel(parent=self.widget_3)
         font = QtGui.QFont()
-        font.setPointSize(16)
+        font.setPointSize(22)
         font.setBold(True)
         self.label_title.setFont(font)
-        self.label_title.setStyleSheet("color: rgba(222, 255, 255, 255)")
+        self.label_title.setStyleSheet("QLabel {\n"
+"    color: rgba(222, 255, 255, 255);\n"
+"    qproperty-alignment: \'AlignCenter\';\n"
+"    margin-bottom: 12px;\n"
+"}")
         self.label_title.setObjectName("label_title")
         self.verticalLayout_5.addWidget(self.label_title)
         self.label_content = QtWidgets.QLabel(parent=self.widget_3)
         font = QtGui.QFont()
+        font.setPointSize(12)
         font.setBold(False)
         self.label_content.setFont(font)
         self.label_content.setStyleSheet("color: rgb(250, 250, 250)")
@@ -97,15 +105,15 @@ class Ui_UpdateDialog(object):
         self.pushButton_cancel.setObjectName("pushButton_cancel")
         self.horizontalLayout.addWidget(self.pushButton_cancel)
         self.pushButton_download = QtWidgets.QPushButton(parent=self.widget_3)
-        self.pushButton_download.setMinimumSize(QtCore.QSize(75, 25))
-        self.pushButton_download.setMaximumSize(QtCore.QSize(75, 25))
+        self.pushButton_download.setMinimumSize(QtCore.QSize(88, 30))
+        self.pushButton_download.setMaximumSize(QtCore.QSize(88, 30))
         self.pushButton_download.setStyleSheet("QPushButton {\n"
 "    background-color: rgba(105, 27, 253, 180);\n"
 "    color: white;\n"
 "    border: none;\n"
 "    border-radius: 8px;\n"
 "    font-family: \'Microsoft YaHei\';\n"
-"    font-size: 12px;\n"
+"    font-size: 14px;\n"
 "}\n"
 "\n"
 "QPushButton:hover {\n"
@@ -119,7 +127,7 @@ class Ui_UpdateDialog(object):
         self.horizontalLayout.addWidget(self.pushButton_download)
         self.verticalLayout_5.addLayout(self.horizontalLayout)
         self.verticalLayout_5.setStretch(0, 1)
-        self.verticalLayout_5.setStretch(1, 2)
+        self.verticalLayout_5.setStretch(1, 3)
         self.verticalLayout_5.setStretch(2, 1)
         self.horizontalLayout_4.addLayout(self.verticalLayout_5)
         self.horizontalLayout_5.addLayout(self.horizontalLayout_4)
@@ -130,13 +138,13 @@ class Ui_UpdateDialog(object):
         self.horizontalLayout_7.setStretch(0, 4)
         self.verticalLayout.addWidget(self.frame)
 
-        self.retranslateUi(Dialog)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.retranslateUi(UpdateDialog)
+        QtCore.QMetaObject.connectSlotsByName(UpdateDialog)
 
-    def retranslateUi(self, Dialog):
+    def retranslateUi(self, UpdateDialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.label_title.setText(_translate("Dialog", "Dialog Title"))
-        self.label_content.setText(_translate("Dialog", "Dialog content"))
-        self.pushButton_cancel.setText(_translate("Dialog", "暂不更新"))
-        self.pushButton_download.setText(_translate("Dialog", "立即下载"))
+        UpdateDialog.setWindowTitle(_translate("UpdateDialog", "Dialog"))
+        self.label_title.setText(_translate("UpdateDialog", "Dialog Title"))
+        self.label_content.setText(_translate("UpdateDialog", "Dialog content"))
+        self.pushButton_cancel.setText(_translate("UpdateDialog", "暂不更新"))
+        self.pushButton_download.setText(_translate("UpdateDialog", "立即下载"))

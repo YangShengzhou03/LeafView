@@ -15,7 +15,8 @@ class MediaPage(QtWidgets.QWidget):
         self.connect_signal()
 
     def connect_signal(self):
-        self.parent.toolButton_saveAs.clicked.connect(self.on_toolButton_saveAs_clicked)
+        pass
+        # self.parent.toolButton_saveAs.clicked.connect(self.on_toolButton_saveAs_clicked)
 
     def on_item_selection_changed(self):
         selected_items_exist = any(

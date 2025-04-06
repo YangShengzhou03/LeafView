@@ -6,7 +6,7 @@ from PyQt6.QtNetwork import QLocalSocket, QLocalServer
 from MainWindow import MainWindow
 
 """
-pyinstaller --windowed --icon=resources/img/icon.ico --add-data "resources;resources" --version-file=LeafView_version_info.txt App.py
+pyinstaller App.spec
 """
 
 
@@ -26,10 +26,10 @@ def main():
 
     if shared_memory.attach():
         bring_existing_to_front()
-        sys.exit(0)
+        sys.exit()
 
     if not shared_memory.create(1):
-        sys.exit(1)
+        sys.exit()
 
     local_server = QLocalServer()
     if local_server.listen("LeafView_Server"):
@@ -45,7 +45,7 @@ def main():
         local_server.newConnection.connect(new_connection)
 
     window = MainWindow()
-    window.move(100, 20)
+    window.move(300, 100)
     window.show()
     sys.exit(app.exec())
 
