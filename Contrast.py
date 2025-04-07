@@ -1,45 +1,232 @@
-from PyQt6 import QtWidgets, QtCore
+import os
+
+import numpy as np
+from PyQt6 import QtWidgets, QtCore, QtGui
+from PyQt6.QtCore import pyqtSignal, QRunnable, QObject, Qt, QThreadPool
+from PyQt6.QtGui import QPixmap, QImage
+
+from ContrastThread import HashWorker, ContrastWorker
+
+
+class ThumbnailLoaderSignals(QObject):
+    thumbnail_ready = pyqtSignal(str, QPixmap)
+
+
+class ThumbnailLoader(QRunnable):
+    def __init__(self, path, size):
+        super().__init__()
+        self.path = path
+        self.size = size
+        self.signals = ThumbnailLoaderSignals()
+
+    def run(self):
+        image = QImage(self.path)
+        if not image.isNull():
+            scaled_image = image.scaled(self.size.width(), self.size.height(),
+                                        Qt.AspectRatioMode.KeepAspectRatio,
+                                        Qt.TransformationMode.SmoothTransformation)
+            pixmap = QPixmap.fromImage(scaled_image)
+            self.signals.thumbnail_ready.emit(self.path, pixmap)
 
 
 class Contrast(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.parent = parent
+        self.groups = {}
+        self.image_hashes = {}
+        self.folder_path = 'D:\\test\\666'
+        self._running = False
+        self.thread_pool = QThreadPool.globalInstance()
+        self.thread_pool.setMaxThreadCount(min(8, os.cpu_count() or 4))
+
         self.init_page()
+        self.connect_signals()
 
     def init_page(self):
-        self.parent.horizontalSlider_levelContrast.setRange(1, 4)
-        self.parent.horizontalSlider_levelContrast.setSingleStep(1)
-        self.parent.horizontalSlider_levelContrast.setTickInterval(1)
-        self.parent.horizontalSlider_levelContrast.setTickPosition(QtWidgets.QSlider.TickPosition.TicksBelow)
-        self.parent.horizontalSlider_levelContrast.setValue(4)
-        self.parent.label_levelContrast.setText("完全一致")
-        self.parent.label_levelContrast.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.parent.label_levelContrast.setStyleSheet("""
-            QLabel {
-                font-size: 18px;
-                color: #4CAF50;
-            }
-        """)
+        slider = self.parent.horizontalSlider_levelContrast
+        slider.setRange(1, 4)
+        slider.setValue(4)
+        label = self.parent.label_levelContrast
+        label.setText("完全一致")
+        label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        label.setStyleSheet("QLabel { font-size: 18px; color: #4CAF50; }")
         self.parent.verticalFrame_similar.hide()
-        self.connect_signals()
 
     def connect_signals(self):
         self.parent.horizontalSlider_levelContrast.valueChanged.connect(self.on_slider_value_changed)
         self.parent.toolButton_startContrast.clicked.connect(self.startContrast)
 
-    def startContrast(self):
-        self.parent.verticalFrame_similar.show()
+    def set_folder_path(self, folder_path):
+        self.folder_path = folder_path
 
-    @QtCore.pyqtSlot(int)
+    def startContrast(self):
+        if not self.folder_path or not os.path.isdir(self.folder_path):
+            QtWidgets.QMessageBox.warning(self, "警告", "请先设置有效的文件夹路径")
+            return
+
+        self._running = True
+        self.parent.verticalFrame_similar.show()
+        self.parent.progressBar_Contrast.setValue(0)
+
+        # 获取所有图片路径
+        supported_formats = ['.jpg', '.jpeg', '.png', '.bmp', '.gif']
+        image_paths = [os.path.join(self.folder_path, f)
+                       for f in os.listdir(self.folder_path)
+                       if os.path.splitext(f)[1].lower() in supported_formats]
+
+        # 启动哈希计算工作线程
+        self.hash_worker = HashWorker(image_paths)
+        self.hash_worker.signals.hash_completed.connect(self.on_hashes_computed)
+        self.hash_worker.signals.progress_updated.connect(self.update_progress)
+        self.hash_worker.signals.error_occurred.connect(self.on_hash_error)
+        self.thread_pool.start(self.hash_worker)
+
+    def on_hashes_computed(self, hashes):
+        if not self._running:
+            return
+
+        self.image_hashes = hashes
+        threshold = self.get_similarity_threshold(self.parent.horizontalSlider_levelContrast.value())
+
+        # 启动对比工作线程
+        self.contrast_worker = ContrastWorker(hashes, threshold)
+        self.contrast_worker.signals.groups_completed.connect(self.on_groups_computed)
+        self.contrast_worker.signals.progress_updated.connect(self.update_progress)
+        self.contrast_worker.signals.image_matched.connect(self.show_images_from_thread)
+        self.thread_pool.start(self.contrast_worker)
+
+    def on_groups_computed(self, groups):
+        if not self._running:
+            return
+
+        self.groups = groups
+        self.display_all_images()
+
+    def on_hash_error(self, error_msg):
+        QtWidgets.QMessageBox.warning(self, "哈希计算错误", error_msg)
+        self._running = False
+
+    def display_all_images(self):
+        layout = self.parent.gridLayout_2
+        self.clear_layout(layout)
+        COLUMN_COUNT = 4
+        row, col = 0, 0
+
+        for index, (group_id, paths) in enumerate(self.groups.items(), start=1):
+            if not paths or not self._running:
+                continue
+
+            title = QtWidgets.QLabel(f"📁 第{index}组 ({len(paths)}张)")
+            title.setStyleSheet("QLabel { font: bold 14px; color: #1976D2; padding: 2px 0; }")
+            layout.addWidget(title, row, 0, 1, COLUMN_COUNT)
+            row += 1
+
+            for path in paths:
+                if col >= COLUMN_COUNT:
+                    col = 0
+                    row += 1
+                thumbnail = self.create_thumbnail(path)
+                if thumbnail:
+                    layout.addWidget(thumbnail, row, col)
+                    col += 1
+
+            if paths and self._running:
+                self.add_separator(layout, row + 1)
+                row += 2
+                col = 0
+
+        layout.update()
+        self.parent.update()
+
+    def create_thumbnail(self, path):
+        container_size = QtCore.QSize(100, 100)
+        label = QtWidgets.QLabel()
+        label.setFixedSize(container_size)
+        label.setStyleSheet("""
+            QLabel {
+                background: #F5F5F5;
+                border: 2px solid #E0E0E0;
+                border-radius: 4px;
+                padding: 0px;
+            }
+            QLabel:hover {
+                border: 2px solid #2196F3;
+            }
+        """)
+
+        loader = ThumbnailLoader(path, container_size)
+        loader.signals.thumbnail_ready.connect(lambda p, pix: self.on_thumbnail_loaded(p, pix, label))
+        self.thread_pool.start(loader)
+
+        return label
+
+    def on_thumbnail_loaded(self, path, pixmap, label):
+        if not pixmap.isNull():
+            label.setPixmap(pixmap)
+            label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+            label.mousePressEvent = lambda e, p=path: self.thumbnail_clicked(p)
+
+    def thumbnail_clicked(self, path):
+        for group_id, paths in self.groups.items():
+            if path in paths:
+                self.set_empty(False)
+                self.show_image(self.parent.label_image_A, path)
+                candidates = [p for p in paths if p != path]
+                if candidates:
+                    random_image_path = np.random.choice(candidates)
+                    self.show_image(self.parent.label_image_B, random_image_path)
+                break
+
+    def show_images_from_thread(self, source_path, match_path):
+        self.set_empty(False)
+        self.show_image(self.parent.label_image_A, source_path)
+        self.show_image(self.parent.label_image_B, match_path)
+
+    def update_progress(self, value):
+        self.parent.progressBar_Contrast.setValue(value)
+
+    def get_similarity_threshold(self, slider_value):
+        threshold_map = {1: 32, 2: 16, 3: 8, 4: 0}
+        return threshold_map.get(slider_value, 0)
+
     def on_slider_value_changed(self, value):
-        texts = ["明显差异", "部分相似", "比较相似", "完全一致"]
+        level_info = [("明显差异", "#FF5252"), ("部分相似", "#FF9800"),
+                      ("比较相似", "#2196F3"), ("完全一致", "#4CAF50")]
         if 1 <= value <= 4:
-            self.parent.label_levelContrast.setText(texts[value - 1])
-            colors = ["#FF5252", "#FF9800", "#2196F3", "#4CAF50"]
-            self.parent.label_levelContrast.setStyleSheet(f"""
-                QLabel {{
-                    font-size: 18px;
-                    color: {colors[value - 1]};
-                }}
-            """)
+            text, color = level_info[value - 1]
+            self.parent.label_levelContrast.setText(text)
+            self.parent.label_levelContrast.setStyleSheet(f"QLabel {{ color: {color}; }}")
+
+    def add_separator(self, layout, row):
+        separator = QtWidgets.QFrame()
+        separator.setFrameShape(QtWidgets.QFrame.Shape.HLine)
+        separator.setStyleSheet("border: 1px dashed #BDBDBD;")
+        layout.addWidget(separator, row, 0, 1, layout.columnCount())
+
+    def clear_layout(self, layout):
+        while layout.count():
+            item = layout.takeAt(0)
+            if widget := item.widget():
+                widget.deleteLater()
+
+    def set_empty(self, status=False):
+        self.parent.label_image_A.setStyleSheet(
+            "QLabel {image: url('resources/img/page_3/对比1.svg');}" if status else "QLabel {image: url('');}")
+        self.parent.label_image_B.setStyleSheet(
+            "QLabel {image: url('resources/img/page_3/对比2.svg');}" if status else "QLabel {image: url('');}")
+
+    def show_image(self, label, path):
+        pixmap = QtGui.QPixmap(path)
+        if not pixmap.isNull():
+            scaled = pixmap.scaled(label.width(), label.height(),
+                                   QtCore.Qt.AspectRatioMode.KeepAspectRatio,
+                                   QtCore.Qt.TransformationMode.SmoothTransformation)
+            label.setPixmap(scaled)
+
+    def stop_processing(self):
+        self._running = False
+        if hasattr(self, 'hash_worker'):
+            self.hash_worker.stop()
+        if hasattr(self, 'contrast_worker'):
+            self.contrast_worker.stop()
