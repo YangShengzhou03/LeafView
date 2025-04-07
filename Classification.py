@@ -9,6 +9,7 @@ from ClassificationThread import ClassificationThread
 
 class Classification(QtWidgets.QWidget):
     log_signal = pyqtSignal(str, str)
+
     def __init__(self, parent=None, folder_page=None):
         super().__init__(parent)
         self.parent = parent
@@ -32,11 +33,11 @@ class Classification(QtWidgets.QWidget):
 
     def init_page(self):
         self.connect_signals()
-        for i in range(1,6):
-            getattr(self.parent,f'comboBox_level_{i}').currentIndexChanged.connect(
-                lambda index,level=i: self.handle_combobox_selection(level,index))
+        for i in range(1, 6):
+            getattr(self.parent, f'comboBox_level_{i}').currentIndexChanged.connect(
+                lambda index, level=i: self.handle_combobox_selection(level, index))
         for button in self.tag_buttons.values():
-            button.clicked.connect(lambda checked,b=button: self.move_tag(b))
+            button.clicked.connect(lambda checked, b=button: self.move_tag(b))
         self.parent.comboBox_operation.currentIndexChanged.connect(self.handle_operation_change)
 
     def connect_signals(self):
@@ -69,22 +70,22 @@ class Classification(QtWidgets.QWidget):
         else:
             folders = self.folder_page.get_all_folders() if self.folder_page else []
             if not folders:
-                self.log("WARNING","没有选择文件夹进行操作")
+                self.log("WARNING", "没有选择文件夹进行操作")
                 return
 
             classification_structure = [
-                getattr(self.parent,f'comboBox_level_{i}').currentText()
-                for i in range(1,6)
-                if getattr(self.parent,f'comboBox_level_{i}').isEnabled() and
-                   getattr(self.parent,f'comboBox_level_{i}').currentText() != "不分类"
+                getattr(self.parent, f'comboBox_level_{i}').currentText()
+                for i in range(1, 6)
+                if getattr(self.parent, f'comboBox_level_{i}').isEnabled() and
+                   getattr(self.parent, f'comboBox_level_{i}').currentText() != "不分类"
             ]
 
             file_name_structure = [self.selected_layout.itemAt(i).widget().text()
-                                  for i in range(self.selected_layout.count())
-                                  if isinstance(self.selected_layout.itemAt(i).widget(),QtWidgets.QPushButton)]
+                                   for i in range(self.selected_layout.count())
+                                   if isinstance(self.selected_layout.itemAt(i).widget(), QtWidgets.QPushButton)]
 
-            if not classification_structure and not file_name_structure:
-                self.log("WARNING","请选择至少一种操作（分类或重命名）")
+            if not classification_structure and not file_name_structure and not self.destination_root:
+                self.log("WARNING", "请选择至少一种操作（分类或重命名）")
                 return
 
             self.classification_thread = ClassificationThread(
@@ -104,55 +105,58 @@ class Classification(QtWidgets.QWidget):
         self.classification_thread = None
 
     def handle_combobox_selection(self, level, index):
-        comboBox = getattr(self.parent,f'comboBox_level_{level}')
+        comboBox = getattr(self.parent, f'comboBox_level_{level}')
         if comboBox.currentText() == "识别文字":
-            text,ok = QInputDialog.getText(self,"输入识别文字","请输入识别文字(最多2个汉字):",QtWidgets.QLineEdit.EchoMode.Normal,"")
+            text, ok = QInputDialog.getText(self, "输入识别文字", "请输入识别文字(最多2个汉字):",
+                                            QtWidgets.QLineEdit.EchoMode.Normal, "")
             if ok:
-                if len(text.encode('utf-8'))>8 or (len(text)>4 and not text.isalpha()):
-                    QMessageBox.warning(self,"输入错误","输入超过长度限制(最多2个汉字)")
+                if len(text.encode('utf-8')) > 8 or (len(text) > 4 and not text.isalpha()):
+                    QMessageBox.warning(self, "输入错误", "输入超过长度限制(最多2个汉字)")
                     comboBox.setCurrentIndex(0)
                 else:
-                    comboBox.setItemText(index,text)
+                    comboBox.setItemText(index, text)
                     comboBox.setCurrentIndex(index)
-            else: comboBox.setCurrentIndex(0)
+            else:
+                comboBox.setCurrentIndex(0)
         self.update_combobox_state(level)
 
     def update_combobox_state(self, level):
-        current_box = getattr(self.parent,f'comboBox_level_{level}')
-        next_box = getattr(self.parent,f'comboBox_level_{level+1}',None) if level<5 else None
+        current_box = getattr(self.parent, f'comboBox_level_{level}')
+        next_box = getattr(self.parent, f'comboBox_level_{level + 1}', None) if level < 5 else None
         if next_box:
-            next_box.setEnabled(current_box.currentIndex()!=0)
-            if current_box.currentIndex()==0:
+            next_box.setEnabled(current_box.currentIndex() != 0)
+            if current_box.currentIndex() == 0:
                 next_box.setCurrentIndex(0)
-                for i in range(level+1,6):
-                    future_box = getattr(self.parent,f'comboBox_level_{i}',None)
+                for i in range(level + 1, 6):
+                    future_box = getattr(self.parent, f'comboBox_level_{i}', None)
                     if future_box:
                         future_box.setEnabled(False)
                         future_box.setCurrentIndex(0)
-            else: self.update_combobox_state(level+1)
+            else:
+                self.update_combobox_state(level + 1)
         self.parent.label_PreviewRoute.setText("/".join([
-            self.get_specific_value(getattr(self.parent,f'comboBox_level_{i}').currentText())
-            for i in range(1,6)
-            if getattr(self.parent,f'comboBox_level_{i}').isEnabled() and
-               getattr(self.parent,f'comboBox_level_{i}').currentText() != "不分类"
-        ]) or "位置不变")
+            self.get_specific_value(getattr(self.parent, f'comboBox_level_{i}').currentText())
+            for i in range(1, 6)
+            if getattr(self.parent, f'comboBox_level_{i}').isEnabled() and
+               getattr(self.parent, f'comboBox_level_{i}').currentText() != "不分类"
+        ]) or "不分类")
 
     def get_specific_value(self, text):
         now = datetime.now()
         return {
-            "年份":str(now.year),
-            "月份":str(now.month),
-            "拍摄设备":"小米",
-            "拍摄省份":"江西",
-            "拍摄城市":"南昌"
-        }.get(text,text)
+            "年份": str(now.year),
+            "月份": str(now.month),
+            "拍摄设备": "小米",
+            "拍摄省份": "江西",
+            "拍摄城市": "南昌"
+        }.get(text, text)
 
     def move_tag(self, button):
-        current_layout = self.available_layout if self.available_layout.indexOf(button)!=-1 else self.selected_layout
+        current_layout = self.available_layout if self.available_layout.indexOf(button) != -1 else self.selected_layout
         if current_layout:
             current_layout.removeWidget(button)
             button.setParent(None)
-        if current_layout==self.available_layout:
+        if current_layout == self.available_layout:
             self.selected_layout.addWidget(button)
             self.last_selected_button_index += 1
         else:
@@ -163,21 +167,21 @@ class Classification(QtWidgets.QWidget):
     def update_example_label(self):
         now = datetime.now()
         selected = [self.selected_layout.itemAt(i).widget().text() for i in range(self.selected_layout.count())
-                    if isinstance(self.selected_layout.itemAt(i).widget(),QtWidgets.QPushButton)]
+                    if isinstance(self.selected_layout.itemAt(i).widget(), QtWidgets.QPushButton)]
         self.parent.label_PreviewName.setText(
             "请点击标签以组成文件名" if not selected else "-".join({
-                "年份":f"{now.year}",
-                "月份":f"{now.month:02d}",
-                "日":f"{now.day:02d}",
-                "星期":f"{self._get_weekday(now)}",
-                "时间":f"{now.strftime('%H%M')}",
-                "位置":"科师大",
-                "品牌":"佳能"
-            }.get(b,"") for b in selected))
+                                                                       "年份": f"{now.year}",
+                                                                       "月份": f"{now.month:02d}",
+                                                                       "日": f"{now.day:02d}",
+                                                                       "星期": f"{self._get_weekday(now)}",
+                                                                       "时间": f"{now.strftime('%H%M')}",
+                                                                       "位置": "科师大",
+                                                                       "品牌": "佳能"
+                                                                   }.get(b, "") for b in selected))
 
     @staticmethod
     def _get_weekday(date):
-        return ["周一","周二","周三","周四","周五","周六","周日"][date.weekday()]
+        return ["周一", "周二", "周三", "周四", "周五", "周六", "周日"][date.weekday()]
 
     def log(self, level, message):
         c = {'ERROR': '#FF0000', 'WARNING': '#FFA500', 'DEBUG': '#008000', 'INFO': '#8677FD'}

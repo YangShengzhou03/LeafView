@@ -3707,7 +3707,7 @@ background:rgba(0, 0, 0, 0);</string>
 background:rgba(0, 0, 0, 0);</string>
                              </property>
                              <property name="text">
-                              <string>位置不变</string>
+                              <string>不分类</string>
                              </property>
                             </widget>
                            </item>
@@ -4564,8 +4564,8 @@ QScrollBar::corner {
                         <rect>
                          <x>0</x>
                          <y>0</y>
-                         <width>231</width>
-                         <height>462</height>
+                         <width>100</width>
+                         <height>30</height>
                         </rect>
                        </property>
                        <layout class="QGridLayout" name="gridLayout_2"/>
