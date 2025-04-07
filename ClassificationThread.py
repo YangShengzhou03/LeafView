@@ -1,250 +1,222 @@
+import io, json, os, shutil, time
 from datetime import datetime
 from pathlib import Path
-import os
-import shutil
-import json
-from PyQt6.QtCore import QThread, pyqtSignal
+import exifread, pillow_heif, requests
 from PIL import Image
-import exifread
-import io
-import pillow_heif
+from PyQt6.QtCore import QThread, pyqtSignal
 from common import get_resource_path
 
 SUPPORTED_EXTENSIONS = (
-    '.jpg', '.jpeg', '.png', '.heic', '.tiff', '.tif',
-    '.bmp', '.webp', '.gif', '.svg', '.psd',
-    '.arw', '.cr2', '.cr3', '.nef', '.orf', '.sr2',
-    '.raf', '.dng', '.rw2', '.pef', '.nrw', '.kdc',
-    '.mos', '.iiq', '.fff', '.x3f', '.3fr', '.mef',
-    '.mrw', '.erf', '.raw', '.rwz', '.ari',
-    '.mp4', '.avi', '.mov', '.mkv', '.flv', '.wmv',
-    '.m4v', '.3gp', '.mpeg', '.mpg', '.mts', '.mxf',
-    '.webm', '.ogv', '.livp'
-)
+    '.jpg', '.jpeg', '.png', '.heic', '.tiff', '.tif', '.bmp', '.webp', '.gif', '.svg', '.psd', '.arw', '.cr2', '.cr3',
+    '.nef', '.orf', '.sr2', '.raf', '.dng', '.rw2', '.pef', '.nrw', '.kdc', '.mos', '.iiq', '.fff', '.x3f', '.3fr',
+    '.mef',
+    '.mrw', '.erf', '.raw', '.rwz', '.ari', '.mp4', '.avi', '.mov', '.mkv', '.flv', '.wmv', '.m4v', '.3gp', '.mpeg',
+    '.mpg',
+    '.mts', '.mxf', '.webm', '.ogv', '.livp')
 
 
 class ClassificationThread(QThread):
-    def __init__(self, parent=None, folders=None, classification_structure=None,
-                 file_name_structure=None, destination_root=None, time_derive="最早时间"):
+    log_signal = pyqtSignal(str, str)
+    progress_signal = pyqtSignal(int)
+
+    def __init__(self, parent=None, folders=None, classification_structure=None, file_name_structure=None,
+                 destination_root=None, time_derive="最早时间"):
         super().__init__()
-        self.parent = parent
-        self.folders = folders or []
-        self.classification_structure = classification_structure or []
-        self.file_name_structure = file_name_structure or []
+        self.parent, self.folders, self.classification_structure = parent, folders or [], classification_structure or []
+        self.file_name_structure, self.time_derive = file_name_structure or [], time_derive
         self.destination_root = Path(destination_root) if destination_root else None
-        self.time_derive = time_derive
-        print(folders, classification_structure, file_name_structure, destination_root, time_derive)
-        self.total_files = 0
-        self.processed_files = 0
-        self.processed_files_set = set()
         self._stop_flag = False
         self.load_geographic_data()
+        self.files_to_rename = []
+        self.log_signal.connect(parent.log_signal.emit)
+        self.progress_signal.connect(parent.update_progress_bar)
 
     def load_geographic_data(self):
         try:
-            city_path = get_resource_path('resources/json/City_Reverse_Geocode.json')
-            province_path = get_resource_path('resources/json/Province_Reverse_Geocode.json')
-
-            with open(city_path, 'r', encoding='utf-8') as f:
+            with open(get_resource_path('resources/json/City_Reverse_Geocode.json'), 'r', encoding='utf-8') as f:
                 self.city_data = json.load(f)
-            with open(province_path, 'r', encoding='utf-8') as f:
+            with open(get_resource_path('resources/json/Province_Reverse_Geocode.json'), 'r', encoding='utf-8') as f:
                 self.province_data = json.load(f)
         except Exception as e:
-            print(f"加载地理数据失败: {str(e)}")
-            self.city_data = {'features': []}
-            self.province_data = {'features': []}
+            self.city_data, self.province_data = {'features': []}, {'features': []}
 
     def stop(self):
         self._stop_flag = True
+        self.log("INFO", "处理线程收到停止信号")
 
     def run(self):
         try:
-            self.total_files = sum(
-                1 for folder_info in self.folders for root, _, files in os.walk(Path(folder_info['path']))
-                for file in files if file.lower().endswith(SUPPORTED_EXTENSIONS)
-            )
+            self.log("INFO", f"开始处理 {len(self.folders)} 个文件夹")
             for folder_info in self.folders:
                 if self._stop_flag:
+                    self.log("INFO", "处理被用户中断")
                     break
-
                 if not self.classification_structure and not self.file_name_structure:
                     self.organize_without_classification(folder_info['path'])
                 else:
                     self.process_folder_with_classification(folder_info)
+            self.process_renaming()
         except Exception as e:
-            print(f"线程运行时发生错误: {str(e)}")
-
-    def count_total_files(self):
-        return sum(
-            1 for folder in self.folders
-            for _, _, files in os.walk(folder)
-            for file in files
-            if file.lower().endswith(SUPPORTED_EXTENSIONS)
-        )
+            self.log("ERROR", f"运行时发生错误: {str(e)}")
 
     def process_folder_with_classification(self, folder_info):
         folder_path = Path(folder_info['path'])
-        include_sub = folder_info.get('include_sub', 0)
+        total_files = sum([len(files) for _, _, files in os.walk(folder_path)]) if folder_info.get('include_sub',
+                                                                                                   0) else len(
+            os.listdir(folder_path))
+        processed_files = 0
 
-        if include_sub:
+        if folder_info.get('include_sub', 0):
             for root, _, files in os.walk(folder_path):
-                if self._stop_flag:
-                    break
                 for file in files:
-                    if self._stop_flag:
-                        break
                     full_file_path = Path(root) / file
                     if full_file_path.suffix.lower() in SUPPORTED_EXTENSIONS:
-                        self.process_single_file(full_file_path)
+                        self.process_single_file(full_file_path, base_folder=folder_path)
+                        processed_files += 1
+                        percent_complete = int((processed_files / total_files) * 100)
+                        self.progress_signal.emit(percent_complete)
         else:
             for file in os.listdir(folder_path):
                 full_file_path = folder_path / file
                 if full_file_path.is_file() and full_file_path.suffix.lower() in SUPPORTED_EXTENSIONS:
                     self.process_single_file(full_file_path)
+                    processed_files += 1
+                    percent_complete = int((processed_files / total_files) * 100)
+                    self.progress_signal.emit(percent_complete)
+        self.delete_empty_folders(folder_path)
 
-    def process_single_file(self, file_path):
-        try:
-            exif_data = self.get_exif_data(file_path)
-            if self.classification_structure:
-                new_path = self.construct_classification_path(exif_data, file_path)
-                if new_path:
-                    self.copy_or_move_image(file_path, new_path)
-            if self.file_name_structure:
-                new_name = self.construct_new_filename(exif_data)
-                if new_name:
-                    new_path = file_path.parent / f"{new_name}{file_path.suffix}"
-                    os.rename(file_path, new_path)
-                    print(f"重命名成功: {file_path.name} -> {new_path.name}")
-        except Exception as e:
-            print(f"处理文件 {file_path.name} 时出错: {str(e)}")
-        finally:
-            print("sha")
-            
+    def process_single_file(self, file_path, base_folder=None):
+        exif_data = self.get_exif_data(file_path)
+        new_path = None
+        if self.classification_structure:
+            new_path = self.construct_classification_path(exif_data, file_path, base_folder)
+            if new_path:
+                self.copy_or_move_image(file_path, new_path)
+        if self.file_name_structure:
+            target_path = new_path if new_path else file_path
+            self.files_to_rename.append((target_path, exif_data))
 
-    def construct_classification_path(self, exif_data, file_path):
+    def process_renaming(self):
+        for file_path, exif_data in self.files_to_rename:
+            if self._stop_flag:
+                return
+            new_name = self.construct_new_filename(exif_data, file_path)
+            if new_name:
+                try:
+                    os.rename(file_path, new_name)
+                except Exception as e:
+                    self.log("ERROR", f"重命名文件 {file_path} 失败: {str(e)}")
+
+    def construct_classification_path(self, exif_data, file_path, base_folder=None):
         structure_parts = []
         for part in self.classification_structure:
             if part == "拍摄设备":
-                make = exif_data.get('Make', '')
-                model = exif_data.get('Model', '')
-                device_info = f"{make} {model}".strip() or '未知设备'
-                structure_parts.append(device_info)
+                make, model = exif_data.get('Make', ''), exif_data.get('Model', '')
+                device = f"{make} {model}".strip() or '未知设备'
+                structure_parts.append(device)
             elif part in ["拍摄省份", "拍摄城市"]:
-                lat = exif_data.get('GPS GPSLatitude')
-                lon = exif_data.get('GPS GPSLongitude')
+                lat, lon = exif_data.get('GPS GPSLatitude'), exif_data.get('GPS GPSLongitude')
                 if lat and lon:
                     province, city = self.get_city_and_province(lat, lon)
-                    structure_parts.append(province if part == "拍摄省份" else city)
+                    location = province if part == "拍摄省份" else city
+                    structure_parts.append(location)
                 else:
-                    structure_parts.append('未知位置')
-            elif part == "年份":
+                    structure_parts.append(f'未知位置')
+            elif part in ["年份", "月份"]:
                 date_str = exif_data.get('DateTime')
                 if date_str:
                     try:
                         date = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
-                        structure_parts.append(str(date.year))
-                    except ValueError:
-                        structure_parts.append("未知年份")
+                        date_part = str(date.year) if part == "年份" else f"{date.month:02d}"
+                        structure_parts.append(date_part)
+                    except:
+                        structure_parts.append(f"未知{part}")
                 else:
-                    structure_parts.append("未知年份")
-            elif part == "月份":
-                date_str = exif_data.get('DateTime')
-                if date_str:
-                    try:
-                        date = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
-                        structure_parts.append(f"{date.month:02d}")
-                    except ValueError:
-                        structure_parts.append("未知月份")
-                else:
-                    structure_parts.append("未知月份")
+                    structure_parts.append(f"未知{part}")
             else:
                 structure_parts.append(part)
 
-        base_folder = self.destination_root if self.destination_root else file_path.parent
+        base_folder = Path(base_folder) if base_folder else (
+            self.destination_root if self.destination_root else file_path.parent)
         new_folder = base_folder.joinpath(*structure_parts)
         new_folder.mkdir(parents=True, exist_ok=True)
-        return self.make_unique_filename(new_folder, file_path.name)
 
-    def construct_new_filename(self, exif_data):
+        unique_filename = self.make_unique_filename(new_folder, file_path.name)
+        return unique_filename
+
+    def construct_new_filename(self, exif_data, file_path):
         parts = []
         date_str = exif_data.get('DateTime')
+
         for part in self.file_name_structure:
-            if part == "年份" and date_str:
+            if part in ["年份", "月份", "日", "星期", "时间"] and date_str:
                 try:
                     date = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
-                    parts.append(str(date.year))
-                except ValueError:
-                    pass
-            elif part == "月份" and date_str:
-                try:
-                    date = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
-                    parts.append(f"{date.month:02d}")
-                except ValueError:
-                    pass
-            elif part == "日" and date_str:
-                try:
-                    date = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
-                    parts.append(f"{date.day:02d}")
-                except ValueError:
-                    pass
-            elif part == "星期" and date_str:
-                try:
-                    date = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
-                    parts.append(self._get_weekday(date))
-                except ValueError:
-                    pass
-            elif part == "时间" and date_str:
-                try:
-                    date = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
-                    parts.append(date.strftime('%H%M'))
-                except ValueError:
-                    pass
+                    if part == "年份":
+                        part_str = str(date.year)
+                    elif part == "月份":
+                        part_str = f"{date.month:02d}"
+                    elif part == "日":
+                        part_str = f"{date.day:02d}"
+                    elif part == "星期":
+                        part_str = self._get_weekday(date)
+                    elif part == "时间":
+                        part_str = date.strftime('%H%M')
+
+                    parts.append(part_str)
+                except Exception as e:
+                    continue
+
             elif part == "位置":
-                lat = exif_data.get('GPS GPSLatitude')
-                lon = exif_data.get('GPS GPSLongitude')
+                lat, lon = exif_data.get('GPS GPSLatitude'), exif_data.get('GPS GPSLongitude')
                 if lat and lon:
-                    _, city = self.get_city_and_province(lat, lon)
-                    parts.append(city or "未知位置")
+                    address = self.get_address(lat, lon)
+                    if address:
+                        parts.append(address)
+
             elif part == "品牌":
-                parts.append(exif_data.get('Make', '未知品牌'))
+                make = exif_data.get('Make')
+                if make:
+                    parts.append(make)
+
             elif part == "型号":
-                parts.append(exif_data.get('Model', '未知型号'))
-        return "-".join(parts) if parts else None
+                model = exif_data.get('Model')
+                if model:
+                    parts.append(model)
+
+        if parts:
+            new_name = "-".join(parts) + file_path.suffix.lower()
+            unique_name = self.make_unique_filename(file_path.parent, new_name)
+            return unique_name
+        return None
 
     def get_exif_data(self, file_path):
         exif_data = {}
         suffix = file_path.suffix.lower()
-
         create_time = datetime.fromtimestamp(file_path.stat().st_ctime)
         modify_time = datetime.fromtimestamp(file_path.stat().st_mtime)
-
         if suffix in ('.jpg', '.jpeg', '.tiff', '.tif'):
             with open(file_path, 'rb') as f:
                 tags = exifread.process_file(f, details=False)
             date_taken = self.parse_exif_datetime(tags)
-
             lat_ref = str(tags.get('GPS GPSLatitudeRef', '')).strip()
             lon_ref = str(tags.get('GPS GPSLongitudeRef', '')).strip()
             lat = self.convert_to_degrees(tags.get('GPS GPSLatitude'))
             lon = self.convert_to_degrees(tags.get('GPS GPSLongitude'))
-
             if lat and lon:
                 lat = -lat if lat_ref.lower() == 's' else lat
                 lon = -lon if lon_ref.lower() == 'w' else lon
-                exif_data['GPS GPSLatitude'] = lat
-                exif_data['GPS GPSLongitude'] = lon
-
-            exif_data['Make'] = str(tags.get('Image Make', '')).strip() or None
-            exif_data['Model'] = str(tags.get('Image Model', '')).strip() or None
-
+                exif_data.update({'GPS GPSLatitude': lat, 'GPS GPSLongitude': lon})
+            exif_data.update({
+                'Make': str(tags.get('Image Make', '')).strip() or None,
+                'Model': str(tags.get('Image Model', '')).strip() or None
+            })
         elif suffix == '.heic':
             heif_file = pillow_heif.read_heif(file_path)
             exif_raw = heif_file.info.get('exif', b'')
-            if exif_raw.startswith(b'Exif\x00\x00'):
-                exif_raw = exif_raw[6:]
+            if exif_raw.startswith(b'Exif\x00\x00'): exif_raw = exif_raw[6:]
             tags = exifread.process_file(io.BytesIO(exif_raw), details=False)
             date_taken = self.parse_exif_datetime(tags)
-
         elif suffix == '.png':
             with Image.open(file_path) as img:
                 date_taken = self.parse_datetime(img.info.get('Creation Time'))
@@ -267,59 +239,85 @@ class ClassificationThread(QThread):
     def parse_exif_datetime(self, tags):
         for tag in ['EXIF DateTimeOriginal', 'Image DateTime']:
             if tag in tags:
-                return self.parse_datetime(str(tags[tag]))
+                datetime_str = str(tags[tag])
+                return self.parse_datetime(datetime_str)
         return None
 
     def parse_datetime(self, datetime_str):
-        formats = [
-            '%Y:%m:%d %H:%M:%S',
-            '%Y:%m:%d %H:%M',
-            '%Y:%m:%d',
-            '%Y-%m-%d %H:%M:%S',
-            '%Y-%m-%d %H:%M',
-            '%Y-%m-%d'
-        ]
-        for fmt in formats:
+        if not datetime_str:
+            return None
+
+        for fmt in ['%Y:%m:%d %H:%M:%S', '%Y:%m:%d %H:%M', '%Y:%m:%d', '%Y-%m-%d %H:%M:%S', '%Y-%m-%d %H:%M',
+                    '%Y-%m-%d']:
             try:
-                return datetime.strptime(datetime_str, fmt)
-            except (ValueError, TypeError):
+                result = datetime.strptime(datetime_str, fmt)
+                return result
+            except Exception as e:
                 continue
         return None
 
     def get_city_and_province(self, lat, lon):
-        def is_point_in_polygon(x, y, polygon):
-            n = len(polygon)
-            inside = False
-            p1x, p1y = polygon[0]
-            for i in range(n + 1):
-                p2x, p2y = polygon[i % n]
-                if y > min(p1y, p2y) and y <= max(p1y, p2y) and x <= max(p1x, p2x):
-                    x_intercept = (y - p1y) * (p2x - p1x) / (p2y - p1y) + p1x if p1y != p2y else p1x
-                    if p1x == p2x or x <= x_intercept:
-                        inside = not inside
-                p1x, p1y = p2x, p2y
-            return inside
-        for feature in self.province_data['features']:
-            province_name = feature['properties']['name']
-            for polygon in feature['geometry']['coordinates']:
-                if is_point_in_polygon(lon, lat, polygon):
-                    for city_feature in self.city_data['features']:
-                        city_name = city_feature['properties']['name']
-                        for city_polygon in city_feature['geometry']['coordinates']:
-                            if is_point_in_polygon(lon, lat, city_polygon):
-                                return province_name, city_name
-                    return province_name, '未知城市'
-        return '未知省份', '未知城市'
 
-    def convert_to_degrees(self, value):
+        def is_point_in_polygon(x, y, polygon):
+            if not isinstance(polygon, (list, tuple)) or len(polygon) < 3:
+                return False
+            inside, n = False, len(polygon)
+            for i in range(n + 1):
+                p1x, p1y = polygon[i % n]
+                p2x, p2y = polygon[(i + 1) % n]
+                if y > min(p1y, p2y) and y <= max(p1y, p2y) and x <= max(p1x, p2x):
+                    if p1y != p2y: x_intercept = (y - p1y) * (p2x - p1x) / (p2y - p1y) + p1x
+                    if p1x == p2x or x <= x_intercept: inside = not inside
+            return inside
+
+        def query_location(longitude, latitude, data):
+            for feature in data['features']:
+                name, coordinates = feature['properties']['name'], feature['geometry']['coordinates']
+                polygons = [polygon for multi_polygon in coordinates for polygon in
+                            ([multi_polygon] if isinstance(multi_polygon[0][0], (float, int)) else multi_polygon)]
+                if any(is_point_in_polygon(longitude, latitude, polygon) for polygon in polygons):
+                    return name
+            return None
+
+        province = query_location(lon, lat, self.province_data)
+        city = query_location(lon, lat, self.city_data)
+
+        result = (
+            (province, '未知省份')[province is None],
+            (city, '未知城市')[city is None]
+        )
+        return result
+
+    @staticmethod
+    def get_address(lat, lon, max_retries=3, wait_time_on_limit=2):
+        key = 'bc383698582923d55b5137c3439cf4b2'
+        url = f'https://restapi.amap.com/v3/geocode/regeo?key={key}&location={lon},{lat}'
+
+        for retry in range(max_retries):
+            try:
+                response = requests.get(url).json()
+                if response.get('status') == '1' and response.get('info', '').lower() == 'ok':
+                    address = response['regeocode']['formatted_address']
+                    return address
+                elif 'cuqps_has_exceeded_the_limit' in response.get('info', '').lower() and retry < max_retries - 1:
+                    time.sleep(wait_time_on_limit)
+            except Exception as e:
+                pass
+            if retry < max_retries - 1:
+                time.sleep(wait_time_on_limit)
+        return None
+
+    @staticmethod
+    def convert_to_degrees(value):
+        if not value:
+            return None
         try:
-            if not value:
-                return None
             d = float(value.values[0].num) / float(value.values[0].den)
             m = float(value.values[1].num) / float(value.values[1].den)
             s = float(value.values[2].num) / float(value.values[2].den)
-            return d + (m / 60.0) + (s / 3600.0)
-        except Exception:
+            result = d + (m / 60.0) + (s / 3600.0)
+            return result
+        except Exception as e:
             return None
 
     def copy_or_move_image(self, src_path, dst_path):
@@ -327,17 +325,14 @@ class ClassificationThread(QThread):
             if str(src_path.parent) == str(dst_path.parent):
                 return
 
+            operation = "复制" if self.destination_root is not None else "移动"
             if self.destination_root is not None:
-                if str(src_path) in self.processed_files_set:
-                    return
                 shutil.copy2(str(src_path), str(dst_path))
-                self.processed_files_set.add(str(src_path))
-                print(f"复制成功: {src_path} -> {dst_path}", "INFO")
             else:
                 shutil.move(str(src_path), str(dst_path))
-                print(f"移动成功: {src_path} -> {dst_path}", "INFO")
+            self.log("DEBUG", f"成功{operation}文件: {src_path} -> {dst_path}")
         except Exception as e:
-            print(f"文件操作失败: {src_path}, 错误: {str(e)}", "ERROR")
+            self.log("ERROR", f"操作文件 {src_path} 出错:{str(e)}")
 
     def organize_without_classification(self, folder):
         destination = self.destination_root if self.destination_root else Path(folder)
@@ -350,33 +345,43 @@ class ClassificationThread(QThread):
                 if file.lower().endswith(SUPPORTED_EXTENSIONS):
                     src_path = dir_path / file
                     dst_path = self.make_unique_filename(destination, file)
-
                     try:
                         self.copy_or_move_image(src_path, dst_path)
-                        
                     except Exception as e:
-                        print(f"处理文件 {src_path} 时出错: {str(e)}", "ERROR")
-                        
                         has_files_remaining = True
+
             if not has_files_remaining and not any(dir_path.iterdir()) and dir_path != Path(folder):
                 try:
                     dir_path.rmdir()
-                    print(f"删除空目录: {dir_path}", "INFO")
                 except OSError as e:
-                    print(f"无法删除目录 {dir_path}: {str(e)}", "WARNING")
+                    pass
 
-    def make_unique_filename(self, target_dir, filename):
+    @staticmethod
+    def make_unique_filename(target_dir, filename):
         base, ext = os.path.splitext(filename)
-        target_path = target_dir / filename
-        counter = 1
-        while target_path.exists():
-            new_name = f"{base}_{counter}{ext}"
-            target_path = target_dir / new_name
+        counter = 0
+        while True:
+            target_path = target_dir / f"{base}{f'-{counter}' if counter else ''}{ext}"
+            if not target_path.exists():
+                return target_path
             counter += 1
-        return target_path
+
+    def delete_empty_folders(self, root_path):
+        root = Path(root_path)
+        for current_dir, _, _ in os.walk(root, topdown=False):
+            dir_path = Path(current_dir)
+            if dir_path == root:
+                continue
+            try:
+                if not any(dir_path.iterdir()):
+                    dir_path.rmdir()
+                    self.log("INFO", f"已删除空文件夹 {dir_path}")
+            except Exception as e:
+                pass
 
     @staticmethod
     def _get_weekday(date):
-        """Get Chinese weekday name."""
-        weekdays = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
-        return weekdays[date.weekday()]
+        return ["周一", "周二", "周三", "周四", "周五", "周六", "周日"][date.weekday()]
+
+    def log(self, level, message):
+        self.log_signal.emit(level, message)

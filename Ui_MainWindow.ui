@@ -1737,8 +1737,8 @@ QScrollBar::sub-page:vertical {
                                 <rect>
                                  <x>0</x>
                                  <y>0</y>
-                                 <width>100</width>
-                                 <height>30</height>
+                                 <width>691</width>
+                                 <height>461</height>
                                 </rect>
                                </property>
                                <layout class="QGridLayout" name="gridLayout_7">
@@ -3563,7 +3563,7 @@ QComboBox QAbstractItemView::item {
                              </font>
                             </property>
                             <property name="text">
-                             <string>整理方式</string>
+                             <string>方式</string>
                             </property>
                            </widget>
                           </item>
@@ -3656,14 +3656,30 @@ QComboBox QAbstractItemView::item {
                             <number>6</number>
                            </property>
                            <item>
-                            <widget class="QLabel" name="label_Preview">
+                            <widget class="QLabel" name="label_CopyRoute">
+                             <property name="minimumSize">
+                              <size>
+                               <width>0</width>
+                               <height>0</height>
+                              </size>
+                             </property>
+                             <property name="maximumSize">
+                              <size>
+                               <width>530</width>
+                               <height>16777215</height>
+                              </size>
+                             </property>
                              <property name="font">
                               <font>
-                               <pointsize>12</pointsize>
+                               <pointsize>9</pointsize>
                               </font>
                              </property>
+                             <property name="styleSheet">
+                              <string notr="true">qproperty-alignment: 'AlignLeft | AlignVCenter';
+background:rgba(0, 0, 0, 0);</string>
+                             </property>
                              <property name="text">
-                              <string>预览：</string>
+                              <string/>
                              </property>
                             </widget>
                            </item>
