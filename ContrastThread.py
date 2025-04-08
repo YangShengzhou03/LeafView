@@ -2,6 +2,7 @@ import numpy as np
 from PIL import Image
 from PyQt6.QtCore import pyqtSignal, QObject, QThread
 
+
 class ImageHasher:
     @staticmethod
     def dhash(image_path, hash_size=8):
@@ -31,10 +32,12 @@ class ImageHasher:
         bit_string = ''.join(str(b) for b in arr.astype(int))
         return f'{int(bit_string, 2):0>{(len(bit_string) + 3) // 4}x}'
 
+
 class HashWorkerSignals(QObject):
     hash_completed = pyqtSignal(dict)
     progress_updated = pyqtSignal(int)
     error_occurred = pyqtSignal(str)
+
 
 class HashWorker(QThread):
     hash_completed = pyqtSignal(dict)
@@ -57,7 +60,7 @@ class HashWorker(QThread):
                 result = ImageHasher.dhash(path, self.hash_size)
                 if result is not None:
                     hashes[path] = result
-                self.progress_updated.emit(index + 1)
+                self.progress_updated.emit(int((index + 1) / total * 40))
 
             if self._is_running:
                 self.hash_completed.emit(hashes)
@@ -67,10 +70,12 @@ class HashWorker(QThread):
     def stop(self):
         self._is_running = False
 
+
 class ContrastWorkerSignals(QObject):
     groups_completed = pyqtSignal(dict)
     progress_updated = pyqtSignal(int)
     image_matched = pyqtSignal(str, str)
+
 
 class ContrastWorker(QThread):
     groups_completed = pyqtSignal(dict)
@@ -105,7 +110,8 @@ class ContrastWorker(QThread):
                         remaining_paths.remove(path)
 
                     processed += 1
-                    self.progress_updated.emit(int(processed / total * 100))
+                    progress = min(40 + int((processed / total) * 40), 80)
+                    self.progress_updated.emit(progress)
 
                 group_id += 1
 

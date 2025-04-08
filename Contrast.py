@@ -1,32 +1,34 @@
 import os
-
 import numpy as np
 from PyQt6 import QtWidgets, QtCore, QtGui
 from PyQt6.QtCore import pyqtSignal, QRunnable, QObject, Qt, QThreadPool
 from PyQt6.QtGui import QPixmap, QImage
-
 from ContrastThread import HashWorker, ContrastWorker
 
 
 class ThumbnailLoaderSignals(QObject):
     thumbnail_ready = pyqtSignal(str, QPixmap)
+    progress_updated = pyqtSignal(int)
 
 
 class ThumbnailLoader(QRunnable):
-    def __init__(self, path, size):
+    def __init__(self, path, size, total_images):
         super().__init__()
         self.path = path
         self.size = size
+        self.total_images = total_images
         self.signals = ThumbnailLoaderSignals()
 
     def run(self):
         image = QImage(self.path)
         if not image.isNull():
-            scaled_image = image.scaled(self.size.width(), self.size.height(),
-                                        Qt.AspectRatioMode.KeepAspectRatio,
+            scaled_image = image.scaled(self.size.width(), self.size.height(), Qt.AspectRatioMode.KeepAspectRatio,
                                         Qt.TransformationMode.SmoothTransformation)
             pixmap = QPixmap.fromImage(scaled_image)
             self.signals.thumbnail_ready.emit(self.path, pixmap)
+            progress = 80 + int((1 / self.total_images) * 20)
+            self.signals.progress_updated.emit(progress)
+        self.signals.progress_updated.emit(100)
 
 
 class Contrast(QtWidgets.QWidget):
@@ -35,7 +37,7 @@ class Contrast(QtWidgets.QWidget):
         self.parent = parent
         self.groups = {}
         self.image_hashes = {}
-        self.folder_path = 'D:/test/666'
+        self.folder_path = 'resources/示例'
         self._running = False
         self.thread_pool = QThreadPool.globalInstance()
         self.thread_pool.setMaxThreadCount(min(8, os.cpu_count() or 4))
@@ -69,9 +71,8 @@ class Contrast(QtWidgets.QWidget):
         self.parent.progressBar_Contrast.setValue(0)
 
         supported_formats = ['.jpg', '.jpeg', '.png', '.bmp', '.gif']
-        image_paths = [os.path.join(self.folder_path, f)
-                       for f in os.listdir(self.folder_path)
-                       if os.path.splitext(f)[1].lower() in supported_formats]
+        image_paths = [os.path.join(self.folder_path, f) for f in os.listdir(self.folder_path) if
+                       os.path.splitext(f)[1].lower() in supported_formats]
         self.hash_worker = HashWorker(image_paths)
         self.hash_worker.hash_completed.connect(self.on_hashes_computed)
         self.hash_worker.progress_updated.connect(self.update_progress)
@@ -84,7 +85,6 @@ class Contrast(QtWidgets.QWidget):
 
         self.image_hashes = hashes
         threshold = self.get_similarity_threshold(self.parent.horizontalSlider_levelContrast.value())
-        print("开始启动对比线程")
         self.contrast_worker = ContrastWorker(hashes, threshold)
         self.contrast_worker.groups_completed.connect(self.on_groups_computed)
         self.contrast_worker.progress_updated.connect(self.update_progress)
@@ -98,6 +98,7 @@ class Contrast(QtWidgets.QWidget):
         self.display_all_images()
 
     def on_hash_error(self, error_msg):
+        print(error_msg)
         QtWidgets.QMessageBox.warning(self, "哈希计算错误", error_msg)
         self._running = False
 
@@ -107,10 +108,12 @@ class Contrast(QtWidgets.QWidget):
         COLUMN_COUNT = 4
         row, col = 0, 0
         duplicate_groups = {group_id: paths for group_id, paths in self.groups.items() if len(paths) > 1}
-
+        total_images = sum(len(paths) for paths in duplicate_groups.values())
+        no_images_found = True
         for index, (group_id, paths) in enumerate(duplicate_groups.items(), start=1):
             if not paths or not self._running:
                 continue
+            no_images_found = False
             title = QtWidgets.QLabel(f"📁 第{index}组 ({len(paths)}张)")
             title.setStyleSheet("QLabel { font: bold 14px; color: #1976D2; padding: 2px 0; }")
             layout.addWidget(title, row, 0, 1, COLUMN_COUNT)
@@ -119,7 +122,7 @@ class Contrast(QtWidgets.QWidget):
                 if col >= COLUMN_COUNT:
                     col = 0
                     row += 1
-                thumbnail = self.create_thumbnail(path)
+                thumbnail = self.create_thumbnail(path, total_images)
                 if thumbnail:
                     layout.addWidget(thumbnail, row, col)
                     col += 1
@@ -129,8 +132,11 @@ class Contrast(QtWidgets.QWidget):
                 col = 0
         layout.update()
         self.parent.update()
+        if no_images_found:
+            self.update_progress(100)
+            QtWidgets.QMessageBox.information(self, "提示", "没有找到符合条件的图片")
 
-    def create_thumbnail(self, path):
+    def create_thumbnail(self, path, total_images):
         container_size = QtCore.QSize(100, 100)
         label = QtWidgets.QLabel()
         label.setFixedSize(container_size)
@@ -145,8 +151,9 @@ class Contrast(QtWidgets.QWidget):
                 border: 2px solid #2196F3;
             }
         """)
-        loader = ThumbnailLoader(path, container_size)
+        loader = ThumbnailLoader(path, container_size, total_images)
         loader.signals.thumbnail_ready.connect(lambda p, pix: self.on_thumbnail_loaded(p, pix, label))
+        loader.signals.progress_updated.connect(self.update_progress)
         self.thread_pool.start(loader)
 
         return label
@@ -181,8 +188,8 @@ class Contrast(QtWidgets.QWidget):
         return threshold_map.get(slider_value, 0)
 
     def on_slider_value_changed(self, value):
-        level_info = [("明显差异", "#FF5252"), ("部分相似", "#FF9800"),
-                      ("比较相似", "#2196F3"), ("完全一致", "#4CAF50")]
+        level_info = [("明显差异", "#FF5252"), ("部分相似", "#FF9800"), ("比较相似", "#2196F3"),
+                      ("完全一致", "#4CAF50")]
         if 1 <= value <= 4:
             text, color = level_info[value - 1]
             self.parent.label_levelContrast.setText(text)
@@ -209,8 +216,7 @@ class Contrast(QtWidgets.QWidget):
     def show_image(self, label, path):
         pixmap = QtGui.QPixmap(path)
         if not pixmap.isNull():
-            scaled = pixmap.scaled(label.width(), label.height(),
-                                   QtCore.Qt.AspectRatioMode.KeepAspectRatio,
+            scaled = pixmap.scaled(label.width(), label.height(), QtCore.Qt.AspectRatioMode.KeepAspectRatio,
                                    QtCore.Qt.TransformationMode.SmoothTransformation)
             label.setPixmap(scaled)
 
