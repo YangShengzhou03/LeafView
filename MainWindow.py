@@ -29,7 +29,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.empty_widgets['gridLayout_7'] = self._create_empty_widget(self.gridLayout_7)
         self.empty_widgets['gridLayout_6'] = self._create_empty_widget(self.gridLayout_6)
         self.folder_page = FolderPage(self)
-        self.contrast_page = Contrast(self)
+        self.contrast_page = Contrast(self, self.folder_page)
         self.writeExif_page = WriteExif(self)
         self.classification_page = Classification(self, self.folder_page)
 

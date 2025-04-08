@@ -34,9 +34,10 @@ class ThumbnailLoader(QRunnable):
 
 
 class Contrast(QtWidgets.QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, folder_page=None):
         super().__init__(parent)
         self.parent = parent
+        self.folder_page = folder_page
         self.groups = {}
         self.image_hashes = {}
         self.folder_path = 'D:/test/666'
@@ -108,11 +109,9 @@ class Contrast(QtWidgets.QWidget):
                 item.widget().style().unpolish(item.widget())
                 item.widget().style().polish(item.widget())
 
-    def set_folder_path(self, folder_path):
-        self.folder_path = folder_path
-
     def startContrast(self):
-        if not self.folder_path or not os.path.isdir(self.folder_path):
+        folders = self.folder_page.get_all_folders() if self.folder_page else []
+        if not folders:
             QtWidgets.QMessageBox.warning(self, "警告", "请先设置有效的文件夹路径")
             return
 
@@ -121,8 +120,21 @@ class Contrast(QtWidgets.QWidget):
         self.parent.progressBar_Contrast.setValue(0)
 
         supported_formats = ['.jpg', '.jpeg', '.png', '.bmp', '.gif']
-        image_paths = [os.path.join(self.folder_path, f) for f in os.listdir(self.folder_path) if
-                       os.path.splitext(f)[1].lower() in supported_formats]
+        image_paths = []
+
+        for folder_info in folders:
+            folder_path = folder_info['path']
+            include_sub = folder_info['include_sub']
+
+            if include_sub == 1:
+                for root, _, files in os.walk(folder_path):
+                    for file in files:
+                        if os.path.splitext(file)[1].lower() in supported_formats:
+                            image_paths.append(os.path.join(root, file))
+            else:
+                for file in os.listdir(folder_path):
+                    if os.path.splitext(file)[1].lower() in supported_formats:
+                        image_paths.append(os.path.join(folder_path, file))
         self.parent.toolButton_startContrast.setEnabled(False)
         self.hash_worker = HashWorker(image_paths)
         self.hash_worker.hash_completed.connect(self.on_hashes_computed)
