@@ -1,14 +1,17 @@
-import os
 from datetime import datetime
+
 import requests
 from PyQt6.QtCore import pyqtSlot
 from PyQt6.QtWidgets import QWidget
+
 from WriteExifThread import WriteExifThread
 
+
 class WriteExif(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, folder_page=None):
         super().__init__(parent)
         self.parent = parent
+        self.folder_page = folder_page
         self.selected_star = 0
         self.worker = None
         self.star_buttons = []
@@ -46,9 +49,11 @@ class WriteExif(QWidget):
     def toggle_exif_writing(self):
         if self.is_running:
             self.stop_exif_writing()
+            self.is_running = False
         else:
-            self.start_exif_writing()
-        self.is_running = not self.is_running
+            success = self.start_exif_writing()
+            if success:
+                self.is_running = True
         self.update_button_state()
 
     def connect_worker_signals(self):
@@ -105,17 +110,14 @@ class WriteExif(QWidget):
         else:
             self.log("ERROR", "未能成功获取位置信息，请检查网络连接或尝试输入具体地址。")
 
-    def validate_inputs(self):
-        if not os.path.exists("resources/示例"):
-            self.log("ERROR", f"目录不存在: resources/示例")
-            return False
-        return True
-
     def start_exif_writing(self):
-        if not self.validate_inputs():
-            return
+        folders = self.folder_page.get_all_folders() if self.folder_page else {}
+        if not folders:
+            self.log("ERROR", "请先设置有效的文件夹路径。")
+            return False
+        print(folders)
         params = {
-            'folders': "resources/示例",
+            'folders_dict': folders,
             'autoMark': self.parent.checkBox_autoMark.isChecked(),
             'title': self.parent.lineEdit_EXIF_Title.text(),
             'author': self.parent.lineEdit_EXIF_Author.text(),
@@ -130,16 +132,16 @@ class WriteExif(QWidget):
                 params['position'] = ','.join(coords)
             else:
                 self.log("ERROR", f"无法找到地址'{address}'对应的地理坐标")
-                return
+                return False
         self.worker = WriteExifThread(**params)
         self.connect_worker_signals()
         self.worker.start()
         self.parent.progressBar_EXIF.setValue(0)
+        return True
 
     def stop_exif_writing(self):
         if self.worker:
-            self.worker.requestInterruption()
-            self.worker._stop_requested = True
+            self.worker.stop()
             self.log("WARNING", "停止EXIF写入操作...")
 
     def update_progress(self, value):

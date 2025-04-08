@@ -197,6 +197,7 @@ class Contrast(QtWidgets.QWidget):
         self.parent.update()
         if no_images_found:
             self.update_progress(100)
+            self.parent.verticalFrame_similar.hide()
             QtWidgets.QMessageBox.information(self, "提示", "没有找到符合条件的图片")
         self.parent.toolButton_startContrast.setEnabled(True)
 

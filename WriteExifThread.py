@@ -11,9 +11,9 @@ class WriteExifThread(QThread):
     finished_conversion = pyqtSignal()
     log = pyqtSignal(str, str)
 
-    def __init__(self, folders, autoMark=True, title='', author='', subject='', rating='', copyright='', position=''):
+    def __init__(self, folders_dict, autoMark=True, title='', author='', subject='', rating='', copyright='', position=''):
         super().__init__()
-        self.folders = folders if isinstance(folders, list) else [folders]
+        self.folders_dict = {item['path']: item['include_sub'] for item in folders_dict}
         self.autoMark = autoMark
         self.title = title
         self.author = author
@@ -38,6 +38,7 @@ class WriteExifThread(QThread):
         total_files = len(image_paths)
         if not image_paths:
             self.log.emit("ERROR", "没有找到可以处理的图片文件")
+            self.finished_conversion.emit()
             return
         self.progress_updated.emit(0)
         with ThreadPoolExecutor(max_workers=min(4, os.cpu_count() or 1)) as executor:
@@ -58,12 +59,19 @@ class WriteExifThread(QThread):
     def _collect_image_paths(self):
         image_extensions = ('.jpg', '.jpeg', '.png', '.webp')
         image_paths = []
-        for folder in self.folders:
-            if os.path.isdir(folder):
-                for root, _, files in os.walk(folder):
+        for folder_path, include_sub in self.folders_dict.items():
+            if include_sub == 1:
+                for root, _, files in os.walk(folder_path):
                     image_paths.extend(
                         os.path.join(root, file)
                         for file in files
+                        if file.lower().endswith(image_extensions)
+                    )
+            else:
+                if os.path.isdir(folder_path):
+                    image_paths.extend(
+                        os.path.join(folder_path, file)
+                        for file in os.listdir(folder_path)
                         if file.lower().endswith(image_extensions)
                     )
         return image_paths
