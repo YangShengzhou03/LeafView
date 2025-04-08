@@ -70,7 +70,7 @@ class Classification(QtWidgets.QWidget):
         else:
             folders = self.folder_page.get_all_folders() if self.folder_page else []
             if not folders:
-                self.log("WARNING", "没有选择文件夹进行操作")
+                self.log("WARNING", "请先导入一个有效的文件夹。")
                 return
 
             classification_structure = [

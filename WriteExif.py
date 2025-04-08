@@ -113,7 +113,7 @@ class WriteExif(QWidget):
     def start_exif_writing(self):
         folders = self.folder_page.get_all_folders() if self.folder_page else {}
         if not folders:
-            self.log("ERROR", "请先设置有效的文件夹路径。")
+            self.log("WARNING", "请先导入一个有效的文件夹。")
             return False
         params = {
             'folders_dict': folders,
