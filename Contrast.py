@@ -37,7 +37,7 @@ class Contrast(QtWidgets.QWidget):
         self.parent = parent
         self.groups = {}
         self.image_hashes = {}
-        self.folder_path = 'resources/示例'
+        self.folder_path = 'D:/test/66'
         self._running = False
         self.thread_pool = QThreadPool.globalInstance()
         self.thread_pool.setMaxThreadCount(min(8, os.cpu_count() or 4))
@@ -73,6 +73,7 @@ class Contrast(QtWidgets.QWidget):
         supported_formats = ['.jpg', '.jpeg', '.png', '.bmp', '.gif']
         image_paths = [os.path.join(self.folder_path, f) for f in os.listdir(self.folder_path) if
                        os.path.splitext(f)[1].lower() in supported_formats]
+        self.parent.toolButton_startContrast.setEnabled(False)
         self.hash_worker = HashWorker(image_paths)
         self.hash_worker.hash_completed.connect(self.on_hashes_computed)
         self.hash_worker.progress_updated.connect(self.update_progress)
@@ -101,6 +102,7 @@ class Contrast(QtWidgets.QWidget):
         print(error_msg)
         QtWidgets.QMessageBox.warning(self, "哈希计算错误", error_msg)
         self._running = False
+        self.parent.toolButton_startContrast.setEnabled(True)
 
     def display_all_images(self):
         layout = self.parent.gridLayout_2
@@ -135,6 +137,7 @@ class Contrast(QtWidgets.QWidget):
         if no_images_found:
             self.update_progress(100)
             QtWidgets.QMessageBox.information(self, "提示", "没有找到符合条件的图片")
+        self.parent.toolButton_startContrast.setEnabled(True)
 
     def create_thumbnail(self, path, total_images):
         container_size = QtCore.QSize(100, 100)
