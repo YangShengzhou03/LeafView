@@ -99,7 +99,6 @@ class Contrast(QtWidgets.QWidget):
         self.display_all_images()
 
     def on_hash_error(self, error_msg):
-        print(error_msg)
         QtWidgets.QMessageBox.warning(self, "哈希计算错误", error_msg)
         self._running = False
         self.parent.toolButton_startContrast.setEnabled(True)
@@ -143,6 +142,8 @@ class Contrast(QtWidgets.QWidget):
         container_size = QtCore.QSize(100, 100)
         label = QtWidgets.QLabel()
         label.setFixedSize(container_size)
+        label.setProperty("image_path", path)
+        label.setProperty("selected", False)
         label.setStyleSheet("""
             QLabel {
                 background: #F5F5F5;
@@ -153,19 +154,23 @@ class Contrast(QtWidgets.QWidget):
             QLabel:hover {
                 border: 2px solid #2196F3;
             }
+            QLabel[selected=true] {
+                border: 3px solid #FF5722;
+            }
         """)
+        label.mousePressEvent = lambda e, p=path: self.thumbnail_clicked(p)
+        label.mouseDoubleClickEvent = lambda e, lbl=label: self.toggle_thumbnail_selection(lbl)
         loader = ThumbnailLoader(path, container_size, total_images)
         loader.signals.thumbnail_ready.connect(lambda p, pix: self.on_thumbnail_loaded(p, pix, label))
         loader.signals.progress_updated.connect(self.update_progress)
         self.thread_pool.start(loader)
-
         return label
 
-    def on_thumbnail_loaded(self, path, pixmap, label):
-        if not pixmap.isNull():
-            label.setPixmap(pixmap)
-            label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-            label.mousePressEvent = lambda e, p=path: self.thumbnail_clicked(p)
+    def toggle_thumbnail_selection(self, label):
+        is_selected = not label.property("selected")
+        label.setProperty("selected", is_selected)
+        label.style().unpolish(label)
+        label.style().polish(label)
 
     def thumbnail_clicked(self, path):
         for group_id, paths in self.groups.items():
@@ -177,6 +182,11 @@ class Contrast(QtWidgets.QWidget):
                     random_image_path = np.random.choice(candidates)
                     self.show_image(self.parent.label_image_B, random_image_path)
                 break
+
+    def on_thumbnail_loaded(self, path, pixmap, label):
+        if not pixmap.isNull():
+            label.setPixmap(pixmap)
+            label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
 
     def show_images_from_thread(self, source_path, match_path):
         self.set_empty(False)
