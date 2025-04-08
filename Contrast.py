@@ -35,11 +35,10 @@ class Contrast(QtWidgets.QWidget):
         self.parent = parent
         self.groups = {}
         self.image_hashes = {}
-        self.folder_path = 'D:\\test\\666'
+        self.folder_path = 'D:/test/666'
         self._running = False
         self.thread_pool = QThreadPool.globalInstance()
         self.thread_pool.setMaxThreadCount(min(8, os.cpu_count() or 4))
-
         self.init_page()
         self.connect_signals()
 
@@ -69,18 +68,15 @@ class Contrast(QtWidgets.QWidget):
         self.parent.verticalFrame_similar.show()
         self.parent.progressBar_Contrast.setValue(0)
 
-        # 获取所有图片路径
         supported_formats = ['.jpg', '.jpeg', '.png', '.bmp', '.gif']
         image_paths = [os.path.join(self.folder_path, f)
                        for f in os.listdir(self.folder_path)
                        if os.path.splitext(f)[1].lower() in supported_formats]
-
-        # 启动哈希计算工作线程
         self.hash_worker = HashWorker(image_paths)
-        self.hash_worker.signals.hash_completed.connect(self.on_hashes_computed)
-        self.hash_worker.signals.progress_updated.connect(self.update_progress)
-        self.hash_worker.signals.error_occurred.connect(self.on_hash_error)
-        self.thread_pool.start(self.hash_worker)
+        self.hash_worker.hash_completed.connect(self.on_hashes_computed)
+        self.hash_worker.progress_updated.connect(self.update_progress)
+        self.hash_worker.error_occurred.connect(self.on_hash_error)
+        self.hash_worker.start()
 
     def on_hashes_computed(self, hashes):
         if not self._running:
@@ -88,18 +84,16 @@ class Contrast(QtWidgets.QWidget):
 
         self.image_hashes = hashes
         threshold = self.get_similarity_threshold(self.parent.horizontalSlider_levelContrast.value())
-
-        # 启动对比工作线程
+        print("开始启动对比线程")
         self.contrast_worker = ContrastWorker(hashes, threshold)
-        self.contrast_worker.signals.groups_completed.connect(self.on_groups_computed)
-        self.contrast_worker.signals.progress_updated.connect(self.update_progress)
-        self.contrast_worker.signals.image_matched.connect(self.show_images_from_thread)
-        self.thread_pool.start(self.contrast_worker)
+        self.contrast_worker.groups_completed.connect(self.on_groups_computed)
+        self.contrast_worker.progress_updated.connect(self.update_progress)
+        self.contrast_worker.image_matched.connect(self.show_images_from_thread)
+        self.contrast_worker.start()
 
     def on_groups_computed(self, groups):
         if not self._running:
             return
-
         self.groups = groups
         self.display_all_images()
 
@@ -112,16 +106,15 @@ class Contrast(QtWidgets.QWidget):
         self.clear_layout(layout)
         COLUMN_COUNT = 4
         row, col = 0, 0
+        duplicate_groups = {group_id: paths for group_id, paths in self.groups.items() if len(paths) > 1}
 
-        for index, (group_id, paths) in enumerate(self.groups.items(), start=1):
+        for index, (group_id, paths) in enumerate(duplicate_groups.items(), start=1):
             if not paths or not self._running:
                 continue
-
             title = QtWidgets.QLabel(f"📁 第{index}组 ({len(paths)}张)")
             title.setStyleSheet("QLabel { font: bold 14px; color: #1976D2; padding: 2px 0; }")
             layout.addWidget(title, row, 0, 1, COLUMN_COUNT)
             row += 1
-
             for path in paths:
                 if col >= COLUMN_COUNT:
                     col = 0
@@ -130,12 +123,10 @@ class Contrast(QtWidgets.QWidget):
                 if thumbnail:
                     layout.addWidget(thumbnail, row, col)
                     col += 1
-
             if paths and self._running:
                 self.add_separator(layout, row + 1)
                 row += 2
                 col = 0
-
         layout.update()
         self.parent.update()
 
@@ -154,7 +145,6 @@ class Contrast(QtWidgets.QWidget):
                 border: 2px solid #2196F3;
             }
         """)
-
         loader = ThumbnailLoader(path, container_size)
         loader.signals.thumbnail_ready.connect(lambda p, pix: self.on_thumbnail_loaded(p, pix, label))
         self.thread_pool.start(loader)
