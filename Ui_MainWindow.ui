@@ -4447,7 +4447,7 @@ image: url('resources/img/page_3/对比2.svg');
                     <string notr="true">border-radius: 12px;
 background:rgb(248, 250, 251);</string>
                    </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_38" stretch="0,10,0">
+                   <layout class="QVBoxLayout" name="verticalLayout_38" stretch="10,0">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -4463,19 +4463,6 @@ background:rgb(248, 250, 251);</string>
                     <property name="bottomMargin">
                      <number>0</number>
                     </property>
-                    <item>
-                     <spacer name="verticalSpacer_5">
-                      <property name="orientation">
-                       <enum>Qt::Vertical</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>20</width>
-                        <height>0</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
                     <item>
                      <widget class="QScrollArea" name="scrollArea_pageSimilar">
                       <property name="focusPolicy">
