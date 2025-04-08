@@ -1,4 +1,6 @@
 import os
+import shutil
+
 import numpy as np
 from PyQt6 import QtWidgets, QtCore, QtGui
 from PyQt6.QtCore import pyqtSignal, QRunnable, QObject, Qt, QThreadPool
@@ -43,6 +45,7 @@ class Contrast(QtWidgets.QWidget):
         self.thread_pool.setMaxThreadCount(min(8, os.cpu_count() or 4))
         self.init_page()
         self.connect_signals()
+        self.selected_images = []
 
     def init_page(self):
         slider = self.parent.horizontalSlider_levelContrast
@@ -57,6 +60,53 @@ class Contrast(QtWidgets.QWidget):
     def connect_signals(self):
         self.parent.horizontalSlider_levelContrast.valueChanged.connect(self.on_slider_value_changed)
         self.parent.toolButton_startContrast.clicked.connect(self.startContrast)
+        self.parent.toolButton_move.clicked.connect(self.move_selected_images)
+        self.parent.toolButton_autoSelect.clicked.connect(self.auto_select_images)
+        self.parent.toolButton_delete.clicked.connect(self.delete_selected_images)
+
+    def move_selected_images(self):
+        dest_folder = QtWidgets.QFileDialog.getExistingDirectory(self, "选择目标文件夹")
+        if dest_folder:
+            for img in self.selected_images:
+                try:
+                    shutil.move(img, os.path.join(dest_folder, os.path.basename(img)))
+                except Exception as e:
+                    print(f"无法移动图片 {img}: {e}")
+            self.display_all_images()
+
+    def auto_select_images(self):
+        self.selected_images.clear()
+        for group_id, paths in self.groups.items():
+            if len(paths) > 1:
+                best_quality_image = max(paths, key=lambda x: os.path.getsize(x))
+                for img in paths:
+                    if img != best_quality_image:
+                        self.selected_images.append(img)
+        self.refresh_selection_visuals()
+
+    def delete_selected_images(self):
+        reply = QtWidgets.QMessageBox.question(self, '确认删除', "确定要删除选中的图片吗？",
+                                               QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No,
+                                               QtWidgets.QMessageBox.StandardButton.No)
+        if reply == QtWidgets.QMessageBox.StandardButton.Yes:
+            for img in self.selected_images:
+                try:
+                    os.remove(img)
+                except Exception as e:
+                    print(f"无法删除图片 {img}: {e}")
+            self.selected_images.clear()
+            self.display_all_images()
+
+    def refresh_selection_visuals(self):
+        layout = self.parent.gridLayout_2
+        for i in reversed(range(layout.count())):
+            item = layout.itemAt(i)
+            if isinstance(item.widget(), QtWidgets.QLabel):
+                path = item.widget().property("image_path")
+                selected = path in self.selected_images
+                item.widget().setProperty("selected", selected)
+                item.widget().style().unpolish(item.widget())
+                item.widget().style().polish(item.widget())
 
     def set_folder_path(self, folder_path):
         self.folder_path = folder_path
@@ -167,10 +217,18 @@ class Contrast(QtWidgets.QWidget):
         return label
 
     def toggle_thumbnail_selection(self, label):
+        path = label.property("image_path")
         is_selected = not label.property("selected")
         label.setProperty("selected", is_selected)
         label.style().unpolish(label)
         label.style().polish(label)
+        if is_selected:
+            if path not in self.selected_images:
+                self.selected_images.append(path)
+        else:
+            if path in self.selected_images:
+                self.selected_images.remove(path)
+        print(self.selected_images)
 
     def thumbnail_clicked(self, path):
         for group_id, paths in self.groups.items():
