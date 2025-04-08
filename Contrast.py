@@ -238,6 +238,7 @@ class Contrast(QtWidgets.QWidget):
                 if candidates:
                     random_image_path = np.random.choice(candidates)
                     self.show_image(self.parent.label_image_B, random_image_path)
+                    self.set_empty(status=False)
                 break
 
     def on_thumbnail_loaded(self, path, pixmap, label):

@@ -55,8 +55,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def _toggle_maximize(self):
         is_max = self.isMaximized()
         self.showNormal() if is_max else self.showMaximized()
-        icon = '还原.svg' if is_max else '最大化.svg'
+        icon = '最大化.svg' if is_max else '还原.svg'
         self.toolButton_maximum.setIcon(QtGui.QIcon(get_resource_path(f'resources/img/窗口控制/{icon}')))
+        self.label_image_A.clear()
+        self.label_image_A.setStyleSheet(
+            "QLabel {image: url('resources/img/page_3/对比1.svg');}")
+        self.label_image_B.clear()
+        self.label_image_B.setStyleSheet(
+            "QLabel {image: url('resources/img/page_3/对比2.svg');}")
 
     def _create_empty_widget(self, parentLayout):
         verticalLayout = QtWidgets.QVBoxLayout()
