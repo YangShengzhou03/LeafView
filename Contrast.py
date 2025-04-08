@@ -228,7 +228,6 @@ class Contrast(QtWidgets.QWidget):
         else:
             if path in self.selected_images:
                 self.selected_images.remove(path)
-        print(self.selected_images)
 
     def thumbnail_clicked(self, path):
         for group_id, paths in self.groups.items():
