@@ -115,7 +115,6 @@ class WriteExif(QWidget):
         if not folders:
             self.log("ERROR", "请先设置有效的文件夹路径。")
             return False
-        print(folders)
         params = {
             'folders_dict': folders,
             'autoMark': self.parent.checkBox_autoMark.isChecked(),
