@@ -96,7 +96,8 @@ class WriteExifThread(QThread):
                 exif_dict["0th"][piexif.ImageIFD.Copyright] = self.copyright.encode('utf-8')
                 updated_fields.append(f"版权: {self.copyright}")
             if self.autoMark:
-                exif_dict["0th"][piexif.ImageIFD.XPKeywords] = ("自动标记" + "\x00").encode("utf-16-le") + b'\x00\x00'
+                pass
+                # exif_dict["0th"][piexif.ImageIFD.XPKeywords] = ("自动标记" + "\x00").encode("utf-16-le") + b'\x00\x00'
             if self.lat is not None and self.lon is not None:
                 exif_dict["GPS"] = self._create_gps_data(self.lat, self.lon)
                 updated_fields.append(
