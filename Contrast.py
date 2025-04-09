@@ -268,7 +268,7 @@ class Contrast(QtWidgets.QWidget):
         self.parent.progressBar_Contrast.setValue(value)
 
     def get_similarity_threshold(self, slider_value):
-        threshold_map = {1: 32, 2: 16, 3: 8, 4: 0}
+        threshold_map = {1: 32, 2: 24, 3: 12, 4: 0}
         return threshold_map.get(slider_value, 0)
 
     def on_slider_value_changed(self, value):

@@ -1,11 +1,8 @@
 from datetime import datetime
-
 import requests
 from PyQt6.QtCore import pyqtSlot
 from PyQt6.QtWidgets import QWidget
-
 from WriteExifThread import WriteExifThread
-
 
 class WriteExif(QWidget):
     def __init__(self, parent=None, folder_page=None):
@@ -141,6 +138,9 @@ class WriteExif(QWidget):
     def stop_exif_writing(self):
         if self.worker:
             self.worker.stop()
+            self.worker.wait(1000)
+            if self.worker.isRunning():
+                self.worker.terminate()
             self.log("WARNING", "停止EXIF写入操作...")
 
     def update_progress(self, value):
