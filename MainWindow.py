@@ -1,5 +1,3 @@
-import time
-
 from PyQt6 import QtWidgets, QtCore, QtGui
 
 from Classification import Classification
@@ -9,7 +7,7 @@ from Read import Read
 from Ui_MainWindow import Ui_MainWindow
 from UpdateDialog import check_update
 from WriteExif import WriteExif
-from common import get_resource_path
+from common import get_resource_path, author
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -41,6 +39,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.toolButton_close.clicked.connect(self.close)
         self.toolButton_maximum.clicked.connect(self._toggle_maximize)
         self.toolButton_minimum.clicked.connect(self.showMinimized)
+        self.toolButton_serve.clicked.connect(author)
+        self.toolButton_setting.clicked.connect(author)
 
     def _setup_drag_handlers(self):
         def start_drag(event):
