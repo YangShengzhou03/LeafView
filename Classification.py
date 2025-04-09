@@ -39,6 +39,7 @@ class Classification(QtWidgets.QWidget):
         for button in self.tag_buttons.values():
             button.clicked.connect(lambda checked, b=button: self.move_tag(b))
         self.parent.comboBox_operation.currentIndexChanged.connect(self.handle_operation_change)
+        self.log("DEBUG", "欢迎使用图像分类整理功能，您可以在上方构建文件夹整理路径和文件名格式~")
 
     def connect_signals(self):
         self.parent.toolButton_startClassification.clicked.connect(self.toggle_classification)
