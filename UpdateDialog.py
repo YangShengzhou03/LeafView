@@ -38,7 +38,7 @@ def check_update():
             update_content = content_parts[0]
             lastlyVersion = float(latest_version_str.strip())
             lastlyVersionUrl = update_link.strip()
-            current_version = 1.1
+            current_version = 1.2
             if lastlyVersion > current_version:
                 necessary = lastlyVersion != current_version
                 dialog = UpdateDialog(lastlyVersionUrl, title_parts[0], update_content, necessary)
