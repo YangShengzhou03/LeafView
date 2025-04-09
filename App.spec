@@ -1,4 +1,3 @@
-# App.spec 文件内容
 block_cipher = None
 
 a = Analysis(
@@ -6,13 +5,12 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=[
-        ('resources', 'resources'),  # 应用程序使用的资源文件夹
-        ('weight', 'weight'),  # 如果有其他资源或权重文件夹，同样添加在这里
-        ('D:\\Code\\python\\LeafView\\venv\\lib\\site-packages\\paddleocr', 'paddleocr'),  # 添加PaddleOCR目录
-        ('D:\\Code\\python\\LeafView\\venv\\lib\\site-packages\\paddleocr\\tools', 'paddleocr/tools')  # 特别指定paddleocr的tools目录
+        ('resources', 'resources'),
+        ('weight', 'weight'),
+        ('D:\\Code\\python\\LeafView\\venv\\lib\\site-packages\\paddleocr', 'paddleocr'),
+        ('D:\\Code\\python\\LeafView\\venv\\lib\\site-packages\\paddleocr\\tools', 'paddleocr/tools')
     ],
     hiddenimports=[
-        # PaddleOCR相关
         'paddleocr',
         'ppocr',
         'tools.infer.utility',
@@ -23,29 +21,17 @@ a = Analysis(
         'ppocr.postprocess.pg_postprocess',
         'ppocr.utils.e2e_utils.pgnet_pp_utils',
         'ppocr.utils.e2e_utils.extract_textpoint_slow',
-
         'albumentations',
-
-        # Shapely
+        'lmdb',
         'shapely',
         'shapely.geometry',
-
-        # Pyclipper
         'pyclipper',
-
-        # Pillow (PIL)
         'PIL',
         'PIL.Image',
         'PIL.ImageDraw',
         'PIL.ImageFont',
-
-        # NumPy
         'numpy',
-
-        # OpenCV
         'cv2',
-
-        # SciPy
         'scipy',
         'scipy.linalg',
         'scipy.sparse',
@@ -62,8 +48,6 @@ a = Analysis(
         'scipy.io',
         'scipy.sparse.csgraph',
         'scipy.sparse.linalg',
-
-        # Matplotlib
         'matplotlib',
         'matplotlib.backends.backend_agg',
         'matplotlib.pyplot',
@@ -104,8 +88,6 @@ a = Analysis(
         'matplotlib.stackplot',
         'matplotlib.rasterize',
         'matplotlib.backends.backend_tkagg',
-
-        # Scikit-image
         'skimage',
         'skimage.morphology',
         'skimage.measure',
@@ -123,12 +105,12 @@ a = Analysis(
         'skimage.graph',
         'skimage.future',
         'skimage.metrics',
-        'skimage.morphology._skeletonize',
+        'skimage.morphology._skeletonize'
     ],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=[],  # 如果发现不需要的模块可以在此处排除
+    excludes=[],
     noarchive=False,
     optimize=0
 )
