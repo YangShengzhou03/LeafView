@@ -1,6 +1,42 @@
 from PyQt6 import QtWidgets, QtCore, QtGui
 
-from ReadThread import ReadThread
+
+class Read(QtWidgets.QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.parent = parent
+        self.items = []
+        self.grid_layout = parent.gridLayout_7
+        parent.toolButton_startRecognition.clicked.connect(self.add_item)
+        self.parent.update_empty_status("gridLayout_7", False)
+
+    def add_item(self):
+        text = f"项目 {len(self.items) + 1}"
+        item = ExplorerItem("resources/example/XX", text, self)
+        row = len(self.items) // 4
+        col = len(self.items) % 4
+        self.grid_layout.addWidget(item, row, col)
+        self.items.append(item)
+        item.remove_requested.connect(self.remove_item)
+        self.parent.update_empty_status("gridLayout_7", True)
+
+    def remove_item(self, item):
+        if item in self.items:
+            self.grid_layout.removeWidget(item)
+            self.items.remove(item)
+            item.deleteLater()
+            self._rearrange_items()
+            self.parent.update_empty_status("gridLayout_7", len(self.items) > 0)
+
+    def _rearrange_items(self):
+        while self.grid_layout.count():
+            item = self.grid_layout.takeAt(0)
+            if item.widget():
+                item.widget().setParent(None)
+        for i, item in enumerate(self.items):
+            row = i // 4
+            col = i % 4
+            self.grid_layout.addWidget(item, row, col)
 
 
 class ExplorerItem(QtWidgets.QFrame):
@@ -127,90 +163,3 @@ class ExplorerItem(QtWidgets.QFrame):
         self.remove_btn.hide()
         super().leaveEvent(event)
 
-
-class Read(QtWidgets.QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.parent = parent
-        self.items = []
-        self.image_grid = parent.gridLayout_5
-        self.video_grid = parent.gridLayout_4
-        self.read_thread = None
-
-        parent.toolButton_startRecognition.clicked.connect(self.start_loading_images)
-        self.parent.update_empty_status("gridLayout_5", False)
-        self.parent.update_empty_status("gridLayout_4", False)
-
-    def start_loading_images(self):
-        self.clear_items()
-        self.read_thread = ReadThread("resources/example")
-        self.read_thread.image_loaded.connect(self.add_image_item)
-        self.read_thread.finished_loading.connect(self.on_loading_finished)
-        self.read_thread.start()
-
-    def add_image_item(self, image_path, text):
-        item = ExplorerItem(image_path, text, self)
-        row = len(self.items) // 4
-        col = len(self.items) % 4
-        self.image_grid.addWidget(item, row, col)
-        self.items.append(item)
-        item.remove_requested.connect(self.remove_item)
-        self.parent.update_empty_status("gridLayout_5", True)
-
-    def on_loading_finished(self):
-        if self.read_thread:
-            self.read_thread.stop()
-            self.read_thread = None
-
-    def remove_item(self, item):
-        if item in self.items:
-            if self.image_grid.indexOf(item) != -1:
-                self.image_grid.removeWidget(item)
-                self.parent.update_empty_status("gridLayout_5", len(self.items) > 1)
-            elif self.video_grid.indexOf(item) != -1:
-                self.video_grid.removeWidget(item)
-                self.parent.update_empty_status("gridLayout_4", len(self.items) > 1)
-
-            self.items.remove(item)
-            item.deleteLater()
-            self._rearrange_items()
-
-    def clear_items(self):
-        def clear_grid(grid):
-            while grid.count():
-                item = grid.takeAt(0)
-                if item.widget():
-                    item.widget().deleteLater()
-
-        clear_grid(self.image_grid)
-        clear_grid(self.video_grid)
-        self.items.clear()
-        self.parent.update_empty_status("gridLayout_5", False)
-        self.parent.update_empty_status("gridLayout_4", False)
-
-    def _rearrange_items(self):
-        items_in_image_grid = []
-        items_in_video_grid = []
-
-        for item in self.items:
-            if self.image_grid.indexOf(item) != -1:
-                items_in_image_grid.append(item)
-            elif self.video_grid.indexOf(item) != -1:
-                items_in_video_grid.append(item)
-
-        self._clear_and_populate_grid(self.image_grid, items_in_image_grid)
-        self._clear_and_populate_grid(self.video_grid, items_in_video_grid)
-
-        self.parent.update_empty_status("gridLayout_5", len(items_in_image_grid) > 0)
-        self.parent.update_empty_status("gridLayout_4", len(items_in_video_grid) > 0)
-
-    def _clear_and_populate_grid(self, grid, items):
-        while grid.count():
-            item = grid.takeAt(0)
-            if item.widget():
-                item.widget().setParent(None)
-
-        for i, item in enumerate(items):
-            row = i // 4
-            col = i % 4
-            grid.addWidget(item, row, col)
