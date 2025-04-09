@@ -1,8 +1,11 @@
+import time
+
 from PyQt6 import QtWidgets, QtCore, QtGui
 
 from Classification import Classification
 from Contrast import Contrast
 from FolderPage import FolderPage
+from Read import Read
 from Ui_MainWindow import Ui_MainWindow
 from UpdateDialog import check_update
 from WriteExif import WriteExif
@@ -23,15 +26,16 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
         self._connect_buttons()
         self.empty_widgets = {}
-        self.empty_widgets['gridLayout_5'] = self._create_empty_widget(self.gridLayout_5)
-        self.empty_widgets['gridLayout_4'] = self._create_empty_widget(self.gridLayout_4)
-        self.empty_widgets['gridLayout_3'] = self._create_empty_widget(self.gridLayout_3)
-        self.empty_widgets['gridLayout_7'] = self._create_empty_widget(self.gridLayout_7)
-        self.empty_widgets['gridLayout_6'] = self._create_empty_widget(self.gridLayout_6)
+        self.empty_widgets['gridLayout_5'] = self._create_empty_widget(self.gridLayout_5)  # 图片
+        self.empty_widgets['gridLayout_4'] = self._create_empty_widget(self.gridLayout_4)  # 视频
+        self.empty_widgets['gridLayout_3'] = self._create_empty_widget(self.gridLayout_3)  # 截图
+        self.empty_widgets['gridLayout_7'] = self._create_empty_widget(self.gridLayout_7)  # 人像 self.gridLayout_8人脸照片
+        self.empty_widgets['gridLayout_6'] = self._create_empty_widget(self.gridLayout_6)  # 第一个文件夹页面
         self.folder_page = FolderPage(self)
+        self.read_page = Read(self)
+        self.classification_page = Classification(self, self.folder_page)
         self.contrast_page = Contrast(self, self.folder_page)
         self.writeExif_page = WriteExif(self, self.folder_page)
-        self.classification_page = Classification(self, self.folder_page)
 
     def _connect_buttons(self):
         self.toolButton_close.clicked.connect(self.close)

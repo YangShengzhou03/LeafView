@@ -1385,7 +1385,7 @@ border-bottom-left-radius:0px;</string>
                     <item>
                      <widget class="QStackedWidget" name="stackedWidget_Recognition">
                       <property name="currentIndex">
-                       <number>3</number>
+                       <number>0</number>
                       </property>
                       <widget class="QWidget" name="page1_0">
                        <layout class="QVBoxLayout" name="verticalLayout_26">
@@ -1448,8 +1448,8 @@ QScrollBar::sub-page:vertical {
                             <rect>
                              <x>0</x>
                              <y>0</y>
-                             <width>100</width>
-                             <height>30</height>
+                             <width>691</width>
+                             <height>461</height>
                             </rect>
                            </property>
                            <property name="styleSheet">
@@ -1538,8 +1538,8 @@ QScrollBar::sub-page:vertical {
                             <rect>
                              <x>0</x>
                              <y>0</y>
-                             <width>100</width>
-                             <height>30</height>
+                             <width>691</width>
+                             <height>461</height>
                             </rect>
                            </property>
                            <property name="styleSheet">
@@ -1628,8 +1628,8 @@ QScrollBar::sub-page:vertical {
                             <rect>
                              <x>0</x>
                              <y>0</y>
-                             <width>100</width>
-                             <height>30</height>
+                             <width>691</width>
+                             <height>461</height>
                             </rect>
                            </property>
                            <property name="styleSheet">
@@ -1781,6 +1781,63 @@ QScrollBar::sub-page:vertical {
                              <number>0</number>
                             </property>
                             <item>
+                             <layout class="QHBoxLayout" name="horizontalLayout_2">
+                              <property name="spacing">
+                               <number>9</number>
+                              </property>
+                              <item>
+                               <widget class="QToolButton" name="toolButton_back">
+                                <property name="styleSheet">
+                                 <string notr="true">QToolButton {
+    color: white;
+    border: none;
+    padding: 4px 4px;
+    border-radius: 6px;
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
+        stop:0.66 rgba(134, 119, 253, 255),
+        stop:1 rgba(119, 111, 252, 255)
+    );
+    font-size: 12px;
+}
+
+QToolButton:hover {
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
+        stop:0.66 rgba(154, 139, 255, 255),
+        stop:1 rgba(139, 131, 254, 255)
+    );
+}
+
+QToolButton:pressed {
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
+        stop:0.66 rgba(94, 79, 253, 255),
+        stop:1 rgba(79, 71, 252, 255)
+    );
+}</string>
+                                </property>
+                                <property name="text">
+                                 <string>返回</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <spacer name="horizontalSpacer_3">
+                                <property name="orientation">
+                                 <enum>Qt::Horizontal</enum>
+                                </property>
+                                <property name="sizeHint" stdset="0">
+                                 <size>
+                                  <width>40</width>
+                                  <height>20</height>
+                                 </size>
+                                </property>
+                               </spacer>
+                              </item>
+                             </layout>
+                            </item>
+                            <item>
                              <widget class="QScrollArea" name="scrollArea_peopleImage">
                               <property name="styleSheet">
                                <string notr="true">QWidget {
@@ -1824,8 +1881,8 @@ QScrollBar::sub-page:vertical {
                                 <rect>
                                  <x>0</x>
                                  <y>0</y>
-                                 <width>200</width>
-                                 <height>200</height>
+                                 <width>691</width>
+                                 <height>432</height>
                                 </rect>
                                </property>
                                <layout class="QGridLayout" name="gridLayout_8">
@@ -1844,30 +1901,6 @@ QScrollBar::sub-page:vertical {
                                 <property name="spacing">
                                  <number>0</number>
                                 </property>
-                                <item row="0" column="0">
-                                 <widget class="QLabel" name="label_xiaomingzhaop">
-                                  <property name="minimumSize">
-                                   <size>
-                                    <width>200</width>
-                                    <height>200</height>
-                                   </size>
-                                  </property>
-                                  <property name="maximumSize">
-                                   <size>
-                                    <width>200</width>
-                                    <height>200</height>
-                                   </size>
-                                  </property>
-                                  <property name="font">
-                                   <font>
-                                    <pointsize>25</pointsize>
-                                   </font>
-                                  </property>
-                                  <property name="text">
-                                   <string>小明的照片</string>
-                                  </property>
-                                 </widget>
-                                </item>
                                </layout>
                               </widget>
                              </widget>
@@ -4551,8 +4584,8 @@ QScrollBar::corner {
                         <rect>
                          <x>0</x>
                          <y>0</y>
-                         <width>231</width>
-                         <height>462</height>
+                         <width>100</width>
+                         <height>30</height>
                         </rect>
                        </property>
                        <layout class="QGridLayout" name="gridLayout_2"/>
