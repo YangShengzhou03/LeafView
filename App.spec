@@ -1,18 +1,21 @@
-# -*- mode: python ; coding: utf-8 -*-
-
+block_cipher = None
 
 a = Analysis(
     ['App.py'],
     pathex=[],
     binaries=[],
-    datas=[('resources', 'resources')],
-    hiddenimports=[],
+    datas=[
+        ('resources', 'resources'),
+        ('weight', 'weight'),
+        ('D:\\Code\\python\\LeafView\\venv\\lib\\site-packages\\paddleocr', 'paddleocr')
+    ],
+    hiddenimports=['paddleocr'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
     excludes=[],
     noarchive=False,
-    optimize=0,
+    optimize=0
 )
 pyz = PYZ(a.pure)
 
@@ -33,7 +36,7 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
     version='LeafView_version_info.txt',
-    icon=['resources\\img\\icon.ico'],
+    icon=['resources\\img\\icon.ico']
 )
 coll = COLLECT(
     exe,
@@ -42,5 +45,5 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='App',
+    name='App'
 )
