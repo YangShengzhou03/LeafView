@@ -2,6 +2,7 @@ from PyQt6 import QtWidgets, QtCore, QtGui
 from PyQt6.QtWidgets import QFileDialog, QMessageBox
 import os
 
+
 class FolderPage(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -33,10 +34,12 @@ class FolderPage(QtWidgets.QWidget):
                 QMessageBox.warning(self, "路径已存在", f"文件夹路径已经添加:\n{folder_path}")
                 return
             if item['include_sub'] and self._is_subpath(folder_path, item_path):
-                QMessageBox.warning(self, "路径冲突", f"您选择的路径是已添加路径（且勾选了包含子文件夹）的子目录:\n\n已添加路径: {item_path}\n当前路径: {folder_path}")
+                QMessageBox.warning(self, "路径冲突",
+                                    f"您选择的路径是已添加路径（且勾选了包含子文件夹）的子目录:\n\n已添加路径: {item_path}\n当前路径: {folder_path}")
                 return
             if self._is_subpath(item_path, folder_path) and item['include_sub']:
-                QMessageBox.warning(self, "路径冲突", f"您选择的路径包含已添加的路径（且已勾选包含子文件夹）:\n\n已添加路径: {item_path}\n当前路径: {folder_path}")
+                QMessageBox.warning(self, "路径冲突",
+                                    f"您选择的路径包含已添加的路径（且已勾选包含子文件夹）:\n\n已添加路径: {item_path}\n当前路径: {folder_path}")
                 return
         self._create_folder_item(folder_path, folder_name)
 
@@ -60,12 +63,14 @@ class FolderPage(QtWidgets.QWidget):
         name_label = QtWidgets.QLabel(folder_name, parent=folder_frame)
         name_label.setMaximumWidth(180)
         name_label.setFont(QtGui.QFont("微软雅黑", 12))
-        name_label.setStyleSheet("QLabel {background: transparent; border: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #333; font-weight: 500;}")
+        name_label.setStyleSheet(
+            "QLabel {background: transparent; border: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #333; font-weight: 500;}")
 
         path_label = QtWidgets.QLabel(folder_path, parent=folder_frame)
         path_label.setMaximumWidth(180)
         path_label.setFont(QtGui.QFont("微软雅黑", 9))
-        path_label.setStyleSheet("QLabel {background: transparent; border: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #666;}")
+        path_label.setStyleSheet(
+            "QLabel {background: transparent; border: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #666;}")
 
         text_layout.addWidget(name_label)
         text_layout.addWidget(path_label)
@@ -78,7 +83,8 @@ class FolderPage(QtWidgets.QWidget):
         remove_button = QtWidgets.QPushButton("移除", parent=folder_frame)
         remove_button.setFixedSize(60, 30)
         remove_button.setFont(QtGui.QFont("微软雅黑", 9))
-        remove_button.setStyleSheet("QPushButton {background-color: #FF5A5F; color: white; border: none; border-radius: 6px; font-weight: 500; box-shadow: 0 2px 4px rgba(255, 90, 95, 0.2);} QPushButton:hover {background-color: #FF3B30; box-shadow: 0 4px 8px rgba(255, 59, 48, 0.3);} QPushButton:pressed {background-color: #E03530; box-shadow: 0 1px 2px rgba(224, 53, 48, 0.2);}")
+        remove_button.setStyleSheet(
+            "QPushButton {background-color: #FF5A5F; color: white; border: none; border-radius: 6px; font-weight: 500; box-shadow: 0 2px 4px rgba(255, 90, 95, 0.2);} QPushButton:hover {background-color: #FF3B30; box-shadow: 0 4px 8px rgba(255, 59, 48, 0.3);} QPushButton:pressed {background-color: #E03530; box-shadow: 0 1px 2px rgba(224, 53, 48, 0.2);}")
         remove_button.hide()
 
         layout.addWidget(icon_widget)
@@ -87,7 +93,8 @@ class FolderPage(QtWidgets.QWidget):
         layout.addWidget(include_checkbox)
         layout.addWidget(remove_button)
 
-        folder_frame.setStyleSheet("QFrame {background-color: #F5F7FA; border: 1px solid #E0E3E9; border-radius: 8px; margin: 2px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);} QFrame:hover {background-color: #EBEFF5; border-color: #C2C9D6; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);}")
+        folder_frame.setStyleSheet(
+            "QFrame {background-color: #F5F7FA; border: 1px solid #E0E3E9; border-radius: 8px; margin: 2px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);} QFrame:hover {background-color: #EBEFF5; border-color: #C2C9D6; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);}")
 
         def enter_event(event):
             remove_button.show()
@@ -128,11 +135,13 @@ class FolderPage(QtWidgets.QWidget):
                         other_path = os.path.normpath(other['path'])
                         if other['frame'] != folder_frame:
                             if self._is_subpath(current_path, other_path) and other['include_sub']:
-                                QMessageBox.warning(self, "操作不允许", f"您不能勾选此选项，因为该路径是其他已勾选包含子文件夹的路径的子目录:\n\n父路径: {other_path}\n当前路径: {current_path}")
+                                QMessageBox.warning(self, "操作不允许",
+                                                    f"您不能勾选此选项，因为该路径是其他已勾选包含子文件夹的路径的子目录:\n\n父路径: {other_path}\n当前路径: {current_path}")
                                 item['checkbox'].setChecked(False)
                                 return
                             if self._is_subpath(other_path, current_path):
-                                QMessageBox.warning(self, "操作不允许", f"您不能勾选此选项，因为该路径包含其他已添加的路径:\n\n子路径: {other_path}\n当前路径: {current_path}")
+                                QMessageBox.warning(self, "操作不允许",
+                                                    f"您不能勾选此选项，因为该路径包含其他已添加的路径:\n\n子路径: {other_path}\n当前路径: {current_path}")
                                 item['checkbox'].setChecked(False)
                                 return
                 item['include_sub'] = 1 if state else 0
