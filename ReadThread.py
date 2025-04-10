@@ -1,46 +1,62 @@
 import os
+from pathlib import Path
 from PyQt6 import QtCore
 
 
 class ReadThread(QtCore.QThread):
-    image_loaded = QtCore.pyqtSignal(str, str, str)
-    finished_loading = QtCore.pyqtSignal()
+    image_loaded = QtCore.pyqtSignal(str, str)
+    finished = QtCore.pyqtSignal()
 
-    def __init__(self, directory):
+    def __init__(self, folders=None):
         super().__init__()
-        print()
-        self.directory = directory
-        self.running = False
+        self.folders = folders or []
+        self._is_running = True
 
     def run(self):
-        self.running = True
-        if not os.path.exists(self.directory):
-            print("Directory doesn't exist")
-            self.finished_loading.emit()
+        for folder_info in self.folders:
+            if not self._is_running:
+                break
+            folder_path = Path(folder_info['path'])
+            include_sub = folder_info.get('include_sub', 0)
+
+            try:
+                if not folder_path.exists():
+                    continue
+
+                if include_sub:
+                    for root, _, files in os.walk(folder_path):
+                        if not self._is_running:
+                            break
+                        for file_name in files:
+                            full_path = os.path.join(root, file_name)
+                            self.process_file(full_path)
+                            self.msleep(50)
+                else:
+                    for file_name in os.listdir(folder_path):
+                        if not self._is_running:
+                            break
+                        full_path = os.path.join(folder_path, file_name)
+                        if os.path.isfile(full_path):
+                            self.process_file(full_path)
+                            self.msleep(50)
+
+            except Exception as e:
+                pass
+
+        self.finished.emit()
+
+    def process_file(self, full_path):
+        file_name = os.path.basename(full_path).lower()
+        if file_name.endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif')):
+            layout = "gridLayout_5"
+        elif file_name.endswith(('.mp4', '.avi', '.mov')):
+            layout = "gridLayout_4"
+        else:
             return
 
-        for file_name in os.listdir(self.directory):
-            if not self.running:
-                break
-            full_path = os.path.join(self.directory, file_name)
-
-            # 根据文件扩展名选择布局
-            if file_name.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif')):
-                print(full_path)
-                layout = "gridLayout_4"  # 图像文件发送到 gridLayout_4
-            elif file_name.lower().endswith(('.mp4', '.avi', '.mov')):
-                print(full_path)
-                layout = "gridLayout_5"  # 视频文件发送到 gridLayout_5
-            else:
-                print("File type not supported")
-                continue  # 跳过不支持的文件类型
-
-            text = os.path.splitext(file_name)[0]
-            self.image_loaded.emit(full_path, text, layout)  # 发送路径、文本和布局名称
-            self.msleep(50)
-
-        self.finished_loading.emit()
+        text = os.path.splitext(file_name)[0]
+        self.image_loaded.emit(full_path, layout)
 
     def stop(self):
-        self.running = False
+        self._is_running = False
         self.wait()

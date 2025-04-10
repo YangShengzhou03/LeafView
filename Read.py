@@ -7,24 +7,42 @@ from common import get_resource_path
 
 
 class Read(QtWidgets.QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, folder_page=None):
         super().__init__(parent)
         self.parent = parent
-        parent.toolButton_startRecognition.clicked.connect(self.startRecognition)
+        self.folder_page = folder_page
         self.current_items = {}
         self.item_counter = 0
+        self.init_page()
+
+    def init_page(self):
+        self.parent.toolButton_startRecognition.clicked.connect(self.startRecognition)
 
     def startRecognition(self):
-        directory = 'resources/img/page_1'
-        read_thread = ReadThread(directory)
-        read_thread.image_loaded.connect(lambda path, text: self.add_item(path=path, layout="gridLayout_4"))
-        read_thread.finished_loading.connect(self.finishedLoading)
-        read_thread.start()
+        folders = self.folder_page.get_all_folders() if self.folder_page else []
+        if not folders:
+            return
+        self.thread = ReadThread(folders=folders)
+        self.thread.image_loaded.connect(self.receive)
+        self.thread.finished.connect(self.finishedLoading)
+        self.thread.start()
 
     def finishedLoading(self):
         print("Finished loading")
 
+    def receive(self, path, layout):
+        self.add_item(path, layout=layout)
+
     def add_item(self, path=None, layout="gridLayout_5"):
+        """
+        gridLayout_5:图片页面；
+        gridLayout_4:视频页面；
+        gridLayout_3:截图页面；
+        """
+        if path:
+            path = get_resource_path(path)
+        else:
+            path = get_resource_path('resources/img/page_1/示例.svg')
         layout_name = layout
         if layout_name == "gridLayout_5":
             target_layout = self.parent.gridLayout_5
@@ -66,7 +84,7 @@ class Read(QtWidgets.QWidget):
         image_widget.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
         image_widget.setStyleSheet(f"""
             background-color: transparent;
-            image: url({path if path else get_resource_path('resources/img/page_1/示例.svg')});
+            image: url({path});
             border-radius: 0px;
         """)
         text_label = QtWidgets.QLabel(parent=item_frame)
@@ -74,14 +92,17 @@ class Read(QtWidgets.QWidget):
         text_label.setStyleSheet("""
             QLabel {
                 background-color: transparent;
-                font-size: 16px;
+                font-size: 14px;
                 color: #333333;
                 padding: 0px;
                 border: none;
                 qproperty-alignment: AlignCenter;
             }
         """)
-        text_label.setText(os.path.splitext(path.split("/")[-1])[0] if path else "Item Name")
+        filename = os.path.splitext(path.split("/")[-1])[0] if path else "Item Name"
+        if len(filename) > 9:
+            filename = filename[:3] + '...' + filename[-6:]
+        text_label.setText(filename)
         vertical_layout.addWidget(image_widget)
         vertical_layout.addWidget(text_label)
         vertical_layout.setStretch(0, 7)

@@ -30,7 +30,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.empty_widgets['gridLayout_7'] = self._create_empty_widget(self.gridLayout_7)  # 人像 self.gridLayout_8人脸照片
         self.empty_widgets['gridLayout_6'] = self._create_empty_widget(self.gridLayout_6)  # 第一个文件夹页面
         self.folder_page = FolderPage(self)
-        self.read_page = Read(self)
+        self.read_page = Read(self, self.folder_page)
         self.classification_page = Classification(self, self.folder_page)
         self.contrast_page = Contrast(self, self.folder_page)
         self.writeExif_page = WriteExif(self, self.folder_page)
