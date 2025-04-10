@@ -566,7 +566,7 @@ class Ui_MainWindow(object):
         self.widget_folder.setSizePolicy(sizePolicy)
         self.widget_folder.setMinimumSize(QtCore.QSize(40, 40))
         self.widget_folder.setMaximumSize(QtCore.QSize(40, 40))
-        self.widget_folder.setStyleSheet(f"image: url({get_resource_path('resources / img / page_0 / 导入文件夹.svg')});\n"
+        self.widget_folder.setStyleSheet(f"image: url({get_resource_path('resources/img/page_0/导入文件夹.svg')});\n"
 "background-color: rgba(0, 0, 0, 0);\n"
 "border-radius:0px;\n"
 "border: 0px;")
@@ -2895,7 +2895,7 @@ f"    image: url({get_resource_path('resources / img / page_4 / 星级_亮.svg')
         self.pushButton_star_2.setMinimumSize(QtCore.QSize(22, 22))
         self.pushButton_star_2.setMaximumSize(QtCore.QSize(22, 22))
         self.pushButton_star_2.setStyleSheet("QPushButton:hover {\n"
-f"    image: url({get_resource_path('resources / img / page_4 / 星级_亮.svg')});\n"
+f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
 "}")
         self.pushButton_star_2.setText("")
         self.pushButton_star_2.setIcon(icon11)
@@ -2906,7 +2906,7 @@ f"    image: url({get_resource_path('resources / img / page_4 / 星级_亮.svg')
         self.pushButton_star_3.setMinimumSize(QtCore.QSize(22, 22))
         self.pushButton_star_3.setMaximumSize(QtCore.QSize(22, 22))
         self.pushButton_star_3.setStyleSheet("QPushButton:hover {\n"
-f"    image: url({get_resource_path('resources / img / page_4 / 星级_亮.svg')});\n"
+f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
 "}")
         self.pushButton_star_3.setText("")
         self.pushButton_star_3.setIcon(icon11)

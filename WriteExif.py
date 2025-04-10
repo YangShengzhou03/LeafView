@@ -3,6 +3,8 @@ import requests
 from PyQt6.QtCore import pyqtSlot
 from PyQt6.QtWidgets import QWidget
 from WriteExifThread import WriteExifThread
+from common import get_resource_path
+
 
 class WriteExif(QWidget):
     def __init__(self, parent=None, folder_page=None):
@@ -19,14 +21,12 @@ class WriteExif(QWidget):
     def init_ui(self):
         for i in range(1, 6):
             btn = getattr(self.parent, f'pushButton_star_{i}')
-            btn.setStyleSheet("""
-                QPushButton {
-                    image: url(resources/img/page_4/星级_暗.svg);
-                    border: none;
-                    padding: 0;
-                }
-                QPushButton:hover { background-color: transparent; }
-            """)
+            btn.setStyleSheet(
+                "QPushButton { \n"
+                f"image: url({get_resource_path('resources/img/page_4/星级_暗.svg')});\n"
+                "border: none; padding: 0; }" "\n"
+                "QPushButton:hover { background-color: transparent; }"
+            )
             btn.enterEvent = lambda e, idx=i: self.highlight_stars(idx)
             btn.leaveEvent = lambda e: self.highlight_stars(self.selected_star)
             btn.clicked.connect(lambda _, idx=i: self.set_selected_star(idx))
@@ -64,7 +64,7 @@ class WriteExif(QWidget):
     def highlight_stars(self, count):
         for i, btn in enumerate(self.star_buttons, 1):
             icon = "星级_亮.svg" if i <= count else "星级_暗.svg"
-            btn.setStyleSheet(f"QPushButton {{ image: url(resources/img/page_4/{icon}); }}")
+            btn.setStyleSheet(f"QPushButton {{ image: url({get_resource_path(f'resources/img/page_4/{icon})')};}}")
 
     @pyqtSlot(int)
     def set_selected_star(self, star):
