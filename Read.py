@@ -1,10 +1,7 @@
 import os
-
 from PyQt6 import QtWidgets, QtCore, QtGui
-
 from ReadThread import ReadThread
 from common import get_resource_path
-
 
 class Read(QtWidgets.QWidget):
     def __init__(self, parent=None, folder_page=None):
@@ -13,32 +10,51 @@ class Read(QtWidgets.QWidget):
         self.folder_page = folder_page
         self.current_items = {}
         self.item_counter = 0
+        self.thread = None
         self.init_page()
 
     def init_page(self):
-        self.parent.toolButton_startRecognition.clicked.connect(self.startRecognition)
+        self.parent.toolButton_startRecognition.clicked.connect(self.toggle_processing)
+        self.parent.progressBar_Recognition.setRange(0, 100)
+        self.parent.progressBar_Recognition.setValue(0)
 
-    def startRecognition(self):
+    def toggle_processing(self):
+        if self.thread and self.thread.isRunning():
+            self._stop_processing()
+        else:
+            self._start_processing()
+
+    def _start_processing(self):
         folders = self.folder_page.get_all_folders() if self.folder_page else []
         if not folders:
             return
-        self.thread = ReadThread(folders=folders)
+
+        self.parent.progressBar_Recognition.setValue(0)
+        self.parent.toolButton_startRecognition.setText("停止")
+
+        self.thread = ReadThread(folders)
         self.thread.image_loaded.connect(self.receive)
-        self.thread.finished.connect(self.finishedLoading)
+        self.thread.finished.connect(self._on_finished)
+        self.thread.progress_updated.connect(self._update_progress)
         self.thread.start()
 
-    def finishedLoading(self):
-        print("Finished loading")
+    def _stop_processing(self):
+        if self.thread:
+            self.thread.stop()
+            self.parent.toolButton_startRecognition.setText("开始")
+            self.parent.progressBar_Recognition.setValue(0)
+
+    def _on_finished(self):
+        self.parent.toolButton_startRecognition.setText("开始")
+        self.parent.progressBar_Recognition.setValue(100)
+
+    def _update_progress(self, value):
+        self.parent.progressBar_Recognition.setValue(value)
 
     def receive(self, path, layout):
         self.add_item(path, layout=layout)
 
     def add_item(self, path=None, layout="gridLayout_5"):
-        """
-        gridLayout_5:图片页面；
-        gridLayout_4:视频页面；
-        gridLayout_3:截图页面；
-        """
         if path:
             path = get_resource_path(path)
         else:
@@ -72,7 +88,6 @@ class Read(QtWidgets.QWidget):
                 box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             }
         """)
-        item_frame.setObjectName("ItemFrame")
         vertical_layout = QtWidgets.QVBoxLayout(item_frame)
         vertical_layout.setContentsMargins(0, 0, 0, 0)
         vertical_layout.setSpacing(0)

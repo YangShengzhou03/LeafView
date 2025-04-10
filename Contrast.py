@@ -40,7 +40,6 @@ class Contrast(QtWidgets.QWidget):
         self.folder_page = folder_page
         self.groups = {}
         self.image_hashes = {}
-        self.folder_path = 'D:/test/666'
         self._running = False
         self.thread_pool = QThreadPool.globalInstance()
         self.thread_pool.setMaxThreadCount(min(8, os.cpu_count() or 4))
