@@ -17,7 +17,6 @@ hiddenimports=[
     'skimage.feature._orb_descriptor_positions',
     'skimage.filters.edges',
     'skimage.data._fetchers',
-    # 添加 PaddlePaddle 相关的隐式导入
     'paddle',
     'paddle.fluid',
     'paddle.fluid.core',
@@ -28,7 +27,8 @@ hiddenimports=[
     'paddle.nn.functional',
     'paddle.vision',
     'paddle.vision.transforms',
-    'paddleocr',  # 如果 paddleocr 不是自动包含的话
+    'paddleocr',
+    'zoneinfo',  # 添加 zoneinfo 模块
     # 根据需要添加更多 PaddlePaddle 模块或其它依赖
 ],
     hookspath=[],
