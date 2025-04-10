@@ -96,6 +96,9 @@ border-radius:12px;
           </property>
           <item>
            <widget class="QFrame" name="frame_logo">
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
@@ -127,6 +130,7 @@ border-radius:12px;
                </property>
                <property name="styleSheet">
                 <string notr="true">QLabel {
+    color: rgb(255, 255, 255);
     padding: 4px;
     border: none;
     qproperty-alignment: AlignCenter;
@@ -1062,6 +1066,7 @@ border: 0px;</string>
                            </property>
                            <property name="styleSheet">
                             <string notr="true">QPushButton {
+	color: rgb(0, 0, 0);
     border: none;
 }
 
@@ -1098,10 +1103,14 @@ QPushButton:pressed {
                           </font>
                          </property>
                          <property name="styleSheet">
-                          <string notr="true">border: 0px;</string>
+                          <string notr="true">QLabel {
+    color: rgb(150, 150, 150);
+    qproperty-alignment: AlignCenter;
+    border: none;
+}</string>
                          </property>
                          <property name="text">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; color:#969696;&quot;&gt;手动添加或拖动文件夹到此处&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                          <string>手动添加或拖动文件夹到此处</string>
                          </property>
                         </widget>
                        </item>
@@ -1952,7 +1961,8 @@ QScrollBar::sub-page:vertical {
                    <item>
                     <widget class="QFrame" name="horizontalFrame_3">
                      <property name="styleSheet">
-                      <string notr="true">background:rgb(255, 255, 255);
+                      <string notr="true">color: rgb(0, 0, 0);
+background:rgb(255, 255, 255);
 border: none;
 border-radius: 0px;</string>
                      </property>
@@ -1979,6 +1989,12 @@ border-radius: 0px;</string>
                           <pointsize>12</pointsize>
                          </font>
                         </property>
+                        <property name="styleSheet">
+                         <string notr="true">QLabel {
+    color: rgb(0, 0, 0);
+    border: none;
+}</string>
+                        </property>
                         <property name="text">
                          <string>文件夹分类整理：</string>
                         </property>
@@ -1991,6 +2007,12 @@ border-radius: 0px;</string>
                           <pointsize>12</pointsize>
                          </font>
                         </property>
+                        <property name="styleSheet">
+                         <string notr="true">QLabel {
+    color: rgb(0, 0, 0);
+    border: none;
+}</string>
+                        </property>
                         <property name="text">
                          <string>目录</string>
                         </property>
@@ -2002,6 +2024,12 @@ border-radius: 0px;</string>
                          <font>
                           <pointsize>12</pointsize>
                          </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QLabel {
+    color: rgb(0, 0, 0);
+    border: none;
+}</string>
                         </property>
                         <property name="text">
                          <string>\</string>
@@ -2166,6 +2194,12 @@ QComboBox:focus {
                           <pointsize>12</pointsize>
                          </font>
                         </property>
+                        <property name="styleSheet">
+                         <string notr="true">QLabel {
+    color: rgb(0, 0, 0);
+    border: none;
+}</string>
+                        </property>
                         <property name="text">
                          <string>\</string>
                         </property>
@@ -2328,6 +2362,12 @@ QComboBox:focus {
                          <font>
                           <pointsize>12</pointsize>
                          </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QLabel {
+    color: rgb(0, 0, 0);
+    border: none;
+}</string>
                         </property>
                         <property name="text">
                          <string>\</string>
@@ -2492,6 +2532,12 @@ QComboBox:focus {
                           <pointsize>12</pointsize>
                          </font>
                         </property>
+                        <property name="styleSheet">
+                         <string notr="true">QLabel {
+    color: rgb(0, 0, 0);
+    border: none;
+}</string>
+                        </property>
                         <property name="text">
                          <string>\</string>
                         </property>
@@ -2654,6 +2700,12 @@ QComboBox:focus {
                          <font>
                           <pointsize>12</pointsize>
                          </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QLabel {
+    color: rgb(0, 0, 0);
+    border: none;
+}</string>
                         </property>
                         <property name="text">
                          <string>\</string>
@@ -2873,6 +2925,12 @@ background:rgb(255, 255, 255);</string>
                             <pointsize>12</pointsize>
                            </font>
                           </property>
+                          <property name="styleSheet">
+                           <string notr="true">QLabel {
+    color: rgb(0, 0, 0);
+    border: none;
+}</string>
+                          </property>
                           <property name="text">
                            <string>文件名构建：</string>
                           </property>
@@ -2976,6 +3034,12 @@ QPushButton:hover {
                             <pointsize>12</pointsize>
                            </font>
                           </property>
+                          <property name="styleSheet">
+                           <string notr="true">QLabel {
+    color: rgb(0, 0, 0);
+    border: none;
+}</string>
+                          </property>
                           <property name="text">
                            <string>.</string>
                           </property>
@@ -3078,8 +3142,10 @@ border-radius: 0px;</string>
                             </font>
                            </property>
                            <property name="styleSheet">
-                            <string notr="true">border: 0px;
-</string>
+                            <string notr="true">QLabel {
+    color: rgb(0, 0, 0);
+    border: none;
+}</string>
                            </property>
                            <property name="text">
                             <string>命名标签：</string>
@@ -3479,6 +3545,12 @@ QPushButton:pressed {
                               <pointsize>12</pointsize>
                              </font>
                             </property>
+                            <property name="styleSheet">
+                             <string notr="true">QLabel {
+    color: rgb(0, 0, 0);
+    border: none;
+}</string>
+                            </property>
                             <property name="text">
                              <string>时间来源</string>
                             </property>
@@ -3569,6 +3641,12 @@ QComboBox QAbstractItemView::item {
                              <font>
                               <pointsize>12</pointsize>
                              </font>
+                            </property>
+                            <property name="styleSheet">
+                             <string notr="true">QLabel {
+    color: rgb(0, 0, 0);
+    border: none;
+}</string>
                             </property>
                             <property name="text">
                              <string>方式</string>
@@ -3711,8 +3789,12 @@ background:rgba(0, 0, 0, 0);</string>
                               </font>
                              </property>
                              <property name="styleSheet">
-                              <string notr="true">qproperty-alignment: 'AlignLeft | AlignVCenter';
-background:rgba(0, 0, 0, 0);</string>
+                              <string notr="true">QLabel {
+	qproperty-alignment: 'AlignLeft | AlignVCenter';
+	background:rgba(0, 0, 0, 0);
+    color: rgb(0, 0, 0);
+    border: none;
+}</string>
                              </property>
                              <property name="text">
                               <string>不分类</string>
@@ -3726,6 +3808,12 @@ background:rgba(0, 0, 0, 0);</string>
                                <pointsize>10</pointsize>
                                <bold>true</bold>
                               </font>
+                             </property>
+                             <property name="styleSheet">
+                              <string notr="true">QLabel {
+    color: rgb(0, 0, 0);
+    border: none;
+}</string>
                              </property>
                              <property name="text">
                               <string>/</string>
@@ -3752,8 +3840,12 @@ background:rgba(0, 0, 0, 0);</string>
                               </font>
                              </property>
                              <property name="styleSheet">
-                              <string notr="true">qproperty-alignment: 'AlignLeft | AlignVCenter';
-background:rgba(0, 0, 0, 0);</string>
+                              <string notr="true">QLabel {
+	qproperty-alignment: 'AlignLeft | AlignVCenter';
+	background:rgba(0, 0, 0, 0);
+    color: rgb(0, 0, 0);
+    border: none;
+}</string>
                              </property>
                              <property name="text">
                               <string>文件名不变</string>
@@ -4118,6 +4210,12 @@ border-bottom-left-radius:0px;</string>
                           <font>
                            <pointsize>12</pointsize>
                           </font>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">QLabel {
+    color: rgb(0, 0, 0);
+    border: none;
+}</string>
                          </property>
                          <property name="text">
                           <string>相似度</string>
@@ -4819,6 +4917,12 @@ border-bottom-left-radius:0px;</string>
                           <pointsize>12</pointsize>
                          </font>
                         </property>
+                        <property name="styleSheet">
+                         <string notr="true">QLabel {
+    color: rgb(0, 0, 0);
+    border: none;
+}</string>
+                        </property>
                         <property name="text">
                          <string>图片标题</string>
                         </property>
@@ -4877,6 +4981,12 @@ QLineEdit:disabled {
                          <font>
                           <pointsize>12</pointsize>
                          </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QLabel {
+    color: rgb(0, 0, 0);
+    border: none;
+}</string>
                         </property>
                         <property name="text">
                          <string>星级</string>
@@ -5127,6 +5237,12 @@ QCheckBox::indicator:checked {
                           <pointsize>12</pointsize>
                          </font>
                         </property>
+                        <property name="styleSheet">
+                         <string notr="true">QLabel {
+    color: rgb(0, 0, 0);
+    border: none;
+}</string>
+                        </property>
                         <property name="text">
                          <string>自动打图片标记</string>
                         </property>
@@ -5187,6 +5303,12 @@ border-bottom-left-radius:0px;</string>
                           <pointsize>12</pointsize>
                          </font>
                         </property>
+                        <property name="styleSheet">
+                         <string notr="true">QLabel {
+    color: rgb(0, 0, 0);
+    border: none;
+}</string>
+                        </property>
                         <property name="text">
                          <string>作者</string>
                         </property>
@@ -5240,6 +5362,12 @@ QLineEdit:disabled {
                           <pointsize>12</pointsize>
                          </font>
                         </property>
+                        <property name="styleSheet">
+                         <string notr="true">QLabel {
+    color: rgb(0, 0, 0);
+    border: none;
+}</string>
+                        </property>
                         <property name="text">
                          <string>主题</string>
                         </property>
@@ -5292,6 +5420,12 @@ QLineEdit:disabled {
                          <font>
                           <pointsize>12</pointsize>
                          </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QLabel {
+    color: rgb(0, 0, 0);
+    border: none;
+}</string>
                         </property>
                         <property name="text">
                          <string>版权</string>
@@ -5354,6 +5488,12 @@ QLineEdit:disabled {
                          <font>
                           <pointsize>12</pointsize>
                          </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QLabel {
+    color: rgb(0, 0, 0);
+    border: none;
+}</string>
                         </property>
                         <property name="text">
                          <string>拍摄位置 </string>

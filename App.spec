@@ -5,32 +5,9 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=[
-        ('resources', 'resources'),
-        ('weight', 'weight'),
-        ('D:\\Code\\python\\LeafView\\venv\\lib\\site-packages\\paddleocr', 'paddleocr'),
-        ('D:\\Code\\python\\LeafView\\venv\\lib\\site-packages\\paddleocr\\tools', 'paddleocr/tools')
+        ('resources', 'resources')
     ],
-hiddenimports=[
-    'framework_pb2',
-    'scipy.special.cython_special',
-    'skimage',
-    'skimage.feature._orb_descriptor_positions',
-    'skimage.filters.edges',
-    'skimage.data._fetchers',
-    'paddle',
-    'paddle.fluid',
-    'paddle.fluid.core',
-    'paddle.fluid.framework',
-    'paddle.fluid.executor',
-    'paddle.fluid.layers',
-    'paddle.nn',
-    'paddle.nn.functional',
-    'paddle.vision',
-    'paddle.vision.transforms',
-    'paddleocr',
-    'zoneinfo',  # 添加 zoneinfo 模块
-    # 根据需要添加更多 PaddlePaddle 模块或其它依赖
-],
+hiddenimports=[],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
