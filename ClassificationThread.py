@@ -1,4 +1,3 @@
-import io
 import json
 import os
 import shutil
@@ -10,7 +9,8 @@ import exifread
 import pillow_heif
 import requests
 from PIL import Image
-from PyQt6.QtCore import QThread, pyqtSignal
+from PyQt6 import QtCore
+from scipy import io
 
 from common import get_resource_path
 
@@ -42,9 +42,9 @@ _ocr_model = None
 # init_ocr_model()
 
 
-class ClassificationThread(QThread):
-    log_signal = pyqtSignal(str, str)
-    progress_signal = pyqtSignal(int)
+class ClassificationThread(QtCore.QThread):
+    log_signal = QtCore.pyqtSignal(str, str)
+    progress_signal = QtCore.pyqtSignal(int)
 
     def __init__(self, parent=None, folders=None, classification_structure=None, file_name_structure=None,
                  destination_root=None, time_derive="最早时间"):

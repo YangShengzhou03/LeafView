@@ -97,7 +97,7 @@ border-radius:12px;
           <item>
            <widget class="QFrame" name="frame_logo">
             <property name="styleSheet">
-             <string notr="true"/>
+             <string notr="true">border: none;</string>
             </property>
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
@@ -129,11 +129,11 @@ border-radius:12px;
                 </font>
                </property>
                <property name="styleSheet">
-                <string notr="true">QLabel {
-    color: rgb(255, 255, 255);
-    padding: 4px;
-    border: none;
-    qproperty-alignment: AlignCenter;
+                <string notr="true">QPushButton { 
+    color: #333333; 
+    padding: 4px; 
+    border: none; 
+    qproperty-alignment: AlignCenter; 
 }</string>
                </property>
                <property name="text">
@@ -1066,7 +1066,7 @@ border: 0px;</string>
                            </property>
                            <property name="styleSheet">
                             <string notr="true">QPushButton {
-	color: rgb(0, 0, 0);
+	color: #333333;
     border: none;
 }
 
@@ -1221,7 +1221,7 @@ border-radius: 0px; </string>
                       <property name="styleSheet">
                        <string notr="true">QListView {
 background:rgb(255, 255, 255);
-color: rgb(0, 0, 0);
+color: #333333;
 border-radius: 0px;
 }
 QListView::item{
@@ -1547,8 +1547,8 @@ QScrollBar::sub-page:vertical {
                             <rect>
                              <x>0</x>
                              <y>0</y>
-                             <width>100</width>
-                             <height>30</height>
+                             <width>691</width>
+                             <height>461</height>
                             </rect>
                            </property>
                            <property name="styleSheet">
@@ -1746,8 +1746,8 @@ QScrollBar::sub-page:vertical {
                                 <rect>
                                  <x>0</x>
                                  <y>0</y>
-                                 <width>100</width>
-                                 <height>30</height>
+                                 <width>691</width>
+                                 <height>461</height>
                                 </rect>
                                </property>
                                <layout class="QGridLayout" name="gridLayout_7">
@@ -1798,32 +1798,32 @@ QScrollBar::sub-page:vertical {
                                <widget class="QToolButton" name="toolButton_back">
                                 <property name="styleSheet">
                                  <string notr="true">QToolButton {
-    color: white;
-    border: none;
-    padding: 4px 4px;
-    border-radius: 6px;
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
-        stop:0.66 rgba(134, 119, 253, 255),
-        stop:1 rgba(119, 111, 252, 255)
-    );
-    font-size: 12px;
+    color: #1A73E8;
+    background-color: transparent;
+    border: 1px solid #DADCE0;
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-size: 14px;
+    font-weight: 500;
+    qproperty-icon: url(:/icons/back_arrow_blue.svg);
+    qproperty-iconSize: 16px 16px;
+    qproperty-toolButtonStyle: ToolButtonTextBesideIcon;
+    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
 }
 
 QToolButton:hover {
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
-        stop:0.66 rgba(154, 139, 255, 255),
-        stop:1 rgba(139, 131, 254, 255)
-    );
+    background-color: #E8F0FE;
+    border-color: #AECBFA;
+    transform: translateY(-1px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 QToolButton:pressed {
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
-        stop:0.66 rgba(94, 79, 253, 255),
-        stop:1 rgba(79, 71, 252, 255)
-    );
+    background-color: #D2E3FC;
+    border-color: #8AB4F8;
+    color: #0D5DCC;
+    transform: translateY(0);
+    box-shadow: none;
 }</string>
                                 </property>
                                 <property name="text">
@@ -1890,8 +1890,8 @@ QScrollBar::sub-page:vertical {
                                 <rect>
                                  <x>0</x>
                                  <y>0</y>
-                                 <width>100</width>
-                                 <height>30</height>
+                                 <width>691</width>
+                                 <height>428</height>
                                 </rect>
                                </property>
                                <layout class="QGridLayout" name="gridLayout_8">
@@ -1961,7 +1961,7 @@ QScrollBar::sub-page:vertical {
                    <item>
                     <widget class="QFrame" name="horizontalFrame_3">
                      <property name="styleSheet">
-                      <string notr="true">color: rgb(0, 0, 0);
+                      <string notr="true">color: #333333;
 background:rgb(255, 255, 255);
 border: none;
 border-radius: 0px;</string>
@@ -1991,7 +1991,7 @@ border-radius: 0px;</string>
                         </property>
                         <property name="styleSheet">
                          <string notr="true">QLabel {
-    color: rgb(0, 0, 0);
+    color: #333333;
     border: none;
 }</string>
                         </property>
@@ -2009,7 +2009,7 @@ border-radius: 0px;</string>
                         </property>
                         <property name="styleSheet">
                          <string notr="true">QLabel {
-    color: rgb(0, 0, 0);
+    color: #333333;
     border: none;
 }</string>
                         </property>
@@ -2027,7 +2027,7 @@ border-radius: 0px;</string>
                         </property>
                         <property name="styleSheet">
                          <string notr="true">QLabel {
-    color: rgb(0, 0, 0);
+    color: #333333;
     border: none;
 }</string>
                         </property>
@@ -2196,7 +2196,7 @@ QComboBox:focus {
                         </property>
                         <property name="styleSheet">
                          <string notr="true">QLabel {
-    color: rgb(0, 0, 0);
+    color: #333333;
     border: none;
 }</string>
                         </property>
@@ -2365,7 +2365,7 @@ QComboBox:focus {
                         </property>
                         <property name="styleSheet">
                          <string notr="true">QLabel {
-    color: rgb(0, 0, 0);
+    color: #333333;
     border: none;
 }</string>
                         </property>
@@ -2534,7 +2534,7 @@ QComboBox:focus {
                         </property>
                         <property name="styleSheet">
                          <string notr="true">QLabel {
-    color: rgb(0, 0, 0);
+    color: #333333;
     border: none;
 }</string>
                         </property>
@@ -2703,7 +2703,7 @@ QComboBox:focus {
                         </property>
                         <property name="styleSheet">
                          <string notr="true">QLabel {
-    color: rgb(0, 0, 0);
+    color: #333333;
     border: none;
 }</string>
                         </property>
@@ -2927,7 +2927,7 @@ background:rgb(255, 255, 255);</string>
                           </property>
                           <property name="styleSheet">
                            <string notr="true">QLabel {
-    color: rgb(0, 0, 0);
+    color: #333333;
     border: none;
 }</string>
                           </property>
@@ -3036,7 +3036,7 @@ QPushButton:hover {
                           </property>
                           <property name="styleSheet">
                            <string notr="true">QLabel {
-    color: rgb(0, 0, 0);
+    color: #333333;
     border: none;
 }</string>
                           </property>
@@ -3143,7 +3143,7 @@ border-radius: 0px;</string>
                            </property>
                            <property name="styleSheet">
                             <string notr="true">QLabel {
-    color: rgb(0, 0, 0);
+    color: #333333;
     border: none;
 }</string>
                            </property>
@@ -3547,7 +3547,7 @@ QPushButton:pressed {
                             </property>
                             <property name="styleSheet">
                              <string notr="true">QLabel {
-    color: rgb(0, 0, 0);
+    color: #333333;
     border: none;
 }</string>
                             </property>
@@ -3644,7 +3644,7 @@ QComboBox QAbstractItemView::item {
                             </property>
                             <property name="styleSheet">
                              <string notr="true">QLabel {
-    color: rgb(0, 0, 0);
+    color: #333333;
     border: none;
 }</string>
                             </property>
@@ -3792,7 +3792,7 @@ background:rgba(0, 0, 0, 0);</string>
                               <string notr="true">QLabel {
 	qproperty-alignment: 'AlignLeft | AlignVCenter';
 	background:rgba(0, 0, 0, 0);
-    color: rgb(0, 0, 0);
+    color: #333333;
     border: none;
 }</string>
                              </property>
@@ -3811,7 +3811,7 @@ background:rgba(0, 0, 0, 0);</string>
                              </property>
                              <property name="styleSheet">
                               <string notr="true">QLabel {
-    color: rgb(0, 0, 0);
+    color: #333333;
     border: none;
 }</string>
                              </property>
@@ -3843,7 +3843,7 @@ background:rgba(0, 0, 0, 0);</string>
                               <string notr="true">QLabel {
 	qproperty-alignment: 'AlignLeft | AlignVCenter';
 	background:rgba(0, 0, 0, 0);
-    color: rgb(0, 0, 0);
+    color: #333333;
     border: none;
 }</string>
                              </property>
@@ -4213,7 +4213,7 @@ border-bottom-left-radius:0px;</string>
                          </property>
                          <property name="styleSheet">
                           <string notr="true">QLabel {
-    color: rgb(0, 0, 0);
+    color: #333333;
     border: none;
 }</string>
                          </property>
@@ -4578,25 +4578,24 @@ background:rgb(248, 250, 251);</string>
                        <enum>Qt::LeftToRight</enum>
                       </property>
                       <property name="styleSheet">
-                       <string notr="true">/* 主窗口样式 */
+                       <string notr="true">
 QWidget {
     background-color: #FFFFFF;
-    border-radius: 0; /* 统一设置为0，替代原先的单独设置 */
+    border-radius: 0;
 }
 
-/* 垂直滚动条系统 */
 QScrollBar:vertical {
-    width: 10px; /* 稍宽更易操作 */
+    width: 10px;
     background: transparent;
     margin: 2px 0;
 }
 
 QScrollBar::handle:vertical {
-    min-height: 30px; /* 更大的可拖动区域 */
+    min-height: 30px;
     background: rgba(100, 100, 100, 0.15);
     border-radius: 5px;
     margin: 2px;
-    transition: background 0.2s ease; /* 平滑过渡 */
+    transition: background 0.2s ease;
 }
 
 QScrollBar::handle:vertical:hover {
@@ -4607,7 +4606,6 @@ QScrollBar::handle:vertical:pressed {
     background: rgba(100, 100, 100, 0.35);
 }
 
-/* 水平滚动条系统 */
 QScrollBar:horizontal {
     height: 10px;
     background: transparent;
@@ -4630,7 +4628,6 @@ QScrollBar::handle:horizontal:pressed {
     background: rgba(100, 100, 100, 0.35);
 }
 
-/* 通用滚动条设置 */
 QScrollBar::add-line,
 QScrollBar::sub-line,
 QScrollBar::add-page,
@@ -4641,7 +4638,6 @@ QScrollBar::sub-page {
     width: 0;
 }
 
-/* 滚动条角落 */
 QScrollBar::corner {
     background: transparent;
 }</string>
@@ -4657,8 +4653,8 @@ QScrollBar::corner {
                         <rect>
                          <x>0</x>
                          <y>0</y>
-                         <width>231</width>
-                         <height>462</height>
+                         <width>100</width>
+                         <height>30</height>
                         </rect>
                        </property>
                        <layout class="QGridLayout" name="gridLayout_2"/>
@@ -4919,7 +4915,7 @@ border-bottom-left-radius:0px;</string>
                         </property>
                         <property name="styleSheet">
                          <string notr="true">QLabel {
-    color: rgb(0, 0, 0);
+    color: #333333;
     border: none;
 }</string>
                         </property>
@@ -4984,7 +4980,7 @@ QLineEdit:disabled {
                         </property>
                         <property name="styleSheet">
                          <string notr="true">QLabel {
-    color: rgb(0, 0, 0);
+    color: #333333;
     border: none;
 }</string>
                         </property>
@@ -5239,7 +5235,7 @@ QCheckBox::indicator:checked {
                         </property>
                         <property name="styleSheet">
                          <string notr="true">QLabel {
-    color: rgb(0, 0, 0);
+    color: #333333;
     border: none;
 }</string>
                         </property>
@@ -5305,7 +5301,7 @@ border-bottom-left-radius:0px;</string>
                         </property>
                         <property name="styleSheet">
                          <string notr="true">QLabel {
-    color: rgb(0, 0, 0);
+    color: #333333;
     border: none;
 }</string>
                         </property>
@@ -5364,7 +5360,7 @@ QLineEdit:disabled {
                         </property>
                         <property name="styleSheet">
                          <string notr="true">QLabel {
-    color: rgb(0, 0, 0);
+    color: #333333;
     border: none;
 }</string>
                         </property>
@@ -5423,7 +5419,7 @@ QLineEdit:disabled {
                         </property>
                         <property name="styleSheet">
                          <string notr="true">QLabel {
-    color: rgb(0, 0, 0);
+    color: #333333;
     border: none;
 }</string>
                         </property>
@@ -5491,7 +5487,7 @@ QLineEdit:disabled {
                         </property>
                         <property name="styleSheet">
                          <string notr="true">QLabel {
-    color: rgb(0, 0, 0);
+    color: #333333;
     border: none;
 }</string>
                         </property>

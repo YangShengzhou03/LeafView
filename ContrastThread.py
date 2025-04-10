@@ -2,7 +2,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import numpy as np
 from PIL import Image
-from PyQt6.QtCore import pyqtSignal, QThread
+from PyQt6 import QtCore
 
 
 class ImageHasher:
@@ -28,10 +28,10 @@ class ImageHasher:
         return np.count_nonzero(bits1 != bits2)
 
 
-class HashWorker(QThread):
-    hash_completed = pyqtSignal(dict)
-    progress_updated = pyqtSignal(int)
-    error_occurred = pyqtSignal(str)
+class HashWorker(QtCore.QThread):
+    hash_completed = QtCore.pyqtSignal(dict)
+    progress_updated = QtCore.pyqtSignal(int)
+    error_occurred = QtCore.pyqtSignal(str)
 
     def __init__(self, image_paths, hash_size=8, max_workers=4):
         super().__init__()
@@ -71,10 +71,10 @@ class HashWorker(QThread):
         self._is_running = False
 
 
-class ContrastWorker(QThread):
-    groups_completed = pyqtSignal(dict)
-    progress_updated = pyqtSignal(int)
-    image_matched = pyqtSignal(str, str)
+class ContrastWorker(QtCore.QThread):
+    groups_completed = QtCore.pyqtSignal(dict)
+    progress_updated = QtCore.pyqtSignal(int)
+    image_matched = QtCore.pyqtSignal(str, str)
 
     def __init__(self, image_hashes, threshold):
         super().__init__()
