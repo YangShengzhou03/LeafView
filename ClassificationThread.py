@@ -11,7 +11,6 @@ import pillow_heif
 import requests
 from PIL import Image
 from PyQt6.QtCore import QThread, pyqtSignal
-from paddleocr import paddleocr
 
 from common import get_resource_path
 
@@ -25,22 +24,22 @@ SUPPORTED_EXTENSIONS = (
 _ocr_model = None
 
 
-def init_ocr_model():
-    global _ocr_model
-    if _ocr_model is None:
-        _ocr_model = paddleocr.PaddleOCR(
-            use_angle_cls=True,
-            lang="ch",
-            use_gpu=True,
-            det_db_box_thresh=0.1,
-            use_dilation=True,
-            det_model_dir='weight/ch_PP-OCRv4_det_server_infer',
-            cls_model_dir='weight/ch_ppocr_mobile_v2.0_cls_infer',
-            rec_model_dir='weight/ch_PP-OCRv4_rec_server_infer'
-        )
-
-
-init_ocr_model()
+# def init_ocr_model():
+#     global _ocr_model
+#     if _ocr_model is None:
+#         _ocr_model = paddleocr.PaddleOCR(
+#             use_angle_cls=True,
+#             lang="ch",
+#             use_gpu=True,
+#             det_db_box_thresh=0.1,
+#             use_dilation=True,
+#             det_model_dir='weight/ch_PP-OCRv4_det_server_infer',
+#             cls_model_dir='weight/ch_ppocr_mobile_v2.0_cls_infer',
+#             rec_model_dir='weight/ch_PP-OCRv4_rec_server_infer'
+#         )
+#
+#
+# init_ocr_model()
 
 
 class ClassificationThread(QThread):
@@ -162,10 +161,7 @@ class ClassificationThread(QThread):
                 else:
                     structure_parts.append(f"未知{part}")
             else:
-                if perform_ocr(file_path, part):
-                    structure_parts.append(part)
-                else:
-                    structure_parts.append(f"未识别到{part}")
+                structure_parts.append(f"{part}")
 
         base_folder = Path(base_folder) if base_folder else (
             self.destination_root if self.destination_root else file_path.parent)
@@ -418,18 +414,18 @@ class ClassificationThread(QThread):
         self.log_signal.emit(level, message)
 
 
-def perform_ocr(filepath, keyword):
-    try:
-        if _ocr_model is None:
-            init_ocr_model()
-        result = _ocr_model.ocr(img=str(filepath), det=True, rec=True, cls=True)
-        if not result or not result[0]:
-            return False
-        detected_texts = [line[1][0] for line in result[0]]
-        for text in detected_texts:
-            if keyword in text:
-                return True
-        return False
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return False
+# def perform_ocr(filepath, keyword):
+#     try:
+#         if _ocr_model is None:
+#             init_ocr_model()
+#         result = _ocr_model.ocr(img=str(filepath), det=True, rec=True, cls=True)
+#         if not result or not result[0]:
+#             return False
+#         detected_texts = [line[1][0] for line in result[0]]
+#         for text in detected_texts:
+#             if keyword in text:
+#                 return True
+#         return False
+#     except Exception as e:
+#         print(f"An error occurred: {e}")
+#         return False

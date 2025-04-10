@@ -1538,8 +1538,8 @@ QScrollBar::sub-page:vertical {
                             <rect>
                              <x>0</x>
                              <y>0</y>
-                             <width>691</width>
-                             <height>461</height>
+                             <width>100</width>
+                             <height>30</height>
                             </rect>
                            </property>
                            <property name="styleSheet">
@@ -1628,8 +1628,8 @@ QScrollBar::sub-page:vertical {
                             <rect>
                              <x>0</x>
                              <y>0</y>
-                             <width>691</width>
-                             <height>461</height>
+                             <width>100</width>
+                             <height>30</height>
                             </rect>
                            </property>
                            <property name="styleSheet">
@@ -1737,8 +1737,8 @@ QScrollBar::sub-page:vertical {
                                 <rect>
                                  <x>0</x>
                                  <y>0</y>
-                                 <width>691</width>
-                                 <height>461</height>
+                                 <width>100</width>
+                                 <height>30</height>
                                 </rect>
                                </property>
                                <layout class="QGridLayout" name="gridLayout_7">
@@ -1881,8 +1881,8 @@ QScrollBar::sub-page:vertical {
                                 <rect>
                                  <x>0</x>
                                  <y>0</y>
-                                 <width>691</width>
-                                 <height>432</height>
+                                 <width>100</width>
+                                 <height>30</height>
                                 </rect>
                                </property>
                                <layout class="QGridLayout" name="gridLayout_8">
@@ -2157,11 +2157,6 @@ QComboBox:focus {
                           <string>拍摄城市</string>
                          </property>
                         </item>
-                        <item>
-                         <property name="text">
-                          <string>识别文字</string>
-                         </property>
-                        </item>
                        </widget>
                       </item>
                       <item>
@@ -2323,11 +2318,6 @@ QComboBox:focus {
                         <item>
                          <property name="text">
                           <string>拍摄城市</string>
-                         </property>
-                        </item>
-                        <item>
-                         <property name="text">
-                          <string>识别文字</string>
                          </property>
                         </item>
                        </widget>
@@ -2493,11 +2483,6 @@ QComboBox:focus {
                           <string>拍摄城市</string>
                          </property>
                         </item>
-                        <item>
-                         <property name="text">
-                          <string>识别文字</string>
-                         </property>
-                        </item>
                        </widget>
                       </item>
                       <item>
@@ -2661,11 +2646,6 @@ QComboBox:focus {
                           <string>拍摄城市</string>
                          </property>
                         </item>
-                        <item>
-                         <property name="text">
-                          <string>识别文字</string>
-                         </property>
-                        </item>
                        </widget>
                       </item>
                       <item>
@@ -2827,11 +2807,6 @@ QComboBox:focus {
                         <item>
                          <property name="text">
                           <string>拍摄城市</string>
-                         </property>
-                        </item>
-                        <item>
-                         <property name="text">
-                          <string>识别文字</string>
                          </property>
                         </item>
                        </widget>
@@ -4584,8 +4559,8 @@ QScrollBar::corner {
                         <rect>
                          <x>0</x>
                          <y>0</y>
-                         <width>100</width>
-                         <height>30</height>
+                         <width>231</width>
+                         <height>462</height>
                         </rect>
                        </property>
                        <layout class="QGridLayout" name="gridLayout_2"/>
