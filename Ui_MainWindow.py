@@ -847,7 +847,7 @@ class Ui_MainWindow(object):
         self.scrollArea_page0_1.setWidgetResizable(True)
         self.scrollArea_page0_1.setObjectName("scrollArea_page0_1")
         self.scrollAreaWidgetContents_video = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_video.setGeometry(QtCore.QRect(0, 0, 691, 461))
+        self.scrollAreaWidgetContents_video.setGeometry(QtCore.QRect(0, 0, 100, 30))
         self.scrollAreaWidgetContents_video.setStyleSheet("border-top-left-radius:0px;\n"
 "border-top-right-radius:0px;\n"
 "border-bottom-right-radius:20px;\n"
@@ -963,7 +963,7 @@ class Ui_MainWindow(object):
         self.scrollArea_people.setWidgetResizable(True)
         self.scrollArea_people.setObjectName("scrollArea_people")
         self.scrollAreaWidgetContents_people = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_people.setGeometry(QtCore.QRect(0, 0, 691, 461))
+        self.scrollAreaWidgetContents_people.setGeometry(QtCore.QRect(0, 0, 100, 30))
         self.scrollAreaWidgetContents_people.setObjectName("scrollAreaWidgetContents_people")
         self.gridLayout_7 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents_people)
         self.gridLayout_7.setContentsMargins(0, 0, 0, 0)
@@ -1051,7 +1051,7 @@ class Ui_MainWindow(object):
         self.scrollArea_peopleImage.setWidgetResizable(True)
         self.scrollArea_peopleImage.setObjectName("scrollArea_peopleImage")
         self.scrollAreaWidgetContents_peopleImage = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_peopleImage.setGeometry(QtCore.QRect(0, 0, 691, 428))
+        self.scrollAreaWidgetContents_peopleImage.setGeometry(QtCore.QRect(0, 0, 100, 30))
         self.scrollAreaWidgetContents_peopleImage.setObjectName("scrollAreaWidgetContents_peopleImage")
         self.gridLayout_8 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents_peopleImage)
         self.gridLayout_8.setContentsMargins(0, 0, 0, 0)
@@ -2234,8 +2234,12 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(9)
         self.label_CopyRoute.setFont(font)
-        self.label_CopyRoute.setStyleSheet("qproperty-alignment: \'AlignLeft | AlignVCenter\';\n"
-"background:rgba(0, 0, 0, 0);")
+        self.label_CopyRoute.setStyleSheet("QLabel {\n"
+"    qproperty-alignment: \'AlignLeft | AlignVCenter\';\n"
+"    background:rgba(0, 0, 0, 0);\n"
+"    color: #333333;\n"
+"    border: none;\n"
+"}")
         self.label_CopyRoute.setText("")
         self.label_CopyRoute.setObjectName("label_CopyRoute")
         self.horizontalLayout.addWidget(self.label_CopyRoute)
@@ -2748,7 +2752,7 @@ class Ui_MainWindow(object):
         self.scrollArea_pageSimilar.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.scrollArea_pageSimilar.setObjectName("scrollArea_pageSimilar")
         self.scrollAreaWidgetContents_Contrast = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_Contrast.setGeometry(QtCore.QRect(0, 0, 100, 30))
+        self.scrollAreaWidgetContents_Contrast.setGeometry(QtCore.QRect(0, 0, 231, 462))
         self.scrollAreaWidgetContents_Contrast.setObjectName("scrollAreaWidgetContents_Contrast")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents_Contrast)
         self.gridLayout_2.setObjectName("gridLayout_2")

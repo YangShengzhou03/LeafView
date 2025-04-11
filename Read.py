@@ -21,6 +21,7 @@ class Read(QtWidgets.QWidget):
         self.parent.toolButton_startRecognition.clicked.connect(self.toggle_processing)
         self.parent.progressBar_Recognition.setRange(0, 100)
         self.parent.progressBar_Recognition.setValue(0)
+        self.parent.progressBar_Recognition.hide()
 
     def toggle_processing(self):
         if self.thread and self.thread.isRunning():
@@ -41,6 +42,7 @@ class Read(QtWidgets.QWidget):
         self.thread.finished.connect(self._on_finished)
         self.thread.progress_updated.connect(self._update_progress)
         self.thread.start()
+        self.parent.progressBar_Recognition.show()
 
     def _stop_processing(self):
         if self.thread:
@@ -51,6 +53,7 @@ class Read(QtWidgets.QWidget):
     def _on_finished(self):
         self._reset_ui()
         self.parent.progressBar_Recognition.setValue(100)
+        self.parent.progressBar_Recognition.hide()
 
     def _reset_ui(self):
         self.parent.toolButton_startRecognition.setText("开始")

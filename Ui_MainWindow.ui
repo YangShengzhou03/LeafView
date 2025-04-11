@@ -1547,8 +1547,8 @@ QScrollBar::sub-page:vertical {
                             <rect>
                              <x>0</x>
                              <y>0</y>
-                             <width>691</width>
-                             <height>461</height>
+                             <width>100</width>
+                             <height>30</height>
                             </rect>
                            </property>
                            <property name="styleSheet">
@@ -1746,8 +1746,8 @@ QScrollBar::sub-page:vertical {
                                 <rect>
                                  <x>0</x>
                                  <y>0</y>
-                                 <width>691</width>
-                                 <height>461</height>
+                                 <width>100</width>
+                                 <height>30</height>
                                 </rect>
                                </property>
                                <layout class="QGridLayout" name="gridLayout_7">
@@ -1890,8 +1890,8 @@ QScrollBar::sub-page:vertical {
                                 <rect>
                                  <x>0</x>
                                  <y>0</y>
-                                 <width>691</width>
-                                 <height>428</height>
+                                 <width>100</width>
+                                 <height>30</height>
                                 </rect>
                                </property>
                                <layout class="QGridLayout" name="gridLayout_8">
@@ -3761,8 +3761,12 @@ QComboBox QAbstractItemView::item {
                               </font>
                              </property>
                              <property name="styleSheet">
-                              <string notr="true">qproperty-alignment: 'AlignLeft | AlignVCenter';
-background:rgba(0, 0, 0, 0);</string>
+                              <string notr="true">QLabel {
+	qproperty-alignment: 'AlignLeft | AlignVCenter';
+	background:rgba(0, 0, 0, 0);
+    color: #333333;
+    border: none;
+}</string>
                              </property>
                              <property name="text">
                               <string/>
@@ -4653,8 +4657,8 @@ QScrollBar::corner {
                         <rect>
                          <x>0</x>
                          <y>0</y>
-                         <width>100</width>
-                         <height>30</height>
+                         <width>231</width>
+                         <height>462</height>
                         </rect>
                        </property>
                        <layout class="QGridLayout" name="gridLayout_2"/>
