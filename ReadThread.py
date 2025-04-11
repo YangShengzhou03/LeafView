@@ -6,6 +6,7 @@ from PIL import Image
 from PyQt6 import QtCore
 from skimage import feature
 
+
 class ReadThread(QtCore.QThread):
     image_loaded = QtCore.pyqtSignal(str, str)
     finished = QtCore.pyqtSignal()
@@ -98,6 +99,7 @@ class ReadThread(QtCore.QThread):
         img = Image.open(image_path)
         width, height = img.size
         size_match = any(abs(w - width) <= 10 and abs(h - height) <= 10 for w, h in self.common_screen_sizes)
+
         def check_lbp(gray_np):
             lbp = feature.local_binary_pattern(gray_np, P=8, R=1, method="uniform")
             hist, _ = np.histogram(lbp.ravel(), bins=np.arange(0, 10), range=(0, 9))
@@ -105,6 +107,7 @@ class ReadThread(QtCore.QThread):
             hist /= hist.sum()
             threshold = 0.45 if size_match else 0.55
             return np.any(hist > threshold)
+
         gray_img = img.convert('L')
         gray_np = np.array(gray_img, dtype=np.uint8)
         return check_lbp(gray_np)

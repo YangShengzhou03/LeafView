@@ -8,8 +8,12 @@ class Read(QtWidgets.QWidget):
         super().__init__(parent)
         self.parent = parent
         self.folder_page = folder_page
-        self.current_items = {}
-        self.item_counter = 0
+        self.current_items_5 = {}
+        self.item_counter_5 = 0
+        self.current_items_4 = {}
+        self.item_counter_4 = 0
+        self.current_items_3 = {}
+        self.item_counter_3 = 0
         self.thread = None
         self.init_page()
 
@@ -122,11 +126,32 @@ class Read(QtWidgets.QWidget):
         vertical_layout.addWidget(text_label)
         vertical_layout.setStretch(0, 7)
         vertical_layout.setStretch(1, 1)
-        row = self.item_counter // 4
-        column = self.item_counter % 4
-        target_layout.addWidget(item_frame, row, column)
-        self.item_counter += 1
-        if layout_name not in self.current_items:
-            self.current_items[layout_name] = []
-        self.current_items[layout_name].append(item_frame)
+
+        layout_name = layout
+        if layout_name == "gridLayout_5":
+            row = self.item_counter_5 // 4
+            column = self.item_counter_5 % 4
+            target_layout.addWidget(item_frame, row, column)
+            self.item_counter_5 += 1
+            if layout_name not in self.current_items_5:
+                self.current_items_5[layout_name] = []
+            self.current_items_5[layout_name].append(item_frame)
+        elif layout_name == "gridLayout_4":
+            row = self.item_counter_4 // 4
+            column = self.item_counter_4 % 4
+            target_layout.addWidget(item_frame, row, column)
+            self.item_counter_4 += 1
+            if layout_name not in self.current_items_4:
+                self.current_items_4[layout_name] = []
+            self.current_items_4[layout_name].append(item_frame)
+        elif layout_name == "gridLayout_3":
+            row = self.item_counter_3 // 4
+            column = self.item_counter_3 % 4
+            target_layout.addWidget(item_frame, row, column)
+            self.item_counter_3 += 1
+            if layout_name not in self.current_items_3:
+                self.current_items_3[layout_name] = []
+            self.current_items_3[layout_name].append(item_frame)
+        else:
+            return
         self.parent.update_empty_status(layout_name, has_content=True)
