@@ -23,7 +23,7 @@ AppUpdatesURL={#MyAppURL}
 VersionInfoVersion=1.2.0.0
 DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
-LicenseFile=C:\Users\YangShengzhou\Desktop\license.txt
+LicenseFile=D:\Code\python\LeafView\license.txt
 ; 以下行取消注释，以在非管理安装模式下运行（仅为当前用户安装）。
 ;PrivilegesRequired=lowest
 ; 以管理员身份运行
@@ -45,14 +45,14 @@ Type: dirifempty; Name: "{app}\_internal"
 Type: dirifempty; Name: "{app}"
 
 [Languages]
-Name: "chinesesimp"; MessagesFile: "compiler:Default.isl"
+Name: "chinesesimp"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: checkablealone
 
 [Files]
-Source: "D:\LeafView\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\LeafView\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\App\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\App\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; 注意: 不要在任何共享系统文件上使用“Flags: ignoreversion”
 
 [Icons]
