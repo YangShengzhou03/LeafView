@@ -2,7 +2,7 @@
 ; 有关创建 Inno Setup 脚本文件的详细资料请查阅帮助文档！
 
 #define MyAppName "LeafView"
-#define MyAppVersion "1.1.0.0"
+#define MyAppVersion "1.2.0.0"
 #define MyAppPublisher "Yangshengzhou"
 #define MyAppURL "https://blog.csdn.net/Yang_shengzhou"
 #define AppSupportURL "https://blog.csdn.net/Yang_shengzhou/article/details/143782041"
@@ -20,7 +20,7 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#AppSupportURL}
 AppUpdatesURL={#MyAppURL}
-VersionInfoVersion=1.1.0.0
+VersionInfoVersion=1.2.0.0
 DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
 LicenseFile=C:\Users\YangShengzhou\Desktop\license.txt
@@ -35,7 +35,7 @@ Compression=lzma2/max
 SolidCompression=yes
 WizardStyle=modern
 AppCopyright=© 2025 LeafView by YangShengzhou.版权所有
-UninstallDisplayIcon=D:\code\Python\LeafView\resources\img\setup.ico
+UninstallDisplayIcon={app}\_internal\resources\img\icon.ico
 
 
 [UninstallDelete]
