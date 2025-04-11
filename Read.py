@@ -8,16 +8,15 @@ class Read(QtWidgets.QWidget):
         super().__init__(parent)
         self.parent = parent
         self.folder_page = folder_page
-        self.current_items_5 = {}
-        self.item_counter_5 = 0
-        self.current_items_4 = {}
-        self.item_counter_4 = 0
-        self.current_items_3 = {}
-        self.item_counter_3 = 0
         self.thread = None
-        self.init_page()
+        self.layout_config = {
+            "gridLayout_5": {"counter": 0, "items": [], "layout": parent.gridLayout_5},
+            "gridLayout_4": {"counter": 0, "items": [], "layout": parent.gridLayout_4},
+            "gridLayout_3": {"counter": 0, "items": [], "layout": parent.gridLayout_3}
+        }
+        self.init_ui()
 
-    def init_page(self):
+    def init_ui(self):
         self.parent.toolButton_startRecognition.clicked.connect(self.toggle_processing)
         self.parent.progressBar_Recognition.setRange(0, 100)
         self.parent.progressBar_Recognition.setValue(0)
@@ -29,15 +28,15 @@ class Read(QtWidgets.QWidget):
             self._start_processing()
 
     def _start_processing(self):
-        folders = self.folder_page.get_all_folders() if self.folder_page else []
-        if not folders:
+        if not self.folder_page or not (folders := self.folder_page.get_all_folders()):
+            QtWidgets.QMessageBox.warning(self, "警告", "请先选择文件夹")
             return
 
         self.parent.progressBar_Recognition.setValue(0)
         self.parent.toolButton_startRecognition.setText("停止")
 
         self.thread = ReadThread(folders)
-        self.thread.image_loaded.connect(self.receive)
+        self.thread.image_loaded.connect(self.handle_image_loaded)
         self.thread.finished.connect(self._on_finished)
         self.thread.progress_updated.connect(self._update_progress)
         self.thread.start()
@@ -45,37 +44,43 @@ class Read(QtWidgets.QWidget):
     def _stop_processing(self):
         if self.thread:
             self.thread.stop()
-            self.parent.toolButton_startRecognition.setText("开始")
-            self.parent.progressBar_Recognition.setValue(0)
+            self.thread.wait()
+            self._reset_ui()
 
     def _on_finished(self):
-        self.parent.toolButton_startRecognition.setText("开始")
+        self._reset_ui()
         self.parent.progressBar_Recognition.setValue(100)
+
+    def _reset_ui(self):
+        self.parent.toolButton_startRecognition.setText("开始")
+        self.parent.progressBar_Recognition.setValue(0)
 
     def _update_progress(self, value):
         self.parent.progressBar_Recognition.setValue(value)
 
-    def receive(self, path, layout):
-        self.add_item(path, layout=layout)
+    def handle_image_loaded(self, path, layout):
+        self.add_item(path, layout)
 
-    def add_item(self, path=None, layout="gridLayout_5"):
-        if path:
-            path = get_resource_path(path)
-        else:
-            path = get_resource_path('resources/img/page_1/示例.svg')
-        layout_name = layout
-        if layout_name == "gridLayout_5":
-            target_layout = self.parent.gridLayout_5
-        elif layout_name == "gridLayout_4":
-            target_layout = self.parent.gridLayout_4
-        elif layout_name == "gridLayout_3":
-            target_layout = self.parent.gridLayout_3
-        else:
-            return
+    def create_item_widget(self, path, layout_name):
         item_frame = QtWidgets.QFrame(parent=self.parent.scrollAreaWidgetContents_image)
-        item_frame.setMinimumSize(QtCore.QSize(120, 145))
-        item_frame.setMaximumSize(QtCore.QSize(120, 145))
-        item_frame.setStyleSheet("""
+        item_frame.setFixedSize(QtCore.QSize(120, 145))
+        item_frame.setStyleSheet(self.get_frame_style())
+
+        vertical_layout = QtWidgets.QVBoxLayout(item_frame)
+        vertical_layout.setContentsMargins(0, 0, 0, 0)
+        vertical_layout.setSpacing(0)
+
+        image_widget = self.create_image_widget(path)
+        text_label = self.create_text_label(path)
+
+        vertical_layout.addWidget(image_widget, stretch=7)
+        vertical_layout.addWidget(text_label, stretch=1)
+
+        return item_frame
+
+    @staticmethod
+    def get_frame_style():
+        return """
             QFrame {
                 background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #FFFFFF, stop:1 #F8F8F8);
                 border: 1px solid #E5E5E5;
@@ -83,19 +88,13 @@ class Read(QtWidgets.QWidget):
                 padding: 4px;
                 box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
             }
-            QFrame:hover {
-                background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #F8F8F8, stop:1 #F0F0F0);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-            }
-            QFrame:pressed {
-                background: #F0F0F0;
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            }
-        """)
-        vertical_layout = QtWidgets.QVBoxLayout(item_frame)
-        vertical_layout.setContentsMargins(0, 0, 0, 0)
-        vertical_layout.setSpacing(0)
-        image_widget = QtWidgets.QWidget(parent=item_frame)
+            QFrame:hover { background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #F8F8F8, stop:1 #F0F0F0);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12); }
+            QFrame:pressed { background: #F0F0F0; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+        """
+
+    def create_image_widget(self, path):
+        image_widget = QtWidgets.QWidget()
         image_widget.setSizePolicy(
             QtWidgets.QSizePolicy.Policy.Preferred,
             QtWidgets.QSizePolicy.Policy.Preferred
@@ -103,10 +102,14 @@ class Read(QtWidgets.QWidget):
         image_widget.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
         image_widget.setStyleSheet(f"""
             background-color: transparent;
-            image: url({path});
+            image: url({get_resource_path(path)});
             border-radius: 0px;
         """)
-        text_label = QtWidgets.QLabel(parent=item_frame)
+        return image_widget
+
+    def create_text_label(self, path):
+        filename = os.path.splitext(os.path.basename(path))[0] if path else "Item Name"
+        text_label = QtWidgets.QLabel(self._truncate_filename(filename))
         text_label.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
         text_label.setStyleSheet("""
             QLabel {
@@ -118,40 +121,22 @@ class Read(QtWidgets.QWidget):
                 qproperty-alignment: AlignCenter;
             }
         """)
-        filename = os.path.splitext(path.split("/")[-1])[0] if path else "Item Name"
-        if len(filename) > 9:
-            filename = filename[:3] + '...' + filename[-6:]
-        text_label.setText(filename)
-        vertical_layout.addWidget(image_widget)
-        vertical_layout.addWidget(text_label)
-        vertical_layout.setStretch(0, 7)
-        vertical_layout.setStretch(1, 1)
+        return text_label
 
-        layout_name = layout
-        if layout_name == "gridLayout_5":
-            row = self.item_counter_5 // 4
-            column = self.item_counter_5 % 4
-            target_layout.addWidget(item_frame, row, column)
-            self.item_counter_5 += 1
-            if layout_name not in self.current_items_5:
-                self.current_items_5[layout_name] = []
-            self.current_items_5[layout_name].append(item_frame)
-        elif layout_name == "gridLayout_4":
-            row = self.item_counter_4 // 4
-            column = self.item_counter_4 % 4
-            target_layout.addWidget(item_frame, row, column)
-            self.item_counter_4 += 1
-            if layout_name not in self.current_items_4:
-                self.current_items_4[layout_name] = []
-            self.current_items_4[layout_name].append(item_frame)
-        elif layout_name == "gridLayout_3":
-            row = self.item_counter_3 // 4
-            column = self.item_counter_3 % 4
-            target_layout.addWidget(item_frame, row, column)
-            self.item_counter_3 += 1
-            if layout_name not in self.current_items_3:
-                self.current_items_3[layout_name] = []
-            self.current_items_3[layout_name].append(item_frame)
-        else:
+    @staticmethod
+    def _truncate_filename(filename, max_length=9):
+        if len(filename) > max_length:
+            return f"{filename[:3]}...{filename[-6:]}" if len(filename) > 9 else filename
+        return filename
+
+    def add_item(self, path=None, layout="gridLayout_5"):
+        config = self.layout_config.get(layout)
+        if not config:
             return
-        self.parent.update_empty_status(layout_name, has_content=True)
+
+        item_frame = self.create_item_widget(path or 'resources/img/page_1/示例.svg', layout)
+        row, column = divmod(config["counter"], 4)
+        config["layout"].addWidget(item_frame, row, column)
+        config["counter"] += 1
+        config["items"].append(item_frame)
+        self.parent.update_empty_status(layout, has_content=True)
