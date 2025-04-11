@@ -2,6 +2,8 @@ from PyQt6 import QtWidgets, QtCore, QtGui
 from PyQt6.QtWidgets import QFileDialog, QMessageBox
 import os
 
+from common import get_resource_path
+
 
 class FolderPage(QtWidgets.QWidget):
     def __init__(self, parent=None):
@@ -54,7 +56,7 @@ class FolderPage(QtWidgets.QWidget):
         icon_widget = QtWidgets.QWidget(parent=folder_frame)
         icon_widget.setFixedSize(42, 42)
         icon_widget.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
-        icon_widget.setStyleSheet("image: url(resources/img/page_0/导入文件夹.svg); background-color: transparent;")
+        icon_widget.setStyleSheet(f"image: url({get_resource_path('resources/img/page_0/导入文件夹.svg')}); background-color: transparent;")
 
         text_layout = QtWidgets.QVBoxLayout()
         text_layout.setSpacing(2)
