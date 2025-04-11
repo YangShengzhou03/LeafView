@@ -32,7 +32,7 @@ class WriteExif(QWidget):
             btn.clicked.connect(lambda _, idx=i: self.set_selected_star(idx))
             self.star_buttons.append(btn)
         self.update_button_state()
-        self.log("DEBUG", "欢迎使用图像属性写入功能，不写入项留空即可~")
+        self.log("DEBUG", "欢迎使用图像属性写入功能，不写入项请留空。")
 
     def setup_connections(self):
         self.parent.toolButton_StartEXIF.clicked.connect(self.toggle_exif_writing)
@@ -97,7 +97,7 @@ class WriteExif(QWidget):
                 self.log("ERROR", "无法解析位置信息")
                 return None
         except Exception as e:
-            self.log("ERROR", f"获取IP位置失败: {str(e)}")
+            self.log("ERROR", f"获取位置失败: {str(e)}")
             return None
 
     def update_position_by_ip(self):
@@ -106,7 +106,7 @@ class WriteExif(QWidget):
             lat, lon = location_info
             self.log("INFO", f"成功获取位置信息: 纬度={lat}, 经度={lon}")
         else:
-            self.log("ERROR", "未能成功获取位置信息，请检查网络连接或尝试输入具体地址。")
+            self.log("ERROR", "获取位置信息失败，请检查网络连接。")
 
     def start_exif_writing(self):
         folders = self.folder_page.get_all_folders() if self.folder_page else {}
@@ -142,7 +142,7 @@ class WriteExif(QWidget):
             self.worker.wait(1000)
             if self.worker.isRunning():
                 self.worker.terminate()
-            self.log("WARNING", "停止EXIF写入操作...")
+            self.log("WARNING", "正在停止EXIF写入。")
 
     def update_progress(self, value):
         self.parent.progressBar_EXIF.setValue(value)
@@ -153,6 +153,6 @@ class WriteExif(QWidget):
             f'<span style="color:{c.get(level, "#000000")}">[{datetime.now().strftime("%H:%M:%S")}] [{level}] {message}</span>')
 
     def on_finished(self):
-        self.log("DEBUG", "EXIF信息写入完成!")
+        self.log("DEBUG", "EXIF信息写入结束!")
         self.is_running = False
         self.update_button_state()

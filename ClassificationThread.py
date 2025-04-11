@@ -69,14 +69,13 @@ class ClassificationThread(QtCore.QThread):
 
     def stop(self):
         self._stop_flag = True
-        self.log("INFO", "处理线程收到停止信号")
 
     def run(self):
         try:
             self.log("INFO", f"开始处理 {len(self.folders)} 个文件夹")
             for folder_info in self.folders:
                 if self._stop_flag:
-                    self.log("INFO", "处理被用户中断")
+                    self.log("WARNING", "处理被用户中断")
                     break
                 if not self.classification_structure and not self.file_name_structure:
                     self.organize_without_classification(folder_info['path'])
@@ -84,7 +83,7 @@ class ClassificationThread(QtCore.QThread):
                     self.process_folder_with_classification(folder_info)
             self.process_renaming()
         except Exception as e:
-            self.log("ERROR", f"运行时发生错误: {str(e)}")
+            self.log("ERROR", f"发生错误: {str(e)}")
 
     def process_folder_with_classification(self, folder_info):
         folder_path = Path(folder_info['path'])
@@ -189,7 +188,6 @@ class ClassificationThread(QtCore.QThread):
                         part_str = self._get_weekday(date)
                     elif part == "时间":
                         part_str = date.strftime('%H%M')
-
                     parts.append(part_str)
                 except Exception as e:
                     continue
@@ -402,7 +400,7 @@ class ClassificationThread(QtCore.QThread):
             try:
                 if not any(dir_path.iterdir()):
                     dir_path.rmdir()
-                    self.log("INFO", f"已删除空文件夹 {dir_path}")
+                    self.log("WARNING", f"已删除空文件夹 {dir_path}")
             except Exception as e:
                 pass
 

@@ -3,6 +3,7 @@ from PyQt6 import QtWidgets, QtCore, QtGui
 from ReadThread import ReadThread
 from common import get_resource_path
 
+
 class Read(QtWidgets.QWidget):
     def __init__(self, parent=None, folder_page=None):
         super().__init__(parent)

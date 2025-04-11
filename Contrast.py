@@ -6,6 +6,7 @@ from PyQt6 import QtWidgets, QtCore, QtGui
 from PyQt6.QtCore import pyqtSignal, QRunnable, QObject, Qt, QThreadPool
 from PyQt6.QtGui import QPixmap, QImage
 from ContrastThread import HashWorker, ContrastWorker
+from common import get_resource_path
 
 
 class ThumbnailLoaderSignals(QObject):
@@ -93,7 +94,7 @@ class Contrast(QtWidgets.QWidget):
                 try:
                     os.remove(img)
                 except Exception as e:
-                    print(f"无法删除图片 {img}: {e}")
+                    QtWidgets.QMessageBox.warning(self, "无法删除图片", f"删除图片{img}出错: {e}")
             self.selected_images.clear()
             self.display_all_images()
 
@@ -160,7 +161,7 @@ class Contrast(QtWidgets.QWidget):
         self.display_all_images()
 
     def on_hash_error(self, error_msg):
-        QtWidgets.QMessageBox.warning(self, "哈希计算错误", error_msg)
+        QtWidgets.QMessageBox.warning(self, "图像Hash计算错误", error_msg)
         self._running = False
         self.parent.toolButton_startContrast.setEnabled(True)
 
@@ -197,7 +198,7 @@ class Contrast(QtWidgets.QWidget):
         if no_images_found:
             self.update_progress(100)
             self.parent.verticalFrame_similar.hide()
-            QtWidgets.QMessageBox.information(self, "提示", "没有找到符合条件的图片")
+            QtWidgets.QMessageBox.information(self, "提示", "没有找到符合相似度条件的图片")
         self.parent.toolButton_startContrast.setEnabled(True)
 
     def create_thumbnail(self, path, total_images):
@@ -291,10 +292,10 @@ class Contrast(QtWidgets.QWidget):
                 widget.deleteLater()
 
     def set_empty(self, status=False):
-        self.parent.label_image_A.setStyleSheet(
-            "QLabel {image: url('resources/img/page_3/对比1.svg');}" if status else "QLabel {image: url('');}")
-        self.parent.label_image_B.setStyleSheet(
-            "QLabel {image: url('resources/img/page_3/对比2.svg');}" if status else "QLabel {image: url('');}")
+        self.parent.label_image_A.setStyleSheet(f"image: url({get_resource_path('resources/img/page_3/对比1.svg')})" if
+                                                status else "QLabel {image: url('');}")
+        self.parent.label_image_B.setStyleSheet(f"image: url({get_resource_path('resources/img/page_3/对比2.svg')})" if
+                                                status else "QLabel {image: url('');}")
 
     def show_image(self, label, path):
         pixmap = QtGui.QPixmap(path)

@@ -46,5 +46,5 @@ def check_update():
     except Exception:
         error_message = f"网络连接失败"
         dialog = UpdateDialog('https://blog.csdn.net/Yang_shengzhou', '网络连接失败',
-                              '软件内测,须连网启动,感谢您的理解\n' + error_message, True)
+                              '枫叶内测版,须连网启动,感谢您的理解\n' + error_message, True)
         dialog.exec()

@@ -70,7 +70,7 @@ class WriteExifThread(QThread):
                     line = json.dumps({img_hash: data})
                     f.write(line + '\n')
         except Exception as e:
-            self.log.emit("ERROR", f"保存缓存失败: {str(e)}")
+            self.log.emit("ERROR", f"保存数据失败: {str(e)}")
 
     def _calculate_image_hash(self, file_path):
         try:
@@ -208,7 +208,7 @@ class WriteExifThread(QThread):
                 updated_fields.append(f"版权: {self.copyright}")
             if self.autoMark:
                 if self._stop_requested:
-                    self.log.emit("INFO", f"处理被取消: {image_path}")
+                    self.log.emit("INFO", f"操作被终止: {image_path}")
                     return
                 keywords_list, description = self.analyze_image(image_path)
                 keywords_str = ",".join(keywords_list)
@@ -230,7 +230,7 @@ class WriteExifThread(QThread):
                 self.log.emit("WARNING", f"未对 {image_path} 进行任何更改")
 
         except Exception as e:
-            self.log.emit("ERROR", f"处理图片 {image_path} 时出错: {str(e)}")
+            self.log.emit("ERROR", f"处理 {image_path} 时出错: {str(e)}")
 
     def _create_gps_data(self, lat: float, lon: float) -> dict:
         def decimal_to_dms(decimal: float) -> tuple:

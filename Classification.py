@@ -176,7 +176,7 @@ class Classification(QtWidgets.QWidget):
                                                                        "日": f"{now.day:02d}",
                                                                        "星期": f"{self._get_weekday(now)}",
                                                                        "时间": f"{now.strftime('%H%M')}",
-                                                                       "位置": "科师大",
+                                                                       "位置": "浙大",
                                                                        "品牌": "佳能"
                                                                    }.get(b, "") for b in selected))
 
