@@ -52,10 +52,6 @@ class Contrast(QtWidgets.QWidget):
         slider = self.parent.horizontalSlider_levelContrast
         slider.setRange(1, 4)
         slider.setValue(4)
-        label = self.parent.label_levelContrast
-        label.setText("完全一致")
-        label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        label.setStyleSheet("QLabel { font-size: 18px; color: #4CAF50; }")
         self.parent.verticalFrame_similar.hide()
 
     def connect_signals(self):
@@ -72,7 +68,7 @@ class Contrast(QtWidgets.QWidget):
                 try:
                     shutil.move(img, os.path.join(dest_folder, os.path.basename(img)))
                 except Exception as e:
-                    print(f"无法移动图片 {img}: {e}")
+                    QtWidgets.QMessageBox.warning(self, "无法移动图片", f"无法移动图片 {img}: {e}")
             self.display_all_images()
 
     def auto_select_images(self):

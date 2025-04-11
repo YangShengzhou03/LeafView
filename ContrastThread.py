@@ -117,7 +117,7 @@ class ContrastWorker(QtCore.QThread):
             if self._is_running:
                 self.groups_completed.emit(groups)
         except Exception as e:
-            print(f"Error in contrast worker: {str(e)}")
+            pass
 
     def stop(self):
         self._is_running = False
