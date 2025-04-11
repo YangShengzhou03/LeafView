@@ -288,9 +288,9 @@ class Contrast(QtWidgets.QWidget):
                 widget.deleteLater()
 
     def set_empty(self, status=False):
-        self.parent.label_image_A.setStyleSheet(f"image: url({get_resource_path('resources/img/page_3/对比1.svg')})" if
+        self.parent.label_image_A.setStyleSheet(f"image: url({get_resource_path('resources/img/page_3/对比1.jpg')})" if
                                                 status else "QLabel {image: url('');}")
-        self.parent.label_image_B.setStyleSheet(f"image: url({get_resource_path('resources/img/page_3/对比2.svg')})" if
+        self.parent.label_image_B.setStyleSheet(f"image: url({get_resource_path('resources/img/page_3/对比2.jpg')})" if
                                                 status else "QLabel {image: url('');}")
 
     def show_image(self, label, path):

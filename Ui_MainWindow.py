@@ -2654,7 +2654,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_65.setObjectName("horizontalLayout_65")
         self.label_image_A = QtWidgets.QLabel(parent=self.verticalFrame_13)
         self.label_image_A.setStyleSheet("QLabel {\n"
-f"image: url({get_resource_path('resources/img/page_3/对比1.svg')});    \n"
+f"image: url({get_resource_path('resources/img/page_3/对比1.jpg')});    \n"
 "}")
         self.label_image_A.setText("")
         self.label_image_A.setObjectName("label_image_A")
@@ -2668,7 +2668,7 @@ f"image: url({get_resource_path('resources/img/page_3/对比1.svg')});    \n"
         self.horizontalLayout_65.addWidget(self.line_contrast)
         self.label_image_B = QtWidgets.QLabel(parent=self.verticalFrame_13)
         self.label_image_B.setStyleSheet("QLabel {\n"
-f"image: url({get_resource_path('resources/img/page_3/对比2.svg')});    \n"
+f"image: url({get_resource_path('resources/img/page_3/对比2.jpg')});    \n"
 "}")
         self.label_image_B.setText("")
         self.label_image_B.setObjectName("label_image_B")
