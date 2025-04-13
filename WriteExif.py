@@ -1,6 +1,6 @@
 from datetime import datetime
 import requests
-from PyQt6.QtCore import pyqtSlot
+from PyQt6.QtCore import pyqtSlot, QDateTime
 from PyQt6.QtWidgets import QWidget
 from WriteExifThread import WriteExifThread
 from common import get_resource_path
@@ -32,6 +32,7 @@ class WriteExif(QWidget):
             btn.clicked.connect(lambda _, idx=i: self.set_selected_star(idx))
             self.star_buttons.append(btn)
         self.update_button_state()
+        self.parent.dateTimeEdit_shootTime.setDateTime(QDateTime.currentDateTime())
         self.parent.dateTimeEdit_shootTime.hide()
         self.log("DEBUG", "欢迎使用图像属性写入功能，不写入项目留空即可。")
 
