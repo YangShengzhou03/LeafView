@@ -3513,6 +3513,107 @@ QPushButton:pressed {
                            </property>
                           </spacer>
                          </item>
+                         <item>
+                          <layout class="QHBoxLayout" name="horizontalLayout_46">
+                           <property name="spacing">
+                            <number>4</number>
+                           </property>
+                           <property name="rightMargin">
+                            <number>9</number>
+                           </property>
+                           <item>
+                            <widget class="QLabel" name="label_operation_2">
+                             <property name="font">
+                              <font>
+                               <pointsize>12</pointsize>
+                              </font>
+                             </property>
+                             <property name="styleSheet">
+                              <string notr="true">QLabel {
+    color: #333333;
+    border: none;
+}</string>
+                             </property>
+                             <property name="text">
+                              <string>分隔</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QComboBox" name="comboBox_separator">
+                             <property name="minimumSize">
+                              <size>
+                               <width>48</width>
+                               <height>30</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <family>Microsoft YaHei</family>
+                               <pointsize>-1</pointsize>
+                               <italic>false</italic>
+                               <bold>false</bold>
+                              </font>
+                             </property>
+                             <property name="styleSheet">
+                              <string notr="true">QComboBox {
+    border: 1px solid rgba(134, 119, 253, 0.8);
+    background: rgb(245, 249, 254);
+    border-radius: 4px;
+    padding: 2px 6px;
+    min-height: 24px;
+	min-width: 34px;
+    color: #333333;
+    font: 14px &quot;Microsoft YaHei&quot;;
+}
+
+QComboBox:hover {
+    border-color: rgba(134, 119, 253, 1);
+    background: rgb(240, 247, 254);
+}
+
+QComboBox::drop-down {
+    width: 0px;
+    border: none;
+}
+
+QComboBox QAbstractItemView {
+    border: 1px solid rgba(134, 119, 253, 0.3);
+    background: white;
+    selection-background-color: rgba(134, 119, 253, 0.15);
+    outline: none;
+}
+
+QComboBox QAbstractItemView::item {
+    padding: 1px 6px;
+    color: #333333;
+    font: 12px &quot;Microsoft YaHei&quot;;
+}</string>
+                             </property>
+                             <item>
+                              <property name="text">
+                               <string>-</string>
+                              </property>
+                             </item>
+                             <item>
+                              <property name="text">
+                               <string>无</string>
+                              </property>
+                             </item>
+                             <item>
+                              <property name="text">
+                               <string>空格</string>
+                              </property>
+                             </item>
+                             <item>
+                              <property name="text">
+                               <string>_</string>
+                              </property>
+                             </item>
+                            </widget>
+                           </item>
+                          </layout>
+                         </item>
                         </layout>
                        </widget>
                       </item>
@@ -4657,8 +4758,8 @@ QScrollBar::corner {
                         <rect>
                          <x>0</x>
                          <y>0</y>
-                         <width>231</width>
-                         <height>462</height>
+                         <width>100</width>
+                         <height>30</height>
                         </rect>
                        </property>
                        <layout class="QGridLayout" name="gridLayout_2"/>
@@ -4864,9 +4965,12 @@ QToolButton:pressed {
                 </layout>
                </widget>
                <widget class="QWidget" name="page_4">
-                <layout class="QVBoxLayout" name="verticalLayout_47" stretch="0,0,0,0">
+                <property name="styleSheet">
+                 <string notr="true">background:rgb(255, 255, 255);</string>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_47" stretch="0,0,0,0,0">
                  <property name="spacing">
-                  <number>0</number>
+                  <number>4</number>
                  </property>
                  <property name="leftMargin">
                   <number>0</number>
@@ -5175,6 +5279,24 @@ QLineEdit:disabled {
                        <number>0</number>
                       </property>
                       <item>
+                       <widget class="QLabel" name="label_36">
+                        <property name="font">
+                         <font>
+                          <pointsize>12</pointsize>
+                         </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QLabel {
+    color: #333333;
+    border: none;
+}</string>
+                        </property>
+                        <property name="text">
+                         <string>自动打图片标记</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
                        <widget class="QCheckBox" name="checkBox_autoMark">
                         <property name="minimumSize">
                          <size>
@@ -5230,24 +5352,6 @@ QCheckBox::indicator:checked {
                         </property>
                        </widget>
                       </item>
-                      <item>
-                       <widget class="QLabel" name="label_36">
-                        <property name="font">
-                         <font>
-                          <pointsize>12</pointsize>
-                         </font>
-                        </property>
-                        <property name="styleSheet">
-                         <string notr="true">QLabel {
-    color: #333333;
-    border: none;
-}</string>
-                        </property>
-                        <property name="text">
-                         <string>自动打图片标记</string>
-                        </property>
-                       </widget>
-                      </item>
                      </layout>
                     </item>
                     <item>
@@ -5278,7 +5382,7 @@ border-top-right-radius:0px;
 border-bottom-right-radius:0px;
 border-bottom-left-radius:0px;</string>
                    </property>
-                   <layout class="QHBoxLayout" name="horizontalLayout_68" stretch="0,0,0,0,0">
+                   <layout class="QHBoxLayout" name="horizontalLayout_68" stretch="0,0,0,0">
                     <property name="spacing">
                      <number>12</number>
                     </property>
@@ -5478,6 +5582,252 @@ QLineEdit:disabled {
                      </layout>
                     </item>
                     <item>
+                     <spacer name="horizontalSpacer_51">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeType">
+                       <enum>QSizePolicy::Preferred</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="horizontalFrame_10">
+                   <property name="styleSheet">
+                    <string notr="true">background:rgb(255, 255, 255);
+border-top-left-radius:0px;
+border-top-right-radius:0px;
+border-bottom-right-radius:0px;
+border-bottom-left-radius:0px;</string>
+                   </property>
+                   <layout class="QHBoxLayout" name="horizontalLayout_72" stretch="0,0,0">
+                    <property name="spacing">
+                     <number>12</number>
+                    </property>
+                    <property name="leftMargin">
+                     <number>12</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>6</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>6</number>
+                    </property>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_15">
+                      <item>
+                       <widget class="QLabel" name="label_44">
+                        <property name="font">
+                         <font>
+                          <pointsize>12</pointsize>
+                         </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QLabel {
+    color: #333333;
+    border: none;
+}</string>
+                        </property>
+                        <property name="text">
+                         <string>拍摄时间</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QComboBox" name="comboBox_shootTime">
+                        <property name="styleSheet">
+                         <string notr="true">QComboBox {
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 6px 12px;
+    color: #374151;
+    font-family: &quot;Microsoft YaHei&quot;, &quot;微软雅黑&quot;, sans-serif;
+    font-size: 13px;
+    min-width: 56px;
+    min-height: 16px;
+    selection-background-color: #6d28d9;
+    selection-color: white;
+    transition: all 0.2s ease-out;
+}
+
+QComboBox::drop-down {
+    width: 0;
+    border: none;
+    padding: 0;
+}
+
+QComboBox::down-arrow {
+    image: none;
+}
+
+QComboBox:hover {
+    border-color: #a5b4fc;
+    background-color: #f8fafc;
+    box-shadow: 0 1px 3px rgba(166, 175, 195, 0.2);
+}
+
+QComboBox:on {
+    background-color: #f5f3ff;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+QComboBox:pressed {
+    background-color: #ede9fe;
+    transform: translateY(1px);
+}
+
+QComboBox:disabled {
+    background-color: #f3f4f6;
+    color: #9ca3af;
+    border-color: #e5e7eb;
+}
+
+QComboBox QAbstractItemView {
+    border: 1px solid #e5e7eb;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    background: white;
+    padding: 4px 0;
+    margin-top: -1px;
+    selection-background-color: #6d28d9;
+    selection-color: white;
+    outline: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    min-width: 88px;
+    font-family: &quot;Microsoft YaHei&quot;, &quot;微软雅黑&quot;, sans-serif;
+    font-size: 13px;
+}
+
+QComboBox QAbstractItemView::item {
+    padding: 6px 2px;
+    margin: 0 4px;
+    border-radius: 3px;
+    border-left: 1px solid transparent;
+}
+
+QComboBox QAbstractItemView::item:hover {
+    background-color: #f8f5ff;
+    color: #6d28d9;
+}
+
+QComboBox QAbstractItemView::item:selected {
+    background-color: #faf7ff;
+    color: #6d28d9;
+    border-left: 1px solid #6d28d9;
+    font-weight: normal;
+    padding-left: 11px;
+}
+
+QComboBox:editable {
+    background: white;
+    padding-right: 12px;
+}
+
+QComboBox:editable:on {
+    background: #f5f3ff;
+}
+
+QComboBox:!editable {
+    background: #f9fafb;
+}
+
+QComboBox:focus {
+    border: 1px solid #8b5cf6;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+}</string>
+                        </property>
+                        <item>
+                         <property name="text">
+                          <string>不写入</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>从文件名</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>指定时间</string>
+                         </property>
+                        </item>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QDateTimeEdit" name="dateTimeEdit_shootTime">
+                        <property name="font">
+                         <font>
+                          <pointsize>-1</pointsize>
+                         </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QDateTimeEdit {
+    border: 1px solid qradialgradient(
+        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
+        stop:0.66 rgba(134, 119, 253, 255),
+        stop:1 rgba(119, 111, 252, 255)
+    );
+    background: rgb(245, 249, 254);
+    padding: 8px 4px;
+    border-radius: 6px;
+    color: #333;
+    selection-background-color: rgba(134, 119, 253, 180);
+    selection-color: white;
+    font-size: 13px;
+}
+
+QDateTimeEdit::up-button, QDateTimeEdit::down-button {
+    subcontrol-origin: border;
+    subcontrol-position: top right;
+    width: 12px;
+    height: 6px;
+    background: transparent;
+    border: none;
+    qproperty-arrowType: none;
+    display: none;
+}
+
+QDateTimeEdit:focus {
+    border: 2px solid qradialgradient(
+        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
+        stop:0.66 rgba(134, 119, 253, 255),
+        stop:1 rgba(119, 111, 252, 255)
+    );
+    outline: none;
+}
+
+QDateTimeEdit:disabled {
+    background: #eaeaea;
+    color: #aaa;
+}</string>
+                        </property>
+                        <property name="currentSection">
+                         <enum>QDateTimeEdit::YearSection</enum>
+                        </property>
+                        <property name="displayFormat">
+                         <string>yyyy/MM/dd HH:mm:ss</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
                      <layout class="QHBoxLayout" name="horizontalLayout_12">
                       <property name="spacing">
                        <number>0</number>
@@ -5578,7 +5928,7 @@ QLineEdit:disabled {
                      </layout>
                     </item>
                     <item>
-                     <spacer name="horizontalSpacer_51">
+                     <spacer name="horizontalSpacer_52">
                       <property name="orientation">
                        <enum>Qt::Horizontal</enum>
                       </property>

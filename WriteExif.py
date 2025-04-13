@@ -32,11 +32,19 @@ class WriteExif(QWidget):
             btn.clicked.connect(lambda _, idx=i: self.set_selected_star(idx))
             self.star_buttons.append(btn)
         self.update_button_state()
+        self.parent.dateTimeEdit_shootTime.hide()
         self.log("DEBUG", "欢迎使用图像属性写入功能，不写入项目留空即可。")
 
     def setup_connections(self):
         self.parent.toolButton_StartEXIF.clicked.connect(self.toggle_exif_writing)
         self.parent.pushButton_Position.clicked.connect(self.update_position_by_ip)
+        self.parent.comboBox_shootTime.currentIndexChanged.connect(self.on_combobox_time_changed)
+
+    def on_combobox_time_changed(self, index):
+        if index == 2:
+            self.parent.dateTimeEdit_shootTime.show()
+        else:
+            self.parent.dateTimeEdit_shootTime.hide()
 
     def update_button_state(self):
         if self.is_running:
@@ -121,7 +129,11 @@ class WriteExif(QWidget):
             'subject': self.parent.lineEdit_EXIF_Theme.text(),
             'rating': str(self.selected_star),
             'copyright': self.parent.lineEdit_EXIF_Copyright.text(),
-            'position': None
+            'position': None,
+            'shootTime': self.parent.dateTimeEdit_shootTime.dateTime().toString(
+                "yyyy:MM:dd HH:mm:ss")
+            if self.parent.comboBox_shootTime.currentIndex() == 2
+            else self.parent.comboBox_shootTime.currentIndex()
         }
         address = self.parent.lineEdit_EXIF_Position.text()
         if address:

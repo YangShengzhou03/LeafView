@@ -47,11 +47,12 @@ class ClassificationThread(QtCore.QThread):
     progress_signal = QtCore.pyqtSignal(int)
 
     def __init__(self, parent=None, folders=None, classification_structure=None, file_name_structure=None,
-                 destination_root=None, time_derive="最早时间"):
+                 destination_root=None, separator=None, time_derive="最早时间"):
         super().__init__()
         self.parent, self.folders, self.classification_structure = parent, folders or [], classification_structure or []
         self.file_name_structure, self.time_derive = file_name_structure or [], time_derive
         self.destination_root = Path(destination_root) if destination_root else None
+        self.separator = separator
         self._stop_flag = False
         self.load_geographic_data()
         self.files_to_rename = []
@@ -138,7 +139,7 @@ class ClassificationThread(QtCore.QThread):
                     return
                 new_name = self.construct_new_filename(exif_data, file_path)
                 if new_name:
-                        os.rename(file_path, new_name)
+                    os.rename(file_path, new_name)
             except Exception as e:
                 print(e)
                 result = detect_media_type(file_path)
@@ -203,9 +204,9 @@ class ClassificationThread(QtCore.QThread):
                     elif part == "星期":
                         part_str = self._get_weekday(date)
                     elif part == "时间":
-                        part_str = date.strftime('%H%M')
+                        part_str = date.strftime('%H%M%S')
                     parts.append(part_str)
-                except Exception as e:
+                except Exception:
                     continue
 
             elif part == "位置":
@@ -226,7 +227,7 @@ class ClassificationThread(QtCore.QThread):
                     parts.append(model)
 
         if parts:
-            new_name = "-".join(parts) + file_path.suffix.lower()
+            new_name = self.separator.join(parts) + file_path.suffix.lower()
             unique_name = self.make_unique_filename(file_path.parent, new_name)
             return unique_name
         return None

@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import time
 from concurrent.futures import as_completed, ThreadPoolExecutor
 from datetime import datetime
@@ -7,7 +8,7 @@ from datetime import datetime
 import imagehash
 import piexif
 import requests
-from PIL import Image
+from PIL import Image, PngImagePlugin
 from PyQt6.QtCore import QThread, pyqtSignal
 
 from common import detect_media_type
@@ -19,7 +20,7 @@ class WriteExifThread(QThread):
     log = pyqtSignal(str, str)
 
     def __init__(self, folders_dict, autoMark=True, title='', author='', subject='', rating='', copyright='',
-                 position=''):
+                 position='', shootTime=''):
         super().__init__()
         self.folders_dict = {item['path']: item['include_sub'] for item in folders_dict}
         self.autoMark = autoMark
@@ -29,6 +30,7 @@ class WriteExifThread(QThread):
         self.rating = rating
         self.copyright = copyright
         self.position = position
+        self.shootTime = shootTime
         self._stop_requested = False
         self.lat = None
         self.lon = None
@@ -208,6 +210,20 @@ class WriteExifThread(QThread):
             if self.copyright:
                 exif_dict["0th"][piexif.ImageIFD.Copyright] = self.copyright.encode('utf-8')
                 updated_fields.append(f"版权: {self.copyright}")
+            if self.shootTime != 0:
+                if self.shootTime == 1:
+                    date_from_filename = self.get_date_from_filename(image_path)
+                    if date_from_filename:
+                        if "Exif" not in exif_dict:
+                            exif_dict["Exif"] = {}
+                        exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = date_from_filename.strftime(
+                            "%Y:%m:%d %H:%M:%S")
+                        updated_fields.append(f"文件名识别拍摄时间: {date_from_filename.strftime('%Y:%m:%d %H:%M:%S')}")
+                else:
+                    if "Exif" not in exif_dict:
+                        exif_dict["Exif"] = {}
+                    exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = self.shootTime
+                    updated_fields.append(f"拍摄时间: {self.shootTime}")
             if self.autoMark:
                 if self._stop_requested:
                     self.log.emit("INFO", f"操作被终止: {image_path}")
@@ -261,3 +277,78 @@ class WriteExifThread(QThread):
 
     def stop(self):
         self._stop_requested = True
+
+    def _set_png_exif_info(self, image_path):
+        with Image.open(image_path) as img:
+            png_info = PngImagePlugin.PngInfo()
+            for key, value in img.info.items():
+                if isinstance(value, str):
+                    png_info.add_text(key, value)
+
+            if self.time_option != 0:
+                if self.automatic_time:
+                    date_from_filename = self.extract_date_from_filename(image_path)
+                    if date_from_filename:
+                        png_info.add_text('Creation Time', date_from_filename.strftime("%Y:%m:%d %H:%M:%S"))
+                        self.log_message.emit(
+                            f"写入PNG文件 {image_path} 拍摄时间(文件名识别): {date_from_filename.strftime('%Y:%m:%d %H:%M:%S')}",
+                            "INFO")
+                elif self.update_date and self.time_option == 1:
+                    png_info.add_text('Creation Time', self.update_date)
+                    self.log_message.emit(f"写入PNG文件 {image_path} 拍摄时间: {self.update_date}", "INFO")
+                output_file_path = image_path + ".new"
+                img.save(output_file_path, "PNG", pnginfo=png_info)
+                os.replace(output_file_path, image_path)
+            else:
+                self.log_message.emit(f"未对 {image_path} EXIF数据 进行任何更改", "WARNING")
+
+    def get_date_from_filename(self, image_path):
+        base_name = os.path.basename(image_path)
+        name_without_ext = os.path.splitext(base_name)[0]
+        date_pattern = r'(?P<year>\d{4})[^0-9]*' \
+                       r'(?P<month>1[0-2]|0?[1-9])[^0-9]*' \
+                       r'(?P<day>3[01]|[12]\d|0?[1-9])[^0-9]*' \
+                       r'(?P<hour>2[0-3]|[01]?\d)?[^0-9]*' \
+                       r'(?P<minute>[0-5]?\d)?[^0-9]*' \
+                       r'(?P<second>[0-5]?\d)?'
+        match = re.search(date_pattern, name_without_ext)
+        if match:
+            groups = match.groupdict()
+            if not all([groups.get('year'), groups.get('month'), groups.get('day')]):
+                return None
+            date_str_parts = [
+                groups['year'],
+                groups['month'].rjust(2, '0'),
+                groups['day'].rjust(2, '0')
+            ]
+            if groups.get('hour'):
+                date_str_parts.append(groups['hour'].rjust(2, '0'))
+                if groups.get('minute'):
+                    date_str_parts.append(groups['minute'].rjust(2, '0'))
+                    if groups.get('second'):
+                        date_str_parts.append(groups['second'].rjust(2, '0'))
+
+            date_str = ''.join(date_str_parts)
+            possible_formats = []
+            if len(date_str) == 8:
+                possible_formats.append("%Y%m%d")
+            elif len(date_str) == 12:
+                possible_formats.append("%Y%m%d%H%M")
+            elif len(date_str) == 14:
+                possible_formats.append("%Y%m%d%H%M%S")
+
+            for fmt in possible_formats:
+                try:
+                    date_obj = datetime.strptime(date_str, fmt)
+                    if (1900 <= date_obj.year <= 2100 and
+                            1 <= date_obj.month <= 12 and
+                            1 <= date_obj.day <= 31 and
+                            0 <= date_obj.hour <= 23 and
+                            0 <= date_obj.minute <= 59 and
+                            0 <= date_obj.second <= 59):
+                        return date_obj
+                    else:
+                        return None
+                except ValueError:
+                    continue
+        return None

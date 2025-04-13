@@ -8,8 +8,6 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from common import get_resource_path
-
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -202,27 +200,27 @@ class Ui_MainWindow(object):
         self.listWidget_base.setObjectName("listWidget_base")
         item = QtWidgets.QListWidgetItem()
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/list/媒体导入.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon.addPixmap(QtGui.QPixmap("resources/img/list/媒体导入.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         item.setIcon(icon)
         self.listWidget_base.addItem(item)
         item = QtWidgets.QListWidgetItem()
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/list/图像识别.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon1.addPixmap(QtGui.QPixmap("resources/img/list/图像识别.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         item.setIcon(icon1)
         self.listWidget_base.addItem(item)
         item = QtWidgets.QListWidgetItem()
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/list/智能整理.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon2.addPixmap(QtGui.QPixmap("resources/img/list/智能整理.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         item.setIcon(icon2)
         self.listWidget_base.addItem(item)
         item = QtWidgets.QListWidgetItem()
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/list/文件去重.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon3.addPixmap(QtGui.QPixmap("resources/img/list/文件去重.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         item.setIcon(icon3)
         self.listWidget_base.addItem(item)
         item = QtWidgets.QListWidgetItem()
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/list/属性写入.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon4.addPixmap(QtGui.QPixmap("resources/img/list/属性写入.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         item.setIcon(icon4)
         self.listWidget_base.addItem(item)
         self.verticalLayout_4.addWidget(self.listWidget_base)
@@ -285,7 +283,7 @@ class Ui_MainWindow(object):
         self.widget_headVip.setMinimumSize(QtCore.QSize(106, 36))
         self.widget_headVip.setMaximumSize(QtCore.QSize(106, 36))
         self.widget_headVip.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
-        self.widget_headVip.setStyleSheet(f"image: url({get_resource_path('resources/img/头标/头标-紫银高级会员.svg')});\n"
+        self.widget_headVip.setStyleSheet("image: url(resources/img/头标/头标-紫银高级会员.svg);\n"
 "background-color: rgba(0, 0, 0,0);\n"
 "border-radius:0px;")
         self.widget_headVip.setObjectName("widget_headVip")
@@ -309,7 +307,7 @@ class Ui_MainWindow(object):
 "}")
         self.toolButton_serve.setText("")
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/窗口控制/服务.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon5.addPixmap(QtGui.QPixmap("resources/img/窗口控制/服务.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.toolButton_serve.setIcon(icon5)
         self.toolButton_serve.setIconSize(QtCore.QSize(16, 16))
         self.toolButton_serve.setObjectName("toolButton_serve")
@@ -333,7 +331,7 @@ class Ui_MainWindow(object):
 "}")
         self.toolButton_setting.setText("")
         icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/窗口控制/设置.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon6.addPixmap(QtGui.QPixmap("resources/img/窗口控制/设置.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.toolButton_setting.setIcon(icon6)
         self.toolButton_setting.setIconSize(QtCore.QSize(18, 18))
         self.toolButton_setting.setObjectName("toolButton_setting")
@@ -357,7 +355,7 @@ class Ui_MainWindow(object):
 "}")
         self.toolButton_minimum.setText("")
         icon7 = QtGui.QIcon()
-        icon7.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/窗口控制/最小化.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon7.addPixmap(QtGui.QPixmap("resources/img/窗口控制/最小化.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.toolButton_minimum.setIcon(icon7)
         self.toolButton_minimum.setIconSize(QtCore.QSize(14, 14))
         self.toolButton_minimum.setObjectName("toolButton_minimum")
@@ -381,7 +379,7 @@ class Ui_MainWindow(object):
 "}")
         self.toolButton_maximum.setText("")
         icon8 = QtGui.QIcon()
-        icon8.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/窗口控制/最大化.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon8.addPixmap(QtGui.QPixmap("resources/img/窗口控制/最大化.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.toolButton_maximum.setIcon(icon8)
         self.toolButton_maximum.setIconSize(QtCore.QSize(14, 14))
         self.toolButton_maximum.setObjectName("toolButton_maximum")
@@ -405,7 +403,7 @@ class Ui_MainWindow(object):
 "}")
         self.toolButton_close.setText("")
         icon9 = QtGui.QIcon()
-        icon9.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/窗口控制/关闭.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon9.addPixmap(QtGui.QPixmap("resources/img/窗口控制/关闭.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.toolButton_close.setIcon(icon9)
         self.toolButton_close.setIconSize(QtCore.QSize(14, 14))
         self.toolButton_close.setObjectName("toolButton_close")
@@ -568,7 +566,7 @@ class Ui_MainWindow(object):
         self.widget_folder.setSizePolicy(sizePolicy)
         self.widget_folder.setMinimumSize(QtCore.QSize(40, 40))
         self.widget_folder.setMaximumSize(QtCore.QSize(40, 40))
-        self.widget_folder.setStyleSheet(f"image: url({get_resource_path('resources/img/page_0/导入文件夹.svg);')}\n"
+        self.widget_folder.setStyleSheet("image: url(resources/img/page_0/导入文件夹.svg);\n"
 "background-color: rgba(0, 0, 0, 0);\n"
 "border-radius:0px;\n"
 "border: 0px;")
@@ -2090,13 +2088,75 @@ class Ui_MainWindow(object):
 "  transform: translateY(2px);\n"
 "}")
         icon10 = QtGui.QIcon()
-        icon10.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/page_2/位置.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon10.addPixmap(QtGui.QPixmap("resources/img/page_2/位置.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.pushButton_address.setIcon(icon10)
         self.pushButton_address.setObjectName("pushButton_address")
         self.horizontalLayout_57.addWidget(self.pushButton_address)
         self.horizontalLayout_54.addWidget(self.frame_Rename_tags)
         spacerItem8 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
         self.horizontalLayout_54.addItem(spacerItem8)
+        self.horizontalLayout_46 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_46.setContentsMargins(-1, -1, 9, -1)
+        self.horizontalLayout_46.setSpacing(4)
+        self.horizontalLayout_46.setObjectName("horizontalLayout_46")
+        self.label_operation_2 = QtWidgets.QLabel(parent=self.Frame_tags)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_operation_2.setFont(font)
+        self.label_operation_2.setStyleSheet("QLabel {\n"
+"    color: #333333;\n"
+"    border: none;\n"
+"}")
+        self.label_operation_2.setObjectName("label_operation_2")
+        self.horizontalLayout_46.addWidget(self.label_operation_2)
+        self.comboBox_separator = QtWidgets.QComboBox(parent=self.Frame_tags)
+        self.comboBox_separator.setMinimumSize(QtCore.QSize(48, 30))
+        font = QtGui.QFont()
+        font.setFamily("Microsoft YaHei")
+        font.setPointSize(-1)
+        font.setBold(False)
+        font.setItalic(False)
+        self.comboBox_separator.setFont(font)
+        self.comboBox_separator.setStyleSheet("QComboBox {\n"
+"    border: 1px solid rgba(134, 119, 253, 0.8);\n"
+"    background: rgb(245, 249, 254);\n"
+"    border-radius: 4px;\n"
+"    padding: 2px 6px;\n"
+"    min-height: 24px;\n"
+"    min-width: 34px;\n"
+"    color: #333333;\n"
+"    font: 14px \"Microsoft YaHei\";\n"
+"}\n"
+"\n"
+"QComboBox:hover {\n"
+"    border-color: rgba(134, 119, 253, 1);\n"
+"    background: rgb(240, 247, 254);\n"
+"}\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    width: 0px;\n"
+"    border: none;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView {\n"
+"    border: 1px solid rgba(134, 119, 253, 0.3);\n"
+"    background: white;\n"
+"    selection-background-color: rgba(134, 119, 253, 0.15);\n"
+"    outline: none;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item {\n"
+"    padding: 1px 6px;\n"
+"    color: #333333;\n"
+"    font: 12px \"Microsoft YaHei\";\n"
+"}")
+        self.comboBox_separator.setObjectName("comboBox_separator")
+        self.comboBox_separator.addItem("")
+        self.comboBox_separator.addItem("")
+        self.comboBox_separator.addItem("")
+        self.comboBox_separator.addItem("")
+        self.horizontalLayout_46.addWidget(self.comboBox_separator)
+        self.horizontalLayout_54.addLayout(self.horizontalLayout_46)
         self.verticalLayout_35.addWidget(self.Frame_tags)
         self.horizontalLayout_55 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_55.setContentsMargins(12, 0, 0, 0)
@@ -2654,7 +2714,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_65.setObjectName("horizontalLayout_65")
         self.label_image_A = QtWidgets.QLabel(parent=self.verticalFrame_13)
         self.label_image_A.setStyleSheet("QLabel {\n"
-f"image: url({get_resource_path('resources/img/page_3/对比1.jpg')});    \n"
+"image: url(\'resources/img/page_3/对比1.svg\');    \n"
 "}")
         self.label_image_A.setText("")
         self.label_image_A.setObjectName("label_image_A")
@@ -2668,7 +2728,7 @@ f"image: url({get_resource_path('resources/img/page_3/对比1.jpg')});    \n"
         self.horizontalLayout_65.addWidget(self.line_contrast)
         self.label_image_B = QtWidgets.QLabel(parent=self.verticalFrame_13)
         self.label_image_B.setStyleSheet("QLabel {\n"
-f"image: url({get_resource_path('resources/img/page_3/对比2.jpg')});    \n"
+"image: url(\'resources/img/page_3/对比2.svg\');    \n"
 "}")
         self.label_image_B.setText("")
         self.label_image_B.setObjectName("label_image_B")
@@ -2754,7 +2814,7 @@ f"image: url({get_resource_path('resources/img/page_3/对比2.jpg')});    \n"
         self.scrollArea_pageSimilar.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.scrollArea_pageSimilar.setObjectName("scrollArea_pageSimilar")
         self.scrollAreaWidgetContents_Contrast = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_Contrast.setGeometry(QtCore.QRect(0, 0, 231, 462))
+        self.scrollAreaWidgetContents_Contrast.setGeometry(QtCore.QRect(0, 0, 100, 30))
         self.scrollAreaWidgetContents_Contrast.setObjectName("scrollAreaWidgetContents_Contrast")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents_Contrast)
         self.gridLayout_2.setObjectName("gridLayout_2")
@@ -2879,10 +2939,11 @@ f"image: url({get_resource_path('resources/img/page_3/对比2.jpg')});    \n"
         self.horizontalLayout_66.setStretch(0, 1)
         self.stackedWidget.addWidget(self.page_3)
         self.page_4 = QtWidgets.QWidget()
+        self.page_4.setStyleSheet("background:rgb(255, 255, 255);")
         self.page_4.setObjectName("page_4")
         self.verticalLayout_47 = QtWidgets.QVBoxLayout(self.page_4)
         self.verticalLayout_47.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout_47.setSpacing(0)
+        self.verticalLayout_47.setSpacing(4)
         self.verticalLayout_47.setObjectName("verticalLayout_47")
         self.horizontalFrame_9 = QtWidgets.QFrame(parent=self.page_4)
         self.horizontalFrame_9.setStyleSheet("background:rgb(255, 255, 255);\n"
@@ -2960,11 +3021,11 @@ f"image: url({get_resource_path('resources/img/page_3/对比2.jpg')});    \n"
         self.pushButton_star_1.setMinimumSize(QtCore.QSize(22, 22))
         self.pushButton_star_1.setMaximumSize(QtCore.QSize(22, 22))
         self.pushButton_star_1.setStyleSheet("QPushButton:hover {\n"
-f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
+"    image: url(resources/img/page_4/星级_亮.svg);\n"
 "}")
         self.pushButton_star_1.setText("")
         icon11 = QtGui.QIcon()
-        icon11.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/page_4/星级_暗.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon11.addPixmap(QtGui.QPixmap("resources/img/page_4/星级_暗.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.pushButton_star_1.setIcon(icon11)
         self.pushButton_star_1.setIconSize(QtCore.QSize(20, 20))
         self.pushButton_star_1.setObjectName("pushButton_star_1")
@@ -2973,7 +3034,7 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
         self.pushButton_star_2.setMinimumSize(QtCore.QSize(22, 22))
         self.pushButton_star_2.setMaximumSize(QtCore.QSize(22, 22))
         self.pushButton_star_2.setStyleSheet("QPushButton:hover {\n"
-f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
+"    image: url(resources/img/page_4/星级_亮.svg);\n"
 "}")
         self.pushButton_star_2.setText("")
         self.pushButton_star_2.setIcon(icon11)
@@ -2984,7 +3045,7 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
         self.pushButton_star_3.setMinimumSize(QtCore.QSize(22, 22))
         self.pushButton_star_3.setMaximumSize(QtCore.QSize(22, 22))
         self.pushButton_star_3.setStyleSheet("QPushButton:hover {\n"
-f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
+"    image: url(resources/img/page_4/星级_亮.svg);\n"
 "}")
         self.pushButton_star_3.setText("")
         self.pushButton_star_3.setIcon(icon11)
@@ -2995,7 +3056,7 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
         self.pushButton_star_4.setMinimumSize(QtCore.QSize(22, 22))
         self.pushButton_star_4.setMaximumSize(QtCore.QSize(22, 22))
         self.pushButton_star_4.setStyleSheet("QPushButton:hover {\n"
-f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
+"    image: url(resources/img/page_4/星级_亮.svg);\n"
 "}")
         self.pushButton_star_4.setText("")
         self.pushButton_star_4.setIcon(icon11)
@@ -3006,7 +3067,7 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
         self.pushButton_star_5.setMinimumSize(QtCore.QSize(22, 22))
         self.pushButton_star_5.setMaximumSize(QtCore.QSize(22, 22))
         self.pushButton_star_5.setStyleSheet("QPushButton:hover {\n"
-f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
+"    image: url(resources/img/page_4/星级_亮.svg);\n"
 "}")
         self.pushButton_star_5.setText("")
         self.pushButton_star_5.setIcon(icon11)
@@ -3018,6 +3079,16 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
         self.horizontalLayout_7 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_7.setSpacing(0)
         self.horizontalLayout_7.setObjectName("horizontalLayout_7")
+        self.label_36 = QtWidgets.QLabel(parent=self.horizontalFrame_9)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_36.setFont(font)
+        self.label_36.setStyleSheet("QLabel {\n"
+"    color: #333333;\n"
+"    border: none;\n"
+"}")
+        self.label_36.setObjectName("label_36")
+        self.horizontalLayout_7.addWidget(self.label_36)
         self.checkBox_autoMark = QtWidgets.QCheckBox(parent=self.horizontalFrame_9)
         self.checkBox_autoMark.setMinimumSize(QtCore.QSize(46, 26))
         self.checkBox_autoMark.setMaximumSize(QtCore.QSize(46, 26))
@@ -3059,16 +3130,6 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
         self.checkBox_autoMark.setText("")
         self.checkBox_autoMark.setObjectName("checkBox_autoMark")
         self.horizontalLayout_7.addWidget(self.checkBox_autoMark)
-        self.label_36 = QtWidgets.QLabel(parent=self.horizontalFrame_9)
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        self.label_36.setFont(font)
-        self.label_36.setStyleSheet("QLabel {\n"
-"    color: #333333;\n"
-"    border: none;\n"
-"}")
-        self.label_36.setObjectName("label_36")
-        self.horizontalLayout_7.addWidget(self.label_36)
         self.horizontalLayout_69.addLayout(self.horizontalLayout_7)
         spacerItem14 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Minimum)
         self.horizontalLayout_69.addItem(spacerItem14)
@@ -3217,10 +3278,192 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
         self.lineEdit_EXIF_Copyright.setObjectName("lineEdit_EXIF_Copyright")
         self.horizontalLayout_11.addWidget(self.lineEdit_EXIF_Copyright)
         self.horizontalLayout_68.addLayout(self.horizontalLayout_11)
+        spacerItem15 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Minimum)
+        self.horizontalLayout_68.addItem(spacerItem15)
+        self.verticalLayout_47.addWidget(self.horizontalFrame_8)
+        self.horizontalFrame_10 = QtWidgets.QFrame(parent=self.page_4)
+        self.horizontalFrame_10.setStyleSheet("background:rgb(255, 255, 255);\n"
+"border-top-left-radius:0px;\n"
+"border-top-right-radius:0px;\n"
+"border-bottom-right-radius:0px;\n"
+"border-bottom-left-radius:0px;")
+        self.horizontalFrame_10.setObjectName("horizontalFrame_10")
+        self.horizontalLayout_72 = QtWidgets.QHBoxLayout(self.horizontalFrame_10)
+        self.horizontalLayout_72.setContentsMargins(12, 6, 0, 6)
+        self.horizontalLayout_72.setSpacing(12)
+        self.horizontalLayout_72.setObjectName("horizontalLayout_72")
+        self.horizontalLayout_15 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_15.setObjectName("horizontalLayout_15")
+        self.label_44 = QtWidgets.QLabel(parent=self.horizontalFrame_10)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_44.setFont(font)
+        self.label_44.setStyleSheet("QLabel {\n"
+"    color: #333333;\n"
+"    border: none;\n"
+"}")
+        self.label_44.setObjectName("label_44")
+        self.horizontalLayout_15.addWidget(self.label_44)
+        self.comboBox_shootTime = QtWidgets.QComboBox(parent=self.horizontalFrame_10)
+        self.comboBox_shootTime.setStyleSheet("QComboBox {\n"
+"    background-color: #ffffff;\n"
+"    border: 1px solid #d1d5db;\n"
+"    border-radius: 6px;\n"
+"    padding: 6px 12px;\n"
+"    color: #374151;\n"
+"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
+"    font-size: 13px;\n"
+"    min-width: 56px;\n"
+"    min-height: 16px;\n"
+"    selection-background-color: #6d28d9;\n"
+"    selection-color: white;\n"
+"    transition: all 0.2s ease-out;\n"
+"}\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    width: 0;\n"
+"    border: none;\n"
+"    padding: 0;\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow {\n"
+"    image: none;\n"
+"}\n"
+"\n"
+"QComboBox:hover {\n"
+"    border-color: #a5b4fc;\n"
+"    background-color: #f8fafc;\n"
+"    box-shadow: 0 1px 3px rgba(166, 175, 195, 0.2);\n"
+"}\n"
+"\n"
+"QComboBox:on {\n"
+"    background-color: #f5f3ff;\n"
+"    border-bottom-left-radius: 0;\n"
+"    border-bottom-right-radius: 0;\n"
+"    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);\n"
+"}\n"
+"\n"
+"QComboBox:pressed {\n"
+"    background-color: #ede9fe;\n"
+"    transform: translateY(1px);\n"
+"}\n"
+"\n"
+"QComboBox:disabled {\n"
+"    background-color: #f3f4f6;\n"
+"    color: #9ca3af;\n"
+"    border-color: #e5e7eb;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView {\n"
+"    border: 1px solid #e5e7eb;\n"
+"    border-top: none;\n"
+"    border-radius: 0 0 6px 6px;\n"
+"    background: white;\n"
+"    padding: 4px 0;\n"
+"    margin-top: -1px;\n"
+"    selection-background-color: #6d28d9;\n"
+"    selection-color: white;\n"
+"    outline: none;\n"
+"    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);\n"
+"    min-width: 88px;\n"
+"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
+"    font-size: 13px;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item {\n"
+"    padding: 6px 2px;\n"
+"    margin: 0 4px;\n"
+"    border-radius: 3px;\n"
+"    border-left: 1px solid transparent;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item:hover {\n"
+"    background-color: #f8f5ff;\n"
+"    color: #6d28d9;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item:selected {\n"
+"    background-color: #faf7ff;\n"
+"    color: #6d28d9;\n"
+"    border-left: 1px solid #6d28d9;\n"
+"    font-weight: normal;\n"
+"    padding-left: 11px;\n"
+"}\n"
+"\n"
+"QComboBox:editable {\n"
+"    background: white;\n"
+"    padding-right: 12px;\n"
+"}\n"
+"\n"
+"QComboBox:editable:on {\n"
+"    background: #f5f3ff;\n"
+"}\n"
+"\n"
+"QComboBox:!editable {\n"
+"    background: #f9fafb;\n"
+"}\n"
+"\n"
+"QComboBox:focus {\n"
+"    border: 1px solid #8b5cf6;\n"
+"    outline: none;\n"
+"    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
+"}")
+        self.comboBox_shootTime.setObjectName("comboBox_shootTime")
+        self.comboBox_shootTime.addItem("")
+        self.comboBox_shootTime.addItem("")
+        self.comboBox_shootTime.addItem("")
+        self.horizontalLayout_15.addWidget(self.comboBox_shootTime)
+        self.dateTimeEdit_shootTime = QtWidgets.QDateTimeEdit(parent=self.horizontalFrame_10)
+        font = QtGui.QFont()
+        font.setPointSize(-1)
+        self.dateTimeEdit_shootTime.setFont(font)
+        self.dateTimeEdit_shootTime.setStyleSheet("QDateTimeEdit {\n"
+"    border: 1px solid qradialgradient(\n"
+"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
+"        stop:0.66 rgba(134, 119, 253, 255),\n"
+"        stop:1 rgba(119, 111, 252, 255)\n"
+"    );\n"
+"    background: rgb(245, 249, 254);\n"
+"    padding: 8px 4px;\n"
+"    border-radius: 6px;\n"
+"    color: #333;\n"
+"    selection-background-color: rgba(134, 119, 253, 180);\n"
+"    selection-color: white;\n"
+"    font-size: 13px;\n"
+"}\n"
+"\n"
+"QDateTimeEdit::up-button, QDateTimeEdit::down-button {\n"
+"    subcontrol-origin: border;\n"
+"    subcontrol-position: top right;\n"
+"    width: 12px;\n"
+"    height: 6px;\n"
+"    background: transparent;\n"
+"    border: none;\n"
+"    qproperty-arrowType: none;\n"
+"    display: none;\n"
+"}\n"
+"\n"
+"QDateTimeEdit:focus {\n"
+"    border: 2px solid qradialgradient(\n"
+"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
+"        stop:0.66 rgba(134, 119, 253, 255),\n"
+"        stop:1 rgba(119, 111, 252, 255)\n"
+"    );\n"
+"    outline: none;\n"
+"}\n"
+"\n"
+"QDateTimeEdit:disabled {\n"
+"    background: #eaeaea;\n"
+"    color: #aaa;\n"
+"}")
+        self.dateTimeEdit_shootTime.setCurrentSection(QtWidgets.QDateTimeEdit.Section.YearSection)
+        self.dateTimeEdit_shootTime.setObjectName("dateTimeEdit_shootTime")
+        self.horizontalLayout_15.addWidget(self.dateTimeEdit_shootTime)
+        self.horizontalLayout_72.addLayout(self.horizontalLayout_15)
         self.horizontalLayout_12 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_12.setSpacing(0)
         self.horizontalLayout_12.setObjectName("horizontalLayout_12")
-        self.label_41 = QtWidgets.QLabel(parent=self.horizontalFrame_8)
+        self.label_41 = QtWidgets.QLabel(parent=self.horizontalFrame_10)
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_41.setFont(font)
@@ -3230,7 +3473,7 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
 "}")
         self.label_41.setObjectName("label_41")
         self.horizontalLayout_12.addWidget(self.label_41)
-        self.lineEdit_EXIF_Position = QtWidgets.QLineEdit(parent=self.horizontalFrame_8)
+        self.lineEdit_EXIF_Position = QtWidgets.QLineEdit(parent=self.horizontalFrame_10)
         self.lineEdit_EXIF_Position.setMinimumSize(QtCore.QSize(0, 0))
         self.lineEdit_EXIF_Position.setStyleSheet("QLineEdit {\n"
 "    border: 1px solid qradialgradient(\n"
@@ -3263,20 +3506,20 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
         self.lineEdit_EXIF_Position.setInputMask("")
         self.lineEdit_EXIF_Position.setObjectName("lineEdit_EXIF_Position")
         self.horizontalLayout_12.addWidget(self.lineEdit_EXIF_Position)
-        self.pushButton_Position = QtWidgets.QPushButton(parent=self.horizontalFrame_8)
+        self.pushButton_Position = QtWidgets.QPushButton(parent=self.horizontalFrame_10)
         self.pushButton_Position.setMinimumSize(QtCore.QSize(20, 20))
         self.pushButton_Position.setMaximumSize(QtCore.QSize(20, 20))
         self.pushButton_Position.setText("")
         icon12 = QtGui.QIcon()
-        icon12.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/page_4/位置.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon12.addPixmap(QtGui.QPixmap("resources/img/page_4/位置.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.pushButton_Position.setIcon(icon12)
         self.pushButton_Position.setIconSize(QtCore.QSize(20, 20))
         self.pushButton_Position.setObjectName("pushButton_Position")
         self.horizontalLayout_12.addWidget(self.pushButton_Position)
-        self.horizontalLayout_68.addLayout(self.horizontalLayout_12)
-        spacerItem15 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Minimum)
-        self.horizontalLayout_68.addItem(spacerItem15)
-        self.verticalLayout_47.addWidget(self.horizontalFrame_8)
+        self.horizontalLayout_72.addLayout(self.horizontalLayout_12)
+        spacerItem16 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Minimum)
+        self.horizontalLayout_72.addItem(spacerItem16)
+        self.verticalLayout_47.addWidget(self.horizontalFrame_10)
         self.verticalFrame_15 = QtWidgets.QFrame(parent=self.page_4)
         self.verticalFrame_15.setStyleSheet("background:rgb(255, 255, 255);\n"
 "border-top-left-radius:0px;\n"
@@ -3351,8 +3594,8 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
         self.toolButton_StartEXIF.setIconSize(QtCore.QSize(24, 24))
         self.toolButton_StartEXIF.setObjectName("toolButton_StartEXIF")
         self.horizontalLayout_70.addWidget(self.toolButton_StartEXIF)
-        spacerItem16 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
-        self.horizontalLayout_70.addItem(spacerItem16)
+        spacerItem17 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
+        self.horizontalLayout_70.addItem(spacerItem17)
         self.horizontalLayout_70.setStretch(0, 1)
         self.verticalLayout_47.addWidget(self.verticalFrame_15)
         self.horizontalFrame_log = QtWidgets.QFrame(parent=self.page_4)
@@ -3556,6 +3799,11 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
         self.pushButton_time.setText(_translate("MainWindow", "时间"))
         self.pushButton_make.setText(_translate("MainWindow", "品牌"))
         self.pushButton_address.setText(_translate("MainWindow", "位置"))
+        self.label_operation_2.setText(_translate("MainWindow", "分隔"))
+        self.comboBox_separator.setItemText(0, _translate("MainWindow", "-"))
+        self.comboBox_separator.setItemText(1, _translate("MainWindow", "无"))
+        self.comboBox_separator.setItemText(2, _translate("MainWindow", "空格"))
+        self.comboBox_separator.setItemText(3, _translate("MainWindow", "_"))
         self.label_timeSources.setText(_translate("MainWindow", "时间来源"))
         self.comboBox_timeSource.setItemText(0, _translate("MainWindow", "最早时间"))
         self.comboBox_timeSource.setItemText(1, _translate("MainWindow", "拍摄日期"))
@@ -3584,6 +3832,11 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
         self.lineEdit_EXIF_Theme.setPlaceholderText(_translate("MainWindow", "上海神奇之旅"))
         self.label_40.setText(_translate("MainWindow", "版权"))
         self.lineEdit_EXIF_Copyright.setPlaceholderText(_translate("MainWindow", "©2025 LeafView. "))
+        self.label_44.setText(_translate("MainWindow", "拍摄时间"))
+        self.comboBox_shootTime.setItemText(0, _translate("MainWindow", "不写入"))
+        self.comboBox_shootTime.setItemText(1, _translate("MainWindow", "从文件名"))
+        self.comboBox_shootTime.setItemText(2, _translate("MainWindow", "指定时间"))
+        self.dateTimeEdit_shootTime.setDisplayFormat(_translate("MainWindow", "yyyy/MM/dd HH:mm:ss"))
         self.label_41.setText(_translate("MainWindow", "拍摄位置 "))
         self.lineEdit_EXIF_Position.setPlaceholderText(_translate("MainWindow", "江西科技师范大学"))
         self.toolButton_StartEXIF.setText(_translate("MainWindow", "开始写入"))

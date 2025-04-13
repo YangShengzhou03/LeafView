@@ -25,6 +25,12 @@ class Classification(QtWidgets.QWidget):
             '位置': self.parent.pushButton_address,
             '品牌': self.parent.pushButton_make
         }
+        self.separator_mapping = {
+            "-": "-",
+            "无": "",
+            "空格": " ",
+            "_": "_"
+        }
         self.available_layout = self.parent.horizontalLayout_57
         self.selected_layout = self.parent.horizontalLayout_53
         self.classification_thread = None
@@ -95,7 +101,8 @@ class Classification(QtWidgets.QWidget):
                 classification_structure=classification_structure or None,
                 file_name_structure=file_name_structure or None,
                 destination_root=self.destination_root,
-                time_derive=self.parent.comboBox_timeSource.currentText()
+                time_derive=self.parent.comboBox_timeSource.currentText(),
+                separator=self.separator_mapping.get(self.parent.comboBox_separator.currentText(), "")
             )
             self.classification_thread.finished.connect(self.on_thread_finished)
             self.classification_thread.start()
@@ -169,16 +176,18 @@ class Classification(QtWidgets.QWidget):
         now = datetime.now()
         selected = [self.selected_layout.itemAt(i).widget().text() for i in range(self.selected_layout.count())
                     if isinstance(self.selected_layout.itemAt(i).widget(), QtWidgets.QPushButton)]
-        self.parent.label_PreviewName.setText(
-            "请点击标签以组成文件名" if not selected else "-".join({
-                                                                       "年份": f"{now.year}",
-                                                                       "月份": f"{now.month:02d}",
-                                                                       "日": f"{now.day:02d}",
-                                                                       "星期": f"{self._get_weekday(now)}",
-                                                                       "时间": f"{now.strftime('%H%M')}",
-                                                                       "位置": "浙大",
-                                                                       "品牌": "佳能"
-                                                                   }.get(b, "") for b in selected))
+        current_separator = self.separator_mapping.get(self.parent.comboBox_separator.currentText(), "")
+        parts = {
+            "年份": f"{now.year}",
+            "月份": f"{now.month:02d}",
+            "日": f"{now.day:02d}",
+            "星期": f"{self._get_weekday(now)}",
+            "时间": f"{now.strftime('%H%M%S')}",
+            "位置": "浙大",
+            "品牌": "佳能"
+        }
+        example_text = current_separator.join(parts.get(b, "") for b in selected) if selected else "请点击标签以组成文件名"
+        self.parent.label_PreviewName.setText(example_text)
 
     @staticmethod
     def _get_weekday(date):
