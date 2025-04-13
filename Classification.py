@@ -107,6 +107,8 @@ class Classification(QtWidgets.QWidget):
     def on_thread_finished(self):
         self.parent.toolButton_startClassification.setText("开始整理")
         self.classification_thread = None
+        self.log("DEBUG", "整理任务已结束。")
+        self.update_progress_bar(100)
 
     def handle_combobox_selection(self, level, index):
         comboBox = getattr(self.parent, f'comboBox_level_{level}')
