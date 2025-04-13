@@ -32,7 +32,7 @@ class WriteExif(QWidget):
             btn.clicked.connect(lambda _, idx=i: self.set_selected_star(idx))
             self.star_buttons.append(btn)
         self.update_button_state()
-        self.log("DEBUG", "欢迎使用图像属性写入功能，不写入项请留空。")
+        self.log("DEBUG", "欢迎使用图像属性写入功能，不写入项目留空即可。")
 
     def setup_connections(self):
         self.parent.toolButton_StartEXIF.clicked.connect(self.toggle_exif_writing)
@@ -153,6 +153,6 @@ class WriteExif(QWidget):
             f'<span style="color:{c.get(level, "#000000")}">[{datetime.now().strftime("%H:%M:%S")}] [{level}] {message}</span>')
 
     def on_finished(self):
-        self.log("DEBUG", "EXIF信息写入结束!")
+        self.log("DEBUG", "EXIF信息写入任务结束!")
         self.is_running = False
         self.update_button_state()
