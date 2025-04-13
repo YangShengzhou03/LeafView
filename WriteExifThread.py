@@ -10,6 +10,8 @@ import requests
 from PIL import Image
 from PyQt6.QtCore import QThread, pyqtSignal
 
+from common import detect_media_type
+
 
 class WriteExifThread(QThread):
     progress_updated = pyqtSignal(int)
@@ -230,7 +232,13 @@ class WriteExifThread(QThread):
                 self.log.emit("WARNING", f"未对 {image_path} 进行任何更改")
 
         except Exception as e:
-            self.log.emit("ERROR", f"处理 {image_path} 时出错: {str(e)}")
+            result = detect_media_type(image_path)
+            if not result["valid"]:
+                self.log("ERROR", f"{image_path}文件已损坏")
+            elif not result["extension_match"]:
+                self.log("ERROR", f"扩展名不匹配，{image_path}正确的格式是{result['extension']}")
+            else:
+                self.log("ERROR", f"{image_path}出错{e}")
 
     def _create_gps_data(self, lat: float, lon: float) -> dict:
         def decimal_to_dms(decimal: float) -> tuple:

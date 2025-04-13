@@ -3,8 +3,10 @@ import re
 from pathlib import Path
 import numpy as np
 from PIL import Image
-from PyQt6 import QtCore
+from PyQt6 import QtCore, QtWidgets
 from skimage import feature
+
+from common import detect_media_type
 
 
 class ReadThread(QtCore.QThread):
@@ -29,20 +31,23 @@ class ReadThread(QtCore.QThread):
         ]
 
     def run(self):
-        all_files = self._collect_files()
-        total_files = len(all_files)
-        if total_files == 0:
+        try:
+            all_files = self._collect_files()
+            total_files = len(all_files)
+            if total_files == 0:
+                self.finished.emit()
+                return
+
+            for idx, file_path in enumerate(all_files):
+                if not self._is_running:
+                    break
+                self.process_file(file_path)
+                progress = int((idx + 1) / total_files * 100)
+                self.progress_updated.emit(progress)
+
             self.finished.emit()
-            return
-
-        for idx, file_path in enumerate(all_files):
-            if not self._is_running:
-                break
-            self.process_file(file_path)
-            progress = int((idx + 1) / total_files * 100)
-            self.progress_updated.emit(progress)
-
-        self.finished.emit()
+        except Exception as e:
+            pass
 
     def _collect_files(self):
         all_files = []
@@ -80,16 +85,19 @@ class ReadThread(QtCore.QThread):
         return valid_files
 
     def process_file(self, full_path):
-        file_name = os.path.basename(full_path)
-        lower_name = file_name.lower()
+        try:
+            file_name = os.path.basename(full_path)
+            lower_name = file_name.lower()
 
-        if lower_name.endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif', '.webp')):
-            self.image_loaded.emit(full_path, "gridLayout_5")
-            is_screenshot = self.is_screenshot(full_path)
-            if is_screenshot:
-                self.image_loaded.emit(full_path, "gridLayout_3")
-        elif lower_name.endswith(('.mp4', '.avi', '.mov', '.mkv', '.wmv')):
-            self.image_loaded.emit(full_path, "gridLayout_4")
+            if lower_name.endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif', '.webp')):
+                self.image_loaded.emit(full_path, "gridLayout_5")
+                is_screenshot = self.is_screenshot(full_path)
+                if is_screenshot:
+                    self.image_loaded.emit(full_path, "gridLayout_3")
+            elif lower_name.endswith(('.mp4', '.avi', '.mov', '.mkv', '.wmv')):
+                self.image_loaded.emit(full_path, "gridLayout_4")
+        except Exception:
+            pass
 
     def is_screenshot(self, image_path):
         filename = os.path.basename(image_path).lower()

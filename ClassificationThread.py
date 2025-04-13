@@ -12,7 +12,7 @@ from PIL import Image
 from PyQt6 import QtCore
 from scipy import io
 
-from common import get_resource_path
+from common import get_resource_path, detect_media_type
 
 SUPPORTED_EXTENSIONS = (
     '.jpg', '.jpeg', '.png', '.heic', '.tiff', '.tif', '.bmp', '.webp', '.gif', '.svg', '.psd', '.arw', '.cr2', '.cr3',
@@ -112,26 +112,42 @@ class ClassificationThread(QtCore.QThread):
         self.delete_empty_folders(folder_path)
 
     def process_single_file(self, file_path, base_folder=None):
-        exif_data = self.get_exif_data(file_path)
-        new_path = None
-        if self.classification_structure:
-            new_path = self.construct_classification_path(exif_data, file_path, base_folder)
-            if new_path:
-                self.copy_or_move_image(file_path, new_path)
-        if self.file_name_structure:
-            target_path = new_path if new_path else file_path
-            self.files_to_rename.append((target_path, exif_data))
+        try:
+            exif_data = self.get_exif_data(file_path)
+            new_path = None
+            if self.classification_structure:
+                new_path = self.construct_classification_path(exif_data, file_path, base_folder)
+                if new_path:
+                    self.copy_or_move_image(file_path, new_path)
+            if self.file_name_structure:
+                target_path = new_path if new_path else file_path
+                self.files_to_rename.append((target_path, exif_data))
+        except Exception as e:
+            result = detect_media_type(file_path)
+            if not result["valid"]:
+                self.log("ERROR", f"{file_path}文件已损坏")
+            elif not result["extension_match"]:
+                self.log("ERROR", f"扩展名不匹配，{file_path}正确的格式是{result['extension']}")
+            else:
+                self.log("ERROR", f"{file_path}发生未知故障")
 
     def process_renaming(self):
         for file_path, exif_data in self.files_to_rename:
-            if self._stop_flag:
-                return
-            new_name = self.construct_new_filename(exif_data, file_path)
-            if new_name:
-                try:
-                    os.rename(file_path, new_name)
-                except Exception as e:
-                    self.log("ERROR", f"重命名文件 {file_path} 失败: {str(e)}")
+            try:
+                if self._stop_flag:
+                    return
+                new_name = self.construct_new_filename(exif_data, file_path)
+                if new_name:
+                        os.rename(file_path, new_name)
+            except Exception as e:
+                print(e)
+                result = detect_media_type(file_path)
+                if not result["valid"]:
+                    self.log("ERROR", f"{file_path}文件已损坏")
+                elif not result["extension_match"]:
+                    self.log("ERROR", f"扩展名不匹配，{file_path}正确的格式是{result['extension']}")
+                else:
+                    self.log("ERROR", f"{file_path}出错{e}")
 
     def construct_classification_path(self, exif_data, file_path, base_folder=None):
         structure_parts = []
@@ -410,7 +426,6 @@ class ClassificationThread(QtCore.QThread):
 
     def log(self, level, message):
         self.log_signal.emit(level, message)
-
 
 # def perform_ocr(filepath, keyword):
 #     try:

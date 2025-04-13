@@ -5,6 +5,7 @@ from pathlib import Path
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap, QIcon
 from PyQt6.QtWidgets import QDialog, QWidget, QVBoxLayout, QLabel, QPushButton
+from filetype import guess
 
 
 def load_stylesheet(filename):
@@ -25,6 +26,62 @@ def get_resource_path(relative_path):
         base_path = Path(__file__).parent if '__file__' in globals() else Path.cwd()
 
     return str((base_path / relative_path).resolve()).replace('\\', '/')
+
+
+def detect_media_type(file_path):
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(f"文件不存在: {file_path}")
+
+    mime_to_ext = {
+        'image/jpeg': ('jpg', 'image'),
+        'image/png': ('png', 'image'),
+        'image/gif': ('gif', 'image'),
+        'image/tiff': ('tiff', 'image'),
+        'image/webp': ('webp', 'image'),
+        'image/heic': ('heic', 'image'),
+        'image/avif': ('avif', 'image'),
+        'video/mp4': ('mp4', 'video'),
+        'video/x-msvideo': ('avi', 'video'),
+        'video/x-matroska': ('mkv', 'video'),
+        'video/quicktime': ('mov', 'video'),
+        'video/x-ms-wmv': ('wmv', 'video'),
+        'video/mpeg': ('mpeg', 'video'),
+        'video/webm': ('webm', 'video'),
+    }
+
+    file_ext = os.path.splitext(file_path)[1].lower().lstrip('.')
+    try:
+        kind = guess(file_path)
+    except Exception as e:
+        raise IOError(f"文件读取失败: {str(e)}")
+
+    if not kind:
+        return {
+            'valid': False,
+            'type': None,
+            'mime': None,
+            'extension': None,
+            'extension_match': False
+        }
+
+    mime = kind.mime
+    result = {
+        'valid': mime in mime_to_ext,
+        'mime': mime,
+        'extension': None,
+        'type': None,
+        'extension_match': False
+    }
+
+    if result['valid']:
+        ext, media_type = mime_to_ext[mime]
+        result.update({
+            'extension': ext,
+            'type': media_type,
+            'extension_match': (ext == file_ext)
+        })
+
+    return result
 
 
 def author():
