@@ -91,10 +91,6 @@ class Classification(QtWidgets.QWidget):
                                    for i in range(self.selected_layout.count())
                                    if isinstance(self.selected_layout.itemAt(i).widget(), QtWidgets.QPushButton)]
 
-            if not classification_structure and not file_name_structure and not self.destination_root:
-                self.log("WARNING", "请选择至少一种操作（分类或重命名）")
-                return
-
             self.classification_thread = ClassificationThread(
                 parent=self,
                 folders=folders,

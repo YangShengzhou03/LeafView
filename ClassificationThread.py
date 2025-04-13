@@ -78,6 +78,14 @@ class ClassificationThread(QtCore.QThread):
                 if self._stop_flag:
                     self.log("WARNING", "处理被用户中断")
                     break
+                if self.destination_root:
+                    destination_path = Path(self.destination_root).resolve()
+                    folder_path = Path(folder_info['path']).resolve()
+                    if len(destination_path.parts) > len(folder_path.parts) and destination_path.parts[
+                                                                                :len(
+                                                                                    folder_path.parts)] == folder_path.parts:
+                        self.log("WARNING", "复制目标路径不能是待整理的子路径，否则会引发无限循环！")
+                        break
                 if not self.classification_structure and not self.file_name_structure:
                     self.organize_without_classification(folder_info['path'])
                 else:
