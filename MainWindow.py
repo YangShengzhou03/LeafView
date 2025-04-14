@@ -19,6 +19,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self._setup_drag_handlers()
 
     def _init_window(self):
+        self.setWindowTitle("枫叶相册")
         self.setWindowIcon(QtGui.QIcon(get_resource_path('resources/img/icon.ico')))
         self.setWindowFlags(QtCore.Qt.WindowType.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)

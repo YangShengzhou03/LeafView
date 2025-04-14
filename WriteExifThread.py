@@ -193,8 +193,6 @@ class WriteExifThread(QThread):
                 return
             exif_dict = piexif.load(image_path)
             updated_fields = []
-            if self._stop_requested:
-                return
             if self.title:
                 exif_dict["0th"][piexif.ImageIFD.ImageDescription] = self.title.encode('utf-8')
                 updated_fields.append(f"标题: {self.title}")
@@ -277,30 +275,6 @@ class WriteExifThread(QThread):
 
     def stop(self):
         self._stop_requested = True
-
-    def _set_png_exif_info(self, image_path):
-        with Image.open(image_path) as img:
-            png_info = PngImagePlugin.PngInfo()
-            for key, value in img.info.items():
-                if isinstance(value, str):
-                    png_info.add_text(key, value)
-
-            if self.time_option != 0:
-                if self.automatic_time:
-                    date_from_filename = self.extract_date_from_filename(image_path)
-                    if date_from_filename:
-                        png_info.add_text('Creation Time', date_from_filename.strftime("%Y:%m:%d %H:%M:%S"))
-                        self.log_message.emit(
-                            f"写入PNG文件 {image_path} 拍摄时间(文件名识别): {date_from_filename.strftime('%Y:%m:%d %H:%M:%S')}",
-                            "INFO")
-                elif self.update_date and self.time_option == 1:
-                    png_info.add_text('Creation Time', self.update_date)
-                    self.log_message.emit(f"写入PNG文件 {image_path} 拍摄时间: {self.update_date}", "INFO")
-                output_file_path = image_path + ".new"
-                img.save(output_file_path, "PNG", pnginfo=png_info)
-                os.replace(output_file_path, image_path)
-            else:
-                self.log_message.emit(f"未对 {image_path} EXIF数据 进行任何更改", "WARNING")
 
     def get_date_from_filename(self, image_path):
         base_name = os.path.basename(image_path)
