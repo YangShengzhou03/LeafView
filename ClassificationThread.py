@@ -1,3 +1,4 @@
+import io
 import json
 import os
 import shutil
@@ -10,7 +11,6 @@ import pillow_heif
 import requests
 from PIL import Image
 from PyQt6 import QtCore
-from scipy import io
 
 from common import get_resource_path, detect_media_type
 
@@ -73,7 +73,7 @@ class ClassificationThread(QtCore.QThread):
 
     def run(self):
         try:
-            self.log("INFO", f"开始处理 {len(self.folders)} 个文件夹")
+            self.log("INFO", f"正在处理 {len(self.folders)} 个文件夹")
             for folder_info in self.folders:
                 if self._stop_flag:
                     self.log("WARNING", "处理被用户中断")
@@ -84,7 +84,7 @@ class ClassificationThread(QtCore.QThread):
                     if len(destination_path.parts) > len(folder_path.parts) and destination_path.parts[
                                                                                 :len(
                                                                                     folder_path.parts)] == folder_path.parts:
-                        self.log("ERROR", "复制到目标路径不能是待整理的子路径，否则会引发无限循环！")
+                        self.log("ERROR", "复制到目标路径不能是待整理的子路径，会导致死循环！")
                         break
                 if not self.classification_structure and not self.file_name_structure:
                     self.organize_without_classification(folder_info['path'])
@@ -138,7 +138,7 @@ class ClassificationThread(QtCore.QThread):
             elif not result["extension_match"]:
                 self.log("ERROR", f"扩展名不匹配，{file_path}正确的格式是{result['extension']}")
             else:
-                self.log("ERROR", f"{file_path}发生未知故障")
+                self.log("ERROR", f"{file_path}出错:{e}")
 
     def process_renaming(self):
         for file_path, exif_data in self.files_to_rename:
@@ -264,9 +264,24 @@ class ClassificationThread(QtCore.QThread):
         elif suffix == '.heic':
             heif_file = pillow_heif.read_heif(file_path)
             exif_raw = heif_file.info.get('exif', b'')
-            if exif_raw.startswith(b'Exif\x00\x00'): exif_raw = exif_raw[6:]
-            tags = exifread.process_file(io.BytesIO(exif_raw), details=False)
-            date_taken = self.parse_exif_datetime(tags)
+            if exif_raw.startswith(b'Exif\x00\x00'):
+                exif_raw = exif_raw[6:]
+            if exif_raw:
+                tags = exifread.process_file(io.BytesIO(exif_raw), details=False)
+                date_taken = self.parse_exif_datetime(tags)
+                lat_ref = str(tags.get('GPS GPSLatitudeRef', '')).strip()
+                lon_ref = str(tags.get('GPS GPSLongitudeRef', '')).strip()
+                lat = self.convert_to_degrees(tags.get('GPS GPSLatitude'))
+                lon = self.convert_to_degrees(tags.get('GPS GPSLongitude'))
+                if lat and lon:
+                    lat = -lat if lat_ref.lower() == 's' else lat
+                    lon = -lon if lon_ref.lower() == 'w' else lon
+                    exif_data.update({'GPS GPSLatitude': lat, 'GPS GPSLongitude': lon})
+                exif_data.update({
+                    'Make': str(tags.get('Image Make', '')).strip() or None,
+                    'Model': str(tags.get('Image Model', '')).strip() or None,
+                    'DateTaken': date_taken
+                })
         elif suffix == '.png':
             with Image.open(file_path) as img:
                 date_taken = self.parse_datetime(img.info.get('Creation Time'))
@@ -283,7 +298,6 @@ class ClassificationThread(QtCore.QThread):
             times = [t for t in [date_taken, create_time, modify_time] if t is not None]
             earliest_time = min(times) if times else modify_time
             exif_data['DateTime'] = earliest_time.strftime('%Y-%m-%d %H:%M:%S')
-
         return exif_data
 
     def parse_exif_datetime(self, tags):
@@ -307,6 +321,7 @@ class ClassificationThread(QtCore.QThread):
         return None
 
     def get_city_and_province(self, lat, lon):
+        print(lat, lon)
 
         def is_point_in_polygon(x, y, polygon):
             if not isinstance(polygon, (list, tuple)) or len(polygon) < 3:
@@ -380,17 +395,18 @@ class ClassificationThread(QtCore.QThread):
                 shutil.copy2(str(src_path), str(dst_path))
             else:
                 shutil.move(str(src_path), str(dst_path))
-            self.log("DEBUG", f"成功{operation}文件: {src_path} -> {dst_path}")
+            self.log("INFO", f"成功{operation}文件: {src_path} -> {dst_path}")
         except Exception as e:
             self.log("ERROR", f"操作文件 {src_path} 出错:{str(e)}")
 
     def organize_without_classification(self, folder):
         destination = self.destination_root if self.destination_root else Path(folder)
-
+        total_files = sum([len([f for f in files if f.lower().endswith(SUPPORTED_EXTENSIONS)])
+                           for _, _, files in os.walk(folder)])
+        processed_files = 0
         for current_dir, _, files in os.walk(folder, topdown=False):
             dir_path = Path(current_dir)
             has_files_remaining = False
-
             for file in files:
                 if file.lower().endswith(SUPPORTED_EXTENSIONS):
                     src_path = dir_path / file
@@ -399,7 +415,9 @@ class ClassificationThread(QtCore.QThread):
                         self.copy_or_move_image(src_path, dst_path)
                     except Exception as e:
                         has_files_remaining = True
-
+                    processed_files += 1
+                    percent_complete = int((processed_files / total_files) * 100)
+                    self.progress_signal.emit(percent_complete)
             if not has_files_remaining and not any(dir_path.iterdir()) and dir_path != Path(folder):
                 try:
                     dir_path.rmdir()
