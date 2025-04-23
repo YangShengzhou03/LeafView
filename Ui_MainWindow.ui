@@ -5711,6 +5711,7 @@ QComboBox QAbstractItemView {
     min-width: 88px;
     font-family: &quot;Microsoft YaHei&quot;, &quot;微软雅黑&quot;, sans-serif;
     font-size: 13px;
+    color: black;
 }
 
 QComboBox QAbstractItemView::item {
