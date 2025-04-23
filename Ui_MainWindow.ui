@@ -4758,8 +4758,8 @@ QScrollBar::corner {
                         <rect>
                          <x>0</x>
                          <y>0</y>
-                         <width>100</width>
-                         <height>30</height>
+                         <width>231</width>
+                         <height>462</height>
                         </rect>
                        </property>
                        <layout class="QGridLayout" name="gridLayout_2"/>
@@ -5653,7 +5653,7 @@ border-bottom-left-radius:0px;</string>
     border: 1px solid #d1d5db;
     border-radius: 6px;
     padding: 6px 12px;
-    color: #374151;
+    color: rgb(0, 0, 0);
     font-family: &quot;Microsoft YaHei&quot;, &quot;微软雅黑&quot;, sans-serif;
     font-size: 13px;
     min-width: 56px;
