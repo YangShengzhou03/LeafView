@@ -8,7 +8,7 @@ from datetime import datetime
 import imagehash
 import piexif
 import requests
-from PIL import Image, PngImagePlugin
+from PIL import Image
 from PyQt6.QtCore import QThread, pyqtSignal
 
 from common import detect_media_type
