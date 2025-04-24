@@ -3,10 +3,12 @@ import shutil
 
 import numpy as np
 import pillow_heif
+import send2trash
 from PIL import Image
 from PyQt6 import QtWidgets, QtCore, QtGui
 from PyQt6.QtCore import pyqtSignal, QRunnable, QObject, Qt, QThreadPool
 from PyQt6.QtGui import QPixmap, QImage
+
 from ContrastThread import HashWorker, ContrastWorker
 from common import get_resource_path
 
@@ -107,13 +109,13 @@ class Contrast(QtWidgets.QWidget):
         self.refresh_selection_visuals()
 
     def delete_selected_images(self):
-        reply = QtWidgets.QMessageBox.question(self, '确认删除', "确定要删除选中的图片吗？",
+        reply = QtWidgets.QMessageBox.question(self, '移动到回收站', "确定要将选中的图片移动至回收站吗？",
                                                QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No,
                                                QtWidgets.QMessageBox.StandardButton.No)
         if reply == QtWidgets.QMessageBox.StandardButton.Yes:
             for img in self.selected_images:
                 try:
-                    os.remove(img)
+                    send2trash.send2trash(img)
                 except Exception as e:
                     QtWidgets.QMessageBox.warning(self, "无法删除图片", f"删除图片{img}出错: {e}")
             self.selected_images.clear()
