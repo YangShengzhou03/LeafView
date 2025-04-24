@@ -2,6 +2,8 @@ import os
 import shutil
 
 import numpy as np
+import pillow_heif
+from PIL import Image
 from PyQt6 import QtWidgets, QtCore, QtGui
 from PyQt6.QtCore import pyqtSignal, QRunnable, QObject, Qt, QThreadPool
 from PyQt6.QtGui import QPixmap, QImage
@@ -14,6 +16,21 @@ class ThumbnailLoaderSignals(QObject):
     progress_updated = pyqtSignal(int)
 
 
+def load_heic_as_qimage(path):
+    heif_file = pillow_heif.read_heif(path)
+    image = Image.frombytes(
+        heif_file.mode,
+        heif_file.size,
+        heif_file.data,
+        "raw",
+    )
+    if image.mode != "RGB":
+        image = image.convert("RGB")
+    buffer = image.tobytes()
+    qimage = QImage(buffer, image.width, image.height, QImage.Format.Format_RGB888)
+    return qimage.copy()
+
+
 class ThumbnailLoader(QRunnable):
     def __init__(self, path, size, total_images):
         super().__init__()
@@ -23,9 +40,17 @@ class ThumbnailLoader(QRunnable):
         self.signals = ThumbnailLoaderSignals()
 
     def run(self):
-        image = QImage(self.path)
+        if self.path.lower().endswith(('.heic', '.heif')):
+            try:
+                image = load_heic_as_qimage(self.path)
+            except Exception:
+                return
+        else:
+            image = QImage(self.path)
+
         if not image.isNull():
-            scaled_image = image.scaled(self.size.width(), self.size.height(), Qt.AspectRatioMode.KeepAspectRatio,
+            scaled_image = image.scaled(self.size.width(), self.size.height(),
+                                        Qt.AspectRatioMode.KeepAspectRatio,
                                         Qt.TransformationMode.SmoothTransformation)
             pixmap = QPixmap.fromImage(scaled_image)
             self.signals.thumbnail_ready.emit(self.path, pixmap)
@@ -115,7 +140,12 @@ class Contrast(QtWidgets.QWidget):
         self.parent.verticalFrame_similar.show()
         self.parent.progressBar_Contrast.setValue(0)
 
-        supported_formats = ['.jpg', '.jpeg', '.png', '.bmp', '.gif']
+        supported_formats = [
+            '.jpg', '.jpeg', '.png', '.bmp', '.gif',
+            '.webp', '.tif', '.tiff', '.heif', '.heic',
+            '.arw', '.cr2', '.cr3', '.nef', '.orf', '.sr2',
+            '.raf', '.dng', '.rw2', '.pef', '.nrw', '.kdc'
+        ]
         image_paths = []
 
         for folder_info in folders:
@@ -220,7 +250,7 @@ class Contrast(QtWidgets.QWidget):
         label.mousePressEvent = lambda e, p=path: self.thumbnail_clicked(p)
         label.mouseDoubleClickEvent = lambda e, lbl=label: self.toggle_thumbnail_selection(lbl)
         loader = ThumbnailLoader(path, container_size, total_images)
-        loader.signals.thumbnail_ready.connect(lambda p, pix: self.on_thumbnail_loaded(p, pix, label))
+        loader.signals.thumbnail_ready.connect(lambda p, pix: self.on_thumbnail_loaded(pix, label))
         loader.signals.progress_updated.connect(self.update_progress)
         self.thread_pool.start(loader)
         return label
@@ -250,7 +280,7 @@ class Contrast(QtWidgets.QWidget):
                     self.set_empty(status=False)
                 break
 
-    def on_thumbnail_loaded(self, path, pixmap, label):
+    def on_thumbnail_loaded(self, pixmap, label):
         if not pixmap.isNull():
             label.setPixmap(pixmap)
             label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
@@ -294,9 +324,32 @@ class Contrast(QtWidgets.QWidget):
                                                 status else "QLabel {image: url('');}")
 
     def show_image(self, label, path):
+        if path.lower().endswith(('.heic', '.heif')):
+            try:
+                heif_file = pillow_heif.read_heif(path)
+                image = Image.frombytes(
+                    heif_file.mode,
+                    heif_file.size,
+                    heif_file.data,
+                    "raw",
+                )
+                if image.mode != "RGB":
+                    image = image.convert("RGB")
+                buffer = image.tobytes()
+                qimage = QImage(buffer, image.width, image.height, QImage.Format.Format_RGB888)
+                if not qimage.isNull():
+                    pixmap = QPixmap.fromImage(qimage)
+                    scaled = pixmap.scaled(label.width(), label.height(),
+                                           QtCore.Qt.AspectRatioMode.KeepAspectRatio,
+                                           QtCore.Qt.TransformationMode.SmoothTransformation)
+                    label.setPixmap(scaled)
+                return
+            except Exception:
+                return
         pixmap = QtGui.QPixmap(path)
         if not pixmap.isNull():
-            scaled = pixmap.scaled(label.width(), label.height(), QtCore.Qt.AspectRatioMode.KeepAspectRatio,
+            scaled = pixmap.scaled(label.width(), label.height(),
+                                   QtCore.Qt.AspectRatioMode.KeepAspectRatio,
                                    QtCore.Qt.TransformationMode.SmoothTransformation)
             label.setPixmap(scaled)
 

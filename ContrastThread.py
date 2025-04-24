@@ -1,25 +1,44 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
-
 import numpy as np
 from PIL import Image
 from PyQt6 import QtCore
+import pillow_heif
 
 
 class ImageHasher:
     @staticmethod
     def dhash(image_path, hash_size=8):
         try:
-            with Image.open(image_path) as img:
-                w, h = img.size
-                if w < 50 or h < 50:
-                    return None
-                if (w / h) < 0.2 or (w / h) > 5:
-                    return None
+            ext = image_path.lower().split('.')[-1]
+            if ext in ('heic', 'heif'):
+                heif_file = pillow_heif.read_heif(image_path)
+                img = Image.frombytes(
+                    heif_file.mode,
+                    heif_file.size,
+                    heif_file.data,
+                    "raw",
+                    heif_file.mode,
+                    heif_file.stride,
+                )
+            else:
+                with Image.open(image_path) as img:
+                    img.load()
 
-                image = img.convert('L').resize((hash_size + 1, hash_size), Image.Resampling.BILINEAR)
-                pixels = np.array(image, dtype=np.int16)
-                diff = pixels[:, 1:] > pixels[:, :-1]
-                return diff.flatten()
+            w, h = img.size
+            if w < 50 or h < 50:
+                return None
+            if (w / h) < 0.2 or (w / h) > 5:
+                return None
+
+            image = img.convert('L').resize(
+                (hash_size + 1, hash_size),
+                Image.Resampling.BILINEAR
+            )
+
+            pixels = np.array(image, dtype=np.int16)
+            diff = pixels[:, 1:] > pixels[:, :-1]
+            return diff.flatten()
+
         except Exception:
             return None
 
@@ -43,12 +62,21 @@ class HashWorker(QtCore.QThread):
     def run(self):
         try:
             hashes = {}
-            total = len(self.image_paths)
+            supported_extensions = (
+                '.jpg', '.jpeg', '.png', '.bmp', '.gif',
+                '.heic', '.heif', '.webp', '.tif', '.tiff'
+            )
+
+            filtered_paths = [
+                path for path in self.image_paths
+                if path.lower().endswith(supported_extensions)
+            ]
+            total = len(filtered_paths)
 
             with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
                 future_to_path = {
                     executor.submit(ImageHasher.dhash, path, self.hash_size): path
-                    for path in self.image_paths
+                    for path in filtered_paths
                 }
 
                 for i, future in enumerate(as_completed(future_to_path)):
@@ -116,7 +144,7 @@ class ContrastWorker(QtCore.QThread):
 
             if self._is_running:
                 self.groups_completed.emit(groups)
-        except Exception as e:
+        except Exception:
             pass
 
     def stop(self):
