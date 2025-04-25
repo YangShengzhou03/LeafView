@@ -8,7 +8,7 @@ from datetime import datetime
 import imagehash
 import piexif
 import requests
-from PIL import Image
+from PIL import Image, PngImagePlugin
 from PyQt6.QtCore import QThread, pyqtSignal
 
 from common import detect_media_type
@@ -191,59 +191,86 @@ class WriteExifThread(QThread):
             if self._stop_requested:
                 self.log.emit("INFO", f"处理被取消: {image_path}")
                 return
-            exif_dict = piexif.load(image_path)
-            updated_fields = []
-            if self.title:
-                exif_dict["0th"][piexif.ImageIFD.ImageDescription] = self.title.encode('utf-8')
-                updated_fields.append(f"标题: {self.title}")
-            if self.author:
-                exif_dict["0th"][315] = self.author.encode('utf-8')
-                updated_fields.append(f"作者: {self.author}")
-            if self.subject:
-                exif_dict["0th"][piexif.ImageIFD.XPSubject] = self.subject.encode('utf-16le')
-                updated_fields.append(f"主题: {self.subject}")
-            if self.rating:
-                exif_dict["0th"][piexif.ImageIFD.Rating] = int(self.rating)
-                updated_fields.append(f"评分: {self.rating}星")
-            if self.copyright:
-                exif_dict["0th"][piexif.ImageIFD.Copyright] = self.copyright.encode('utf-8')
-                updated_fields.append(f"版权: {self.copyright}")
-            if self.shootTime != 0:
-                if self.shootTime == 1:
-                    date_from_filename = self.get_date_from_filename(image_path)
-                    if date_from_filename:
+            if not image_path.lower().endswith('.png'):
+                exif_dict = piexif.load(image_path)
+                updated_fields = []
+                if self.title:
+                    exif_dict["0th"][piexif.ImageIFD.ImageDescription] = self.title.encode('utf-8')
+                    updated_fields.append(f"标题: {self.title}")
+                if self.author:
+                    exif_dict["0th"][315] = self.author.encode('utf-8')
+                    updated_fields.append(f"作者: {self.author}")
+                if self.subject:
+                    exif_dict["0th"][piexif.ImageIFD.XPSubject] = self.subject.encode('utf-16le')
+                    updated_fields.append(f"主题: {self.subject}")
+                if self.rating:
+                    exif_dict["0th"][piexif.ImageIFD.Rating] = int(self.rating)
+                    updated_fields.append(f"评分: {self.rating}星")
+                if self.copyright:
+                    exif_dict["0th"][piexif.ImageIFD.Copyright] = self.copyright.encode('utf-8')
+                    updated_fields.append(f"版权: {self.copyright}")
+                if self.shootTime != 0:
+                    if self.shootTime == 1:
+                        date_from_filename = self.get_date_from_filename(image_path)
+                        if date_from_filename:
+                            if "Exif" not in exif_dict:
+                                exif_dict["Exif"] = {}
+                            exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = date_from_filename.strftime(
+                                "%Y:%m:%d %H:%M:%S")
+                            updated_fields.append(
+                                f"文件名识别拍摄时间: {date_from_filename.strftime('%Y:%m:%d %H:%M:%S')}")
+                    else:
                         if "Exif" not in exif_dict:
                             exif_dict["Exif"] = {}
-                        exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = date_from_filename.strftime(
-                            "%Y:%m:%d %H:%M:%S")
-                        updated_fields.append(f"文件名识别拍摄时间: {date_from_filename.strftime('%Y:%m:%d %H:%M:%S')}")
+                        exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = self.shootTime
+                        updated_fields.append(f"拍摄时间: {self.shootTime}")
+                if self.autoMark:
+                    if self._stop_requested:
+                        self.log.emit("INFO", f"操作被终止: {image_path}")
+                        return
+                    keywords_list, description = self.analyze_image(image_path)
+                    keywords_str = ",".join(keywords_list)
+                    exif_dict["0th"][piexif.ImageIFD.XPComment] = description.encode('utf-16le')
+                    exif_dict["Exif"][piexif.ExifIFD.UserComment] = description.encode('utf-8')
+                    exif_dict["0th"][piexif.ImageIFD.XPKeywords] = (keywords_str + "\x00").encode(
+                        "utf-16-le") + b'\x00\x00'
+                    updated_fields.append(f"标记:{keywords_str}；描述:{description}")
+                if self.lat is not None and self.lon is not None:
+                    exif_dict["GPS"] = self._create_gps_data(self.lat, self.lon)
+                    updated_fields.append(
+                        f"GPS坐标: {abs(self.lat):.6f}°{'N' if self.lat >= 0 else 'S'}, {abs(self.lon):.6f}°{'E' if self.lon >= 0 else 'W'}")
+                exif_bytes = piexif.dump(exif_dict)
+                piexif.insert(exif_bytes, image_path)
+                if updated_fields:
+                    self.log.emit("INFO", f"已成功更新 {image_path}: {'; '.join(updated_fields)}")
                 else:
-                    if "Exif" not in exif_dict:
-                        exif_dict["Exif"] = {}
-                    exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = self.shootTime
-                    updated_fields.append(f"拍摄时间: {self.shootTime}")
-            if self.autoMark:
-                if self._stop_requested:
-                    self.log.emit("INFO", f"操作被终止: {image_path}")
-                    return
-                keywords_list, description = self.analyze_image(image_path)
-                keywords_str = ",".join(keywords_list)
-                exif_dict["0th"][piexif.ImageIFD.XPComment] = description.encode('utf-16le')
-                exif_dict["Exif"][piexif.ExifIFD.UserComment] = description.encode('utf-8')
-                exif_dict["0th"][piexif.ImageIFD.XPKeywords] = (keywords_str + "\x00").encode("utf-16-le") + b'\x00\x00'
-                updated_fields.append(f"标记:{keywords_str}；描述:{description}")
-            if self.lat is not None and self.lon is not None:
-                exif_dict["GPS"] = self._create_gps_data(self.lat, self.lon)
-                updated_fields.append(
-                    f"GPS坐标: {abs(self.lat):.6f}°{'N' if self.lat >= 0 else 'S'}, "
-                    f"{abs(self.lon):.6f}°{'E' if self.lon >= 0 else 'W'}"
-                )
-            exif_bytes = piexif.dump(exif_dict)
-            piexif.insert(exif_bytes, image_path)
-            if updated_fields:
-                self.log.emit("INFO", f"已成功更新 {image_path}: {'; '.join(updated_fields)}")
+                    self.log.emit("WARNING", f"未对 {image_path} 进行任何更改")
             else:
-                self.log.emit("WARNING", f"未对 {image_path} 进行任何更改")
+                if self.shootTime != 0:
+                    if self.shootTime == 1:
+                        date_from_filename = self.get_date_from_filename(image_path)
+                        if date_from_filename:
+                            with Image.open(image_path) as img:
+                                png_info = PngImagePlugin.PngInfo()
+                                for key in img.text:
+                                    if key.lower() != "creation time":
+                                        png_info.add_text(key, img.text[key])
+                                png_info.add_text("Creation Time", str(date_from_filename))
+                                temp_path = image_path + ".tmp"
+                                img.save(temp_path, format="PNG", pnginfo=png_info)
+                                os.replace(temp_path, image_path)
+                                self.log.emit("INFO", f"成功写入 {image_path} 的拍摄时间 {date_from_filename}")
+                    else:
+                        with Image.open(image_path) as img:
+                            png_info = PngImagePlugin.PngInfo()
+                            for key in img.text:
+                                if key.lower() != "creation time":
+                                    png_info.add_text(key, img.text[key])
+                            png_info.add_text("Creation Time", self.shootTime)
+                            temp_path = image_path + ".tmp"
+                            img.save(temp_path, format="PNG", pnginfo=png_info)
+                            os.replace(temp_path, image_path)
+                            self.log.emit("INFO", f"成功写入 {image_path} 的拍摄时间 {self.shootTime}")
 
         except Exception as e:
             result = detect_media_type(image_path)
