@@ -4610,7 +4610,7 @@ border-bottom-left-radius:0px;</string>
                         <widget class="QLabel" name="label_image_A">
                          <property name="styleSheet">
                           <string notr="true">QLabel {
-image: url('resources/img/page_3/对比1.jpg');
+image: url('resources/img/page_3/对比.jpg');
 }</string>
                          </property>
                          <property name="text">
@@ -4638,7 +4638,7 @@ image: url('resources/img/page_3/对比1.jpg');
                         <widget class="QLabel" name="label_image_B">
                          <property name="styleSheet">
                           <string notr="true">QLabel {
-image: url('resources/img/page_3/对比2.jpg');
+image: url('resources/img/page_3/对比.jpg');
 }</string>
                          </property>
                          <property name="text">

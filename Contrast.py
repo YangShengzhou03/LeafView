@@ -290,8 +290,8 @@ class Contrast(QtWidgets.QWidget):
                 widget.deleteLater()
 
     def set_empty(self, status):
-        style1 = f"image:url({get_resource_path('resources/img/page_3/对比1.jpg')})" if status else ""
-        style2 = f"image:url({get_resource_path('resources/img/page_3/对比2.jpg')})" if status else ""
+        style1 = f"image:url({get_resource_path('resources/img/page_3/对比.jpg')})" if status else ""
+        style2 = f"image:url({get_resource_path('resources/img/page_3/对比.jpg')})" if status else ""
         self.parent.label_image_A.setStyleSheet(style1)
         self.parent.label_image_B.setStyleSheet(style2)
 
