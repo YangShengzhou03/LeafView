@@ -1,6 +1,5 @@
 import os
 import shutil
-
 import numpy as np
 import pillow_heif
 import send2trash
@@ -8,24 +7,18 @@ from PIL import Image
 from PyQt6 import QtWidgets, QtCore, QtGui
 from PyQt6.QtCore import pyqtSignal, QRunnable, QObject, Qt, QThreadPool
 from PyQt6.QtGui import QPixmap, QImage
-
 from ContrastThread import HashWorker, ContrastWorker
 from common import get_resource_path
 
 
 class ThumbnailLoaderSignals(QObject):
-    thumbnail_ready = pyqtSignal(str, QPixmap)
+    thumbnail_ready = pyqtSignal(str, QImage)
     progress_updated = pyqtSignal(int)
 
 
 def load_heic_as_qimage(path):
     heif_file = pillow_heif.read_heif(path)
-    image = Image.frombytes(
-        heif_file.mode,
-        heif_file.size,
-        heif_file.data,
-        "raw",
-    )
+    image = Image.frombytes(heif_file.mode, heif_file.size, heif_file.data, "raw")
     if image.mode != "RGB":
         image = image.convert("RGB")
     buffer = image.tobytes()
@@ -42,23 +35,24 @@ class ThumbnailLoader(QRunnable):
         self.signals = ThumbnailLoaderSignals()
 
     def run(self):
+        image = QImage()
         if self.path.lower().endswith(('.heic', '.heif')):
             try:
                 image = load_heic_as_qimage(self.path)
             except Exception:
-                return
+                pass
         else:
-            image = QImage(self.path)
+            image.load(self.path)
 
         if not image.isNull():
             scaled_image = image.scaled(self.size.width(), self.size.height(),
                                         Qt.AspectRatioMode.KeepAspectRatio,
                                         Qt.TransformationMode.SmoothTransformation)
-            pixmap = QPixmap.fromImage(scaled_image)
-            self.signals.thumbnail_ready.emit(self.path, pixmap)
+            self.signals.thumbnail_ready.emit(self.path, scaled_image)
             progress = 80 + int((1 / self.total_images) * 20)
             self.signals.progress_updated.emit(progress)
         self.signals.progress_updated.emit(100)
+        del image
 
 
 class Contrast(QtWidgets.QWidget):
@@ -70,15 +64,15 @@ class Contrast(QtWidgets.QWidget):
         self.image_hashes = {}
         self._running = False
         self.thread_pool = QThreadPool.globalInstance()
-        self.thread_pool.setMaxThreadCount(min(8, os.cpu_count() or 4))
+        self.thread_pool.setMaxThreadCount(4)
+        self.selected_images = []
         self.init_page()
         self.connect_signals()
-        self.selected_images = []
+        self.thumbnail_loaders = []
 
     def init_page(self):
-        slider = self.parent.horizontalSlider_levelContrast
-        slider.setRange(1, 4)
-        slider.setValue(4)
+        self.parent.horizontalSlider_levelContrast.setRange(1, 4)
+        self.parent.horizontalSlider_levelContrast.setValue(4)
         self.parent.verticalFrame_similar.hide()
 
     def connect_signals(self):
@@ -90,47 +84,47 @@ class Contrast(QtWidgets.QWidget):
 
     def move_selected_images(self):
         dest_folder = QtWidgets.QFileDialog.getExistingDirectory(self, "选择目标文件夹")
-        if dest_folder:
-            for img in self.selected_images:
-                try:
-                    shutil.move(img, os.path.join(dest_folder, os.path.basename(img)))
-                except Exception as e:
-                    QtWidgets.QMessageBox.warning(self, "无法移动图片", f"无法移动图片 {img}: {e}")
-            self.display_all_images()
+        if not dest_folder:
+            return
+        for img in self.selected_images:
+            try:
+                shutil.move(img, os.path.join(dest_folder, os.path.basename(img)))
+            except Exception as e:
+                QtWidgets.QMessageBox.warning(self, "无法移动图片", f"无法移动图片 {img}: {e}")
+        self.display_all_images()
 
     def auto_select_images(self):
         self.selected_images.clear()
         for group_id, paths in self.groups.items():
-            if len(paths) > 1:
-                best_quality_image = max(paths, key=lambda x: os.path.getsize(x))
-                for img in paths:
-                    if img != best_quality_image:
-                        self.selected_images.append(img)
+            if len(paths) <= 1:
+                continue
+            best = max(paths, key=lambda x: os.path.getsize(x))
+            self.selected_images.extend([p for p in paths if p != best])
         self.refresh_selection_visuals()
 
     def delete_selected_images(self):
         reply = QtWidgets.QMessageBox.question(self, '移动到回收站', "确定要将选中的图片移动至回收站吗？",
                                                QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No,
                                                QtWidgets.QMessageBox.StandardButton.No)
-        if reply == QtWidgets.QMessageBox.StandardButton.Yes:
-            for img in self.selected_images:
-                try:
-                    send2trash.send2trash(img)
-                except Exception as e:
-                    QtWidgets.QMessageBox.warning(self, "无法删除图片", f"删除图片{img}出错: {e}")
-            self.selected_images.clear()
-            self.display_all_images()
+        if reply != QtWidgets.QMessageBox.StandardButton.Yes:
+            return
+        for img in self.selected_images:
+            try:
+                send2trash.send2trash(img)
+            except Exception as e:
+                QtWidgets.QMessageBox.warning(self, "无法删除图片", f"删除图片{img}出错: {e}")
+        self.selected_images.clear()
+        self.display_all_images()
 
     def refresh_selection_visuals(self):
         layout = self.parent.gridLayout_2
         for i in reversed(range(layout.count())):
-            item = layout.itemAt(i)
-            if isinstance(item.widget(), QtWidgets.QLabel):
-                path = item.widget().property("image_path")
-                selected = path in self.selected_images
-                item.widget().setProperty("selected", selected)
-                item.widget().style().unpolish(item.widget())
-                item.widget().style().polish(item.widget())
+            widget = layout.itemAt(i).widget()
+            if isinstance(widget, QtWidgets.QLabel):
+                path = widget.property("image_path")
+                widget.setProperty("selected", path in self.selected_images)
+                widget.style().unpolish(widget)
+                widget.style().polish(widget)
 
     def startContrast(self):
         folders = self.folder_page.get_all_folders() if self.folder_page else []
@@ -141,28 +135,19 @@ class Contrast(QtWidgets.QWidget):
         self._running = True
         self.parent.verticalFrame_similar.show()
         self.parent.progressBar_Contrast.setValue(0)
-
-        supported_formats = [
-            '.jpg', '.jpeg', '.png', '.bmp', '.gif',
-            '.webp', '.tif', '.tiff', '.heif', '.heic',
-            '.arw', '.cr2', '.cr3', '.nef', '.orf', '.sr2',
-            '.raf', '.dng', '.rw2', '.pef', '.nrw', '.kdc'
-        ]
+        supported_formats = {'.jpg', '.jpeg', '.png', '.bmp', '.gif', '.webp', '.tif', '.tiff',
+                             '.heif', '.heic', '.arw', '.cr2', '.cr3', '.nef', '.orf', '.sr2',
+                             '.raf', '.dng', '.rw2', '.pef', '.nrw', '.kdc'}
         image_paths = []
-
         for folder_info in folders:
             folder_path = folder_info['path']
-            include_sub = folder_info['include_sub']
-
-            if include_sub == 1:
+            if folder_info['include_sub'] == 1:
                 for root, _, files in os.walk(folder_path):
-                    for file in files:
-                        if os.path.splitext(file)[1].lower() in supported_formats:
-                            image_paths.append(os.path.join(root, file))
+                    image_paths.extend(os.path.join(root, f) for f in files
+                                       if os.path.splitext(f)[1].lower() in supported_formats)
             else:
-                for file in os.listdir(folder_path):
-                    if os.path.splitext(file)[1].lower() in supported_formats:
-                        image_paths.append(os.path.join(folder_path, file))
+                image_paths.extend(os.path.join(folder_path, f) for f in os.listdir(folder_path)
+                                   if os.path.splitext(f)[1].lower() in supported_formats)
         self.parent.toolButton_startContrast.setEnabled(False)
         self.hash_worker = HashWorker(image_paths)
         self.hash_worker.hash_completed.connect(self.on_hashes_computed)
@@ -173,7 +158,6 @@ class Contrast(QtWidgets.QWidget):
     def on_hashes_computed(self, hashes):
         if not self._running:
             return
-
         self.image_hashes = hashes
         threshold = self.get_similarity_threshold(self.parent.horizontalSlider_levelContrast.value())
         self.contrast_worker = ContrastWorker(hashes, threshold)
@@ -196,122 +180,106 @@ class Contrast(QtWidgets.QWidget):
     def display_all_images(self):
         layout = self.parent.gridLayout_2
         self.clear_layout(layout)
-        COLUMN_COUNT = 4
-        row, col = 0, 0
-        duplicate_groups = {group_id: paths for group_id, paths in self.groups.items() if len(paths) > 1}
-        total_images = sum(len(paths) for paths in duplicate_groups.values())
-        no_images_found = True
-        for index, (group_id, paths) in enumerate(duplicate_groups.items(), start=1):
+        duplicate_groups = {k: v for k, v in self.groups.items() if len(v) > 1}
+        total_images = sum(len(v) for v in duplicate_groups.values())
+        no_images = True
+        row = col = 0
+        for idx, (gid, paths) in enumerate(duplicate_groups.items(), 1):
             if not paths or not self._running:
                 continue
-            no_images_found = False
-            title = QtWidgets.QLabel(f"📁 第{index}组 ({len(paths)}张)")
-            title.setStyleSheet("QLabel { font: bold 14px; color: #1976D2; padding: 2px 0; }")
-            layout.addWidget(title, row, 0, 1, COLUMN_COUNT)
+            no_images = False
+            title = QtWidgets.QLabel(f"📁 第{idx}组 ({len(paths)}张)")
+            title.setStyleSheet("QLabel{font:bold 14px;color:#1976D2;padding:2px 0;}")
+            layout.addWidget(title, row, 0, 1, 4)
             row += 1
             for path in paths:
-                if col >= COLUMN_COUNT:
+                if col >= 4:
                     col = 0
                     row += 1
-                thumbnail = self.create_thumbnail(path, total_images)
-                if thumbnail:
-                    layout.addWidget(thumbnail, row, col)
+                thumb = self.create_thumbnail(path, total_images)
+                if thumb:
+                    layout.addWidget(thumb, row, col)
                     col += 1
             if paths and self._running:
                 self.add_separator(layout, row + 1)
                 row += 2
                 col = 0
-        layout.update()
-        self.parent.update()
-        if no_images_found:
+        if no_images:
             self.update_progress(100)
             self.parent.verticalFrame_similar.hide()
             QtWidgets.QMessageBox.information(self, "提示", "没有找到符合相似度条件的图片")
         self.parent.toolButton_startContrast.setEnabled(True)
 
     def create_thumbnail(self, path, total_images):
-        container_size = QtCore.QSize(100, 100)
         label = QtWidgets.QLabel()
-        label.setFixedSize(container_size)
+        label.setFixedSize(80, 80)
         label.setProperty("image_path", path)
         label.setProperty("selected", False)
-        label.setStyleSheet("""
-            QLabel {
-                background: #F5F5F5;
-                border: 2px solid #E0E0E0;
-                border-radius: 4px;
-                padding: 0px;
-            }
-            QLabel:hover {
-                border: 2px solid #2196F3;
-            }
-            QLabel[selected=true] {
-                border: 3px solid #FF5722;
-            }
-        """)
+        label.setStyleSheet("QLabel{background:#F5F5F5;border:2px solid #E0E0E0;border-radius:4px;}"
+                            "QLabel:hover{border:2px solid #2196F3;}QLabel[selected=true]{border:3px solid #FF5722;}")
         label.mousePressEvent = lambda e, p=path: self.thumbnail_clicked(p)
-        label.mouseDoubleClickEvent = lambda e, lbl=label: self.toggle_thumbnail_selection(lbl)
-        loader = ThumbnailLoader(path, container_size, total_images)
-        loader.signals.thumbnail_ready.connect(lambda p, pix: self.on_thumbnail_loaded(pix, label))
+        label.mouseDoubleClickEvent = lambda e, l=label: self.toggle_thumbnail_selection(l)
+        loader = ThumbnailLoader(path, QtCore.QSize(80, 80), total_images)
+        loader.signals.thumbnail_ready.connect(lambda p, img: self.on_thumbnail_ready(p, img, label))
         loader.signals.progress_updated.connect(self.update_progress)
+        self.thumbnail_loaders.append(loader)
         self.thread_pool.start(loader)
         return label
 
     def toggle_thumbnail_selection(self, label):
         path = label.property("image_path")
-        is_selected = not label.property("selected")
-        label.setProperty("selected", is_selected)
+        selected = not label.property("selected")
+        label.setProperty("selected", selected)
         label.style().unpolish(label)
         label.style().polish(label)
-        if is_selected:
+        if selected:
             if path not in self.selected_images:
                 self.selected_images.append(path)
-        else:
-            if path in self.selected_images:
-                self.selected_images.remove(path)
+        elif path in self.selected_images:
+            self.selected_images.remove(path)
 
     def thumbnail_clicked(self, path):
-        for group_id, paths in self.groups.items():
+        for gid, paths in self.groups.items():
             if path in paths:
                 self.set_empty(False)
                 self.show_image(self.parent.label_image_A, path)
-                candidates = [p for p in paths if p != path]
-                if candidates:
-                    random_image_path = np.random.choice(candidates)
-                    self.show_image(self.parent.label_image_B, random_image_path)
-                    self.set_empty(status=False)
+                others = [p for p in paths if p != path]
+                if others:
+                    self.show_image(self.parent.label_image_B, np.random.choice(others))
                 break
 
-    def on_thumbnail_loaded(self, pixmap, label):
-        if not pixmap.isNull():
-            label.setPixmap(pixmap)
-            label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+    def on_thumbnail_ready(self, path, image, label):
+        if image.isNull():
+            return
+        pixmap = QPixmap.fromImage(image)
+        label.setPixmap(pixmap)
+        label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        del image
 
-    def show_images_from_thread(self, source_path, match_path):
+    def show_images_from_thread(self, src, match):
         self.set_empty(False)
-        self.show_image(self.parent.label_image_A, source_path)
-        self.show_image(self.parent.label_image_B, match_path)
+        self.show_image(self.parent.label_image_A, src)
+        self.show_image(self.parent.label_image_B, match)
 
     def update_progress(self, value):
         self.parent.progressBar_Contrast.setValue(value)
 
-    def get_similarity_threshold(self, slider_value):
-        threshold_map = {1: 32, 2: 24, 3: 12, 4: 0}
-        return threshold_map.get(slider_value, 0)
+    def get_similarity_threshold(self, val):
+        return {1: 32, 2: 24, 3: 12, 4: 0}.get(val, 0)
 
-    def on_slider_value_changed(self, value):
-        level_info = [("明显差异", "#FF5252"), ("部分相似", "#FF9800"), ("比较相似", "#2196F3"),
-                      ("完全一致", "#4CAF50")]
-        if 1 <= value <= 4:
-            text, color = level_info[value - 1]
+    def on_slider_value_changed(self, val):
+        levels = [("明显差异", "#FF5252"), ("部分相似", "#FF9800"),
+                  ("比较相似", "#2196F3"), ("完全一致", "#4CAF50")]
+        if 1 <= val <= 4:
+            text, color = levels[val - 1]
             self.parent.label_levelContrast.setText(text)
-            self.parent.label_levelContrast.setStyleSheet(f"QLabel {{ color: {color}; }}")
+            self.parent.label_levelContrast.setStyleSheet(f"QLabel{{color:{color};}}")
 
     def add_separator(self, layout, row):
-        separator = QtWidgets.QFrame()
-        separator.setFrameShape(QtWidgets.QFrame.Shape.HLine)
-        separator.setStyleSheet("border: 1px dashed #BDBDBD;")
-        layout.addWidget(separator, row, 0, 1, layout.columnCount())
+        sep = QtWidgets.QFrame()
+        sep.setFrameShape(QtWidgets.QFrame.Shape.HLine)
+        sep.setStyleSheet("border:1px dashed #BDBDBD;")
+        layout.addWidget(sep, row, 0, 1, layout.columnCount())
 
     def clear_layout(self, layout):
         while layout.count():
@@ -319,41 +287,35 @@ class Contrast(QtWidgets.QWidget):
             if widget := item.widget():
                 widget.deleteLater()
 
-    def set_empty(self, status=False):
-        self.parent.label_image_A.setStyleSheet(f"image: url({get_resource_path('resources/img/page_3/对比1.jpg')})" if
-                                                status else "QLabel {image: url('');}")
-        self.parent.label_image_B.setStyleSheet(f"image: url({get_resource_path('resources/img/page_3/对比2.jpg')})" if
-                                                status else "QLabel {image: url('');}")
+    def set_empty(self, status):
+        style1 = f"image:url({get_resource_path('resources/img/page_3/对比1.jpg')})" if status else ""
+        style2 = f"image:url({get_resource_path('resources/img/page_3/对比2.jpg')})" if status else ""
+        self.parent.label_image_A.setStyleSheet(style1)
+        self.parent.label_image_B.setStyleSheet(style2)
 
     def show_image(self, label, path):
         if path.lower().endswith(('.heic', '.heif')):
             try:
-                heif_file = pillow_heif.read_heif(path)
-                image = Image.frombytes(
-                    heif_file.mode,
-                    heif_file.size,
-                    heif_file.data,
-                    "raw",
-                )
-                if image.mode != "RGB":
-                    image = image.convert("RGB")
-                buffer = image.tobytes()
-                qimage = QImage(buffer, image.width, image.height, QImage.Format.Format_RGB888)
-                if not qimage.isNull():
-                    pixmap = QPixmap.fromImage(qimage)
-                    scaled = pixmap.scaled(label.width(), label.height(),
-                                           QtCore.Qt.AspectRatioMode.KeepAspectRatio,
-                                           QtCore.Qt.TransformationMode.SmoothTransformation)
-                    label.setPixmap(scaled)
+                heif = pillow_heif.read_heif(path)
+                img = Image.frombytes(heif.mode, heif.size, heif.data, "raw")
+                if img.mode != "RGB":
+                    img = img.convert("RGB")
+                qimg = QImage(img.tobytes(), img.width, img.height, QImage.Format.Format_RGB888)
+                if not qimg.isNull():
+                    pix = QPixmap.fromImage(qimg)
+                    pix = pix.scaled(label.width(), label.height(),
+                                     Qt.AspectRatioMode.KeepAspectRatio,
+                                     Qt.TransformationMode.SmoothTransformation)
+                    label.setPixmap(pix)
                 return
-            except Exception:
+            except:
                 return
-        pixmap = QtGui.QPixmap(path)
-        if not pixmap.isNull():
-            scaled = pixmap.scaled(label.width(), label.height(),
-                                   QtCore.Qt.AspectRatioMode.KeepAspectRatio,
-                                   QtCore.Qt.TransformationMode.SmoothTransformation)
-            label.setPixmap(scaled)
+        pix = QPixmap(path)
+        if not pix.isNull():
+            pix = pix.scaled(label.width(), label.height(),
+                             Qt.AspectRatioMode.KeepAspectRatio,
+                             Qt.TransformationMode.SmoothTransformation)
+            label.setPixmap(pix)
 
     def stop_processing(self):
         self._running = False
