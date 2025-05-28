@@ -177,7 +177,7 @@ pyinstaller --onefile --windowed --icon=resources/icon.ico App.py
 4. **开始处理**：点击"开始"按钮查看实时进度
 
 ### 视频教程
-[![使用教程](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=VIDEO_ID)
+[![使用教程](https://i0.hdslb.com/bfs/archive/18642d7c2e6fdb1b277140f2bda877d966aa6dc1.jpg)](https://www.bilibili.com/video/BV1qgfmYmEAa)
 
 ---
 
