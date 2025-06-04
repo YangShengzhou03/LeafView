@@ -332,4 +332,14 @@ Copyright (c) 2023 Yangshengzhou
 > 让每一张照片都找到归属，  
 > 每一次回忆都清晰如初。  
 
+
+## 📞 联系与支持  
+- **项目主页**：[https://gitee.com/Yangshengzhou/leaf-view](https://gitee.com/Yangshengzhou/leaf-view)
+- **文档中心**：[https://yangshengzhou.gitbook.io/leaf-view](https://yangshengzhou.gitbook.io/leaf-view)
+- **问题反馈**：[提交Issue](https://gitee.com/Yangshengzhou/leaf-view/issues)
+- **商务合作**：3555844679@qq.com（主题注明"LeafView合作"）  
+- **社区交流**：  
+  ![WeChat Group](https://img.shields.io/badge/微信-YSZFortune-brightgreen?logo=wechat)  
+  ![QQ Group](https://img.shields.io/badge/QQ群-1021471813-blue?logo=tencentqq)  
+
 🌟 **Star 项目支持我们** → [https://github.com/YangShengzhou03/LeafView](https://github.com/YangShengzhou03/LeafView)
