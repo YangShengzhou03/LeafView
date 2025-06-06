@@ -1,6 +1,11 @@
 # 🍁 LeafView（枫叶相册）V1.2 免费公测版  
 
-[![GitHub stars](https://img.shields.io/github/stars/YangShengzhou03/LeafView?style=social)](https://github.com/YangShengzhou03/LeafView) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) [![Python Version](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/) [![Downloads](https://img.shields.io/badge/downloads-10K%2B-brightgreen)](https://github.com/YangShengzhou03/LeafView/releases)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) 
+[![GitHub stars](https://img.shields.io/github/stars/YangShengzhou03/LeafView?style=social)](https://github.com/YangShengzhou03/LeafView) 
+[![Gitee Stars](https://gitee.com/Yangshengzhou/leaf-view/badge/star.svg?theme=dark)](https://gitee.com/Yangshengzhou/leaf-view)
+[![Gitee Fork](https://gitee.com/Yangshengzhou/leaf-view/badge/fork.svg?theme=dark)](https://gitee.com/Yangshengzhou/leaf-view)
+[![Python Version](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/) 
+[![Downloads](https://img.shields.io/badge/downloads-10K%2B-brightgreen)](https://github.com/YangShengzhou03/LeafView/releases)
 
 > **智能媒体整理专家 | 照片视频高效管理 | 隐私安全无忧 | 免费开源**  
 
@@ -339,7 +344,7 @@ Copyright (c) 2023 Yangshengzhou
 - **问题反馈**：[提交Issue](https://gitee.com/Yangshengzhou/leaf-view/issues)
 - **商务合作**：3555844679@qq.com（主题注明"LeafView合作"）  
 - **社区交流**：  
-  ![WeChat Group](https://img.shields.io/badge/微信-YSZFortune-brightgreen?logo=wechat)  
-  ![QQ Group](https://img.shields.io/badge/QQ群-1021471813-blue?logo=tencentqq)  
+  [![WeChat Group](https://img.shields.io/badge/微信-YSZFortune-brightgreen?logo=wechat)](https://img.shields.io/badge/微信-YSZFortune-brightgreen?logo=wechat)  
+  [![QQ Group](https://img.shields.io/badge/QQ群-1021471813-blue?logo=tencentqq)](https://img.shields.io/badge/QQ群-1021471813-blue?logo=tencentqq)
 
 🌟 **Star 项目支持我们** → [https://github.com/YangShengzhou03/LeafView](https://github.com/YangShengzhou03/LeafView)
