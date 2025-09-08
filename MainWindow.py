@@ -1,13 +1,13 @@
 from PyQt6 import QtWidgets, QtCore, QtGui
 
-from Classification import Classification
-from Contrast import Contrast
 from FolderPage import FolderPage
-from Read import Read
 from Ui_MainWindow import Ui_MainWindow
 from UpdateDialog import check_update
-from WriteExif import WriteExif
 from common import get_resource_path, author
+from src.leafview.controllers.classification_controller import ClassificationController
+from src.leafview.controllers.media_controller import MediaController
+from src.leafview.controllers.duplicate_finder_controller import DuplicateFinderController
+from src.leafview.views.duplicates_page import DuplicatesPageWidget
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -25,16 +25,22 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
         self._connect_buttons()
         self.empty_widgets = {}
-        self.empty_widgets['gridLayout_5'] = self._create_empty_widget(self.gridLayout_5)  # 图片
-        self.empty_widgets['gridLayout_4'] = self._create_empty_widget(self.gridLayout_4)  # 视频
-        self.empty_widgets['gridLayout_3'] = self._create_empty_widget(self.gridLayout_3)  # 截图
-        self.empty_widgets['gridLayout_7'] = self._create_empty_widget(self.gridLayout_7)  # 人像 self.gridLayout_8人脸照片
-        self.empty_widgets['gridLayout_6'] = self._create_empty_widget(self.gridLayout_6)  # 第一个文件夹页面
+        # Note: Only gridLayout_6 exists in the UI, so we'll use it for all media types
+        self.empty_widgets['gridLayout_6'] = self._create_empty_widget(self.gridLayout_6)  # 主布局（用于所有媒体类型）
         self.folder_page = FolderPage(self)
-        self.read_page = Read(self, self.folder_page)
-        self.classification_page = Classification(self, self.folder_page)
-        self.contrast_page = Contrast(self, self.folder_page)
-        self.writeExif_page = WriteExif(self, self.folder_page)
+        # 使用新的控制器类替代原来的类
+        self.media_controller = MediaController(self)
+        self.classification_controller = ClassificationController(self)
+        self.duplicate_finder_controller = DuplicateFinderController(self)
+        
+        # 注意：不再创建独立的去重页面，而是使用UI文件中已定义的页面
+        # 去重页面已经在Ui_MainWindow.ui中定义，并通过setupUi方法创建
+        
+        # 连接去重相关信号
+        self._connect_duplicate_finder_buttons()
+        
+        # 设置导航列表项点击事件
+        self.listWidget_base.itemClicked.connect(self._on_navigation_item_clicked)
 
     def _connect_buttons(self):
         self.toolButton_close.clicked.connect(self.close)
@@ -42,6 +48,234 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.toolButton_minimum.clicked.connect(self.showMinimized)
         self.toolButton_serve.clicked.connect(author)
         self.toolButton_setting.clicked.connect(author)
+    
+    def _on_navigation_item_clicked(self, item):
+        """处理导航项点击事件
+        
+        Args:
+            item: 被点击的列表项
+        """
+        row = self.listWidget_base.row(item)
+        # 根据点击的导航项切换stackedWidget的页面
+        # 0: 媒体导入, 1: 智能整理, 2: 文件去重, 3: 属性写入
+        self.stackedWidget.setCurrentIndex(row)
+        
+        # 如果点击的是文件去重项，初始化去重功能
+        if row == 2:  # 文件去重
+            self._init_duplicate_finder()
+    
+    def _init_duplicate_finder(self):
+        """初始化去重功能"""
+        # 检查是否已添加去重页面
+        if self.stackedWidget.count() <= 3:  # 只有默认的4个页面
+            # 创建去重页面
+            self.duplicates_page = DuplicatesPageWidget(self)
+            # 添加到stackedWidget
+            self.stackedWidget.addWidget(self.duplicates_page)
+        else:
+            # 获取已存在的去重页面
+            self.duplicates_page = self.stackedWidget.widget(4)  # 第5个页面
+        
+        # 连接去重控制器信号
+        self._connect_duplicate_finder_signals()
+    
+    def _connect_duplicate_finder_signals(self):
+        """连接去重控制器信号"""
+        # 连接去重控制器信号
+        self.duplicate_finder_controller.duplicate_finder_started.connect(self._on_duplicate_finder_started)
+        self.duplicate_finder_controller.duplicate_finder_completed.connect(self._on_duplicate_finder_completed)
+        self.duplicate_finder_controller.progress_updated.connect(self._on_duplicate_finder_progress_updated)
+        self.duplicate_finder_controller.duplicate_found.connect(self._on_duplicate_found)
+        self.duplicate_finder_controller.error_occurred.connect(self._on_duplicate_finder_error_occurred)
+    
+    def _connect_duplicate_finder_buttons(self):
+        """连接图像去重相关按钮信号"""
+        # 连接开始查找按钮
+        self.toolButton_startContrast.clicked.connect(self._on_start_duplicate_finder)
+        
+        # 连接其他去重相关按钮
+        self.toolButton_move.clicked.connect(self._on_move_duplicates)
+        self.toolButton_autoSelect.clicked.connect(self._on_auto_select_duplicates)
+        self.toolButton_delete.clicked.connect(self._on_delete_duplicates)
+    
+    def _on_start_duplicate_finder(self):
+        """开始查找重复图像"""
+        # 确保去重页面已初始化
+        if not hasattr(self, 'duplicates_page'):
+            self._init_duplicate_finder()
+        
+        # 显示去重页面
+        self.stackedWidget.setCurrentWidget(self.duplicates_page)
+        
+        # 获取当前媒体项列表
+        media_items = self.media_controller.get_media_items()
+        
+        if not media_items:
+            if hasattr(self, 'duplicates_page'):
+                self.duplicates_page.updateProgress(0, 100, "没有可检查的文件")
+            else:
+                self.label_levelContrast.setText("没有可检查的文件")
+            return
+        
+        # 获取去重页面中的设置
+        similarity_threshold = self.duplicates_page.getSimilarityThreshold()
+        duplicate_method = self.duplicates_page.getDuplicateMethod()
+        auto_select = self.duplicates_page.isAutoSelectEnabled()
+        auto_select_criteria = self.duplicates_page.getAutoSelectCriteria()
+        
+        # 重置去重页面
+        self.duplicates_page.clearDuplicateGroups()
+        self.duplicates_page.resetProgress()
+        
+        # 启动去重查找
+        self.duplicate_finder_controller.find_duplicates(
+            media_items, 
+            similarity_threshold,
+            method=duplicate_method,
+            auto_select=auto_select,
+            auto_select_criteria=auto_select_criteria
+        )
+    
+    def _on_duplicate_finder_started(self):
+        """去重开始处理"""
+        if hasattr(self, 'duplicates_page'):
+            self.duplicates_page.updateProgress(0, 100, "正在查找重复文件...")
+        else:
+            self.label_levelContrast.setText("正在查找重复文件...")
+        self.toolButton_startContrast.setEnabled(False)
+    
+    def _on_duplicate_finder_completed(self, success):
+        """去重完成处理"""
+        self.toolButton_startContrast.setEnabled(True)
+        
+        if success:
+            duplicates = self.duplicate_finder_controller.get_duplicates()
+            if hasattr(self, 'duplicates_page'):
+                if duplicates:
+                    self.duplicates_page.updateProgress(100, 100, f"发现 {len(duplicates)} 组重复文件")
+                    
+                    # 将重复组添加到去重页面
+                    for group in duplicates:
+                        self.duplicates_page.addDuplicateGroup(group)
+                        
+                    # 如果启用了自动选择，执行自动选择
+                    if self.duplicates_page.isAutoSelectEnabled():
+                        self.duplicate_finder_controller.auto_select_best_items(
+                            self.duplicates_page.getAutoSelectCriteria()
+                        )
+                else:
+                    self.duplicates_page.updateProgress(100, 100, "未发现重复文件")
+            else:
+                if duplicates:
+                    self.label_levelContrast.setText(f"发现 {len(duplicates)} 组重复文件")
+                else:
+                    self.label_levelContrast.setText("未发现重复文件")
+        else:
+            if hasattr(self, 'duplicates_page'):
+                self.duplicates_page.updateProgress(0, 100, "查找失败")
+            else:
+                self.label_levelContrast.setText("查找失败")
+    
+    def _on_duplicate_finder_progress_updated(self, value, maximum, message):
+        """去重进度更新处理"""
+        if hasattr(self, 'duplicates_page'):
+            self.duplicates_page.updateProgress(value, maximum, message)
+        else:
+            self.label_levelContrast.setText(message)
+    
+    def _on_duplicate_found(self, item1, item2, similarity):
+        """发现重复项处理"""
+        # 这个方法在去重控制器中可能不再需要，因为现在我们使用重复组的方式
+        pass
+    
+    def _on_duplicate_finder_error_occurred(self, error_message):
+        """去重错误处理"""
+        if hasattr(self, 'duplicates_page'):
+            self.duplicates_page.updateProgress(0, 100, f"错误: {error_message}")
+        else:
+            self.label_levelContrast.setText(f"错误: {error_message}")
+        self.toolButton_startContrast.setEnabled(True)
+    
+    def _on_move_duplicates(self):
+        """移动重复文件"""
+        # 确保去重页面已初始化
+        if not hasattr(self, 'duplicates_page'):
+            self._init_duplicate_finder()
+            return
+        
+        # 获取当前选中的重复组
+        current_group_index = self.duplicates_page.duplicateGroupsListWidget.currentRow()
+        if current_group_index < 0:
+            self.duplicates_page.updateProgress(0, 100, "请先选择一个重复组")
+            return
+            
+        # 获取目标路径
+        target_path = QtWidgets.QFileDialog.getExistingDirectory(self, "选择目标文件夹")
+        if not target_path:
+            return
+            
+        # 应用去重结果（移动操作）
+        result = self.duplicate_finder_controller.apply_result("move", target_path)
+        
+        # 更新UI
+        if result.get("success", False):
+            self.duplicates_page.updateProgress(100, 100, f"移动成功: {result.get('moved_count', 0)} 个文件")
+            # 从列表中移除已处理的重复组
+            self.duplicates_page.removeSelectedGroup()
+        else:
+            self.duplicates_page.updateProgress(0, 100, f"移动失败: {result.get('error', '未知错误')}")
+    
+    def _on_auto_select_duplicates(self):
+        """自动选择重复文件"""
+        # 确保去重页面已初始化
+        if not hasattr(self, 'duplicates_page'):
+            self._init_duplicate_finder()
+            return
+        
+        # 获取自动选择标准
+        criteria = self.duplicates_page.getAutoSelectCriteria()
+        
+        # 执行自动选择
+        result = self.duplicate_finder_controller.auto_select_best_items(criteria)
+        
+        # 更新UI
+        if result.get("success", False):
+            self.duplicates_page.updateProgress(100, 100, "自动选择完成")
+            # 刷新当前显示的重复组
+            current_group_index = self.duplicates_page.duplicateGroupsListWidget.currentRow()
+            if current_group_index >= 0:
+                self.duplicates_page._display_group_items(current_group_index)
+        else:
+            self.duplicates_page.updateProgress(0, 100, f"自动选择失败: {result.get('error', '未知错误')}")
+    
+    def _on_delete_duplicates(self):
+        """删除重复文件"""
+        # 确保去重页面已初始化
+        if not hasattr(self, 'duplicates_page'):
+            self._init_duplicate_finder()
+            return
+        
+        # 确认删除操作
+        reply = QtWidgets.QMessageBox.question(
+            self, "确认删除", 
+            "确定要删除选中的重复文件吗？此操作不可撤销！",
+            QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No,
+            QtWidgets.QMessageBox.StandardButton.No
+        )
+        
+        if reply == QtWidgets.QMessageBox.StandardButton.No:
+            return
+            
+        # 应用去重结果（删除操作）
+        result = self.duplicate_finder_controller.apply_result("delete")
+        
+        # 更新UI
+        if result.get("success", False):
+            self.duplicates_page.updateProgress(100, 100, f"删除成功: {result.get('deleted_count', 0)} 个文件")
+            # 从列表中移除已处理的重复组
+            self.duplicates_page.removeSelectedGroup()
+        else:
+            self.duplicates_page.updateProgress(0, 100, f"删除失败: {result.get('error', '未知错误')}")
 
     def _setup_drag_handlers(self):
         def start_drag(event):
@@ -94,6 +328,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         return widget
 
     def update_empty_status(self, layout_name, has_content):
-        if layout_name in self.empty_widgets:
-            widget = self.empty_widgets[layout_name]
+        # Always use gridLayout_6 since it's the only layout that exists
+        if 'gridLayout_6' in self.empty_widgets:
+            widget = self.empty_widgets['gridLayout_6']
             widget.setVisible(not has_content)
