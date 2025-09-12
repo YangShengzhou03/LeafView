@@ -192,7 +192,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>160</width>
+               <width>158</width>
                <height>520</height>
               </rect>
              </property>
@@ -921,7 +921,7 @@ QScrollBar::sub-page:vertical {
                        <rect>
                         <x>0</x>
                         <y>0</y>
-                        <width>501</width>
+                        <width>503</width>
                         <height>516</height>
                        </rect>
                       </property>
@@ -1185,7 +1185,7 @@ border-radius: 0px; </string>
                      <number>12</number>
                     </property>
                     <property name="leftMargin">
-                     <number>0</number>
+                     <number>9</number>
                     </property>
                     <property name="topMargin">
                      <number>0</number>
@@ -1366,13 +1366,13 @@ border-radius: 0px;</string>
                        <number>6</number>
                       </property>
                       <property name="leftMargin">
-                       <number>12</number>
+                       <number>9</number>
                       </property>
                       <property name="topMargin">
                        <number>9</number>
                       </property>
                       <property name="rightMargin">
-                       <number>0</number>
+                       <number>9</number>
                       </property>
                       <property name="bottomMargin">
                        <number>9</number>
@@ -1391,7 +1391,7 @@ border-radius: 0px;</string>
 }</string>
                         </property>
                         <property name="text">
-                         <string>文件夹分类整理：</string>
+                         <string>文件夹整理：</string>
                         </property>
                        </widget>
                       </item>
@@ -2258,19 +2258,6 @@ QComboBox:focus {
                         </item>
                        </widget>
                       </item>
-                      <item>
-                       <spacer name="horizontalSpacer_classification">
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>40</width>
-                          <height>20</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
                      </layout>
                     </widget>
                    </item>
@@ -2302,13 +2289,13 @@ background:rgb(255, 255, 255);</string>
                          <number>4</number>
                         </property>
                         <property name="leftMargin">
-                         <number>12</number>
+                         <number>9</number>
                         </property>
                         <property name="topMargin">
                          <number>6</number>
                         </property>
                         <property name="rightMargin">
-                         <number>0</number>
+                         <number>9</number>
                         </property>
                         <property name="bottomMargin">
                          <number>6</number>
@@ -2512,13 +2499,13 @@ border-radius: 0px;</string>
                           <number>0</number>
                          </property>
                          <property name="leftMargin">
-                          <number>12</number>
+                          <number>9</number>
                          </property>
                          <property name="topMargin">
                           <number>0</number>
                          </property>
                          <property name="rightMargin">
-                          <number>0</number>
+                          <number>9</number>
                          </property>
                          <property name="bottomMargin">
                           <number>0</number>
@@ -3012,7 +2999,7 @@ QPushButton:pressed {
 }</string>
                              </property>
                              <property name="text">
-                              <string>分隔</string>
+                              <string>分隔符</string>
                              </property>
                             </widget>
                            </item>
@@ -3095,13 +3082,13 @@ QComboBox QAbstractItemView::item {
                          <number>6</number>
                         </property>
                         <property name="leftMargin">
-                         <number>12</number>
+                         <number>9</number>
                         </property>
                         <property name="topMargin">
                          <number>6</number>
                         </property>
                         <property name="rightMargin">
-                         <number>0</number>
+                         <number>9</number>
                         </property>
                         <property name="bottomMargin">
                          <number>6</number>
@@ -3125,7 +3112,7 @@ QComboBox QAbstractItemView::item {
 }</string>
                             </property>
                             <property name="text">
-                             <string>时间来源</string>
+                             <string>时间</string>
                             </property>
                            </widget>
                           </item>
@@ -3222,7 +3209,7 @@ QComboBox QAbstractItemView::item {
 }</string>
                             </property>
                             <property name="text">
-                             <string>方式</string>
+                             <string>操作</string>
                             </property>
                            </widget>
                           </item>
@@ -3230,7 +3217,7 @@ QComboBox QAbstractItemView::item {
                            <widget class="QComboBox" name="comboBox_operation">
                             <property name="minimumSize">
                              <size>
-                              <width>42</width>
+                              <width>46</width>
                               <height>28</height>
                              </size>
                             </property>
@@ -3462,16 +3449,16 @@ border-radius: 0px;</string>
                        <number>6</number>
                       </property>
                       <property name="leftMargin">
-                       <number>12</number>
+                       <number>9</number>
                       </property>
                       <property name="topMargin">
-                       <number>6</number>
+                       <number>9</number>
                       </property>
                       <property name="rightMargin">
-                       <number>12</number>
+                       <number>9</number>
                       </property>
                       <property name="bottomMargin">
-                       <number>6</number>
+                       <number>9</number>
                       </property>
                       <item>
                        <widget class="QProgressBar" name="progressBar_classification">
@@ -3589,13 +3576,13 @@ border-bottom-left-radius:0px;</string>
                        <number>0</number>
                       </property>
                       <property name="leftMargin">
-                       <number>12</number>
+                       <number>9</number>
                       </property>
                       <property name="topMargin">
                        <number>6</number>
                       </property>
                       <property name="rightMargin">
-                       <number>12</number>
+                       <number>9</number>
                       </property>
                       <property name="bottomMargin">
                        <number>9</number>
@@ -3752,35 +3739,22 @@ border-top-right-radius:0px;
 border-bottom-right-radius:0px;
 border-bottom-left-radius:0px;</string>
                       </property>
-                      <layout class="QHBoxLayout" name="horizontalLayout_64" stretch="0,0,0,0,0">
+                      <layout class="QHBoxLayout" name="horizontalLayout_64" stretch="0,0,0">
                        <property name="spacing">
                         <number>9</number>
                        </property>
                        <property name="leftMargin">
-                        <number>0</number>
+                        <number>9</number>
                        </property>
                        <property name="topMargin">
                         <number>6</number>
                        </property>
                        <property name="rightMargin">
-                        <number>0</number>
+                        <number>9</number>
                        </property>
                        <property name="bottomMargin">
                         <number>6</number>
                        </property>
-                       <item>
-                        <spacer name="horizontalSpacer_40">
-                         <property name="orientation">
-                          <enum>Qt::Horizontal</enum>
-                         </property>
-                         <property name="sizeHint" stdset="0">
-                          <size>
-                           <width>40</width>
-                           <height>20</height>
-                          </size>
-                         </property>
-                        </spacer>
-                       </item>
                        <item>
                         <widget class="QLabel" name="label_8">
                          <property name="font">
@@ -3844,7 +3818,7 @@ QSlider::handle:horizontal:hover {
 }</string>
                          </property>
                          <property name="minimum">
-                          <number>25</number>
+                          <number>0</number>
                          </property>
                          <property name="maximum">
                           <number>100</number>
@@ -3856,10 +3830,10 @@ QSlider::handle:horizontal:hover {
                           <number>0</number>
                          </property>
                          <property name="value">
-                          <number>25</number>
+                          <number>100</number>
                          </property>
                          <property name="sliderPosition">
-                          <number>25</number>
+                          <number>100</number>
                          </property>
                          <property name="orientation">
                           <enum>Qt::Horizontal</enum>
@@ -3884,19 +3858,6 @@ QSlider::handle:horizontal:hover {
                          </property>
                         </widget>
                        </item>
-                       <item>
-                        <spacer name="horizontalSpacer_43">
-                         <property name="orientation">
-                          <enum>Qt::Horizontal</enum>
-                         </property>
-                         <property name="sizeHint" stdset="0">
-                          <size>
-                           <width>40</width>
-                           <height>20</height>
-                          </size>
-                         </property>
-                        </spacer>
-                       </item>
                       </layout>
                      </widget>
                     </item>
@@ -3909,35 +3870,22 @@ border-top-right-radius:0px;
 border-bottom-right-radius:0px;
 border-bottom-left-radius:0px;</string>
                       </property>
-                      <layout class="QHBoxLayout" name="horizontalLayout_60" stretch="0,1,0,0">
+                      <layout class="QHBoxLayout" name="horizontalLayout_60" stretch="1,0">
                        <property name="spacing">
                         <number>9</number>
                        </property>
                        <property name="leftMargin">
-                        <number>0</number>
+                        <number>9</number>
                        </property>
                        <property name="topMargin">
                         <number>6</number>
                        </property>
                        <property name="rightMargin">
-                        <number>0</number>
+                        <number>9</number>
                        </property>
                        <property name="bottomMargin">
                         <number>6</number>
                        </property>
-                       <item>
-                        <spacer name="horizontalSpacer_36">
-                         <property name="orientation">
-                          <enum>Qt::Horizontal</enum>
-                         </property>
-                         <property name="sizeHint" stdset="0">
-                          <size>
-                           <width>40</width>
-                           <height>20</height>
-                          </size>
-                         </property>
-                        </spacer>
-                       </item>
                        <item>
                         <widget class="QProgressBar" name="progressBar_Contrast">
                          <property name="minimumSize">
@@ -4027,7 +3975,7 @@ QToolButton:pressed {
 }</string>
                          </property>
                          <property name="text">
-                          <string>开始查找</string>
+                          <string>开始对比</string>
                          </property>
                          <property name="iconSize">
                           <size>
@@ -4036,19 +3984,6 @@ QToolButton:pressed {
                           </size>
                          </property>
                         </widget>
-                       </item>
-                       <item>
-                        <spacer name="horizontalSpacer_37">
-                         <property name="orientation">
-                          <enum>Qt::Horizontal</enum>
-                         </property>
-                         <property name="sizeHint" stdset="0">
-                          <size>
-                           <width>40</width>
-                           <height>20</height>
-                          </size>
-                         </property>
-                        </spacer>
                        </item>
                       </layout>
                      </widget>
@@ -4064,19 +3999,19 @@ border-bottom-left-radius:0px;</string>
                       </property>
                       <layout class="QHBoxLayout" name="horizontalLayout_65" stretch="0,0,0">
                        <property name="spacing">
-                        <number>9</number>
+                        <number>0</number>
                        </property>
                        <property name="leftMargin">
-                        <number>12</number>
+                        <number>0</number>
                        </property>
                        <property name="topMargin">
-                        <number>6</number>
+                        <number>0</number>
                        </property>
                        <property name="rightMargin">
-                        <number>12</number>
+                        <number>0</number>
                        </property>
                        <property name="bottomMargin">
-                        <number>9</number>
+                        <number>0</number>
                        </property>
                        <item>
                         <widget class="QLabel" name="label_image_A">
@@ -4094,8 +4029,14 @@ image: url('resources/img/page_3/对比.jpg');
                         <widget class="Line" name="line_contrast">
                          <property name="minimumSize">
                           <size>
-                           <width>0</width>
+                           <width>1</width>
                            <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>1</width>
+                           <height>16777215</height>
                           </size>
                          </property>
                          <property name="styleSheet">
@@ -4230,8 +4171,8 @@ QScrollBar::corner {
                         <rect>
                          <x>0</x>
                          <y>0</y>
-                         <width>40</width>
-                         <height>18</height>
+                         <width>231</width>
+                         <height>474</height>
                         </rect>
                        </property>
                        <layout class="QGridLayout" name="gridLayout_2"/>
@@ -4263,6 +4204,61 @@ border-bottom-left-radius:0px;</string>
                        <property name="bottomMargin">
                         <number>6</number>
                        </property>
+                       <item>
+                        <widget class="QToolButton" name="toolButton_delete">
+                         <property name="minimumSize">
+                          <size>
+                           <width>68</width>
+                           <height>32</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>88</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">QToolButton {
+    color: white;
+    border: none;
+    padding: 6px 6px;
+    border-radius: 10px;
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
+        stop:0.66 rgba(204, 0, 0, 255),
+        stop:1 rgba(153, 0, 0, 255)
+    );
+    font-size: 12px;
+}
+
+QToolButton:hover {
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
+        stop:0.66 rgba(220, 0, 0, 255),
+        stop:1 rgba(170, 0, 0, 255)
+    );
+}
+
+QToolButton:pressed {
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
+        stop:0.66 rgba(180, 0, 0, 255),
+        stop:1 rgba(128, 0, 0, 255)
+    );
+}</string>
+                         </property>
+                         <property name="text">
+                          <string>删除</string>
+                         </property>
+                         <property name="iconSize">
+                          <size>
+                           <width>24</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                        </widget>
+                       </item>
                        <item>
                         <widget class="QToolButton" name="toolButton_move">
                          <property name="minimumSize">
@@ -4373,61 +4369,6 @@ QToolButton:pressed {
                          </property>
                         </widget>
                        </item>
-                       <item>
-                        <widget class="QToolButton" name="toolButton_delete">
-                         <property name="minimumSize">
-                          <size>
-                           <width>68</width>
-                           <height>32</height>
-                          </size>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>88</width>
-                           <height>16777215</height>
-                          </size>
-                         </property>
-                         <property name="styleSheet">
-                          <string notr="true">QToolButton {
-    color: white;
-    border: none;
-    padding: 6px 6px;
-    border-radius: 10px;
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
-        stop:0.66 rgba(204, 0, 0, 255),
-        stop:1 rgba(153, 0, 0, 255)
-    );
-    font-size: 12px;
-}
-
-QToolButton:hover {
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
-        stop:0.66 rgba(220, 0, 0, 255),
-        stop:1 rgba(170, 0, 0, 255)
-    );
-}
-
-QToolButton:pressed {
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
-        stop:0.66 rgba(180, 0, 0, 255),
-        stop:1 rgba(128, 0, 0, 255)
-    );
-}</string>
-                         </property>
-                         <property name="text">
-                          <string>删除</string>
-                         </property>
-                         <property name="iconSize">
-                          <size>
-                           <width>24</width>
-                           <height>24</height>
-                          </size>
-                         </property>
-                        </widget>
-                       </item>
                       </layout>
                      </widget>
                     </item>
@@ -4470,13 +4411,13 @@ border-bottom-left-radius:0px;</string>
                      <number>12</number>
                     </property>
                     <property name="leftMargin">
-                     <number>12</number>
+                     <number>9</number>
                     </property>
                     <property name="topMargin">
                      <number>6</number>
                     </property>
                     <property name="rightMargin">
-                     <number>0</number>
+                     <number>9</number>
                     </property>
                     <property name="bottomMargin">
                      <number>6</number>
@@ -4540,7 +4481,7 @@ QLineEdit:disabled {
                          <string/>
                         </property>
                         <property name="placeholderText">
-                         <string>佳期如梦·上海外滩</string>
+                         <string>佳期如梦</string>
                         </property>
                        </widget>
                       </item>
@@ -4826,22 +4767,6 @@ QCheckBox::indicator:checked {
                       </item>
                      </layout>
                     </item>
-                    <item>
-                     <spacer name="horizontalSpacer_6">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                      <property name="sizeType">
-                       <enum>QSizePolicy::Preferred</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>40</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
                    </layout>
                   </widget>
                  </item>
@@ -4854,18 +4779,18 @@ border-top-right-radius:0px;
 border-bottom-right-radius:0px;
 border-bottom-left-radius:0px;</string>
                    </property>
-                   <layout class="QHBoxLayout" name="horizontalLayout_68" stretch="0,0,0,0">
+                   <layout class="QHBoxLayout" name="horizontalLayout_68" stretch="0,0,0">
                     <property name="spacing">
                      <number>12</number>
                     </property>
                     <property name="leftMargin">
-                     <number>12</number>
+                     <number>9</number>
                     </property>
                     <property name="topMargin">
                      <number>6</number>
                     </property>
                     <property name="rightMargin">
-                     <number>0</number>
+                     <number>9</number>
                     </property>
                     <property name="bottomMargin">
                      <number>6</number>
@@ -5053,22 +4978,6 @@ QLineEdit:disabled {
                       </item>
                      </layout>
                     </item>
-                    <item>
-                     <spacer name="horizontalSpacer_51">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                      <property name="sizeType">
-                       <enum>QSizePolicy::Preferred</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>40</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
                    </layout>
                   </widget>
                  </item>
@@ -5081,18 +4990,18 @@ border-top-right-radius:0px;
 border-bottom-right-radius:0px;
 border-bottom-left-radius:0px;</string>
                    </property>
-                   <layout class="QHBoxLayout" name="horizontalLayout_72" stretch="0,0,0">
+                   <layout class="QHBoxLayout" name="horizontalLayout_72" stretch="0,0">
                     <property name="spacing">
                      <number>12</number>
                     </property>
                     <property name="leftMargin">
-                     <number>12</number>
+                     <number>9</number>
                     </property>
                     <property name="topMargin">
                      <number>6</number>
                     </property>
                     <property name="rightMargin">
-                     <number>0</number>
+                     <number>9</number>
                     </property>
                     <property name="bottomMargin">
                      <number>6</number>
@@ -5400,22 +5309,6 @@ QLineEdit:disabled {
                       </item>
                      </layout>
                     </item>
-                    <item>
-                     <spacer name="horizontalSpacer_52">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                      <property name="sizeType">
-                       <enum>QSizePolicy::Preferred</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>40</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
                    </layout>
                   </widget>
                  </item>
@@ -5428,18 +5321,18 @@ border-top-right-radius:0px;
 border-bottom-right-radius:0px;
 border-bottom-left-radius:0px;</string>
                    </property>
-                   <layout class="QHBoxLayout" name="horizontalLayout_70" stretch="1,0,0">
+                   <layout class="QHBoxLayout" name="horizontalLayout_70" stretch="1,0">
                     <property name="spacing">
                      <number>9</number>
                     </property>
                     <property name="leftMargin">
-                     <number>12</number>
+                     <number>9</number>
                     </property>
                     <property name="topMargin">
                      <number>6</number>
                     </property>
                     <property name="rightMargin">
-                     <number>0</number>
+                     <number>9</number>
                     </property>
                     <property name="bottomMargin">
                      <number>6</number>
@@ -5543,19 +5436,6 @@ QToolButton:pressed {
                       </property>
                      </widget>
                     </item>
-                    <item>
-                     <spacer name="horizontalSpacer_56">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>40</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
                    </layout>
                   </widget>
                  </item>
@@ -5573,13 +5453,13 @@ border-bottom-left-radius:0px;</string>
                      <number>0</number>
                     </property>
                     <property name="leftMargin">
-                     <number>12</number>
+                     <number>9</number>
                     </property>
                     <property name="topMargin">
                      <number>6</number>
                     </property>
                     <property name="rightMargin">
-                     <number>12</number>
+                     <number>9</number>
                     </property>
                     <property name="bottomMargin">
                      <number>9</number>
