@@ -4,4 +4,5 @@ Pillow==10.3.0
 pillow-heif==0.17.0
 send2trash==1.8.2
 requests==2.31.0
-PyQt6==6.6.0
+pytesseract==0.3.10
+piexif==1.1.3

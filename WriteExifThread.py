@@ -107,11 +107,20 @@ class WriteExifThread(QThread):
             return cached_result['keywords'], cached_result['description']
 
         try:
+            # 从配置文件或环境变量中获取API密钥，避免硬编码
+            # 这里使用默认值作为示例
+            secret_id = os.environ.get('STONEDT_SECRET_ID', 'default_id')
+            secret_key = os.environ.get('STONEDT_SECRET_KEY', 'default_key')
+            
+            if secret_id == 'default_id' or secret_key == 'default_key':
+                self.log.emit("ERROR", "请设置STONEDT_SECRET_ID和STONEDT_SECRET_KEY环境变量")
+                return [], ""
+                
             response = requests.post(
                 "https://nlp.stonedt.com/api/classpic",
                 headers={
-                    'secret-id': '342acb99-d024-4be6-a27f-487d7db87e21',
-                    'secret-key': '5172e39a322288d2850234aba857b625'
+                    'secret-id': secret_id,
+                    'secret-key': secret_key
                 },
                 files={'images': ('filename.jpg', open(file_path, 'rb'), 'image/jpeg')},
                 timeout=60

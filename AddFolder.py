@@ -156,6 +156,7 @@ class FolderPage(QtWidgets.QWidget):
         remove_button.clicked.connect(lambda: self.remove_folder_item(folder_frame))
 
     def _update_include_sub(self, folder_frame, state):
+        # 更新文件夹项的包含子文件夹状态
         for item in self.folder_items:
             if item['frame'] == folder_frame:
                 current_path = os.path.normpath(item['path'])
@@ -173,7 +174,7 @@ class FolderPage(QtWidgets.QWidget):
                                                     f"您不能勾选此选项，因为该路径包含其他已添加的路径:\n\n子路径: {other_path}\n当前路径: {current_path}")
                                 item['checkbox'].setChecked(False)
                                 return
-                item['include_sub'] = 1 if state else 0
+                item['include_sub'] = state == QtCore.Qt.CheckState.Checked
                 break
 
     def remove_folder_item(self, folder_frame):
@@ -189,8 +190,7 @@ class FolderPage(QtWidgets.QWidget):
                 self.parent._update_empty_state(bool(self.folder_items))
                 break
 
-    def get_all_folders(self):
-        return [{'path': item['path'], 'include_sub': item['include_sub']} for item in self.folder_items]
+
 
     def _paths_equal(self, path1, path2):
         if os.name == 'nt':

@@ -156,7 +156,14 @@ class WriteExif(QWidget):
     def get_location(self, address):
         try:
             url = "https://restapi.amap.com/v3/geocode/geo"
-            params = {'address': address, 'key': 'bc383698582923d55b5137c3439cf4b2', 'output': 'JSON'}
+            # 从环境变量中获取API密钥，避免硬编码
+            amap_key = os.environ.get('AMAP_API_KEY', 'default_key')
+            
+            if amap_key == 'default_key':
+                self.log("ERROR", "请设置AMAP_API_KEY环境变量")
+                return None
+                
+            params = {'address': address, 'key': amap_key, 'output': 'JSON'}
             response = requests.get(url, params=params, timeout=5)
             response.raise_for_status()
             data = response.json()
@@ -191,7 +198,11 @@ class WriteExif(QWidget):
             self.log("ERROR", "获取位置信息失败，请检查网络连接。")
 
     def start_exif_writing(self):
-        folders = self.folder_page.get_all_folders() if self.folder_page else {}
+        if not self.folder_page:
+            self.log("ERROR", "文件夹页面未初始化")
+            return False
+            
+        folders = self.folder_page.get_all_folders()
         if not folders:
             self.log("WARNING", "请先导入一个有效的文件夹。")
             return False
@@ -232,6 +243,8 @@ class WriteExif(QWidget):
             if self.worker.isRunning():
                 self.worker.terminate()
             self.log("WARNING", "正在停止EXIF写入。")
+        self.is_running = False
+        self.update_button_state()
 
     def update_progress(self, value):
         self.parent.progressBar_EXIF.setValue(value)

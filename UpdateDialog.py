@@ -7,14 +7,17 @@ from UI_UpdateDialog import Ui_UpdateDialog
 
 
 class UpdateDialog(QDialog):
-    def __init__(self, url, title, content, necessary=False):
+    def __init__(self, url, title, content, version="", necessary=False):
         super().__init__()
         self.ui = Ui_UpdateDialog()
         self.ui.setupUi(self)
-        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
-        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        # 移除无边框和透明背景设置，以确保圆角和阴影效果正常显示
         self.ui.label_title.setText(title)
         self.ui.label_content.setText(content)
+        if version:
+            self.ui.label_version.setText(version)
+        else:
+            self.ui.label_version.setText("LeafView 新版本")
         if necessary:
             self.ui.pushButton_cancel.hide()
         self.ui.pushButton_download.clicked.connect(
@@ -41,10 +44,11 @@ def check_update():
             current_version = 1.2
             if lastlyVersion > current_version:
                 necessary = lastlyVersion != current_version
-                dialog = UpdateDialog(lastlyVersionUrl, title_parts[0], update_content, necessary)
+                version_text = f"LeafView v{latest_version_str.strip()}"
+                dialog = UpdateDialog(lastlyVersionUrl, title_parts[0], update_content, version_text, necessary)
                 dialog.exec()
     except Exception:
         error_message = f"网络连接失败"
         dialog = UpdateDialog('https://blog.csdn.net/Yang_shengzhou', '网络连接失败',
-                              '枫叶内测版,须连网启动,感谢您的理解\n' + error_message, True)
+                              '枫叶内测版,须连网启动,感谢您的理解\n' + error_message, "", True)
         dialog.exec()
