@@ -1,5 +1,5 @@
 from PyQt6 import QtWidgets, QtCore, QtGui
-from AddFolderView import FolderPage
+from AddFolder import FolderPage
 from SmartArrange import Classification
 from RemoveDuplication import Contrast
 from WriteExif import WriteExif
@@ -33,6 +33,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.classification = Classification(self, self.folder_page)
         self.contrast = Contrast(self, self.folder_page)
         self.write_exif = WriteExif(self, self.folder_page)
+        
+        # 初始化显示空状态
+        self._update_empty_state(False)
 
     def _connect_buttons(self):
         # 窗口控制按钮
@@ -56,6 +59,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.frame_logo.mousePressEvent = self._on_mouse_press
         self.frame_logo.mouseMoveEvent = self._on_mouse_move
         self.frame_logo.mouseReleaseEvent = self._on_mouse_release
+        
+        # 为窗口顶部区域添加拖拽功能
+        self.frame_head.mousePressEvent = self._on_mouse_press
+        self.frame_head.mouseMoveEvent = self._on_mouse_move
+        self.frame_head.mouseReleaseEvent = self._on_mouse_release
         
         # 记录拖拽状态
         self._is_dragging = False
@@ -84,7 +92,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
         # 添加图标
         icon_label = QtWidgets.QLabel()
-        icon = QtGui.QIcon(get_resource_path('resources/img/page_0/empty.png'))
+        icon = QtGui.QIcon(get_resource_path('resources/img/page_0/空状态.svg'))
         icon_label.setPixmap(icon.pixmap(128, 128))
         empty_layout.addWidget(icon_label, 0, QtCore.Qt.AlignmentFlag.AlignCenter)
         

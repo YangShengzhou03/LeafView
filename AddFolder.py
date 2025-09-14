@@ -14,12 +14,21 @@ class FolderPage(QtWidgets.QWidget):
         self.parent.widget_add_folder.setAcceptDrops(True)
         self.parent.widget_add_folder.dragEnterEvent = self.dragEnterEvent
         self.parent.widget_add_folder.dropEvent = self.dropEvent
+        # 设置 widget_add_folder 为可点击区域并更改鼠标指针
+        self.parent.widget_add_folder.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
+        # 连接整个 widget 的点击事件
+        self.parent.widget_add_folder.mousePressEvent = self._open_folder_dialog_on_click
 
     def init_page(self):
         self._connect_buttons()
 
     def _connect_buttons(self):
+        # 保持原有按钮的连接
         self.parent.pushButton_add_folder.clicked.connect(self._open_folder_dialog)
+    
+    def _open_folder_dialog_on_click(self, event):
+        # 捕获 widget_add_folder 的点击事件并打开文件夹对话框
+        self._open_folder_dialog()
 
     def _open_folder_dialog(self):
         folder_paths = QFileDialog.getExistingDirectory(self, "选择文件夹")
@@ -112,17 +121,8 @@ class FolderPage(QtWidgets.QWidget):
             "QFrame {background-color: #F5F7FA; border: 1px solid #E0E3E9; border-radius: 8px; margin: 2px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);} QFrame:hover {background-color: #EBEFF5; border-color: #C2C9D6; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);}")
 
         # 添加到滚动区域
-        self.parent.verticalLayout_folds.addWidget(folder_frame)
+        self.parent.gridLayout_6.addWidget(folder_frame)
         
-        # 存储文件夹信息
-        folder_info = {
-            'path': folder_path,
-            'name': folder_name,
-            'frame': folder_frame,
-            'include_sub': include_checkbox.isChecked()
-        }
-        self.folder_items.append(folder_info)
-
         def enter_event(event):
             remove_button.show()
             QtWidgets.QFrame.enterEvent(folder_frame, event)
@@ -134,23 +134,25 @@ class FolderPage(QtWidgets.QWidget):
         folder_frame.enterEvent = enter_event
         folder_frame.leaveEvent = leave_event
 
+        # 创建完整的文件夹项数据
         item_data = {
             'frame': folder_frame,
             'name_label': name_label,
             'path_label': path_label,
             'remove_button': remove_button,
             'path': folder_path,
-            'include_sub': 0,
+            'name': folder_name,
+            'include_sub': include_checkbox.isChecked(),
             'checkbox': include_checkbox
         }
 
-        self.folder_items.insert(0, item_data)
+        self.folder_items.append(item_data)
         self.parent.gridLayout_6.addWidget(folder_frame, 0, 0)
 
         for i, item in enumerate(self.folder_items[1:], 1):
             self.parent.gridLayout_6.addWidget(item['frame'], i, 0)
 
-        self.parent.update_empty_status('gridLayout_6', bool(self.folder_items))
+        self.parent._update_empty_state(bool(self.folder_items))
         remove_button.clicked.connect(lambda: self.remove_folder_item(folder_frame))
 
     def _update_include_sub(self, folder_frame, state):
@@ -184,7 +186,7 @@ class FolderPage(QtWidgets.QWidget):
                 self.folder_items.remove(item)
                 for row, item in enumerate(self.folder_items):
                     self.parent.gridLayout_6.addWidget(item['frame'], row, 0)
-                self.parent.update_empty_status('gridLayout_6', bool(self.folder_items))
+                self.parent._update_empty_state(bool(self.folder_items))
                 break
 
     def get_all_folders(self):
@@ -212,7 +214,7 @@ class FolderPage(QtWidgets.QWidget):
 
     def _show_remove_button(self, folder_frame):
         # 显示移除按钮
-        for item in self.parent.verticalLayout_folds.children():
+        for item in self.parent.gridLayout_6.children():
             if item == folder_frame:
                 for child in folder_frame.children():
                     if isinstance(child, QtWidgets.QPushButton) and child.text() == "移除":
@@ -221,7 +223,7 @@ class FolderPage(QtWidgets.QWidget):
 
     def _hide_remove_button(self, folder_frame):
         # 隐藏移除按钮
-        for item in self.parent.verticalLayout_folds.children():
+        for item in self.parent.gridLayout_6.children():
             if item == folder_frame:
                 for child in folder_frame.children():
                     if isinstance(child, QtWidgets.QPushButton) and child.text() == "移除":
@@ -233,7 +235,7 @@ class FolderPage(QtWidgets.QWidget):
         for i, item in enumerate(self.folder_items):
             if item['frame'] == folder_frame:
                 # 从布局中移除
-                self.parent.verticalLayout_folds.removeWidget(folder_frame)
+                self.parent.gridLayout_6.removeWidget(folder_frame)
                 folder_frame.deleteLater()
                 # 从列表中移除
                 self.folder_items.pop(i)
