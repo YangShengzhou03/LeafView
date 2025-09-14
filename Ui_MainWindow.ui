@@ -2583,7 +2583,7 @@ border: 0px;
                              <number>6</number>
                             </property>
                             <item>
-                             <widget class="QPushButton" name="pushButton_year_2">
+                             <widget class="QPushButton" name="pushButton_original">
                               <property name="maximumSize">
                                <size>
                                 <width>80</width>
@@ -2921,7 +2921,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="pushButton_year_3">
+                             <widget class="QPushButton" name="pushButton_customize">
                               <property name="maximumSize">
                                <size>
                                 <width>80</width>
@@ -4425,7 +4425,7 @@ border-bottom-left-radius:0px;</string>
                     <item>
                      <layout class="QHBoxLayout" name="horizontalLayout_3">
                       <property name="spacing">
-                       <number>4</number>
+                       <number>6</number>
                       </property>
                       <item>
                        <widget class="QLabel" name="label_35">
@@ -4441,7 +4441,7 @@ border-bottom-left-radius:0px;</string>
 }</string>
                         </property>
                         <property name="text">
-                         <string>图片标题</string>
+                         <string>标题</string>
                         </property>
                        </widget>
                       </item>
@@ -4490,7 +4490,7 @@ QLineEdit:disabled {
                     <item>
                      <layout class="QHBoxLayout" name="horizontalLayout_5">
                       <property name="spacing">
-                       <number>4</number>
+                       <number>6</number>
                       </property>
                       <item>
                        <widget class="QLabel" name="label_star">
@@ -4689,7 +4689,7 @@ QLineEdit:disabled {
                     <item>
                      <layout class="QHBoxLayout" name="horizontalLayout_7">
                       <property name="spacing">
-                       <number>0</number>
+                       <number>6</number>
                       </property>
                       <item>
                        <widget class="QLabel" name="label_36">
@@ -4705,64 +4705,283 @@ QLineEdit:disabled {
 }</string>
                         </property>
                         <property name="text">
-                         <string>自动打图片标记</string>
+                         <string>品牌</string>
                         </property>
                        </widget>
                       </item>
                       <item>
-                       <widget class="QCheckBox" name="checkBox_autoMark">
-                        <property name="minimumSize">
-                         <size>
-                          <width>46</width>
-                          <height>26</height>
-                         </size>
+                       <widget class="QComboBox" name="comboBox_brand">
+                        <property name="styleSheet">
+                         <string notr="true">QComboBox {
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 6px 12px;
+    color: rgb(0, 0, 0);
+    font-family: &quot;Microsoft YaHei&quot;, &quot;微软雅黑&quot;, sans-serif;
+    font-size: 13px;
+    min-width: 56px;
+    min-height: 16px;
+    selection-background-color: #6d28d9;
+    selection-color: white;
+    transition: all 0.2s ease-out;
+}
+
+QComboBox::drop-down {
+    width: 0;
+    border: none;
+    padding: 0;
+}
+
+QComboBox::down-arrow {
+    image: none;
+}
+
+QComboBox:hover {
+    border-color: #a5b4fc;
+    background-color: #f8fafc;
+    box-shadow: 0 1px 3px rgba(166, 175, 195, 0.2);
+}
+
+QComboBox:on {
+    background-color: #f5f3ff;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+QComboBox:pressed {
+    background-color: #ede9fe;
+    transform: translateY(1px);
+}
+
+QComboBox:disabled {
+    background-color: #f3f4f6;
+    color: #9ca3af;
+    border-color: #e5e7eb;
+}
+
+QComboBox QAbstractItemView {
+    border: 1px solid #e5e7eb;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    background: white;
+    padding: 4px 0;
+    margin-top: -1px;
+    selection-background-color: #6d28d9;
+    selection-color: white;
+    outline: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    min-width: 88px;
+    font-family: &quot;Microsoft YaHei&quot;, &quot;微软雅黑&quot;, sans-serif;
+    font-size: 13px;
+    color: black;
+}
+
+QComboBox QAbstractItemView::item {
+    padding: 6px 2px;
+    margin: 0 4px;
+    border-radius: 3px;
+    border-left: 1px solid transparent;
+}
+
+QComboBox QAbstractItemView::item:hover {
+    background-color: #f8f5ff;
+    color: #6d28d9;
+}
+
+QComboBox QAbstractItemView::item:selected {
+    background-color: #faf7ff;
+    color: #6d28d9;
+    border-left: 1px solid #6d28d9;
+    font-weight: normal;
+    padding-left: 11px;
+}
+
+QComboBox:editable {
+    background: white;
+    padding-right: 12px;
+}
+
+QComboBox:editable:on {
+    background: #f5f3ff;
+}
+
+QComboBox:!editable {
+    background: #f9fafb;
+}
+
+QComboBox:focus {
+    border: 1px solid #8b5cf6;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+}</string>
                         </property>
-                        <property name="maximumSize">
-                         <size>
-                          <width>46</width>
-                          <height>26</height>
-                         </size>
+                        <item>
+                         <property name="text">
+                          <string>不写入</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>从文件名</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>指定时间</string>
+                         </property>
+                        </item>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_13">
+                      <property name="spacing">
+                       <number>6</number>
+                      </property>
+                      <item>
+                       <widget class="QLabel" name="label_37">
+                        <property name="font">
+                         <font>
+                          <pointsize>12</pointsize>
+                         </font>
                         </property>
                         <property name="styleSheet">
-                         <string notr="true">QCheckBox {
-    width: 16px;
-    height: 12px;
-    margin: 1px;
-    border-radius: 12px;
-    padding: 0;
-    border: 1px solid #8a8a8a;
-}
-
-QCheckBox::indicator {
-    width: 20px;
-    height: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.3);
-    position: absolute;
-    top: 1px;
-}
-
-QCheckBox:unchecked {
-    background-color: white;
-}
-
-QCheckBox:checked {
-    background-color: qradialgradient(cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5, stop:0.66 rgba(134, 119, 253, 255), stop:1 rgba(119, 111, 252, 255));
-}
-
-QCheckBox::indicator:unchecked {
-    background: qradialgradient(cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5, stop:0.66 rgba(134, 119, 253, 255), stop:1 rgba(119, 111, 252, 255));
-    left: 1px;
-}
-
-QCheckBox::indicator:checked {
-    background-color: white;
-    left: 21px;
+                         <string notr="true">QLabel {
+    color: #333333;
+    border: none;
 }</string>
                         </property>
                         <property name="text">
-                         <string/>
+                         <string>机型</string>
                         </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QComboBox" name="comboBox_model">
+                        <property name="styleSheet">
+                         <string notr="true">QComboBox {
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 6px 12px;
+    color: rgb(0, 0, 0);
+    font-family: &quot;Microsoft YaHei&quot;, &quot;微软雅黑&quot;, sans-serif;
+    font-size: 13px;
+    min-width: 56px;
+    min-height: 16px;
+    selection-background-color: #6d28d9;
+    selection-color: white;
+    transition: all 0.2s ease-out;
+}
+
+QComboBox::drop-down {
+    width: 0;
+    border: none;
+    padding: 0;
+}
+
+QComboBox::down-arrow {
+    image: none;
+}
+
+QComboBox:hover {
+    border-color: #a5b4fc;
+    background-color: #f8fafc;
+    box-shadow: 0 1px 3px rgba(166, 175, 195, 0.2);
+}
+
+QComboBox:on {
+    background-color: #f5f3ff;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+QComboBox:pressed {
+    background-color: #ede9fe;
+    transform: translateY(1px);
+}
+
+QComboBox:disabled {
+    background-color: #f3f4f6;
+    color: #9ca3af;
+    border-color: #e5e7eb;
+}
+
+QComboBox QAbstractItemView {
+    border: 1px solid #e5e7eb;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    background: white;
+    padding: 4px 0;
+    margin-top: -1px;
+    selection-background-color: #6d28d9;
+    selection-color: white;
+    outline: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    min-width: 88px;
+    font-family: &quot;Microsoft YaHei&quot;, &quot;微软雅黑&quot;, sans-serif;
+    font-size: 13px;
+    color: black;
+}
+
+QComboBox QAbstractItemView::item {
+    padding: 6px 2px;
+    margin: 0 4px;
+    border-radius: 3px;
+    border-left: 1px solid transparent;
+}
+
+QComboBox QAbstractItemView::item:hover {
+    background-color: #f8f5ff;
+    color: #6d28d9;
+}
+
+QComboBox QAbstractItemView::item:selected {
+    background-color: #faf7ff;
+    color: #6d28d9;
+    border-left: 1px solid #6d28d9;
+    font-weight: normal;
+    padding-left: 11px;
+}
+
+QComboBox:editable {
+    background: white;
+    padding-right: 12px;
+}
+
+QComboBox:editable:on {
+    background: #f5f3ff;
+}
+
+QComboBox:!editable {
+    background: #f9fafb;
+}
+
+QComboBox:focus {
+    border: 1px solid #8b5cf6;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+}</string>
+                        </property>
+                        <item>
+                         <property name="text">
+                          <string>不写入</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>从文件名</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>指定时间</string>
+                         </property>
+                        </item>
                        </widget>
                       </item>
                      </layout>
@@ -5212,7 +5431,7 @@ QDateTimeEdit:disabled {
                     <item>
                      <layout class="QHBoxLayout" name="horizontalLayout_12">
                       <property name="spacing">
-                       <number>0</number>
+                       <number>6</number>
                       </property>
                       <item>
                        <widget class="QLabel" name="label_41">
@@ -5233,78 +5452,133 @@ QDateTimeEdit:disabled {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLineEdit" name="lineEdit_EXIF_Position">
-                        <property name="minimumSize">
-                         <size>
-                          <width>0</width>
-                          <height>0</height>
-                         </size>
-                        </property>
+                       <widget class="QFrame" name="horizontalFrame">
                         <property name="styleSheet">
-                         <string notr="true">QLineEdit {
+                         <string notr="true">QFrame {
     border: 1px solid qradialgradient(
         cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
         stop:0.66 rgba(134, 119, 253, 255),
         stop:1 rgba(119, 111, 252, 255)
     );
     background: rgb(245, 249, 254);
-    padding: 8px 6px;
-    border-radius: 6px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+QFrame:focus {
+    border: 2px solid qradialgradient(
+        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
+        stop:0.66 rgba(110, 90, 255, 255),
+        stop:1 rgba(85, 65, 250, 255)
+    );
+    background: rgb(250, 252, 255);
+    box-shadow: 0 0 8px rgba(134, 119, 253, 0.6);
+    outline: none;
+}
+
+QFrame:hover:not(:focus):not(:disabled) {
+    border-color: qradialgradient(
+        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
+        stop:0.66 rgba(134, 119, 253, 200),
+        stop:1 rgba(119, 111, 252, 200)
+    );
+    
+    background: rgb(248, 250, 255);
+}
+
+QFrame:disabled {
+    background: #f0f0f0;
+    border-color: #ddd;
+    opacity: 0.8;
+}
+
+/* 可滚动区域的Frame样式 */
+QFrame[frameShape=&quot;QFrame::StyledPanel&quot;] {
+    border: 1px solid rgba(134, 119, 253, 120);
+    background: rgb(249, 251, 255);
+}</string>
+                        </property>
+                        <layout class="QHBoxLayout" name="horizontalLayout_2">
+                         <property name="spacing">
+                          <number>0</number>
+                         </property>
+                         <property name="leftMargin">
+                          <number>4</number>
+                         </property>
+                         <property name="topMargin">
+                          <number>4</number>
+                         </property>
+                         <property name="rightMargin">
+                          <number>4</number>
+                         </property>
+                         <property name="bottomMargin">
+                          <number>4</number>
+                         </property>
+                         <item>
+                          <widget class="QLineEdit" name="lineEdit_EXIF_Position">
+                           <property name="minimumSize">
+                            <size>
+                             <width>0</width>
+                             <height>0</height>
+                            </size>
+                           </property>
+                           <property name="styleSheet">
+                            <string notr="true">QLineEdit {
+    border: 0px;
+    background: rgba(0, 0, 0, 0);
+    padding: 0px;
+    border-radius: 0px;
     color: #333;
-    selection-background-color: rgba(134, 119, 253, 180);
-    selection-color: white;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 QLineEdit:focus {
-    border: 2px solid qradialgradient(
-        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
-        stop:0.66 rgba(134, 119, 253, 255),
-        stop:1 rgba(119, 111, 252, 255)
-    );
+    border: 0px;
     outline: none;
 }
 
 QLineEdit:disabled {
-    background: #eaeaea;
     color: #aaa;
 }</string>
-                        </property>
-                        <property name="inputMask">
-                         <string/>
-                        </property>
-                        <property name="placeholderText">
-                         <string>江西科技师范大学</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QPushButton" name="pushButton_Position">
-                        <property name="minimumSize">
-                         <size>
-                          <width>20</width>
-                          <height>20</height>
-                         </size>
-                        </property>
-                        <property name="maximumSize">
-                         <size>
-                          <width>20</width>
-                          <height>20</height>
-                         </size>
-                        </property>
-                        <property name="text">
-                         <string/>
-                        </property>
-                        <property name="icon">
-                         <iconset>
-                          <normaloff>resources/img/page_4/位置.svg</normaloff>resources/img/page_4/位置.svg</iconset>
-                        </property>
-                        <property name="iconSize">
-                         <size>
-                          <width>20</width>
-                          <height>20</height>
-                         </size>
-                        </property>
+                           </property>
+                           <property name="inputMask">
+                            <string/>
+                           </property>
+                           <property name="placeholderText">
+                            <string>江西科技师范大学</string>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QPushButton" name="pushButton_Position">
+                           <property name="minimumSize">
+                            <size>
+                             <width>20</width>
+                             <height>20</height>
+                            </size>
+                           </property>
+                           <property name="maximumSize">
+                            <size>
+                             <width>20</width>
+                             <height>20</height>
+                            </size>
+                           </property>
+                           <property name="text">
+                            <string/>
+                           </property>
+                           <property name="icon">
+                            <iconset>
+                             <normaloff>resources/img/page_4/位置.svg</normaloff>resources/img/page_4/位置.svg</iconset>
+                           </property>
+                           <property name="iconSize">
+                            <size>
+                             <width>20</width>
+                             <height>20</height>
+                            </size>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
                        </widget>
                       </item>
                      </layout>

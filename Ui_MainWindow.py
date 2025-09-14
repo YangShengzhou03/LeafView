@@ -1523,9 +1523,9 @@ class Ui_MainWindow(object):
         self.horizontalLayout_57.setContentsMargins(6, 6, 0, 6)
         self.horizontalLayout_57.setSpacing(6)
         self.horizontalLayout_57.setObjectName("horizontalLayout_57")
-        self.pushButton_year_2 = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_year_2.setMaximumSize(QtCore.QSize(80, 28))
-        self.pushButton_year_2.setStyleSheet("QPushButton {\n"
+        self.pushButton_original = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
+        self.pushButton_original.setMaximumSize(QtCore.QSize(80, 28))
+        self.pushButton_original.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
 "  color: #2c3e50;\n"
 "  border: 1px solid #d4d4d4;\n"
@@ -1551,8 +1551,8 @@ class Ui_MainWindow(object):
 "  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
 "  transform: translateY(2px);\n"
 "}")
-        self.pushButton_year_2.setObjectName("pushButton_year_2")
-        self.horizontalLayout_57.addWidget(self.pushButton_year_2)
+        self.pushButton_original.setObjectName("pushButton_original")
+        self.horizontalLayout_57.addWidget(self.pushButton_original)
         self.pushButton_year = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
         self.pushButton_year.setMaximumSize(QtCore.QSize(46, 28))
         self.pushButton_year.setStyleSheet("QPushButton {\n"
@@ -1767,9 +1767,9 @@ class Ui_MainWindow(object):
         self.pushButton_address.setIcon(icon10)
         self.pushButton_address.setObjectName("pushButton_address")
         self.horizontalLayout_57.addWidget(self.pushButton_address)
-        self.pushButton_year_3 = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_year_3.setMaximumSize(QtCore.QSize(80, 28))
-        self.pushButton_year_3.setStyleSheet("QPushButton {\n"
+        self.pushButton_customize = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
+        self.pushButton_customize.setMaximumSize(QtCore.QSize(80, 28))
+        self.pushButton_customize.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
 "  color: #2c3e50;\n"
 "  border: 1px solid #d4d4d4;\n"
@@ -1795,8 +1795,8 @@ class Ui_MainWindow(object):
 "  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
 "  transform: translateY(2px);\n"
 "}")
-        self.pushButton_year_3.setObjectName("pushButton_year_3")
-        self.horizontalLayout_57.addWidget(self.pushButton_year_3)
+        self.pushButton_customize.setObjectName("pushButton_customize")
+        self.horizontalLayout_57.addWidget(self.pushButton_customize)
         self.horizontalLayout_54.addWidget(self.frame_Rename_tags)
         spacerItem6 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
         self.horizontalLayout_54.addItem(spacerItem6)
@@ -2654,7 +2654,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_69.setSpacing(12)
         self.horizontalLayout_69.setObjectName("horizontalLayout_69")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_3.setSpacing(4)
+        self.horizontalLayout_3.setSpacing(6)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.label_35 = QtWidgets.QLabel(parent=self.horizontalFrame_9)
         font = QtGui.QFont()
@@ -2700,7 +2700,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.addWidget(self.lineEdit_EXIF_Title)
         self.horizontalLayout_69.addLayout(self.horizontalLayout_3)
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_5.setSpacing(4)
+        self.horizontalLayout_5.setSpacing(6)
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
         self.label_star = QtWidgets.QLabel(parent=self.horizontalFrame_9)
         font = QtGui.QFont()
@@ -2774,7 +2774,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_5.addLayout(self.horizontalLayout_star)
         self.horizontalLayout_69.addLayout(self.horizontalLayout_5)
         self.horizontalLayout_7 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_7.setSpacing(0)
+        self.horizontalLayout_7.setSpacing(6)
         self.horizontalLayout_7.setObjectName("horizontalLayout_7")
         self.label_36 = QtWidgets.QLabel(parent=self.horizontalFrame_9)
         font = QtGui.QFont()
@@ -2786,48 +2786,241 @@ class Ui_MainWindow(object):
 "}")
         self.label_36.setObjectName("label_36")
         self.horizontalLayout_7.addWidget(self.label_36)
-        self.checkBox_autoMark = QtWidgets.QCheckBox(parent=self.horizontalFrame_9)
-        self.checkBox_autoMark.setMinimumSize(QtCore.QSize(46, 26))
-        self.checkBox_autoMark.setMaximumSize(QtCore.QSize(46, 26))
-        self.checkBox_autoMark.setStyleSheet("QCheckBox {\n"
-"    width: 16px;\n"
-"    height: 12px;\n"
-"    margin: 1px;\n"
-"    border-radius: 12px;\n"
+        self.comboBox_brand = QtWidgets.QComboBox(parent=self.horizontalFrame_9)
+        self.comboBox_brand.setStyleSheet("QComboBox {\n"
+"    background-color: #ffffff;\n"
+"    border: 1px solid #d1d5db;\n"
+"    border-radius: 6px;\n"
+"    padding: 6px 12px;\n"
+"    color: rgb(0, 0, 0);\n"
+"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
+"    font-size: 13px;\n"
+"    min-width: 56px;\n"
+"    min-height: 16px;\n"
+"    selection-background-color: #6d28d9;\n"
+"    selection-color: white;\n"
+"    transition: all 0.2s ease-out;\n"
+"}\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    width: 0;\n"
+"    border: none;\n"
 "    padding: 0;\n"
-"    border: 1px solid #8a8a8a;\n"
 "}\n"
 "\n"
-"QCheckBox::indicator {\n"
-"    width: 20px;\n"
-"    height: 20px;\n"
-"    border-radius: 10px;\n"
-"    box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.3);\n"
-"    position: absolute;\n"
-"    top: 1px;\n"
+"QComboBox::down-arrow {\n"
+"    image: none;\n"
 "}\n"
 "\n"
-"QCheckBox:unchecked {\n"
-"    background-color: white;\n"
+"QComboBox:hover {\n"
+"    border-color: #a5b4fc;\n"
+"    background-color: #f8fafc;\n"
+"    box-shadow: 0 1px 3px rgba(166, 175, 195, 0.2);\n"
 "}\n"
 "\n"
-"QCheckBox:checked {\n"
-"    background-color: qradialgradient(cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5, stop:0.66 rgba(134, 119, 253, 255), stop:1 rgba(119, 111, 252, 255));\n"
+"QComboBox:on {\n"
+"    background-color: #f5f3ff;\n"
+"    border-bottom-left-radius: 0;\n"
+"    border-bottom-right-radius: 0;\n"
+"    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);\n"
 "}\n"
 "\n"
-"QCheckBox::indicator:unchecked {\n"
-"    background: qradialgradient(cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5, stop:0.66 rgba(134, 119, 253, 255), stop:1 rgba(119, 111, 252, 255));\n"
-"    left: 1px;\n"
+"QComboBox:pressed {\n"
+"    background-color: #ede9fe;\n"
+"    transform: translateY(1px);\n"
 "}\n"
 "\n"
-"QCheckBox::indicator:checked {\n"
-"    background-color: white;\n"
-"    left: 21px;\n"
+"QComboBox:disabled {\n"
+"    background-color: #f3f4f6;\n"
+"    color: #9ca3af;\n"
+"    border-color: #e5e7eb;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView {\n"
+"    border: 1px solid #e5e7eb;\n"
+"    border-top: none;\n"
+"    border-radius: 0 0 6px 6px;\n"
+"    background: white;\n"
+"    padding: 4px 0;\n"
+"    margin-top: -1px;\n"
+"    selection-background-color: #6d28d9;\n"
+"    selection-color: white;\n"
+"    outline: none;\n"
+"    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);\n"
+"    min-width: 88px;\n"
+"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
+"    font-size: 13px;\n"
+"    color: black;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item {\n"
+"    padding: 6px 2px;\n"
+"    margin: 0 4px;\n"
+"    border-radius: 3px;\n"
+"    border-left: 1px solid transparent;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item:hover {\n"
+"    background-color: #f8f5ff;\n"
+"    color: #6d28d9;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item:selected {\n"
+"    background-color: #faf7ff;\n"
+"    color: #6d28d9;\n"
+"    border-left: 1px solid #6d28d9;\n"
+"    font-weight: normal;\n"
+"    padding-left: 11px;\n"
+"}\n"
+"\n"
+"QComboBox:editable {\n"
+"    background: white;\n"
+"    padding-right: 12px;\n"
+"}\n"
+"\n"
+"QComboBox:editable:on {\n"
+"    background: #f5f3ff;\n"
+"}\n"
+"\n"
+"QComboBox:!editable {\n"
+"    background: #f9fafb;\n"
+"}\n"
+"\n"
+"QComboBox:focus {\n"
+"    border: 1px solid #8b5cf6;\n"
+"    outline: none;\n"
+"    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
 "}")
-        self.checkBox_autoMark.setText("")
-        self.checkBox_autoMark.setObjectName("checkBox_autoMark")
-        self.horizontalLayout_7.addWidget(self.checkBox_autoMark)
+        self.comboBox_brand.setObjectName("comboBox_brand")
+        self.comboBox_brand.addItem("")
+        self.comboBox_brand.addItem("")
+        self.comboBox_brand.addItem("")
+        self.horizontalLayout_7.addWidget(self.comboBox_brand)
         self.horizontalLayout_69.addLayout(self.horizontalLayout_7)
+        self.horizontalLayout_13 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_13.setSpacing(6)
+        self.horizontalLayout_13.setObjectName("horizontalLayout_13")
+        self.label_37 = QtWidgets.QLabel(parent=self.horizontalFrame_9)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_37.setFont(font)
+        self.label_37.setStyleSheet("QLabel {\n"
+"    color: #333333;\n"
+"    border: none;\n"
+"}")
+        self.label_37.setObjectName("label_37")
+        self.horizontalLayout_13.addWidget(self.label_37)
+        self.comboBox_model = QtWidgets.QComboBox(parent=self.horizontalFrame_9)
+        self.comboBox_model.setStyleSheet("QComboBox {\n"
+"    background-color: #ffffff;\n"
+"    border: 1px solid #d1d5db;\n"
+"    border-radius: 6px;\n"
+"    padding: 6px 12px;\n"
+"    color: rgb(0, 0, 0);\n"
+"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
+"    font-size: 13px;\n"
+"    min-width: 56px;\n"
+"    min-height: 16px;\n"
+"    selection-background-color: #6d28d9;\n"
+"    selection-color: white;\n"
+"    transition: all 0.2s ease-out;\n"
+"}\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    width: 0;\n"
+"    border: none;\n"
+"    padding: 0;\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow {\n"
+"    image: none;\n"
+"}\n"
+"\n"
+"QComboBox:hover {\n"
+"    border-color: #a5b4fc;\n"
+"    background-color: #f8fafc;\n"
+"    box-shadow: 0 1px 3px rgba(166, 175, 195, 0.2);\n"
+"}\n"
+"\n"
+"QComboBox:on {\n"
+"    background-color: #f5f3ff;\n"
+"    border-bottom-left-radius: 0;\n"
+"    border-bottom-right-radius: 0;\n"
+"    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);\n"
+"}\n"
+"\n"
+"QComboBox:pressed {\n"
+"    background-color: #ede9fe;\n"
+"    transform: translateY(1px);\n"
+"}\n"
+"\n"
+"QComboBox:disabled {\n"
+"    background-color: #f3f4f6;\n"
+"    color: #9ca3af;\n"
+"    border-color: #e5e7eb;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView {\n"
+"    border: 1px solid #e5e7eb;\n"
+"    border-top: none;\n"
+"    border-radius: 0 0 6px 6px;\n"
+"    background: white;\n"
+"    padding: 4px 0;\n"
+"    margin-top: -1px;\n"
+"    selection-background-color: #6d28d9;\n"
+"    selection-color: white;\n"
+"    outline: none;\n"
+"    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);\n"
+"    min-width: 88px;\n"
+"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
+"    font-size: 13px;\n"
+"    color: black;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item {\n"
+"    padding: 6px 2px;\n"
+"    margin: 0 4px;\n"
+"    border-radius: 3px;\n"
+"    border-left: 1px solid transparent;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item:hover {\n"
+"    background-color: #f8f5ff;\n"
+"    color: #6d28d9;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item:selected {\n"
+"    background-color: #faf7ff;\n"
+"    color: #6d28d9;\n"
+"    border-left: 1px solid #6d28d9;\n"
+"    font-weight: normal;\n"
+"    padding-left: 11px;\n"
+"}\n"
+"\n"
+"QComboBox:editable {\n"
+"    background: white;\n"
+"    padding-right: 12px;\n"
+"}\n"
+"\n"
+"QComboBox:editable:on {\n"
+"    background: #f5f3ff;\n"
+"}\n"
+"\n"
+"QComboBox:!editable {\n"
+"    background: #f9fafb;\n"
+"}\n"
+"\n"
+"QComboBox:focus {\n"
+"    border: 1px solid #8b5cf6;\n"
+"    outline: none;\n"
+"    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
+"}")
+        self.comboBox_model.setObjectName("comboBox_model")
+        self.comboBox_model.addItem("")
+        self.comboBox_model.addItem("")
+        self.comboBox_model.addItem("")
+        self.horizontalLayout_13.addWidget(self.comboBox_model)
+        self.horizontalLayout_69.addLayout(self.horizontalLayout_13)
         self.verticalLayout_47.addWidget(self.horizontalFrame_9)
         self.horizontalFrame_8 = QtWidgets.QFrame(parent=self.page_4)
         self.horizontalFrame_8.setStyleSheet("background:rgb(255, 255, 255);\n"
@@ -3155,7 +3348,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_15.addWidget(self.dateTimeEdit_shootTime)
         self.horizontalLayout_72.addLayout(self.horizontalLayout_15)
         self.horizontalLayout_12 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_12.setSpacing(0)
+        self.horizontalLayout_12.setSpacing(6)
         self.horizontalLayout_12.setObjectName("horizontalLayout_12")
         self.label_41 = QtWidgets.QLabel(parent=self.horizontalFrame_10)
         font = QtGui.QFont()
@@ -3167,40 +3360,78 @@ class Ui_MainWindow(object):
 "}")
         self.label_41.setObjectName("label_41")
         self.horizontalLayout_12.addWidget(self.label_41)
-        self.lineEdit_EXIF_Position = QtWidgets.QLineEdit(parent=self.horizontalFrame_10)
-        self.lineEdit_EXIF_Position.setMinimumSize(QtCore.QSize(0, 0))
-        self.lineEdit_EXIF_Position.setStyleSheet("QLineEdit {\n"
+        self.horizontalFrame = QtWidgets.QFrame(parent=self.horizontalFrame_10)
+        self.horizontalFrame.setStyleSheet("QFrame {\n"
 "    border: 1px solid qradialgradient(\n"
 "        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
 "        stop:0.66 rgba(134, 119, 253, 255),\n"
 "        stop:1 rgba(119, 111, 252, 255)\n"
 "    );\n"
 "    background: rgb(245, 249, 254);\n"
-"    padding: 8px 6px;\n"
-"    border-radius: 6px;\n"
+"    border-radius: 8px;\n"
+"    transition: all 0.2s ease;\n"
+"}\n"
+"\n"
+"QFrame:focus {\n"
+"    border: 2px solid qradialgradient(\n"
+"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
+"        stop:0.66 rgba(110, 90, 255, 255),\n"
+"        stop:1 rgba(85, 65, 250, 255)\n"
+"    );\n"
+"    background: rgb(250, 252, 255);\n"
+"    box-shadow: 0 0 8px rgba(134, 119, 253, 0.6);\n"
+"    outline: none;\n"
+"}\n"
+"\n"
+"QFrame:hover:not(:focus):not(:disabled) {\n"
+"    border-color: qradialgradient(\n"
+"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
+"        stop:0.66 rgba(134, 119, 253, 200),\n"
+"        stop:1 rgba(119, 111, 252, 200)\n"
+"    );\n"
+"    \n"
+"    background: rgb(248, 250, 255);\n"
+"}\n"
+"\n"
+"QFrame:disabled {\n"
+"    background: #f0f0f0;\n"
+"    border-color: #ddd;\n"
+"    opacity: 0.8;\n"
+"}\n"
+"\n"
+"/* 可滚动区域的Frame样式 */\n"
+"QFrame[frameShape=\"QFrame::StyledPanel\"] {\n"
+"    border: 1px solid rgba(134, 119, 253, 120);\n"
+"    background: rgb(249, 251, 255);\n"
+"}")
+        self.horizontalFrame.setObjectName("horizontalFrame")
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.horizontalFrame)
+        self.horizontalLayout_2.setContentsMargins(4, 4, 4, 4)
+        self.horizontalLayout_2.setSpacing(0)
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.lineEdit_EXIF_Position = QtWidgets.QLineEdit(parent=self.horizontalFrame)
+        self.lineEdit_EXIF_Position.setMinimumSize(QtCore.QSize(0, 0))
+        self.lineEdit_EXIF_Position.setStyleSheet("QLineEdit {\n"
+"    border: 0px;\n"
+"    background: rgba(0, 0, 0, 0);\n"
+"    padding: 0px;\n"
+"    border-radius: 0px;\n"
 "    color: #333;\n"
-"    selection-background-color: rgba(134, 119, 253, 180);\n"
-"    selection-color: white;\n"
-"    font-size: 12px;\n"
+"    font-size: 14px;\n"
 "}\n"
 "\n"
 "QLineEdit:focus {\n"
-"    border: 2px solid qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(134, 119, 253, 255),\n"
-"        stop:1 rgba(119, 111, 252, 255)\n"
-"    );\n"
+"    border: 0px;\n"
 "    outline: none;\n"
 "}\n"
 "\n"
 "QLineEdit:disabled {\n"
-"    background: #eaeaea;\n"
 "    color: #aaa;\n"
 "}")
         self.lineEdit_EXIF_Position.setInputMask("")
         self.lineEdit_EXIF_Position.setObjectName("lineEdit_EXIF_Position")
-        self.horizontalLayout_12.addWidget(self.lineEdit_EXIF_Position)
-        self.pushButton_Position = QtWidgets.QPushButton(parent=self.horizontalFrame_10)
+        self.horizontalLayout_2.addWidget(self.lineEdit_EXIF_Position)
+        self.pushButton_Position = QtWidgets.QPushButton(parent=self.horizontalFrame)
         self.pushButton_Position.setMinimumSize(QtCore.QSize(20, 20))
         self.pushButton_Position.setMaximumSize(QtCore.QSize(20, 20))
         self.pushButton_Position.setText("")
@@ -3209,7 +3440,8 @@ class Ui_MainWindow(object):
         self.pushButton_Position.setIcon(icon12)
         self.pushButton_Position.setIconSize(QtCore.QSize(20, 20))
         self.pushButton_Position.setObjectName("pushButton_Position")
-        self.horizontalLayout_12.addWidget(self.pushButton_Position)
+        self.horizontalLayout_2.addWidget(self.pushButton_Position)
+        self.horizontalLayout_12.addWidget(self.horizontalFrame)
         self.horizontalLayout_72.addLayout(self.horizontalLayout_12)
         self.verticalLayout_47.addWidget(self.horizontalFrame_10)
         self.verticalFrame_15 = QtWidgets.QFrame(parent=self.page_4)
@@ -3467,7 +3699,7 @@ class Ui_MainWindow(object):
         self.label_point.setText(_translate("MainWindow", "."))
         self.pushButton_extensions.setText(_translate("MainWindow", "扩展名"))
         self.label_RenamingTags.setText(_translate("MainWindow", "命名标签："))
-        self.pushButton_year_2.setText(_translate("MainWindow", "原文件名"))
+        self.pushButton_original.setText(_translate("MainWindow", "原文件名"))
         self.pushButton_year.setText(_translate("MainWindow", "年份"))
         self.pushButton_month.setText(_translate("MainWindow", "月份"))
         self.pushButton_date.setText(_translate("MainWindow", "日"))
@@ -3475,7 +3707,7 @@ class Ui_MainWindow(object):
         self.pushButton_time.setText(_translate("MainWindow", "时间"))
         self.pushButton_make.setText(_translate("MainWindow", "品牌"))
         self.pushButton_address.setText(_translate("MainWindow", "位置"))
-        self.pushButton_year_3.setText(_translate("MainWindow", "自定义"))
+        self.pushButton_customize.setText(_translate("MainWindow", "自定义"))
         self.label_operation_2.setText(_translate("MainWindow", "分隔符"))
         self.comboBox_separator.setItemText(0, _translate("MainWindow", "-"))
         self.comboBox_separator.setItemText(1, _translate("MainWindow", "无"))
@@ -3498,10 +3730,17 @@ class Ui_MainWindow(object):
         self.toolButton_delete.setText(_translate("MainWindow", "删除"))
         self.toolButton_move.setText(_translate("MainWindow", "移动"))
         self.toolButton_autoSelect.setText(_translate("MainWindow", "自动选择"))
-        self.label_35.setText(_translate("MainWindow", "图片标题"))
+        self.label_35.setText(_translate("MainWindow", "标题"))
         self.lineEdit_EXIF_Title.setPlaceholderText(_translate("MainWindow", "佳期如梦"))
         self.label_star.setText(_translate("MainWindow", "星级"))
-        self.label_36.setText(_translate("MainWindow", "自动打图片标记"))
+        self.label_36.setText(_translate("MainWindow", "品牌"))
+        self.comboBox_brand.setItemText(0, _translate("MainWindow", "不写入"))
+        self.comboBox_brand.setItemText(1, _translate("MainWindow", "从文件名"))
+        self.comboBox_brand.setItemText(2, _translate("MainWindow", "指定时间"))
+        self.label_37.setText(_translate("MainWindow", "机型"))
+        self.comboBox_model.setItemText(0, _translate("MainWindow", "不写入"))
+        self.comboBox_model.setItemText(1, _translate("MainWindow", "从文件名"))
+        self.comboBox_model.setItemText(2, _translate("MainWindow", "指定时间"))
         self.label_38.setText(_translate("MainWindow", "作者"))
         self.lineEdit_EXIF_Author.setPlaceholderText(_translate("MainWindow", "YangShengzhou"))
         self.label_39.setText(_translate("MainWindow", "主题"))

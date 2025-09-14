@@ -17,8 +17,20 @@ class UpdateDialog(QDialog):
         self.ui.label_content.setText(content)
         if necessary:
             self.ui.pushButton_cancel.hide()
+        
+        # 下载按钮点击时打开URL并退出程序
         self.ui.pushButton_download.clicked.connect(
             lambda: (QDesktopServices.openUrl(QUrl(url)), QApplication.instance().quit()))
+        
+        # 取消按钮点击时也退出程序，确保用户无法绕过网络检查
+        self.ui.pushButton_cancel.clicked.connect(QApplication.instance().quit)
+        
+    def closeEvent(self, event):
+        """重写关闭事件，确保点击关闭按钮时也退出程序"""
+        # 忽略原始事件（不允许关闭对话框）
+        event.ignore()
+        # 直接退出程序
+        QApplication.instance().quit()
 
 
 def check_update():

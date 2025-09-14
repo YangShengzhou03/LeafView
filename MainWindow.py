@@ -24,6 +24,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setWindowFlags(QtCore.Qt.WindowType.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
         self._connect_buttons()
+        # 修改scrollArea_page0的对齐方式，从垂直居中改为垂直顶部对齐
+        self.scrollArea_page0.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeading | QtCore.Qt.AlignmentFlag.AlignLeft | QtCore.Qt.AlignmentFlag.AlignTop)
         self.empty_widgets = {}
         # Note: Only gridLayout_6 exists in the UI, so we'll use it for all media types
         self.empty_widgets['gridLayout_6'] = self._create_empty_widget(self.gridLayout_6)  # 主布局（用于所有媒体类型）
@@ -82,8 +84,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def _connect_duplicate_finder_signals(self):
         """连接去重控制器信号"""
         # 连接去重控制器信号
-        self.duplicate_finder_controller.duplicate_finder_started.connect(self._on_duplicate_finder_started)
-        self.duplicate_finder_controller.duplicate_finder_completed.connect(self._on_duplicate_finder_completed)
+        # 注意：DuplicateFinderController类中没有定义duplicate_finder_started信号
+        # 使用finished信号替代duplicate_finder_completed
+        self.duplicate_finder_controller.finished.connect(self._on_duplicate_finder_completed)
         self.duplicate_finder_controller.progress_updated.connect(self._on_duplicate_finder_progress_updated)
         self.duplicate_finder_controller.duplicate_found.connect(self._on_duplicate_found)
         self.duplicate_finder_controller.error_occurred.connect(self._on_duplicate_finder_error_occurred)
@@ -126,6 +129,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # 重置去重页面
         self.duplicates_page.clearDuplicateGroups()
         self.duplicates_page.resetProgress()
+        
+        # 手动触发去重开始事件，因为DuplicateFinderController没有定义duplicate_finder_started信号
+        self._on_duplicate_finder_started()
         
         # 启动去重查找
         self.duplicate_finder_controller.find_duplicates(
