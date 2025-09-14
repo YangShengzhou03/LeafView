@@ -74,6 +74,7 @@ class Classification(QtWidgets.QWidget):
         if self.classification_thread and self.classification_thread.isRunning():
             self.classification_thread.stop()
             self.parent.toolButton_startClassification.setText("开始整理")
+            self.parent.progressBar_classification.setValue(0)
         else:
             folders = self.folder_page.get_all_folders() if self.folder_page else []
             if not folders:
@@ -91,14 +92,21 @@ class Classification(QtWidgets.QWidget):
                                    for i in range(self.selected_layout.count())
                                    if isinstance(self.selected_layout.itemAt(i).widget(), QtWidgets.QPushButton)]
 
+            # 获取分隔符
+            separator_text = self.parent.comboBox_separator.currentText()
+            separator = self.separator_mapping.get(separator_text, "-")
+
+            # 获取操作类型
+            operation_type = self.parent.comboBox_operation.currentIndex()
+
             self.classification_thread = ClassificationThread(
                 parent=self,
                 folders=folders,
                 classification_structure=classification_structure or None,
                 file_name_structure=file_name_structure or None,
                 destination_root=self.destination_root,
-                time_derive=self.parent.comboBox_timeSource.currentText(),
-                separator=self.separator_mapping.get(self.parent.comboBox_separator.currentText(), "")
+                separator=separator,
+                time_derive=self.parent.comboBox_timeSource.currentText()
             )
             self.classification_thread.finished.connect(self.on_thread_finished)
             self.classification_thread.start()
@@ -111,20 +119,24 @@ class Classification(QtWidgets.QWidget):
         self.update_progress_bar(100)
 
     def handle_combobox_selection(self, level, index):
-        comboBox = getattr(self.parent, f'comboBox_level_{level}')
-        if comboBox.currentText() == "识别文字":
-            text, ok = QInputDialog.getText(self, "输入识别文字", "请输入识别文字(最多2个汉字):",
-                                            QtWidgets.QLineEdit.EchoMode.Normal, "")
-            if ok:
-                if len(text.encode('utf-8')) > 8 or (len(text) > 4 and not text.isalpha()):
-                    QMessageBox.warning(self, "输入错误", "输入超过长度限制(最多2个汉字)")
-                    comboBox.setCurrentIndex(0)
-                else:
-                    comboBox.setItemText(index, text)
-                    comboBox.setCurrentIndex(index)
+        # 处理分类级别选择变化
+        current_text = getattr(self.parent, f'comboBox_level_{level}').currentText()
+        
+        # 启用/禁用下一级组合框
+        if level < 5:
+            next_level_combo = getattr(self.parent, f'comboBox_level_{level + 1}')
+            if current_text == "不分类":
+                next_level_combo.setCurrentIndex(0)
+                next_level_combo.setEnabled(False)
             else:
-                comboBox.setCurrentIndex(0)
-        self.update_combobox_state(level)
+                next_level_combo.setEnabled(True)
+        
+        # 处理特殊情况
+        if level > 1:
+            prev_level_combo = getattr(self.parent, f'comboBox_level_{level - 1}')
+            if prev_level_combo.currentText() == "不分类":
+                getattr(self.parent, f'comboBox_level_{level}').setCurrentIndex(0)
+                getattr(self.parent, f'comboBox_level_{level}').setEnabled(False)
 
     def update_combobox_state(self, level):
         current_box = getattr(self.parent, f'comboBox_level_{level}')
@@ -158,17 +170,39 @@ class Classification(QtWidgets.QWidget):
         }.get(text, text)
 
     def move_tag(self, button):
-        current_layout = self.available_layout if self.available_layout.indexOf(button) != -1 else self.selected_layout
-        if current_layout:
-            current_layout.removeWidget(button)
-            button.setParent(None)
-        if current_layout == self.available_layout:
-            self.selected_layout.addWidget(button)
-            self.last_selected_button_index += 1
+        # 移动标签到已选区域
+        if button.parentWidget() == self.available_layout:
+            # 创建新按钮，避免直接移动
+            new_button = QtWidgets.QPushButton(button.text())
+            new_button.setStyleSheet(
+                "QPushButton {background-color: #8677FD; color: white; border: none; border-radius: 4px; padding: 4px 8px;}")
+            self.selected_layout.addWidget(new_button)
+            
+            # 添加移除按钮的功能
+            new_button.clicked.connect(lambda: self.move_tag_back(new_button))
+        
+        # 限制标签数量
+        if self.selected_layout.count() >= 5:
+            for i in range(self.available_layout.count()):
+                widget = self.available_layout.itemAt(i).widget()
+                if widget and isinstance(widget, QtWidgets.QPushButton):
+                    widget.setEnabled(False)
         else:
-            self.available_layout.addWidget(button)
-            self.last_selected_button_index -= 1
-        self.update_example_label()
+            for i in range(self.available_layout.count()):
+                widget = self.available_layout.itemAt(i).widget()
+                if widget and isinstance(widget, QtWidgets.QPushButton):
+                    widget.setEnabled(True)
+    
+    def move_tag_back(self, button):
+        # 将标签移回可用区域
+        self.selected_layout.removeWidget(button)
+        button.deleteLater()
+        
+        # 重新启用所有可用标签
+        for i in range(self.available_layout.count()):
+            widget = self.available_layout.itemAt(i).widget()
+            if widget and isinstance(widget, QtWidgets.QPushButton):
+                widget.setEnabled(True)
 
     def update_example_label(self):
         now = datetime.now()
@@ -192,7 +226,13 @@ class Classification(QtWidgets.QWidget):
         return ["周一", "周二", "周三", "周四", "周五", "周六", "周日"][date.weekday()]
 
     def log(self, level, message):
-        c = {'ERROR': '#FF0000', 'WARNING': '#FFA500', 'DEBUG': '#008000', 'INFO': '#8677FD'}
-        self.parent.textEdit_Classification_Log.append(
-            f'<span style="color:{c.get(level, "#000000")}">[{datetime.now().strftime("%H:%M:%S")}]'
-            f' [{level}] {message}</span>')
+        # 记录日志
+        current_time = datetime.now().strftime('%H:%M:%S')
+        log_message = f"[{current_time}] [{level}] {message}"
+        self.log_signal.emit(level, log_message)
+        
+        # 输出到控制台用于调试
+        print(log_message)
+        
+        # 如果有日志显示区域，可以在这里更新
+        # 例如: self.parent.textEdit_log.append(log_message)

@@ -1,8 +1,8 @@
-import sys
 from PyQt6 import QtWidgets, QtCore
 from PyQt6.QtNetwork import QLocalSocket, QLocalServer
 from contextlib import closing
 from MainWindow import MainWindow
+import sys
 
 
 def bring_existing_to_front():

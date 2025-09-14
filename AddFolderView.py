@@ -2,7 +2,7 @@ from PyQt6 import QtWidgets, QtCore, QtGui
 from PyQt6.QtWidgets import QFileDialog, QMessageBox
 import os
 
-from common import get_resource_path
+from common import get_resource_path, detect_media_type
 
 
 class FolderPage(QtWidgets.QWidget):
@@ -24,12 +24,13 @@ class FolderPage(QtWidgets.QWidget):
     def _open_folder_dialog(self):
         folder_paths = QFileDialog.getExistingDirectory(self, "选择文件夹")
         if folder_paths:
-            for folder_path in folder_paths.split('\n'):
-                self._check_and_add_folder(folder_path)
+            self._check_and_add_folder(folder_paths)
 
     def _check_and_add_folder(self, folder_path):
         folder_path = os.path.normpath(folder_path)
         folder_name = os.path.basename(folder_path) if os.path.basename(folder_path) else folder_path
+        
+        # 检查是否已经添加了相同的路径或存在路径冲突
         for item in self.folder_items:
             item_path = os.path.normpath(item['path'])
             if self._paths_equal(item_path, folder_path):
@@ -43,7 +44,12 @@ class FolderPage(QtWidgets.QWidget):
                 QMessageBox.warning(self, "路径冲突",
                                     f"您选择的路径包含已添加的路径（且已勾选包含子文件夹）:\n\n已添加路径: {item_path}\n当前路径: {folder_path}")
                 return
+        
+        # 创建文件夹项并添加到列表
         self._create_folder_item(folder_path, folder_name)
+        
+        # 检查文件夹中是否有媒体文件
+        self._check_media_files(folder_path)
 
     def _create_folder_item(self, folder_path, folder_name):
         folder_frame = QtWidgets.QFrame(parent=self.parent.scrollAreaWidgetContents_folds)
@@ -89,6 +95,13 @@ class FolderPage(QtWidgets.QWidget):
             "QPushButton {background-color: #FF5A5F; color: white; border: none; border-radius: 6px; font-weight: 500; box-shadow: 0 2px 4px rgba(255, 90, 95, 0.2);} QPushButton:hover {background-color: #FF3B30; box-shadow: 0 4px 8px rgba(255, 59, 48, 0.3);} QPushButton:pressed {background-color: #E03530; box-shadow: 0 1px 2px rgba(224, 53, 48, 0.2);}")
         remove_button.hide()
 
+        # 鼠标悬停时显示移除按钮
+        folder_frame.enterEvent = lambda e: self._show_remove_button(folder_frame)
+        folder_frame.leaveEvent = lambda e: self._hide_remove_button(folder_frame)
+
+        # 连接移除按钮信号
+        remove_button.clicked.connect(lambda: self._remove_folder_item(folder_frame))
+
         layout.addWidget(icon_widget)
         layout.addLayout(text_layout)
         layout.addStretch(1)
@@ -97,6 +110,18 @@ class FolderPage(QtWidgets.QWidget):
 
         folder_frame.setStyleSheet(
             "QFrame {background-color: #F5F7FA; border: 1px solid #E0E3E9; border-radius: 8px; margin: 2px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);} QFrame:hover {background-color: #EBEFF5; border-color: #C2C9D6; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);}")
+
+        # 添加到滚动区域
+        self.parent.verticalLayout_folds.addWidget(folder_frame)
+        
+        # 存储文件夹信息
+        folder_info = {
+            'path': folder_path,
+            'name': folder_name,
+            'frame': folder_frame,
+            'include_sub': include_checkbox.isChecked()
+        }
+        self.folder_items.append(folder_info)
 
         def enter_event(event):
             remove_button.show()
@@ -177,6 +202,72 @@ class FolderPage(QtWidgets.QWidget):
             return path.startswith(parent_path + os.sep) or path == parent_path
         except (TypeError, AttributeError):
             return False
+
+    def _update_include_sub(self, folder_frame, state):
+        # 更新文件夹项的包含子文件夹状态
+        for item in self.folder_items:
+            if item['frame'] == folder_frame:
+                item['include_sub'] = state == QtCore.Qt.CheckState.Checked
+                break
+
+    def _show_remove_button(self, folder_frame):
+        # 显示移除按钮
+        for item in self.parent.verticalLayout_folds.children():
+            if item == folder_frame:
+                for child in folder_frame.children():
+                    if isinstance(child, QtWidgets.QPushButton) and child.text() == "移除":
+                        child.show()
+                break
+
+    def _hide_remove_button(self, folder_frame):
+        # 隐藏移除按钮
+        for item in self.parent.verticalLayout_folds.children():
+            if item == folder_frame:
+                for child in folder_frame.children():
+                    if isinstance(child, QtWidgets.QPushButton) and child.text() == "移除":
+                        child.hide()
+                break
+
+    def _remove_folder_item(self, folder_frame):
+        # 移除文件夹项
+        for i, item in enumerate(self.folder_items):
+            if item['frame'] == folder_frame:
+                # 从布局中移除
+                self.parent.verticalLayout_folds.removeWidget(folder_frame)
+                folder_frame.deleteLater()
+                # 从列表中移除
+                self.folder_items.pop(i)
+                break
+        
+        # 检查是否还有文件夹，如果没有则显示空状态
+        if not self.folder_items:
+            self.parent._update_empty_state(False)
+
+    def _check_media_files(self, folder_path):
+        # 检查文件夹中是否有媒体文件
+        has_media = False
+        try:
+            # 只检查顶层文件夹
+            for file in os.listdir(folder_path):
+                file_path = os.path.join(folder_path, file)
+                if os.path.isfile(file_path):
+                    try:
+                        media_info = detect_media_type(file_path)
+                        if media_info['valid']:
+                            has_media = True
+                            break
+                    except:
+                        continue
+        except Exception as e:
+            print(f"检查媒体文件失败: {e}")
+        
+        # 更新空状态
+        if has_media:
+            self.parent._update_empty_state(True)
+
+    def get_all_folders(self):
+        """获取所有添加的文件夹信息"""
+        return self.folder_items
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls():

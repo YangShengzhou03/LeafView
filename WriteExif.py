@@ -1,4 +1,6 @@
 from datetime import datetime
+import json
+import os
 import requests
 from PyQt6.QtCore import pyqtSlot, QDateTime
 from PyQt6.QtWidgets import QWidget
@@ -31,10 +33,68 @@ class WriteExif(QWidget):
             btn.leaveEvent = lambda e: self.highlight_stars(self.selected_star)
             btn.clicked.connect(lambda _, idx=i: self.set_selected_star(idx))
             self.star_buttons.append(btn)
+        
+        # 初始化相机品牌和型号下拉框
+        self.init_camera_brand_model()
+        
         self.update_button_state()
         self.parent.dateTimeEdit_shootTime.setDateTime(QDateTime.currentDateTime())
         self.parent.dateTimeEdit_shootTime.hide()
         self.log("DEBUG", "欢迎使用图像属性写入功能，不写入项目留空即可。")
+        
+    def init_camera_brand_model(self):
+        """初始化相机品牌和型号下拉框"""
+        # 尝试从JSON文件加载相机品牌和型号数据
+        camera_data = self._load_camera_data()
+        
+        # 如果没有加载到数据，使用默认数据
+        if not camera_data:
+            camera_data = {
+                "佳能": ["EOS R5", "EOS R6", "EOS 5D Mark IV", "EOS 90D"],
+                "尼康": ["Z7 II", "Z6 II", "D850", "D750"],
+                "索尼": ["A7R IV", "A7S III", "A7 III", "A6400"],
+                "富士": ["X-T4", "X-T3", "X-Pro3", "X100V"],
+                "徕卡": ["Q2", "M11", "SL2-S", "CL"],
+                "松下": ["S1R", "S1H", "GH5", "G9"],
+                "奥林巴斯": ["OM-1", "EM-1 Mark III", "EM-5 Mark III"],
+                "宾得": ["K-1 II", "K-3 Mark III", "KP"]
+            }
+        
+        # 添加品牌到下拉框
+        self.parent.comboBox_brand.addItem("不设置")
+        for brand in sorted(camera_data.keys()):
+            self.parent.comboBox_brand.addItem(brand)
+        
+        # 存储相机数据
+        self.camera_data = camera_data
+        
+        # 连接品牌选择变化信号
+        self.parent.comboBox_brand.currentIndexChanged.connect(self._on_brand_changed)
+        
+    def _load_camera_data(self):
+        """从JSON文件加载相机品牌和型号数据"""
+        try:
+            data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                    'resources', 'json', 'camera_brand_model.json')
+            if os.path.exists(data_path):
+                with open(data_path, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+        except Exception as e:
+            self.log("WARNING", f"加载相机品牌型号数据失败: {str(e)}")
+        return None
+        
+    def _on_brand_changed(self, index):
+        """当相机品牌选择变化时，更新型号下拉框"""
+        # 清空型号下拉框
+        self.parent.comboBox_model.clear()
+        self.parent.comboBox_model.addItem("不设置")
+        
+        # 如果选择了具体品牌，添加对应的型号
+        if index > 0:
+            brand = self.parent.comboBox_brand.currentText()
+            if brand in self.camera_data:
+                for model in sorted(self.camera_data[brand]):
+                    self.parent.comboBox_model.addItem(model)
 
     def setup_connections(self):
         self.parent.toolButton_StartEXIF.clicked.connect(self.toggle_exif_writing)
@@ -73,7 +133,7 @@ class WriteExif(QWidget):
     def highlight_stars(self, count):
         for i, btn in enumerate(self.star_buttons, 1):
             icon = "星级_亮.svg" if i <= count else "星级_暗.svg"
-            btn.setStyleSheet(f"QPushButton {{ image: url({get_resource_path(f'resources/img/page_4/{icon})')};}}")
+            btn.setStyleSheet(f"QPushButton {{ image: url({get_resource_path(f'resources/img/page_4/{icon}')}); border: none; padding: 0; }}")
 
     @pyqtSlot(int)
     def set_selected_star(self, star):
@@ -134,7 +194,10 @@ class WriteExif(QWidget):
             'shootTime': self.parent.dateTimeEdit_shootTime.dateTime().toString(
                 "yyyy:MM:dd HH:mm:ss")
             if self.parent.comboBox_shootTime.currentIndex() == 2
-            else self.parent.comboBox_shootTime.currentIndex()
+            else self.parent.comboBox_shootTime.currentIndex(),
+            # 添加相机品牌和型号信息
+            'cameraBrand': self.parent.comboBox_brand.currentText() if self.parent.comboBox_brand.currentIndex() > 0 else None,
+            'cameraModel': self.parent.comboBox_model.currentText() if self.parent.comboBox_model.currentIndex() > 0 else None
         }
         address = self.parent.lineEdit_EXIF_Position.text()
         if address:
