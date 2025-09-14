@@ -183,6 +183,19 @@ class Classification(QtWidgets.QWidget):
             "拍摄城市": "南昌"
         }.get(text, text)
 
+    def is_valid_windows_filename(self, filename):
+        # 检查文件名是否符合Windows命名规范
+        invalid_chars = '<>:"/\\|?*'
+        if any(char in filename for char in invalid_chars):
+            return False
+        if filename in ('CON', 'PRN', 'AUX', 'NUL', 'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9', 'LPT1', 'LPT2', 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9'):
+            return False
+        if filename.endswith('.') or filename.endswith(' '):
+            return False
+        if len(filename) > 255:
+            return False
+        return True
+    
     def move_tag(self, button):
         # 移动标签到已选区域
         # 检查标签数量限制
@@ -193,13 +206,32 @@ class Classification(QtWidgets.QWidget):
         original_style = button.styleSheet()
         button.setProperty('original_style', original_style)
         
+        # 保存按钮的原始文本，用于恢复
+        original_text = button.text()
+        button.setProperty('original_text', original_text)
+        
+        # 特殊处理自定义标签
+        if original_text == '自定义':
+            # 弹出单行文本框让用户输入
+            custom_text, ok = QInputDialog.getText(self, "自定义标签", "请输入自定义部分的文件名内容:")
+            
+            if ok and custom_text:
+                # 检查是否符合Windows命名规范
+                if not self.is_valid_windows_filename(custom_text):
+                    QMessageBox.warning(self, "文件名无效", "输入的文件名包含Windows不允许的字符或格式！")
+                    return
+                
+                # 在已选区域显示前三个字
+                display_text = custom_text[:3] if len(custom_text) > 3 else custom_text
+                button.setText(display_text)
+            else:
+                # 用户取消或未输入，不移动标签
+                return
+        
         # 从原布局中移除按钮
         self.available_layout.removeWidget(button)
         
-        # 应用新样式
-        button.setStyleSheet(
-            "QPushButton {background-color: #8677FD; color: white; border: none; border-radius: 4px; padding: 4px 8px;}")
-        
+        # 保持完全相同的样式
         # 添加到已选区域
         self.selected_layout.addWidget(button)
         
@@ -224,6 +256,10 @@ class Classification(QtWidgets.QWidget):
         # 恢复原始样式
         if button.property('original_style') is not None:
             button.setStyleSheet(button.property('original_style'))
+        
+        # 恢复原始文本（特别是自定义标签）
+        if button.property('original_text') is not None:
+            button.setText(button.property('original_text'))
         
         # 添加回原布局
         self.available_layout.addWidget(button)
