@@ -45,7 +45,7 @@ border-radius:12px;
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,0,0">
+      <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,0,1">
        <property name="spacing">
         <number>0</number>
        </property>
@@ -2505,7 +2505,7 @@ border-radius: 0px;</string>
                           <number>0</number>
                          </property>
                          <property name="rightMargin">
-                          <number>9</number>
+                          <number>0</number>
                          </property>
                          <property name="bottomMargin">
                           <number>0</number>
@@ -2999,7 +2999,7 @@ QPushButton:pressed {
 }</string>
                              </property>
                              <property name="text">
-                              <string>分隔符</string>
+                              <string>分隔</string>
                              </property>
                             </widget>
                            </item>
@@ -3007,8 +3007,8 @@ QPushButton:pressed {
                             <widget class="QComboBox" name="comboBox_separator">
                              <property name="minimumSize">
                               <size>
-                               <width>48</width>
-                               <height>30</height>
+                               <width>0</width>
+                               <height>0</height>
                               </size>
                              </property>
                              <property name="font">
@@ -3025,8 +3025,6 @@ QPushButton:pressed {
     background: rgb(245, 249, 254);
     border-radius: 4px;
     padding: 2px 6px;
-    min-height: 24px;
-	min-width: 34px;
     color: #333333;
     font: 14px &quot;Microsoft YaHei&quot;;
 }
@@ -3120,8 +3118,8 @@ QComboBox QAbstractItemView::item {
                            <widget class="QComboBox" name="comboBox_timeSource">
                             <property name="minimumSize">
                              <size>
-                              <width>72</width>
-                              <height>28</height>
+                              <width>78</width>
+                              <height>0</height>
                              </size>
                             </property>
                             <property name="font">
@@ -3137,8 +3135,7 @@ QComboBox QAbstractItemView::item {
     border: 1px solid rgba(134, 119, 253, 0.8);
     background: rgb(245, 249, 254);
     border-radius: 4px;
-    padding: 1px 6px;
-    min-height: 24px;
+    padding: 2px 6px;
     color: #333333;
     font: 14px &quot;Microsoft YaHei&quot;;
 }
@@ -3209,7 +3206,7 @@ QComboBox QAbstractItemView::item {
 }</string>
                             </property>
                             <property name="text">
-                             <string>操作</string>
+                             <string>整理方式</string>
                             </property>
                            </widget>
                           </item>
@@ -3217,8 +3214,8 @@ QComboBox QAbstractItemView::item {
                            <widget class="QComboBox" name="comboBox_operation">
                             <property name="minimumSize">
                              <size>
-                              <width>46</width>
-                              <height>28</height>
+                              <width>78</width>
+                              <height>0</height>
                              </size>
                             </property>
                             <property name="font">
@@ -3234,8 +3231,7 @@ QComboBox QAbstractItemView::item {
     border: 1px solid rgba(134, 119, 253, 0.8);
     background: rgb(245, 249, 254);
     border-radius: 4px;
-    padding: 1px 6px;
-    min-height: 24px;
+    padding: 2px 6px;
     color: #333333;
     font: 14px &quot;Microsoft YaHei&quot;;
 }
@@ -3265,18 +3261,72 @@ QComboBox QAbstractItemView::item {
                             </property>
                             <item>
                              <property name="text">
-                              <string>移动</string>
+                              <string>移动文件</string>
                              </property>
                             </item>
                             <item>
                              <property name="text">
-                              <string>复制</string>
+                              <string>复制文件</string>
                              </property>
                             </item>
                            </widget>
                           </item>
                          </layout>
                         </item>
+                        <item>
+                         <spacer name="horizontalSpacer_4">
+                          <property name="orientation">
+                           <enum>Qt::Horizontal</enum>
+                          </property>
+                          <property name="sizeHint" stdset="0">
+                           <size>
+                            <width>40</width>
+                            <height>20</height>
+                           </size>
+                          </property>
+                         </spacer>
+                        </item>
+                       </layout>
+                      </item>
+                      <item>
+                       <widget class="Line" name="line_Arrange">
+                        <property name="minimumSize">
+                         <size>
+                          <width>0</width>
+                          <height>1</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>16777215</width>
+                          <height>1</height>
+                         </size>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">background-color: rgb(235, 236, 237);</string>
+                        </property>
+                        <property name="orientation">
+                         <enum>Qt::Horizontal</enum>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <layout class="QHBoxLayout" name="horizontalLayout_58" stretch="0">
+                        <property name="spacing">
+                         <number>6</number>
+                        </property>
+                        <property name="leftMargin">
+                         <number>9</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>6</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>9</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>6</number>
+                        </property>
                         <item>
                          <widget class="QFrame" name="rename_Frame_2">
                           <property name="styleSheet">
@@ -3287,7 +3337,7 @@ QComboBox QAbstractItemView::item {
                           </property>
                           <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,0,0">
                            <property name="spacing">
-                            <number>0</number>
+                            <number>6</number>
                            </property>
                            <property name="leftMargin">
                             <number>0</number>
@@ -3317,7 +3367,7 @@ QComboBox QAbstractItemView::item {
                              </property>
                              <property name="font">
                               <font>
-                               <pointsize>9</pointsize>
+                               <pointsize>12</pointsize>
                               </font>
                              </property>
                              <property name="styleSheet">
@@ -3349,7 +3399,7 @@ QComboBox QAbstractItemView::item {
                              </property>
                              <property name="font">
                               <font>
-                               <pointsize>9</pointsize>
+                               <pointsize>12</pointsize>
                               </font>
                              </property>
                              <property name="styleSheet">
@@ -3369,7 +3419,7 @@ QComboBox QAbstractItemView::item {
                             <widget class="QLabel" name="label_21">
                              <property name="font">
                               <font>
-                               <pointsize>10</pointsize>
+                               <pointsize>12</pointsize>
                                <bold>true</bold>
                               </font>
                              </property>
@@ -3400,7 +3450,7 @@ QComboBox QAbstractItemView::item {
                              </property>
                              <property name="font">
                               <font>
-                               <pointsize>9</pointsize>
+                               <pointsize>12</pointsize>
                               </font>
                              </property>
                              <property name="styleSheet">
@@ -3452,13 +3502,13 @@ border-radius: 0px;</string>
                        <number>9</number>
                       </property>
                       <property name="topMargin">
-                       <number>9</number>
+                       <number>6</number>
                       </property>
                       <property name="rightMargin">
                        <number>9</number>
                       </property>
                       <property name="bottomMargin">
-                       <number>9</number>
+                       <number>6</number>
                       </property>
                       <item>
                        <widget class="QProgressBar" name="progressBar_classification">
@@ -3509,13 +3559,13 @@ QProgressBar::chunk {
                         <property name="minimumSize">
                          <size>
                           <width>88</width>
-                          <height>32</height>
+                          <height>0</height>
                          </size>
                         </property>
                         <property name="maximumSize">
                          <size>
                           <width>16777215</width>
-                          <height>32</height>
+                          <height>29</height>
                          </size>
                         </property>
                         <property name="styleSheet">
@@ -3592,7 +3642,7 @@ border-bottom-left-radius:0px;</string>
                         <property name="minimumSize">
                          <size>
                           <width>0</width>
-                          <height>220</height>
+                          <height>0</height>
                          </size>
                         </property>
                         <property name="font">
