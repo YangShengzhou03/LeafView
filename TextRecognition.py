@@ -1,3 +1,10 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+文字识别模块
+功能：识别图像中的文字并根据文字内容进行整理
+注意：该模块目前处于开发阶段，主要功能尚未实现
+"""
 from PyQt6 import QtWidgets, QtCore, QtGui
 from PyQt6.QtCore import pyqtSignal
 from datetime import datetime
@@ -35,7 +42,6 @@ class TextRecognition(QtWidgets.QWidget):
         
     def recognize_text(self):
         """识别图像上的文字"""
-        # 预留的文字识别方法
         folders = self.folder_page.get_all_folders() if self.folder_page else []
         if not folders:
             self.log("WARNING", "请先导入一个有效的文件夹。")
@@ -45,5 +51,4 @@ class TextRecognition(QtWidgets.QWidget):
     
     def organize_by_text(self):
         """根据识别到的文字进行整理"""
-        # 预留的文字整理方法
         self.log("INFO", "按文字整理功能正在开发中...")

@@ -3,6 +3,7 @@ from AddFolder import FolderPage
 from SmartArrange import Classification
 from RemoveDuplication import Contrast
 from WriteExif import WriteExif
+from TextRecognition import TextRecognition
 from Ui_MainWindow import Ui_MainWindow
 from UpdateDialog import check_update
 from common import get_resource_path, author
@@ -33,6 +34,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.classification = Classification(self, self.folder_page)
         self.contrast = Contrast(self, self.folder_page)
         self.write_exif = WriteExif(self, self.folder_page)
+        self.text_recognition = TextRecognition(self, self.folder_page)
         
         # 初始化显示空状态
         self._update_empty_state(False)

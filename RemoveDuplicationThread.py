@@ -1,9 +1,16 @@
-from concurrent.futures import ThreadPoolExecutor, as_completed
-import numpy as np
 from PIL import Image
 from PyQt6 import QtCore
 import pillow_heif
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
+"""
+重复图片删除线程模块
+
+该模块提供了用于图像哈希计算和相似度对比的线程类，主要用于重复图片删除功能：
+- ImageHasher: 静态类，提供图像哈希计算和汉明距离计算功能
+- HashWorker: 多线程计算图像哈希值
+- ContrastWorker: 对比图像哈希值，找出相似图像组
+"""
 
 class ImageHasher:
     @staticmethod

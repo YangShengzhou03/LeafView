@@ -9,7 +9,7 @@ from PyQt6 import QtWidgets, QtCore
 from PyQt6.QtCore import pyqtSignal, QRunnable, QObject, Qt, QThreadPool
 from PyQt6.QtGui import QPixmap, QImage
 
-from ContrastThread import HashWorker, ContrastWorker
+from RemoveDuplicationThread import HashWorker, ContrastWorker
 from common import get_resource_path
 
 

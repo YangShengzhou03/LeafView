@@ -4,7 +4,7 @@ from PyQt6 import QtWidgets
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QInputDialog, QMessageBox, QFileDialog
 
-from ClassificationThread import ClassificationThread
+from SmartArrangeThread import SmartArrangeThread
 
 
 class Classification(QtWidgets.QWidget):
@@ -99,7 +99,7 @@ class Classification(QtWidgets.QWidget):
             # 获取操作类型
             operation_type = self.parent.comboBox_operation.currentIndex()
 
-            self.classification_thread = ClassificationThread(
+            self.classification_thread = SmartArrangeThread(
                 parent=self,
                 folders=folders,
                 classification_structure=classification_structure or None,

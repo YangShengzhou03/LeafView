@@ -1,7 +1,20 @@
-from datetime import datetime
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+EXIF写入功能模块
+
+该模块提供了用于编辑和写入图像EXIF元数据的UI交互界面，包括：
+- 星级评分系统
+- 相机品牌和型号选择
+- 拍摄时间设置
+- 其他EXIF属性编辑
+
+该模块通过WriteExifThread线程类执行实际的EXIF写入操作
+"""
 import json
 import os
 import requests
+from datetime import datetime
 from PyQt6.QtCore import pyqtSlot, QDateTime
 from PyQt6.QtWidgets import QWidget
 from WriteExifThread import WriteExifThread
@@ -24,7 +37,7 @@ class WriteExif(QWidget):
         for i in range(1, 6):
             btn = getattr(self.parent, f'pushButton_star_{i}')
             btn.setStyleSheet(
-                "QPushButton { \n"
+                "QPushButton { "
                 f"image: url({get_resource_path('resources/img/page_4/星级_暗.svg')});\n"
                 "border: none; padding: 0; }" "\n"
                 "QPushButton:hover { background-color: transparent; }"
@@ -74,7 +87,7 @@ class WriteExif(QWidget):
     def _load_camera_data(self):
         """从JSON文件加载相机品牌和型号数据"""
         try:
-            data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+            data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                     'resources', 'json', 'camera_brand_model.json')
             if os.path.exists(data_path):
                 with open(data_path, 'r', encoding='utf-8') as f:
