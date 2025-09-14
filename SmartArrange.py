@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from PyQt6 import QtWidgets
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QInputDialog, QMessageBox, QFileDialog
@@ -17,13 +16,15 @@ class Classification(QtWidgets.QWidget):
         self.last_selected_button_index = -1
         self.destination_root = None
         self.tag_buttons = {
-            '年份': self.parent.pushButton_year,
-            '月份': self.parent.pushButton_month,
-            '日': self.parent.pushButton_date,
-            '星期': self.parent.pushButton_day,
-            '时间': self.parent.pushButton_time,
-            '位置': self.parent.pushButton_address,
-            '品牌': self.parent.pushButton_make
+            '原文件名': self.parent.pushButton_original_tag,
+            '年份': self.parent.pushButton_year_tag,
+            '月份': self.parent.pushButton_month_tag,
+            '日': self.parent.pushButton_date_tag,
+            '星期': self.parent.pushButton_day_tag,
+            '时间': self.parent.pushButton_time_tag,
+            '品牌': self.parent.pushButton_make_tag,
+            '位置': self.parent.pushButton_address_tag,
+            '自定义': self.parent.pushButton_customize_tag
         }
         self.separator_mapping = {
             "-": "-",
@@ -35,6 +36,9 @@ class Classification(QtWidgets.QWidget):
         self.selected_layout = self.parent.horizontalLayout_53
         self.classification_thread = None
         self.init_page()
+        # 设置分类级别的启用/禁用状态
+        self.set_combo_box_states()
+        # 连接日志信号
         self.log_signal.connect(self.log)
 
     def init_page(self):
@@ -45,6 +49,8 @@ class Classification(QtWidgets.QWidget):
         for button in self.tag_buttons.values():
             button.clicked.connect(lambda checked, b=button: self.move_tag(b))
         self.parent.comboBox_operation.currentIndexChanged.connect(self.handle_operation_change)
+        # 连接分隔符下拉框的信号
+        self.parent.comboBox_separator.currentIndexChanged.connect(self.update_example_label)
         self.log("DEBUG", "欢迎使用图像分类整理，您可在上方构建文件路径与文件名结构。")
 
     def connect_signals(self):
@@ -119,45 +125,53 @@ class Classification(QtWidgets.QWidget):
         self.update_progress_bar(100)
 
     def handle_combobox_selection(self, level, index):
-        # 处理分类级别选择变化
-        current_text = getattr(self.parent, f'comboBox_level_{level}').currentText()
-        
-        # 启用/禁用下一级组合框
-        if level < 5:
-            next_level_combo = getattr(self.parent, f'comboBox_level_{level + 1}')
-            if current_text == "不分类":
-                next_level_combo.setCurrentIndex(0)
-                next_level_combo.setEnabled(False)
-            else:
-                next_level_combo.setEnabled(True)
-        
-        # 处理特殊情况
-        if level > 1:
-            prev_level_combo = getattr(self.parent, f'comboBox_level_{level - 1}')
-            if prev_level_combo.currentText() == "不分类":
-                getattr(self.parent, f'comboBox_level_{level}').setCurrentIndex(0)
-                getattr(self.parent, f'comboBox_level_{level}').setEnabled(False)
+        # 直接调用update_combobox_state方法来处理所有级别的状态更新
+        self.update_combobox_state(level)
 
     def update_combobox_state(self, level):
-        current_box = getattr(self.parent, f'comboBox_level_{level}')
-        next_box = getattr(self.parent, f'comboBox_level_{level + 1}', None) if level < 5 else None
-        if next_box:
-            next_box.setEnabled(current_box.currentIndex() != 0)
-            if current_box.currentIndex() == 0:
-                next_box.setCurrentIndex(0)
-                for i in range(level + 1, 6):
-                    future_box = getattr(self.parent, f'comboBox_level_{i}', None)
-                    if future_box:
-                        future_box.setEnabled(False)
-                        future_box.setCurrentIndex(0)
-            else:
+        # 检查当前级别的选择
+        current_text = getattr(self.parent, f'comboBox_level_{level}').currentText()
+        
+        if current_text == "不分类":
+            # 如果选择了"不分类"，则禁用后面的所有组合框
+            for i in range(level + 1, 6):
+                getattr(self.parent, f'comboBox_level_{i}').setEnabled(False)
+                getattr(self.parent, f'comboBox_level_{i}').setCurrentIndex(0)  # 重置为第一个选项
+        else:
+            # 如果没有选择"不分类"，则启用下一级组合框
+            if level < 5:
+                getattr(self.parent, f'comboBox_level_{level + 1}').setEnabled(True)
+                # 递归更新下一级状态
                 self.update_combobox_state(level + 1)
+        
+        # 更新预览路径
         self.parent.label_PreviewRoute.setText("/".join([
             self.get_specific_value(getattr(self.parent, f'comboBox_level_{i}').currentText())
             for i in range(1, 6)
             if getattr(self.parent, f'comboBox_level_{i}').isEnabled() and
                getattr(self.parent, f'comboBox_level_{i}').currentText() != "不分类"
         ]) or "不分类")
+        
+        # 记录分类设置以便后续使用
+        self.classification_settings = [
+            getattr(self.parent, f'comboBox_level_{i}').currentText()
+            for i in range(1, 6)
+            if getattr(self.parent, f'comboBox_level_{i}').isEnabled() and
+               getattr(self.parent, f'comboBox_level_{i}').currentText() != "不分类"
+        ]
+    
+    def set_combo_box_states(self):
+        """设置分类级别的初始启用/禁用状态"""
+        # 启用第一级分类下拉框
+        self.parent.comboBox_level_1.setEnabled(True)
+        # 禁用其他级别分类下拉框
+        for i in range(2, 6):
+            combo_box = getattr(self.parent, f'comboBox_level_{i}')
+            combo_box.setEnabled(False)
+            combo_box.setCurrentIndex(0)
+        
+        # 初始化预览路径显示
+        self.update_combobox_state(1)
 
     def get_specific_value(self, text):
         now = datetime.now()
@@ -171,38 +185,60 @@ class Classification(QtWidgets.QWidget):
 
     def move_tag(self, button):
         # 移动标签到已选区域
-        if button.parentWidget() == self.available_layout:
-            # 创建新按钮，避免直接移动
-            new_button = QtWidgets.QPushButton(button.text())
-            new_button.setStyleSheet(
-                "QPushButton {background-color: #8677FD; color: white; border: none; border-radius: 4px; padding: 4px 8px;}")
-            self.selected_layout.addWidget(new_button)
-            
-            # 添加移除按钮的功能
-            new_button.clicked.connect(lambda: self.move_tag_back(new_button))
+        # 检查标签数量限制
+        if self.selected_layout.count() >= 5:
+            return
+        
+        # 保存按钮的原始样式
+        original_style = button.styleSheet()
+        button.setProperty('original_style', original_style)
+        
+        # 从原布局中移除按钮
+        self.available_layout.removeWidget(button)
+        
+        # 应用新样式
+        button.setStyleSheet(
+            "QPushButton {background-color: #8677FD; color: white; border: none; border-radius: 4px; padding: 4px 8px;}")
+        
+        # 添加到已选区域
+        self.selected_layout.addWidget(button)
+        
+        # 更新点击事件
+        button.clicked.disconnect()
+        button.clicked.connect(lambda checked, b=button: self.move_tag_back(b))
+        
+        # 更新示例文件名
+        self.update_example_label()
         
         # 限制标签数量
         if self.selected_layout.count() >= 5:
-            for i in range(self.available_layout.count()):
-                widget = self.available_layout.itemAt(i).widget()
-                if widget and isinstance(widget, QtWidgets.QPushButton):
-                    widget.setEnabled(False)
-        else:
-            for i in range(self.available_layout.count()):
-                widget = self.available_layout.itemAt(i).widget()
-                if widget and isinstance(widget, QtWidgets.QPushButton):
-                    widget.setEnabled(True)
+            # 禁用所有原始标签按钮
+            for btn in self.tag_buttons.values():
+                if btn.parent() == self.available_layout:
+                    btn.setEnabled(False)
     
     def move_tag_back(self, button):
         # 将标签移回可用区域
         self.selected_layout.removeWidget(button)
-        button.deleteLater()
+        
+        # 恢复原始样式
+        if button.property('original_style') is not None:
+            button.setStyleSheet(button.property('original_style'))
+        
+        # 添加回原布局
+        self.available_layout.addWidget(button)
+        
+        # 更新点击事件
+        button.clicked.disconnect()
+        button.clicked.connect(lambda checked, b=button: self.move_tag(b))
         
         # 重新启用所有可用标签
-        for i in range(self.available_layout.count()):
-            widget = self.available_layout.itemAt(i).widget()
-            if widget and isinstance(widget, QtWidgets.QPushButton):
-                widget.setEnabled(True)
+        for btn in self.tag_buttons.values():
+            if btn.parent() == self.available_layout:
+                btn.setEnabled(True)
+        
+        # 更新示例文件名
+        self.update_example_label()
 
     def update_example_label(self):
         now = datetime.now()
@@ -210,13 +246,15 @@ class Classification(QtWidgets.QWidget):
                     if isinstance(self.selected_layout.itemAt(i).widget(), QtWidgets.QPushButton)]
         current_separator = self.separator_mapping.get(self.parent.comboBox_separator.currentText(), "")
         parts = {
+            "原文件名": "DSC_1234",
             "年份": f"{now.year}",
             "月份": f"{now.month:02d}",
             "日": f"{now.day:02d}",
             "星期": f"{self._get_weekday(now)}",
             "时间": f"{now.strftime('%H%M%S')}",
+            "品牌": "佳能",
             "位置": "浙大",
-            "品牌": "佳能"
+            "自定义": "家庭聚会"
         }
         example_text = current_separator.join(parts.get(b, "") for b in selected) if selected else "请点击标签以组成文件名"
         self.parent.label_PreviewName.setText(example_text)

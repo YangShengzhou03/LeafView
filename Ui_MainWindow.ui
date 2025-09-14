@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>921</width>
+    <width>922</width>
     <height>572</height>
    </rect>
   </property>
@@ -65,13 +65,13 @@ border-radius:12px;
         <widget class="QFrame" name="Frame_left">
          <property name="minimumSize">
           <size>
-           <width>148</width>
+           <width>162</width>
            <height>0</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>178</width>
+           <width>162</width>
            <height>16777215</height>
           </size>
          </property>
@@ -192,7 +192,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>158</width>
+               <width>156</width>
                <height>520</height>
               </rect>
              </property>
@@ -921,7 +921,7 @@ QScrollBar::sub-page:vertical {
                        <rect>
                         <x>0</x>
                         <y>0</y>
-                        <width>503</width>
+                        <width>506</width>
                         <height>516</height>
                        </rect>
                       </property>
@@ -2583,7 +2583,7 @@ border: 0px;
                              <number>6</number>
                             </property>
                             <item>
-                             <widget class="QPushButton" name="pushButton_original">
+                             <widget class="QPushButton" name="pushButton_original_tag">
                               <property name="maximumSize">
                                <size>
                                 <width>80</width>
@@ -2624,7 +2624,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="pushButton_year">
+                             <widget class="QPushButton" name="pushButton_year_tag">
                               <property name="maximumSize">
                                <size>
                                 <width>46</width>
@@ -2665,7 +2665,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="pushButton_month">
+                             <widget class="QPushButton" name="pushButton_month_tag">
                               <property name="maximumSize">
                                <size>
                                 <width>46</width>
@@ -2706,7 +2706,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="pushButton_date">
+                             <widget class="QPushButton" name="pushButton_date_tag">
                               <property name="maximumSize">
                                <size>
                                 <width>32</width>
@@ -2747,7 +2747,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="pushButton_day">
+                             <widget class="QPushButton" name="pushButton_day_tag">
                               <property name="maximumSize">
                                <size>
                                 <width>46</width>
@@ -2788,7 +2788,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="pushButton_time">
+                             <widget class="QPushButton" name="pushButton_time_tag">
                               <property name="maximumSize">
                                <size>
                                 <width>46</width>
@@ -2835,7 +2835,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="pushButton_make">
+                             <widget class="QPushButton" name="pushButton_make_tag">
                               <property name="maximumSize">
                                <size>
                                 <width>74</width>
@@ -2876,7 +2876,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="pushButton_address">
+                             <widget class="QPushButton" name="pushButton_address_tag">
                               <property name="maximumSize">
                                <size>
                                 <width>66</width>
@@ -2921,7 +2921,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="pushButton_customize">
+                             <widget class="QPushButton" name="pushButton_customize_tag">
                               <property name="maximumSize">
                                <size>
                                 <width>80</width>
@@ -2965,19 +2965,6 @@ QPushButton:pressed {
                           </widget>
                          </item>
                          <item>
-                          <spacer name="horizontalSpacer_4">
-                           <property name="orientation">
-                            <enum>Qt::Horizontal</enum>
-                           </property>
-                           <property name="sizeHint" stdset="0">
-                            <size>
-                             <width>40</width>
-                             <height>20</height>
-                            </size>
-                           </property>
-                          </spacer>
-                         </item>
-                         <item>
                           <layout class="QHBoxLayout" name="horizontalLayout_46">
                            <property name="spacing">
                             <number>4</number>
@@ -2985,6 +2972,19 @@ QPushButton:pressed {
                            <property name="rightMargin">
                             <number>9</number>
                            </property>
+                           <item>
+                            <spacer name="horizontalSpacer_3">
+                             <property name="orientation">
+                              <enum>Qt::Horizontal</enum>
+                             </property>
+                             <property name="sizeHint" stdset="0">
+                              <size>
+                               <width>40</width>
+                               <height>20</height>
+                              </size>
+                             </property>
+                            </spacer>
+                           </item>
                            <item>
                             <widget class="QLabel" name="label_operation_2">
                              <property name="font">

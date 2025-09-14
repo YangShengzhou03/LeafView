@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(921, 572)
+        MainWindow.resize(922, 572)
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
@@ -33,8 +33,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.setSpacing(0)
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.Frame_left = QtWidgets.QFrame(parent=self.frame_main)
-        self.Frame_left.setMinimumSize(QtCore.QSize(148, 0))
-        self.Frame_left.setMaximumSize(QtCore.QSize(178, 16777215))
+        self.Frame_left.setMinimumSize(QtCore.QSize(162, 0))
+        self.Frame_left.setMaximumSize(QtCore.QSize(162, 16777215))
         self.Frame_left.setStyleSheet("background:rgba(0, 0, 0, 0);")
         self.Frame_left.setObjectName("Frame_left")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.Frame_left)
@@ -103,7 +103,7 @@ class Ui_MainWindow(object):
         self.scrollArea_nav.setWidgetResizable(True)
         self.scrollArea_nav.setObjectName("scrollArea_nav")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 158, 520))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 156, 520))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_4.setContentsMargins(0, 12, 0, 0)
@@ -518,7 +518,7 @@ class Ui_MainWindow(object):
         self.scrollArea_page0.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.scrollArea_page0.setObjectName("scrollArea_page0")
         self.scrollAreaWidgetContents_folds = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_folds.setGeometry(QtCore.QRect(0, 0, 503, 516))
+        self.scrollAreaWidgetContents_folds.setGeometry(QtCore.QRect(0, 0, 506, 516))
         self.scrollAreaWidgetContents_folds.setObjectName("scrollAreaWidgetContents_folds")
         self.gridLayout_6 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents_folds)
         self.gridLayout_6.setContentsMargins(0, 0, 0, 0)
@@ -1523,9 +1523,9 @@ class Ui_MainWindow(object):
         self.horizontalLayout_57.setContentsMargins(6, 6, 0, 6)
         self.horizontalLayout_57.setSpacing(6)
         self.horizontalLayout_57.setObjectName("horizontalLayout_57")
-        self.pushButton_original = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_original.setMaximumSize(QtCore.QSize(80, 28))
-        self.pushButton_original.setStyleSheet("QPushButton {\n"
+        self.pushButton_original_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
+        self.pushButton_original_tag.setMaximumSize(QtCore.QSize(80, 28))
+        self.pushButton_original_tag.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
 "  color: #2c3e50;\n"
 "  border: 1px solid #d4d4d4;\n"
@@ -1551,11 +1551,11 @@ class Ui_MainWindow(object):
 "  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
 "  transform: translateY(2px);\n"
 "}")
-        self.pushButton_original.setObjectName("pushButton_original")
-        self.horizontalLayout_57.addWidget(self.pushButton_original)
-        self.pushButton_year = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_year.setMaximumSize(QtCore.QSize(46, 28))
-        self.pushButton_year.setStyleSheet("QPushButton {\n"
+        self.pushButton_original_tag.setObjectName("pushButton_original_tag")
+        self.horizontalLayout_57.addWidget(self.pushButton_original_tag)
+        self.pushButton_year_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
+        self.pushButton_year_tag.setMaximumSize(QtCore.QSize(46, 28))
+        self.pushButton_year_tag.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
 "  color: #2c3e50;\n"
 "  border: 1px solid #d4d4d4;\n"
@@ -1581,11 +1581,11 @@ class Ui_MainWindow(object):
 "  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
 "  transform: translateY(2px);\n"
 "}")
-        self.pushButton_year.setObjectName("pushButton_year")
-        self.horizontalLayout_57.addWidget(self.pushButton_year)
-        self.pushButton_month = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_month.setMaximumSize(QtCore.QSize(46, 28))
-        self.pushButton_month.setStyleSheet("QPushButton {\n"
+        self.pushButton_year_tag.setObjectName("pushButton_year_tag")
+        self.horizontalLayout_57.addWidget(self.pushButton_year_tag)
+        self.pushButton_month_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
+        self.pushButton_month_tag.setMaximumSize(QtCore.QSize(46, 28))
+        self.pushButton_month_tag.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
 "  color: #2c3e50;\n"
 "  border: 1px solid #d4d4d4;\n"
@@ -1611,11 +1611,11 @@ class Ui_MainWindow(object):
 "  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
 "  transform: translateY(2px);\n"
 "}")
-        self.pushButton_month.setObjectName("pushButton_month")
-        self.horizontalLayout_57.addWidget(self.pushButton_month)
-        self.pushButton_date = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_date.setMaximumSize(QtCore.QSize(32, 28))
-        self.pushButton_date.setStyleSheet("QPushButton {\n"
+        self.pushButton_month_tag.setObjectName("pushButton_month_tag")
+        self.horizontalLayout_57.addWidget(self.pushButton_month_tag)
+        self.pushButton_date_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
+        self.pushButton_date_tag.setMaximumSize(QtCore.QSize(32, 28))
+        self.pushButton_date_tag.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
 "  color: #2c3e50;\n"
 "  border: 1px solid #d4d4d4;\n"
@@ -1641,11 +1641,11 @@ class Ui_MainWindow(object):
 "  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
 "  transform: translateY(2px);\n"
 "}")
-        self.pushButton_date.setObjectName("pushButton_date")
-        self.horizontalLayout_57.addWidget(self.pushButton_date)
-        self.pushButton_day = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_day.setMaximumSize(QtCore.QSize(46, 28))
-        self.pushButton_day.setStyleSheet("QPushButton {\n"
+        self.pushButton_date_tag.setObjectName("pushButton_date_tag")
+        self.horizontalLayout_57.addWidget(self.pushButton_date_tag)
+        self.pushButton_day_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
+        self.pushButton_day_tag.setMaximumSize(QtCore.QSize(46, 28))
+        self.pushButton_day_tag.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
 "  color: #2c3e50;\n"
 "  border: 1px solid #d4d4d4;\n"
@@ -1671,11 +1671,11 @@ class Ui_MainWindow(object):
 "  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
 "  transform: translateY(2px);\n"
 "}")
-        self.pushButton_day.setObjectName("pushButton_day")
-        self.horizontalLayout_57.addWidget(self.pushButton_day)
-        self.pushButton_time = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_time.setMaximumSize(QtCore.QSize(46, 28))
-        self.pushButton_time.setStyleSheet("QPushButton {\n"
+        self.pushButton_day_tag.setObjectName("pushButton_day_tag")
+        self.horizontalLayout_57.addWidget(self.pushButton_day_tag)
+        self.pushButton_time_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
+        self.pushButton_time_tag.setMaximumSize(QtCore.QSize(46, 28))
+        self.pushButton_time_tag.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
 "  color: #2c3e50;\n"
 "  border: 1px solid #d4d4d4;\n"
@@ -1701,12 +1701,12 @@ class Ui_MainWindow(object):
 "  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
 "  transform: translateY(2px);\n"
 "}")
-        self.pushButton_time.setIconSize(QtCore.QSize(16, 16))
-        self.pushButton_time.setObjectName("pushButton_time")
-        self.horizontalLayout_57.addWidget(self.pushButton_time)
-        self.pushButton_make = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_make.setMaximumSize(QtCore.QSize(74, 28))
-        self.pushButton_make.setStyleSheet("QPushButton {\n"
+        self.pushButton_time_tag.setIconSize(QtCore.QSize(16, 16))
+        self.pushButton_time_tag.setObjectName("pushButton_time_tag")
+        self.horizontalLayout_57.addWidget(self.pushButton_time_tag)
+        self.pushButton_make_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
+        self.pushButton_make_tag.setMaximumSize(QtCore.QSize(74, 28))
+        self.pushButton_make_tag.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
 "  color: #2c3e50;\n"
 "  border: 1px solid #d4d4d4;\n"
@@ -1732,11 +1732,11 @@ class Ui_MainWindow(object):
 "  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
 "  transform: translateY(2px);\n"
 "}")
-        self.pushButton_make.setObjectName("pushButton_make")
-        self.horizontalLayout_57.addWidget(self.pushButton_make)
-        self.pushButton_address = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_address.setMaximumSize(QtCore.QSize(66, 28))
-        self.pushButton_address.setStyleSheet("QPushButton {\n"
+        self.pushButton_make_tag.setObjectName("pushButton_make_tag")
+        self.horizontalLayout_57.addWidget(self.pushButton_make_tag)
+        self.pushButton_address_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
+        self.pushButton_address_tag.setMaximumSize(QtCore.QSize(66, 28))
+        self.pushButton_address_tag.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
 "  color: #2c3e50;\n"
 "  border: 1px solid #d4d4d4;\n"
@@ -1764,12 +1764,12 @@ class Ui_MainWindow(object):
 "}")
         icon10 = QtGui.QIcon()
         icon10.addPixmap(QtGui.QPixmap("resources/img/page_2/位置.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.pushButton_address.setIcon(icon10)
-        self.pushButton_address.setObjectName("pushButton_address")
-        self.horizontalLayout_57.addWidget(self.pushButton_address)
-        self.pushButton_customize = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_customize.setMaximumSize(QtCore.QSize(80, 28))
-        self.pushButton_customize.setStyleSheet("QPushButton {\n"
+        self.pushButton_address_tag.setIcon(icon10)
+        self.pushButton_address_tag.setObjectName("pushButton_address_tag")
+        self.horizontalLayout_57.addWidget(self.pushButton_address_tag)
+        self.pushButton_customize_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
+        self.pushButton_customize_tag.setMaximumSize(QtCore.QSize(80, 28))
+        self.pushButton_customize_tag.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
 "  color: #2c3e50;\n"
 "  border: 1px solid #d4d4d4;\n"
@@ -1795,15 +1795,15 @@ class Ui_MainWindow(object):
 "  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
 "  transform: translateY(2px);\n"
 "}")
-        self.pushButton_customize.setObjectName("pushButton_customize")
-        self.horizontalLayout_57.addWidget(self.pushButton_customize)
+        self.pushButton_customize_tag.setObjectName("pushButton_customize_tag")
+        self.horizontalLayout_57.addWidget(self.pushButton_customize_tag)
         self.horizontalLayout_54.addWidget(self.frame_Rename_tags)
-        spacerItem6 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
-        self.horizontalLayout_54.addItem(spacerItem6)
         self.horizontalLayout_46 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_46.setContentsMargins(-1, -1, 9, -1)
         self.horizontalLayout_46.setSpacing(4)
         self.horizontalLayout_46.setObjectName("horizontalLayout_46")
+        spacerItem6 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
+        self.horizontalLayout_46.addItem(spacerItem6)
         self.label_operation_2 = QtWidgets.QLabel(parent=self.Frame_tags)
         font = QtGui.QFont()
         font.setPointSize(12)
@@ -3696,15 +3696,15 @@ class Ui_MainWindow(object):
         self.label_point.setText(_translate("MainWindow", "."))
         self.pushButton_extensions.setText(_translate("MainWindow", "扩展名"))
         self.label_RenamingTags.setText(_translate("MainWindow", "命名标签："))
-        self.pushButton_original.setText(_translate("MainWindow", "原文件名"))
-        self.pushButton_year.setText(_translate("MainWindow", "年份"))
-        self.pushButton_month.setText(_translate("MainWindow", "月份"))
-        self.pushButton_date.setText(_translate("MainWindow", "日"))
-        self.pushButton_day.setText(_translate("MainWindow", "星期"))
-        self.pushButton_time.setText(_translate("MainWindow", "时间"))
-        self.pushButton_make.setText(_translate("MainWindow", "品牌"))
-        self.pushButton_address.setText(_translate("MainWindow", "位置"))
-        self.pushButton_customize.setText(_translate("MainWindow", "自定义"))
+        self.pushButton_original_tag.setText(_translate("MainWindow", "原文件名"))
+        self.pushButton_year_tag.setText(_translate("MainWindow", "年份"))
+        self.pushButton_month_tag.setText(_translate("MainWindow", "月份"))
+        self.pushButton_date_tag.setText(_translate("MainWindow", "日"))
+        self.pushButton_day_tag.setText(_translate("MainWindow", "星期"))
+        self.pushButton_time_tag.setText(_translate("MainWindow", "时间"))
+        self.pushButton_make_tag.setText(_translate("MainWindow", "品牌"))
+        self.pushButton_address_tag.setText(_translate("MainWindow", "位置"))
+        self.pushButton_customize_tag.setText(_translate("MainWindow", "自定义"))
         self.label_operation_2.setText(_translate("MainWindow", "分隔符"))
         self.comboBox_separator.setItemText(0, _translate("MainWindow", "-"))
         self.comboBox_separator.setItemText(1, _translate("MainWindow", "无"))

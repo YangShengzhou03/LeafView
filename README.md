@@ -1,138 +1,229 @@
-# LeafView 枫叶相册
+<div align="center">
+  <h1>🍁 枫叶相册 - LeafView</h1>
+  
+  <p>
+    <em>基于 PyQt6 构建的现代化图片与媒体管理工具</em>
+  </p>
 
-LeafView是一个功能丰富的图像处理与管理工具，专注于提供便捷的图片浏览、分类整理、EXIF元数据编辑和文字识别等功能。
+  <div>
+    <a href="https://github.com/YangShengzhou03/LeafView/stargazers">
+      <img src="https://img.shields.io/github/stars/YangShengzhou03/LeafView?style=for-the-badge&logo=github&color=ffd33d&labelColor=000000" alt="GitHub Stars">
+    </a>
+    <a href="https://github.com/YangShengzhou03/LeafView/forks">
+      <img src="https://img.shields.io/github/forks/YangShengzhou03/LeafView?style=for-the-badge&logo=github&color=green&labelColor=000000" alt="GitHub Forks">
+    </a>
+    <a href="https://opensource.org/licenses/MIT">
+      <img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge&logo=open-source-initiative&color=blue&labelColor=000000" alt="MIT License">
+    </a>
+    <a href="https://github.com/YangShengzhou03/LeafView/issues">
+      <img src="https://img.shields.io/github/issues/YangShengzhou03/LeafView?style=for-the-badge&logo=github&color=purple&labelColor=000000" alt="GitHub Issues">
+    </a>
+  </div>
 
-## 功能特性
+  <div>
+    <a href="https://www.python.org/">
+      <img src="https://img.shields.io/badge/Python-3.11-blue?style=for-the-badge&logo=python" alt="Python Version">
+    </a>
+    <a href="https://www.riverbankcomputing.com/software/pyqt/">
+      <img src="https://img.shields.io/badge/PyQt6-6.4.2-green?style=for-the-badge&logo=qt" alt="PyQt6 Version">
+    </a>
+    <a href="https://pillow.readthedocs.io/en/stable/">
+      <img src="https://img.shields.io/badge/Pillow-10.3.0-orange?style=for-the-badge&logo=pypi" alt="Pillow Version">
+    </a>
+  </div>
 
-### 1. 图片管理
-- 支持添加多个文件夹进行图片管理
-- 支持包含子文件夹的递归扫描
-- 拖放功能添加文件夹
-- 媒体文件自动检测
+  <br />
+  
+  [![Star History Chart](https://api.star-history.com/svg?repos=YangShengzhou03/LeafView&type=Date)](https://star-history.com/#YangShengzhou03/LeafView&Date)
 
-### 2. 智能分类整理
-- 按时间（年份、月份、日、星期、时间）分类
-- 按位置、品牌等标签分类
-- 支持复制或移动操作
+</div>
 
-### 3. 去重功能
-- 基于相似度的图片分组
-- 缩略图预览
-- 自动选择保留最大文件
-- 支持移动/删除选中图片
-- 多级相似度阈值控制（1-4级）
+## 目录
+1. [✨ 项目概述](#-项目概述)
+2. [🚀 技术架构](#-技术架构)
+3. [🌟 核心功能](#-核心功能)
+4. [💻 安装部署](#-安装部署)
+5. [📖 使用说明](#-使用说明)
+6. [📁 目录结构](#-目录结构)
+7. [🤝 参与贡献](#-参与贡献)
+8. [📜 开源许可](#-开源许可)
 
-### 4. EXIF元数据编辑
-- 星级评分系统
-- 相机品牌/型号选择
-- 拍摄时间设置
-- 位置信息获取（基于IP或地址）
-- 批量处理文件夹中的图片文件
-- 自动标记功能（通过API分析图像内容）
+## ✨ 项目概述
+枫叶相册 (LeafView) 是一款基于 **Python** 和 **PyQt6** 构建的**开源图片与媒体管理工具**，为用户提供直观、高效的图片浏览和管理体验。系统采用单例模式设计，支持多种图片格式，并提供智能整理、去重、EXIF信息编辑等功能。
 
-### 5. 文字识别
-- 批量识别图片中的文字（支持中英文）
-- 基于识别结果自动整理图片
-- 识别进度实时显示
+**💡 适用场景**
+- 个人图片库管理
+- 摄影爱好者的照片整理
+- 图片批量处理与重命名
+- 图片元数据编辑
+- 重复图片检测与清理
 
-## 安装指南
+## 🚀 技术架构
 
-### 系统要求
-- Windows、macOS或Linux操作系统
-- Python 3.8或更高版本
+### 🔧 技术栈
+| 技术                | 描述                                                         |
+|---------------------|--------------------------------------------------------------|
+| **Python 3.11**     | 主要编程语言，提供强大的后端处理能力                         |
+| **PyQt6**           | 跨平台GUI框架，用于构建直观、美观的用户界面                  |
+| **Pillow**          | Python图像处理库，支持各种图片格式的读写和处理              |
+| **pillow-heif**     | HEIF格式支持，扩展Pillow对HEIC等格式的兼容性                 |
+| **piexif**          | 用于读取和写入EXIF元数据信息                                |
+| **pytesseract**     | OCR文字识别引擎，提供图片文字识别功能                        |
+| **requests**        | HTTP客户端库，用于检查更新和网络请求                        |
+| **send2trash**      | 安全删除文件到回收站的工具                                   |
 
-### 安装步骤
+## 🌟 核心功能
 
-1. 克隆或下载项目代码
+### 📷 **图片管理**
+- 支持多种图片格式：JPG、PNG、HEIC、TIFF、BMP、WEBP、GIF等
+- 文件夹导入与浏览，支持拖拽操作
+- 缩略图预览与大图查看
 
+### 🧹 **智能整理**
+- 按时间分类：年份、月份、日期、星期等
+- 自定义文件夹结构
+- 批量重命名，支持多种命名规则和分隔符
+- 移动或复制到目标目录
+
+### 🔍 **去重功能**
+- 检测重复图片
+- 智能对比相似度
+- 一键删除重复图片
+
+### 📝 **EXIF编辑**
+- 查看和编辑图片元数据
+- 修改拍摄日期、设备信息等
+- 批量处理多张图片
+
+### 🔤 **文字识别**
+- 从图片中提取文字
+- 支持多语言识别
+- 复制识别结果
+
+## 💻 安装部署
+
+### 🔧 环境准备
+- Python 3.8 及以上版本
+- PyQt6 库
+- 其他依赖库（详见requirements.txt）
+
+### 🚀 安装步骤
+1. 克隆项目到本地环境
+   ```bash
+   git clone https://github.com/YangShengzhou03/LeafView.git
+   cd LeafView
+   ```
+
+2. 安装依赖
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. 运行应用程序
+   ```bash
+   python App.py
+   ```
+
+### 📦 打包为可执行文件
+项目包含App.spec文件，可使用PyInstaller打包为独立可执行文件：
 ```bash
-git clone https://your-repository-url/LeafView.git
-cd LeafView
+pyinstaller App.spec
 ```
 
-2. 安装依赖项
+## 📖 使用说明
 
-```bash
-pip install -r requirements.txt
+### 🔑 基本操作
+1. **启动程序**：运行App.py或双击打包后的可执行文件
+2. **导入文件夹**：点击界面上的导入按钮或直接拖拽文件夹到程序窗口
+3. **浏览图片**：在左侧导航栏选择功能模块，在主界面浏览图片
+
+### 📝 功能使用
+
+1. **智能整理**：
+   - 选择要整理的文件夹
+   - 设置分类结构（年份、月份等）
+   - 选择文件名结构和分隔符
+   - 点击"开始整理"按钮执行操作
+
+2. **去重操作**：
+   - 选择要检查重复的文件夹
+   - 设置相似度阈值
+   - 点击"开始对比"查找重复图片
+   - 选择要删除的重复图片
+
+3. **EXIF编辑**：
+   - 选择要编辑EXIF信息的图片
+   - 输入新的EXIF信息
+   - 点击"应用"保存更改
+
+4. **文字识别**：
+   - 选择包含文字的图片
+   - 点击"开始识别"提取文字
+   - 复制或保存识别结果
+
+## 📁 目录结构
+```
+LeafView/
+├── AddFolder.py               # 文件夹导入功能
+├── App.py                     # 应用程序入口
+├── App.spec                   # PyInstaller打包配置
+├── MainWindow.py              # 主窗口实现
+├── RemoveDuplication.py       # 去重功能界面
+├── RemoveDuplicationThread.py # 去重功能线程
+├── SmartArrange.py            # 智能整理功能界面
+├── SmartArrangeThread.py      # 智能整理功能线程
+├── TextRecognition.py         # 文字识别功能
+├── Ui_MainWindow.py           # UI界面代码（自动生成）
+├── Ui_MainWindow.ui           # UI设计文件
+├── WriteExif.py               # EXIF编辑功能界面
+├── WriteExifThread.py         # EXIF编辑功能线程
+├── common.py                  # 公共函数和工具
+├── requirements.txt           # 项目依赖
+└── resources/                 # 资源文件夹
+    ├── img/                   # 图片资源
+    ├── json/                  # JSON配置文件
+    ├── cv2_date/              # OpenCV相关资源
+    └── stylesheet/            # 样式表
 ```
 
-3. 安装Tesseract OCR引擎（用于文字识别功能）
+## 🤝 参与贡献
+我们欢迎所有开发者参与项目改进与功能扩展，共同提升系统质量。贡献流程如下：
 
-- **Windows**: 从[GitHub](https://github.com/UB-Mannheim/tesseract/wiki)下载安装包
-- **macOS**: 使用Homebrew安装 `brew install tesseract tesseract-lang`
-- **Linux**: 使用包管理器安装 `sudo apt install tesseract-ocr tesseract-ocr-chi-sim`
+1. **Fork 仓库**：将项目复制到个人GitHub空间
+2. **创建特性分支**：基于main分支创建新分支，命名规范建议使用"feat/功能名称"或"fix/问题描述"
+3. **提交规范化代码**：遵循项目代码风格，提交信息使用规范格式（如"feat: 添加图片批量旋转功能"）
+4. **推送分支**：将本地分支推送到个人远程仓库
+5. **创建 Pull Request**：提交合并请求到原仓库，描述修改内容与目的，等待审核
 
-4. 配置环境变量（用于API访问）
+## 📜 开源许可
+本项目采用 [MIT License](https://opensource.org/licenses/MIT) 授权。
 
-```bash
-# Windows PowerShell
-$env:STONEDT_SECRET_ID="your_secret_id"
-$env:STONEDT_SECRET_KEY="your_secret_key"
-$env:AMAP_API_KEY="your_amap_api_key"
+```
+MIT License
 
-# macOS/Linux
-# 在.bashrc或.zshrc中添加
-# export STONEDT_SECRET_ID="your_secret_id"
-# export STONEDT_SECRET_KEY="your_secret_key"
-# export AMAP_API_KEY="your_amap_api_key"
+Copyright (c) 2024 YangShengzhou03
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 ```
 
-## 使用说明
+---
 
-### 启动应用
-
-```bash
-python App.py
-```
-
-### 基本操作
-
-1. **添加文件夹**
-   - 点击"添加文件夹"按钮
-   - 选择要管理的文件夹
-   - 可以选择是否包含子文件夹
-
-2. **智能分类**
-   - 切换到"分类整理"选项卡
-   - 选择分类维度（年份、月份等）
-   - 选择目标文件夹
-   - 点击"开始分类"按钮
-
-3. **图片去重**
-   - 切换到"图片去重"选项卡
-   - 选择相似度阈值
-   - 点击"开始扫描"按钮
-   - 可以手动选择或自动选择保留的图片
-
-4. **编辑EXIF信息**
-   - 切换到"EXIF编辑"选项卡
-   - 填写或选择要修改的信息
-   - 点击"开始"按钮批量处理
-
-5. **文字识别与整理**
-   - 切换到"文字识别"选项卡
-   - 点击"识别图片文字"按钮开始识别
-   - 识别完成后，点击"按文字整理"按钮整理图片
-
-## 注意事项
-
-1. 使用自动标记和位置信息功能需要配置相应的API密钥
-2. 处理大量图片时可能需要较长时间，请耐心等待
-3. 进行文件移动或删除操作前，请确保已备份重要数据
-4. 文字识别准确率受图片质量、光照条件等因素影响
-
-## 许可证
-
-[MIT License](LICENSE)
-
-## 更新日志
-
-### 最新版本
-- 修复了API密钥硬编码问题
-- 实现了完整的文字识别功能
-- 改进了代码结构和错误处理
-- 添加了详细的使用文档
-
-## 开发者信息
-
-如有问题或建议，请联系开发者：[作者信息]
+<div align="center">
+  <sub>Built with ❤️ using Python and PyQt6</sub>
+</div>
