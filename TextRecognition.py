@@ -79,14 +79,10 @@ class TextRecognition(QtWidgets.QWidget):
         self.folder_page = folder_page
         self.recognition_thread = None
         self.recognition_results = {}
-        self.init_page()
         self.log_signal.connect(self.log)
+        self.init_page()
 
     def init_page(self):
-        # 初始化页面，连接信号等
-        self._connect_signals()
-        self.log("DEBUG", "欢迎使用识字整理功能")
-        
         # 初始化UI组件
         layout = QtWidgets.QVBoxLayout()
         
@@ -105,6 +101,7 @@ class TextRecognition(QtWidgets.QWidget):
         self.progress_bar.setValue(0)
         layout.addWidget(self.progress_bar)
         
+        # 初始化log_text属性
         if hasattr(self.parent, 'textEdit_TextRecognition_Log'):
             self.log_text = self.parent.textEdit_TextRecognition_Log
         else:
@@ -114,6 +111,10 @@ class TextRecognition(QtWidgets.QWidget):
             layout.addWidget(self.log_text)
         
         self.setLayout(layout)
+        
+        # 初始化页面，连接信号等
+        self._connect_signals()
+        self.log("DEBUG", "欢迎使用识字整理功能")
         
     def _connect_signals(self):
         # 连接按钮信号

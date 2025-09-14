@@ -1,17 +1,10 @@
 import json
 import os
-import shutil
-import time
-from datetime import datetime
 from pathlib import Path
 
-import exifread
-import pillow_heif
-import requests
-from PIL import Image
 from PyQt6 import QtCore
 
-from common import get_resource_path, detect_media_type
+from common import get_resource_path
 
 SUPPORTED_EXTENSIONS = (
     '.jpg', '.jpeg', '.png', '.heic', '.tiff', '.tif', '.bmp', '.webp', '.gif', '.svg', '.psd', '.arw', '.cr2', '.cr3',
