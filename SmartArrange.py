@@ -6,7 +6,7 @@ from PyQt6.QtWidgets import QInputDialog, QMessageBox, QFileDialog
 from SmartArrangeThread import SmartArrangeThread
 
 
-class Classification(QtWidgets.QWidget):
+class SmartArrange(QtWidgets.QWidget):
     log_signal = pyqtSignal(str, str)
 
     def __init__(self, parent=None, folder_page=None):
