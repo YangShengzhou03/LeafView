@@ -34,12 +34,13 @@ class SmartArrange(QtWidgets.QWidget):
         }
         self.available_layout = self.parent.horizontalLayout_57
         self.selected_layout = self.parent.horizontalLayout_53
-        self.classification_thread = None
+        self.SmartArrange_thread = None
+        self.SmartArrange_settings = []  # 初始化分类设置
         self.init_page()
         # 设置分类级别的启用/禁用状态
         self.set_combo_box_states()
-        # 连接日志信号
-        self.log_signal.connect(self.log)
+        # 连接日志信号到日志处理方法
+        self.log_signal.connect(self.handle_log_signal)
 
     def init_page(self):
         self.connect_signals()
@@ -54,40 +55,51 @@ class SmartArrange(QtWidgets.QWidget):
         self.log("DEBUG", "欢迎使用图像分类整理，您可在上方构建文件路径与文件名结构。")
 
     def connect_signals(self):
-        self.parent.toolButton_startClassification.clicked.connect(self.toggle_classification)
+        self.parent.toolButton_startSmartArrange.clicked.connect(self.toggle_SmartArrange)
 
     def update_progress_bar(self, value):
-        self.parent.progressBar_classification.setValue(value)
+        self.parent.progressBar_SmartArrange.setValue(value)
 
     def handle_operation_change(self, index):
         if index == 1:
+            # 复制操作需要选择目标文件夹
             folder = QFileDialog.getExistingDirectory(self, "选择复制目标文件夹",
                                                       options=QFileDialog.Option.ShowDirsOnly)
             if folder:
                 self.destination_root = folder
                 display_path = folder + '/'
-                if len(display_path) > 12:
+                if len(display_path) > 20:
                     display_path = f"{display_path[:8]}...{display_path[-6:]}"
-                self.parent.label_CopyRoute.setText(display_path)
+                # 更清晰的显示操作类型
+                operation_text = "复制到: "
+                self.parent.label_CopyRoute.setText(f"{operation_text}{display_path}")
             else:
+                # 用户取消选择，恢复为移动操作
                 self.parent.comboBox_operation.setCurrentIndex(0)
                 self.destination_root = None
-                self.parent.label_CopyRoute.setText("")
+                self.parent.label_CopyRoute.setText("移动文件（默认操作）")
         else:
-            self.parent.label_CopyRoute.setText("")
+            # 移动操作
+            self.destination_root = None
+            # 显示当前操作类型
+            operation_text = "移动文件"
+            self.parent.label_CopyRoute.setText(f"{operation_text}")
+        
+        # 更新操作类型显示
+        self.update_operation_display()
 
-    def toggle_classification(self):
-        if self.classification_thread and self.classification_thread.isRunning():
-            self.classification_thread.stop()
-            self.parent.toolButton_startClassification.setText("开始整理")
-            self.parent.progressBar_classification.setValue(0)
+    def toggle_SmartArrange(self):
+        if self.SmartArrange_thread and self.SmartArrange_thread.isRunning():
+            self.SmartArrange_thread.stop()
+            self.parent.toolButton_startSmartArrange.setText("开始整理")
+            self.parent.progressBar_SmartArrange.setValue(0)
         else:
             folders = self.folder_page.get_all_folders() if self.folder_page else []
             if not folders:
                 self.log("WARNING", "请先导入一个有效的文件夹。")
                 return
 
-            classification_structure = [
+            SmartArrange_structure = [
                 getattr(self.parent, f'comboBox_level_{i}').currentText()
                 for i in range(1, 6)
                 if getattr(self.parent, f'comboBox_level_{i}').isEnabled() and
@@ -104,23 +116,34 @@ class SmartArrange(QtWidgets.QWidget):
 
             # 获取操作类型
             operation_type = self.parent.comboBox_operation.currentIndex()
+            operation_text = "移动" if operation_type == 0 else "复制"
 
-            self.classification_thread = SmartArrangeThread(
+            # 检查是否什么都不做（不分类且不重命名）
+            if not SmartArrange_structure and not file_name_structure:
+                self.log("INFO", f"将执行{operation_text}操作：将文件夹中的所有文件提取到顶层目录")
+            elif not SmartArrange_structure:
+                self.log("INFO", f"将执行{operation_text}操作：仅重命名文件，不进行分类")
+            elif not file_name_structure:
+                self.log("INFO", f"将执行{operation_text}操作：仅进行分类，不重命名文件")
+            else:
+                self.log("INFO", f"将执行{operation_text}操作：进行分类和重命名")
+
+            self.SmartArrange_thread = SmartArrangeThread(
                 parent=self,
                 folders=folders,
-                classification_structure=classification_structure or None,
+                SmartArrange_structure=SmartArrange_structure or None,
                 file_name_structure=file_name_structure or None,
                 destination_root=self.destination_root,
                 separator=separator,
                 time_derive=self.parent.comboBox_timeSource.currentText()
             )
-            self.classification_thread.finished.connect(self.on_thread_finished)
-            self.classification_thread.start()
-            self.parent.toolButton_startClassification.setText("停止整理")
+            self.SmartArrange_thread.finished.connect(self.on_thread_finished)
+            self.SmartArrange_thread.start()
+            self.parent.toolButton_startSmartArrange.setText("停止整理")
 
     def on_thread_finished(self):
-        self.parent.toolButton_startClassification.setText("开始整理")
-        self.classification_thread = None
+        self.parent.toolButton_startSmartArrange.setText("开始整理")
+        self.SmartArrange_thread = None
         self.log("DEBUG", "整理任务已结束。")
         self.update_progress_bar(100)
 
@@ -144,21 +167,61 @@ class SmartArrange(QtWidgets.QWidget):
                 # 递归更新下一级状态
                 self.update_combobox_state(level + 1)
         
-        # 更新预览路径
-        self.parent.label_PreviewRoute.setText("/".join([
+        # 更新预览路径 - 更友好的显示
+        SmartArrange_paths = [
             self.get_specific_value(getattr(self.parent, f'comboBox_level_{i}').currentText())
             for i in range(1, 6)
             if getattr(self.parent, f'comboBox_level_{i}').isEnabled() and
                getattr(self.parent, f'comboBox_level_{i}').currentText() != "不分类"
-        ]) or "不分类")
+        ]
+        
+        if SmartArrange_paths:
+            preview_text = "/".join(SmartArrange_paths)
+        else:
+            preview_text = "顶层目录（不分类）"
+        
+        self.parent.label_PreviewRoute.setText(preview_text)
+        
+        # 更新操作类型显示
+        self.update_operation_display()
         
         # 记录分类设置以便后续使用
-        self.classification_settings = [
+        self.SmartArrange_settings = [
             getattr(self.parent, f'comboBox_level_{i}').currentText()
             for i in range(1, 6)
             if getattr(self.parent, f'comboBox_level_{i}').isEnabled() and
                getattr(self.parent, f'comboBox_level_{i}').currentText() != "不分类"
         ]
+    
+    def update_operation_display(self):
+        """更新操作类型显示"""
+        # 检查分类设置
+        has_SmartArrange = len(self.SmartArrange_settings) > 0
+        
+        # 检查文件名设置（标签选择）
+        has_filename = self.selected_layout.count() > 0
+        
+        # 确定操作类型
+        if has_SmartArrange and has_filename:
+            operation_type = "分类并重命名"
+        elif has_SmartArrange and not has_filename:
+            operation_type = "仅分类"
+        elif not has_SmartArrange and has_filename:
+            operation_type = "仅重命名"
+        else:
+            operation_type = "提取到顶层目录"
+        
+        # 获取当前操作模式（移动/复制）
+        operation_mode = "移动" if self.parent.comboBox_operation.currentIndex() == 0 else "复制"
+        
+        # 更新显示
+        if self.destination_root:
+            display_path = str(self.destination_root)
+            if len(display_path) > 20:
+                display_path = f"{display_path[:8]}...{display_path[-6:]}"
+            self.parent.label_CopyRoute.setText(f"{operation_mode}到: {display_path} ({operation_type})")
+        else:
+            self.parent.label_CopyRoute.setText(f"{operation_mode}文件 ({operation_type})")
     
     def set_combo_box_states(self):
         """设置分类级别的初始启用/禁用状态"""
@@ -242,6 +305,9 @@ class SmartArrange(QtWidgets.QWidget):
         # 更新示例文件名
         self.update_example_label()
         
+        # 更新操作类型显示
+        self.update_operation_display()
+        
         # 限制标签数量
         if self.selected_layout.count() >= 5:
             # 禁用所有原始标签按钮
@@ -299,6 +365,27 @@ class SmartArrange(QtWidgets.QWidget):
     def _get_weekday(date):
         return ["周一", "周二", "周三", "周四", "周五", "周六", "周日"][date.weekday()]
 
+    def handle_log_signal(self, level, message):
+        # 处理日志信号，避免递归调用
+        current_time = datetime.now().strftime('%H:%M:%S')
+        log_message = f"[{current_time}] [{level}] {message}"
+        
+        # 输出到控制台用于调试
+        print(log_message)
+        
+        # 更新到日志显示区域，使用HTML颜色格式
+        if hasattr(self.parent, 'textEdit_SmartArrange_Log'):
+            # 定义颜色映射
+            color_map = {
+                'ERROR': '#FF0000',    # 红色
+                'WARNING': '#FFA500',  # 橙色
+                'DEBUG': '#008000',    # 绿色
+                'INFO': '#8677FD'      # 紫色
+            }
+            color = color_map.get(level, '#000000')  # 默认黑色
+            self.parent.textEdit_SmartArrange_Log.append(
+                f'<span style="color:{color}">{log_message}</span>')
+    
     def log(self, level, message):
         # 记录日志
         current_time = datetime.now().strftime('%H:%M:%S')
@@ -308,5 +395,15 @@ class SmartArrange(QtWidgets.QWidget):
         # 输出到控制台用于调试
         print(log_message)
         
-        # 如果有日志显示区域，可以在这里更新
-        # 例如: self.parent.textEdit_log.append(log_message)
+        # 更新到日志显示区域，使用HTML颜色格式
+        if hasattr(self.parent, 'textEdit_SmartArrange_Log'):
+            # 定义颜色映射
+            color_map = {
+                'ERROR': '#FF0000',    # 红色
+                'WARNING': '#FFA500',  # 橙色
+                'DEBUG': '#008000',    # 绿色
+                'INFO': '#8677FD'      # 紫色
+            }
+            color = color_map.get(level, '#000000')  # 默认黑色
+            self.parent.textEdit_SmartArrange_Log.append(
+                f'<span style="color:{color}">{log_message}</span>')

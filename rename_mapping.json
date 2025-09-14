@@ -66,7 +66,7 @@
   "tool_button_serve": "toolButton_serve",
   "tool_button_setting": "toolButton_setting",
   "tool_button_start_recognition": "toolButton_startRecognition",
-  "tool_button_start_classification": "toolButton_startClassification",
+  "tool_button_start_classification": "toolButton_startSmartArrange",
   "tool_button_delete": "toolButton_delete",
   "tool_button_move": "toolButton_move",
   "push_button_add_folder": "pushButton_add_folder",

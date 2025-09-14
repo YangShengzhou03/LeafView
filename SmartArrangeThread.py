@@ -7,14 +7,74 @@ from PyQt6 import QtCore
 
 from common import get_resource_path
 
-SUPPORTED_EXTENSIONS = (
-    '.jpg', '.jpeg', '.png', '.heic', '.tiff', '.tif', '.bmp', '.webp', '.gif', '.svg', '.psd', '.arw', '.cr2', '.cr3',
-    '.nef', '.orf', '.sr2', '.raf', '.dng', '.rw2', '.pef', '.nrw', '.kdc', '.mos', '.iiq', '.fff', '.x3f', '.3fr',
-    '.mef',
-    '.mrw', '.erf', '.raw', '.rwz', '.ari', '.mp4', '.avi', '.mov', '.mkv', '.flv', '.wmv', '.m4v', '.3gp', '.mpeg',
-    '.mpg',
-    '.mts', '.mxf', '.webm', '.ogv', '.livp')
+# 扩展支持的文件类型
+IMAGE_EXTENSIONS = (
+    '.jpg', '.jpeg', '.png', '.heic', '.tiff', '.tif', '.bmp', '.webp', '.gif', '.svg', 
+    '.psd', '.arw', '.cr2', '.cr3', '.nef', '.orf', '.sr2', '.raf', '.dng', '.rw2', 
+    '.pef', '.nrw', '.kdc', '.mos', '.iiq', '.fff', '.x3f', '.3fr', '.mef', '.mrw', 
+    '.erf', '.raw', '.rwz', '.ari', '.jxr', '.hdp', '.wdp', '.ico', '.exr', '.tga',
+    '.pbm', '.pgm', '.ppm', '.pnm', '.hdr', '.avif', '.jxl'
+)
 
+VIDEO_EXTENSIONS = (
+    '.mp4', '.avi', '.mov', '.mkv', '.flv', '.wmv', '.m4v', '.3gp', '.mpeg', '.mpg',
+    '.mts', '.mxf', '.webm', '.ogv', '.livp', '.ts', '.m2ts', '.divx', '.f4v', '.vob',
+    '.rm', '.rmvb', '.asf', '.swf', '.m4p', '.m4b', '.m4r', '.3g2', '.3gp2', '.ogm',
+    '.ogx', '.qt', '.yuv', '.dat', '.m1v', '.m2v', '.m4u', '.mpv', '.nsv', '.svi',
+    '.wtv', '.amv', '.drc', '.gifv', '.mng', '.mxf', '.roq', '.y4m'
+)
+
+AUDIO_EXTENSIONS = (
+    '.mp3', '.wav', '.flac', '.aac', '.ogg', '.wma', '.m4a', '.aiff', '.aif', '.aifc',
+    '.ape', '.alac', '.ac3', '.amr', '.au', '.cda', '.dts', '.mka', '.mpc', '.opus',
+    '.ra', '.rm', '.tta', '.voc', '.wv', '.8svx', '.aax', '.act', '.awb', '.dss',
+    '.dvf', '.gsm', '.iklax', '.ivs', '.m4p', '.mmf', '.msv', '.nmf', '.nsf', '.oga',
+    '.spx', '.vox', '.wma', '.wpl', '.xm'
+)
+
+DOCUMENT_EXTENSIONS = (
+    '.pdf', '.doc', '.docx', '.txt', '.rtf', '.odt', '.xls', '.xlsx', '.ppt', '.pptx',
+    '.odp', '.ods', '.csv', '.html', '.htm', '.xml', '.epub', '.mobi', '.azw', '.azw3',
+    '.fb2', '.lit', '.lrf', '.pdb', '.prc', '.rb', '.tcr', '.pdb', '.oxps', '.xps',
+    '.pages', '.numbers', '.key', '.md', '.tex', '.log', '.wpd', '.wps', '.abw',
+    '.zabw', '.123', '.602', '.hwp', '.lwp', '.mw', '.nb', '.nbp', '.odm', '.sxw',
+    '.uot', '.vor', '.wpt', '.wri', '.xmind'
+)
+
+ARCHIVE_EXTENSIONS = (
+    '.zip', '.rar', '.7z', '.tar', '.gz', '.bz2', '.xz', '.lz', '.lzma', '.lzo',
+    '.z', '.Z', '.tgz', '.tbz2', '.txz', '.tlz', '.tlzma', '.tlzo', '.tz', '.tZ',
+    '.cab', '.deb', '.rpm', '.jar', '.war', '.ear', '.sar', '.cpio', '.iso', '.img',
+    '.dmg', '.hfs', '.hfsx', '.udf', '.xar', '.zoo', '.arc', '.arj', '.lha', '.lzh',
+    '.pak', '.pk3', '.pk4', '.vpk', '.wim', '.swm', '.esd', '.msu', '.msp', '.msi',
+    '.appx', '.appxbundle', '.xap', '.snap', '.flatpak', '.appimage', '.r0', '.r1',
+    '.r2', '.r3', '.s7z', '.ace', '.cpt', '.dd', '.dgc', '.gca', '.ha', '.ice',
+    '.ipg', '.kgb', '.lbr', '.lqr', '.lzx', '.pak', '.paq6', '.paq7', '.paq8',
+    '.pea', '.pf', '.pim', '.pit', '.qda', '.rk', '.sda', '.sea', '.sit', '.sitx',
+    '.sqx', '.tar.z', '.uc2', '.uca', '.uha', '.xea', '.yz', '.zap', '.zipx', '.zoo',
+    '.zpaq', '.zz'
+)
+
+# 合并所有支持的文件类型
+SUPPORTED_EXTENSIONS = IMAGE_EXTENSIONS + VIDEO_EXTENSIONS + AUDIO_EXTENSIONS + DOCUMENT_EXTENSIONS + ARCHIVE_EXTENSIONS
+
+# 文件类型分类映射
+FILE_TYPE_CATEGORIES = {
+    '图像': IMAGE_EXTENSIONS,
+    '视频': VIDEO_EXTENSIONS,
+    '音乐': AUDIO_EXTENSIONS,
+    '文档': DOCUMENT_EXTENSIONS,
+    '压缩包': ARCHIVE_EXTENSIONS,
+    '其他': ()  # 其他不支持的文件类型
+}
+
+def get_file_type(file_path):
+    """根据文件扩展名获取文件类型"""
+    ext = file_path.suffix.lower()
+    for file_type, extensions in FILE_TYPE_CATEGORIES.items():
+        if ext in extensions:
+            return file_type
+    return '其他'
 
 class SmartArrangeThread(QtCore.QThread):
     log_signal = QtCore.pyqtSignal(str, str)
@@ -107,11 +167,23 @@ class SmartArrangeThread(QtCore.QThread):
             # 获取文件的时间信息
             file_time = self.get_file_time(file_path)
             
-            # 构建目标路径
-            target_dir = self.build_target_directory(file_path, file_time)
-            
-            # 构建新文件名
-            new_file_name = self.build_new_file_name(file_path, file_time, file_name)
+            # 根据不同的情况构建目标路径和文件名
+            if not self.classification_structure and not self.file_name_structure:
+                # 情况3：什么都不做，将文件从子文件夹提取到顶层目录
+                target_dir = file_path.parent
+                new_file_name = file_name  # 保持原文件名
+            elif not self.classification_structure:
+                # 情况2：只构建文件名，目录不变
+                target_dir = file_path.parent
+                new_file_name = self.build_new_file_name(file_path, file_time, file_name)
+            elif not self.file_name_structure:
+                # 情况1：只构建文件夹目录，文件名不变
+                target_dir = self.build_target_directory(file_path, file_time)
+                new_file_name = file_name  # 保持原文件名
+            else:
+                # 正常情况：既构建目录也构建文件名
+                target_dir = self.build_target_directory(file_path, file_time)
+                new_file_name = self.build_new_file_name(file_path, file_time, file_name)
             
             # 保存重命名信息
             self.files_to_rename.append({
@@ -140,6 +212,10 @@ class SmartArrangeThread(QtCore.QThread):
             
             # 添加到目标路径
             target_path = target_path / category_value
+        
+        # 自动添加文件类型分类（图像、视频、音乐等）
+        file_type = get_file_type(file_path)
+        target_path = target_path / file_type
         
         # 确保目录存在
         target_path.mkdir(parents=True, exist_ok=True)

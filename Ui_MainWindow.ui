@@ -2597,25 +2597,18 @@ border: 0px;
   border: 1px solid #d4d4d4;
   text-align: center;
   font-size: 14px;
-  cursor: pointer;
   border-radius: 12px;
   padding: 4px 8px;
-  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-  text-transform: uppercase;
 }
 
 QPushButton:hover {
   background-color: #f7f7f7;
   color: #2c3e50;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
 QPushButton:pressed {
   background-color: #ececec;
   color: #34495e;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-  transform: translateY(2px);
 }</string>
                               </property>
                               <property name="text">
@@ -3065,6 +3058,31 @@ QComboBox QAbstractItemView::item {
                              <item>
                               <property name="text">
                                <string>空格</string>
+                              </property>
+                             </item>
+                             <item>
+                              <property name="text">
+                               <string>_</string>
+                              </property>
+                             </item>
+                             <item>
+                              <property name="text">
+                               <string>.</string>
+                              </property>
+                             </item>
+                             <item>
+                              <property name="text">
+                               <string>,</string>
+                              </property>
+                             </item>
+                             <item>
+                              <property name="text">
+                               <string>|</string>
+                              </property>
+                             </item>
+                             <item>
+                              <property name="text">
+                               <string>~</string>
                               </property>
                              </item>
                             </widget>
@@ -3555,7 +3573,7 @@ QProgressBar::chunk {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QToolButton" name="toolButton_startClassification">
+                       <widget class="QToolButton" name="toolButton_startSmartArrange">
                         <property name="minimumSize">
                          <size>
                           <width>88</width>
@@ -3638,7 +3656,7 @@ border-bottom-left-radius:0px;</string>
                        <number>9</number>
                       </property>
                       <item>
-                       <widget class="QTextEdit" name="textEdit_Classification_Log">
+                       <widget class="QTextEdit" name="textEdit_SmartArrange_Log">
                         <property name="minimumSize">
                          <size>
                           <width>0</width>

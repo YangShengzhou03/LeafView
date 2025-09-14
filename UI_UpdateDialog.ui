@@ -44,7 +44,6 @@
       <string notr="true">QFrame#frame{
 background-color: rgb(255, 255, 255);
 border-radius: 16px;
-box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }</string>
      </property>
      <property name="frameShape">
@@ -248,17 +247,14 @@ line-height: 1.5;
     font-family: 'Microsoft YaHei';
     font-size: 14px;
     font-weight: 500;
-    transition: all 0.2s ease;
 }
 
 QPushButton:hover {
     background-color: #E5E7EB;
-    transform: translateY(-1px);
 }
 
 QPushButton:pressed {
     background-color: #D1D5DB;
-    transform: translateY(0);
 }</string>
              </property>
              <property name="text">
@@ -289,18 +285,14 @@ QPushButton:pressed {
     font-family: 'Microsoft YaHei';
     font-size: 14px;
     font-weight: 500;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-    transition: all 0.2s ease;
 }
 
 QPushButton:hover {
-    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
-    transform: translateY(-2px);
+    background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
 }
 
 QPushButton:pressed {
-    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
-    transform: translateY(0);
+    background: linear-gradient(135deg, #4338CA 0%, #6D28D9 100%);
 }</string>
              </property>
              <property name="text">

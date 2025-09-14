@@ -1531,25 +1531,18 @@ class Ui_MainWindow(object):
 "  border: 1px solid #d4d4d4;\n"
 "  text-align: center;\n"
 "  font-size: 14px;\n"
-"  cursor: pointer;\n"
 "  border-radius: 12px;\n"
 "  padding: 4px 8px;\n"
-"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
-"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
-"  text-transform: uppercase;\n"
 "}\n"
 "\n"
 "QPushButton:hover {\n"
 "  background-color: #f7f7f7;\n"
 "  color: #2c3e50;\n"
-"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
 "}\n"
 "\n"
 "QPushButton:pressed {\n"
 "  background-color: #ececec;\n"
 "  color: #34495e;\n"
-"  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
-"  transform: translateY(2px);\n"
 "}")
         self.pushButton_original_tag.setObjectName("pushButton_original_tag")
         self.horizontalLayout_57.addWidget(self.pushButton_original_tag)
@@ -1857,6 +1850,11 @@ class Ui_MainWindow(object):
         self.comboBox_separator.addItem("")
         self.comboBox_separator.addItem("")
         self.comboBox_separator.addItem("")
+        self.comboBox_separator.addItem("")
+        self.comboBox_separator.addItem("")
+        self.comboBox_separator.addItem("")
+        self.comboBox_separator.addItem("")
+        self.comboBox_separator.addItem("")
         self.horizontalLayout_46.addWidget(self.comboBox_separator)
         self.horizontalLayout_54.addLayout(self.horizontalLayout_46)
         self.verticalLayout_35.addWidget(self.Frame_tags)
@@ -2102,10 +2100,10 @@ class Ui_MainWindow(object):
         self.progressBar_classification.setProperty("value", 0)
         self.progressBar_classification.setObjectName("progressBar_classification")
         self.horizontalLayout_36.addWidget(self.progressBar_classification)
-        self.toolButton_startClassification = QtWidgets.QToolButton(parent=self.verticalFrame_2)
-        self.toolButton_startClassification.setMinimumSize(QtCore.QSize(88, 0))
-        self.toolButton_startClassification.setMaximumSize(QtCore.QSize(16777215, 29))
-        self.toolButton_startClassification.setStyleSheet("QToolButton {\n"
+        self.toolButton_startSmartArrange = QtWidgets.QToolButton(parent=self.verticalFrame_2)
+        self.toolButton_startSmartArrange.setMinimumSize(QtCore.QSize(88, 0))
+        self.toolButton_startSmartArrange.setMaximumSize(QtCore.QSize(16777215, 29))
+        self.toolButton_startSmartArrange.setStyleSheet("QToolButton {\n"
 "    color: white;\n"
 "    border: none;\n"
 "    padding: 6px 6px;\n"
@@ -2133,9 +2131,9 @@ class Ui_MainWindow(object):
 "        stop:1 rgba(79, 71, 252, 255)\n"
 "    );\n"
 "}")
-        self.toolButton_startClassification.setIconSize(QtCore.QSize(24, 24))
-        self.toolButton_startClassification.setObjectName("toolButton_startClassification")
-        self.horizontalLayout_36.addWidget(self.toolButton_startClassification)
+        self.toolButton_startSmartArrange.setIconSize(QtCore.QSize(24, 24))
+        self.toolButton_startSmartArrange.setObjectName("toolButton_startSmartArrange")
+        self.horizontalLayout_36.addWidget(self.toolButton_startSmartArrange)
         self.horizontalLayout_36.setStretch(0, 1)
         self.verticalLayout_34.addWidget(self.verticalFrame_2)
         self.horizontalFrame_2 = QtWidgets.QFrame(parent=self.page_2)
@@ -2149,13 +2147,13 @@ class Ui_MainWindow(object):
         self.horizontalLayout_37.setContentsMargins(9, 6, 9, 9)
         self.horizontalLayout_37.setSpacing(0)
         self.horizontalLayout_37.setObjectName("horizontalLayout_37")
-        self.textEdit_Classification_Log = QtWidgets.QTextEdit(parent=self.horizontalFrame_2)
-        self.textEdit_Classification_Log.setMinimumSize(QtCore.QSize(0, 0))
+        self.textEdit_SmartArrange_Log = QtWidgets.QTextEdit(parent=self.horizontalFrame_2)
+        self.textEdit_SmartArrange_Log.setMinimumSize(QtCore.QSize(0, 0))
         font = QtGui.QFont()
         font.setFamily("Segoe UI")
         font.setPointSize(-1)
-        self.textEdit_Classification_Log.setFont(font)
-        self.textEdit_Classification_Log.setStyleSheet("QTextEdit {\n"
+        self.textEdit_SmartArrange_Log.setFont(font)
+        self.textEdit_SmartArrange_Log.setStyleSheet("QTextEdit {\n"
 "    border: 1.5px solid qradialgradient(\n"
 "        cx:0.5, cy:0.5,\n"
 "        radius: 1.2,\n"
@@ -2238,8 +2236,8 @@ class Ui_MainWindow(object):
 "    );\n"
 "    box-shadow: 0 0 0 2px rgba(134, 119, 253, 0.15);\n"
 "}")
-        self.textEdit_Classification_Log.setObjectName("textEdit_Classification_Log")
-        self.horizontalLayout_37.addWidget(self.textEdit_Classification_Log)
+        self.textEdit_SmartArrange_Log.setObjectName("textEdit_SmartArrange_Log")
+        self.horizontalLayout_37.addWidget(self.textEdit_SmartArrange_Log)
         self.verticalLayout_34.addWidget(self.horizontalFrame_2)
         self.verticalLayout_29.addLayout(self.verticalLayout_34)
         self.stackedWidget.addWidget(self.page_2)
@@ -3721,6 +3719,11 @@ class Ui_MainWindow(object):
         self.comboBox_separator.setItemText(0, _translate("MainWindow", "-"))
         self.comboBox_separator.setItemText(1, _translate("MainWindow", "无"))
         self.comboBox_separator.setItemText(2, _translate("MainWindow", "空格"))
+        self.comboBox_separator.setItemText(3, _translate("MainWindow", "_"))
+        self.comboBox_separator.setItemText(4, _translate("MainWindow", "."))
+        self.comboBox_separator.setItemText(5, _translate("MainWindow", ","))
+        self.comboBox_separator.setItemText(6, _translate("MainWindow", "|"))
+        self.comboBox_separator.setItemText(7, _translate("MainWindow", "~"))
         self.label_timeSources.setText(_translate("MainWindow", "时间"))
         self.comboBox_timeSource.setItemText(0, _translate("MainWindow", "最早时间"))
         self.comboBox_timeSource.setItemText(1, _translate("MainWindow", "拍摄日期"))
@@ -3732,7 +3735,7 @@ class Ui_MainWindow(object):
         self.label_PreviewRoute.setText(_translate("MainWindow", "不分类"))
         self.label_21.setText(_translate("MainWindow", "/"))
         self.label_PreviewName.setText(_translate("MainWindow", "文件名不变"))
-        self.toolButton_startClassification.setText(_translate("MainWindow", "开始整理"))
+        self.toolButton_startSmartArrange.setText(_translate("MainWindow", "开始整理"))
         self.label_8.setText(_translate("MainWindow", "相似度"))
         self.label_levelContrast.setText(_translate("MainWindow", "完全一致"))
         self.toolButton_startContrast.setText(_translate("MainWindow", "开始对比"))

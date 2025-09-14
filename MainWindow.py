@@ -1,6 +1,6 @@
 from PyQt6 import QtWidgets, QtCore, QtGui
 from AddFolder import FolderPage
-from SmartArrange import Classification
+from SmartArrange import SmartArrange
 from RemoveDuplication import Contrast
 from WriteExif import WriteExif
 from TextRecognition import TextRecognition
@@ -31,7 +31,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
         # 初始化各个功能模块
         self.folder_page = FolderPage(self)
-        self.classification = Classification(self, self.folder_page)
+        self.classification = SmartArrange(self, self.folder_page)
         self.contrast = Contrast(self, self.folder_page)
         self.write_exif = WriteExif(self, self.folder_page)
         self.text_recognition = TextRecognition(self, self.folder_page)
