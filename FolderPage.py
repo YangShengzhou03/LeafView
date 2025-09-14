@@ -19,7 +19,12 @@ class FolderPage(QtWidgets.QWidget):
         self._connect_buttons()
 
     def _connect_buttons(self):
+        # 连接按钮点击事件
         self.parent.pushButton_add_folder.clicked.connect(self._open_folder_dialog)
+        
+        # 设置widget_add_folder区域可点击
+        self.parent.widget_add_folder.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
+        self.parent.widget_add_folder.mousePressEvent = lambda event: self._open_folder_dialog()
 
     def _open_folder_dialog(self):
         folder_paths = QFileDialog.getExistingDirectory(self, "选择文件夹")
