@@ -2287,12 +2287,11 @@ class Ui_MainWindow(object):
 "QSlider::groove:horizontal {\n"
 "    height: 6px;\n"
 "    background: qlineargradient(x1:0, y1:0.5, x2:1, y2:0.5,\n"
-"        stop:0 #FF6B6B, stop:0.249 #FF6B6B,\n"
-"        stop:0.25 #FFA500, stop:0.499 #FFA500,\n"
-"        stop:0.5 #4CC9F0, stop:0.749 #4CC9F0,\n"
-"        stop:0.75 #4CAF50, stop:1 #4CAF50\n"
+"        stop:0 #EC4899,    /* 亮粉色 */\n"
+"        stop:0.5 #8B5CF6,  /* 紫红色 */\n"
+"        stop:1 #06B6D4     /* 青蓝色 */\n"
 "    );\n"
-"    border-radius: 2px;\n"
+"    border-radius: 3px;\n"
 "    margin: 8px 0;\n"
 "}\n"
 "\n"
@@ -2301,13 +2300,13 @@ class Ui_MainWindow(object):
 "    height: 16px;\n"
 "    margin: -6px 0;\n"
 "    background: white;\n"
-"    border: 1px solid #6D28D9;\n"
+"    border: 1px solid #EC4899;\n"
 "    border-radius: 8px;\n"
-"    box-shadow: 0 0px 0px rgba(0,0,0,0.1);\n"
+"    box-shadow: 0 1px 3px rgba(0,0,0,0.1);\n"
 "}\n"
 "\n"
 "QSlider::handle:horizontal:hover {\n"
-"    background: #F3E8FF;\n"
+"    background: #FDF2F8;\n"
 "    transform: scale(1.15);\n"
 "}")
         self.horizontalSlider_levelContrast.setMinimum(0)
@@ -2418,9 +2417,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_65.setSpacing(0)
         self.horizontalLayout_65.setObjectName("horizontalLayout_65")
         self.label_image_A = QtWidgets.QLabel(parent=self.verticalFrame_13)
-        self.label_image_A.setStyleSheet("QLabel {\n"
-"image: url(\'resources/img/page_3/对比.jpg\');\n"
-"}")
+        self.label_image_A.setStyleSheet("")
         self.label_image_A.setText("")
         self.label_image_A.setObjectName("label_image_A")
         self.horizontalLayout_65.addWidget(self.label_image_A)
@@ -2433,9 +2430,7 @@ class Ui_MainWindow(object):
         self.line_contrast.setObjectName("line_contrast")
         self.horizontalLayout_65.addWidget(self.line_contrast)
         self.label_image_B = QtWidgets.QLabel(parent=self.verticalFrame_13)
-        self.label_image_B.setStyleSheet("QLabel {\n"
-"image: url(\'resources/img/page_3/对比.jpg\');\n"
-"}")
+        self.label_image_B.setStyleSheet("")
         self.label_image_B.setText("")
         self.label_image_B.setObjectName("label_image_B")
         self.horizontalLayout_65.addWidget(self.label_image_B)
@@ -2520,7 +2515,7 @@ class Ui_MainWindow(object):
         self.scrollArea_pageSimilar.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.scrollArea_pageSimilar.setObjectName("scrollArea_pageSimilar")
         self.scrollAreaWidgetContents_Contrast = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_Contrast.setGeometry(QtCore.QRect(0, 0, 100, 30))
+        self.scrollAreaWidgetContents_Contrast.setGeometry(QtCore.QRect(0, 0, 231, 474))
         self.scrollAreaWidgetContents_Contrast.setObjectName("scrollAreaWidgetContents_Contrast")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents_Contrast)
         self.gridLayout_2.setObjectName("gridLayout_2")

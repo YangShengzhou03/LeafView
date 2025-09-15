@@ -75,9 +75,30 @@ class Contrast(QtWidgets.QWidget):
         self.thumbnail_loaders = []
 
     def init_page(self):
-        self.parent.horizontalSlider_levelContrast.setRange(1, 4)
-        self.parent.horizontalSlider_levelContrast.setValue(4)
+        self.parent.horizontalSlider_levelContrast.setRange(0, 100)
+        self.parent.horizontalSlider_levelContrast.setValue(100)
         self.parent.verticalFrame_similar.hide()
+
+    def get_similarity_threshold(self, val):
+        # 将百分比值转换为汉明距离阈值 (0-100% -> 64-0)
+        # 0% = 巨大差异 (阈值64), 100% = 完全一致 (阈值0)
+        return int(64 * (100 - val) / 100)
+
+    def on_slider_value_changed(self, val):
+        # 根据百分比值显示不同的文本和颜色
+        if val == 100:
+            text, color = "完全一致", "#4CAF50"
+        elif val >= 75:
+            text, color = "高度相似", "#2196F3"
+        elif val >= 50:
+            text, color = "部分相似", "#FF9800"
+        elif val >= 25:
+            text, color = "略有相似", "#FF5252"
+        else:
+            text, color = "巨大差异", "#F44336"
+        
+        self.parent.label_levelContrast.setText(f"{text} ({val}%)")
+        self.parent.label_levelContrast.setStyleSheet(f"QLabel{{color:{color};font-weight:bold;}}")
 
     def connect_signals(self):
         self.parent.horizontalSlider_levelContrast.valueChanged.connect(self.on_slider_value_changed)
@@ -192,6 +213,19 @@ class Contrast(QtWidgets.QWidget):
         self._running = False
         self.parent.toolButton_startContrast.setEnabled(True)
 
+    def thumbnail_clicked(self, path):
+        for gid, paths in self.groups.items():
+            if path in paths:
+                self.show_image(self.parent.label_image_A, path)
+                others = [p for p in paths if p != path]
+                if others:
+                    self.show_image(self.parent.label_image_B, np.random.choice(others))
+                break
+
+    def show_images_from_thread(self, src, match):
+        self.show_image(self.parent.label_image_A, src)
+        self.show_image(self.parent.label_image_B, match)
+
     def display_all_images(self):
         layout = self.parent.gridLayout_2
         self.clear_layout(layout)
@@ -257,16 +291,6 @@ class Contrast(QtWidgets.QWidget):
         elif path in self.selected_images:
             self.selected_images.remove(path)
 
-    def thumbnail_clicked(self, path):
-        for gid, paths in self.groups.items():
-            if path in paths:
-                self.set_empty(False)
-                self.show_image(self.parent.label_image_A, path)
-                others = [p for p in paths if p != path]
-                if others:
-                    self.show_image(self.parent.label_image_B, np.random.choice(others))
-                break
-
     def on_thumbnail_ready(self, path, image, label):
         if image.isNull():
             return
@@ -276,24 +300,8 @@ class Contrast(QtWidgets.QWidget):
         # 修复内存泄漏：释放图像资源
         image = QImage()
 
-    def show_images_from_thread(self, src, match):
-        self.set_empty(False)
-        self.show_image(self.parent.label_image_A, src)
-        self.show_image(self.parent.label_image_B, match)
-
     def update_progress(self, value):
         self.parent.progressBar_Contrast.setValue(value)
-
-    def get_similarity_threshold(self, val):
-        return {1: 32, 2: 24, 3: 12, 4: 0}.get(val, 0)
-
-    def on_slider_value_changed(self, val):
-        levels = [("明显差异", "#FF5252"), ("部分相似", "#FF9800"),
-                  ("比较相似", "#2196F3"), ("完全一致", "#4CAF50")]
-        if 1 <= val <= 4:
-            text, color = levels[val - 1]
-            self.parent.label_levelContrast.setText(text)
-            self.parent.label_levelContrast.setStyleSheet(f"QLabel{{color:{color};}}")
 
     def add_separator(self, layout, row):
         sep = QtWidgets.QFrame()
@@ -306,12 +314,6 @@ class Contrast(QtWidgets.QWidget):
             item = layout.takeAt(0)
             if widget := item.widget():
                 widget.deleteLater()
-
-    def set_empty(self, status):
-        style1 = f"image:url({get_resource_path('resources/img/page_3/对比.jpg')})" if status else ""
-        style2 = f"image:url({get_resource_path('resources/img/page_3/对比.jpg')})" if status else ""
-        self.parent.label_image_A.setStyleSheet(style1)
-        self.parent.label_image_B.setStyleSheet(style2)
 
     def show_image(self, label, path):
         if path.lower().endswith(('.heic', '.heif')):

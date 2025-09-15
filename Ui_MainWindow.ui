@@ -3861,12 +3861,11 @@ border-bottom-left-radius:0px;</string>
 QSlider::groove:horizontal {
     height: 6px;
     background: qlineargradient(x1:0, y1:0.5, x2:1, y2:0.5,
-        stop:0 #FF6B6B, stop:0.249 #FF6B6B,
-        stop:0.25 #FFA500, stop:0.499 #FFA500,
-        stop:0.5 #4CC9F0, stop:0.749 #4CC9F0,
-        stop:0.75 #4CAF50, stop:1 #4CAF50
+        stop:0 #EC4899,    /* 亮粉色 */
+        stop:0.5 #8B5CF6,  /* 紫红色 */
+        stop:1 #06B6D4     /* 青蓝色 */
     );
-    border-radius: 2px;
+    border-radius: 3px;
     margin: 8px 0;
 }
 
@@ -3875,13 +3874,13 @@ QSlider::handle:horizontal {
     height: 16px;
     margin: -6px 0;
     background: white;
-    border: 1px solid #6D28D9;
+    border: 1px solid #EC4899;
     border-radius: 8px;
-    box-shadow: 0 0px 0px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 QSlider::handle:horizontal:hover {
-    background: #F3E8FF;
+    background: #FDF2F8;
     transform: scale(1.15);
 }</string>
                          </property>
@@ -4084,9 +4083,7 @@ border-bottom-left-radius:0px;</string>
                        <item>
                         <widget class="QLabel" name="label_image_A">
                          <property name="styleSheet">
-                          <string notr="true">QLabel {
-image: url('resources/img/page_3/对比.jpg');
-}</string>
+                          <string notr="true"/>
                          </property>
                          <property name="text">
                           <string/>
@@ -4118,9 +4115,7 @@ image: url('resources/img/page_3/对比.jpg');
                        <item>
                         <widget class="QLabel" name="label_image_B">
                          <property name="styleSheet">
-                          <string notr="true">QLabel {
-image: url('resources/img/page_3/对比.jpg');
-}</string>
+                          <string notr="true"/>
                          </property>
                          <property name="text">
                           <string/>
@@ -4239,8 +4234,8 @@ QScrollBar::corner {
                         <rect>
                          <x>0</x>
                          <y>0</y>
-                         <width>100</width>
-                         <height>30</height>
+                         <width>231</width>
+                         <height>474</height>
                         </rect>
                        </property>
                        <layout class="QGridLayout" name="gridLayout_2"/>
