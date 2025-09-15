@@ -96,12 +96,14 @@ class FolderPage(QtWidgets.QWidget):
         include_checkbox.setFont(QtGui.QFont("微软雅黑", 9))
         include_checkbox.setStyleSheet("QCheckBox {spacing: 4px; background: transparent; color: #666;}")
         include_checkbox.stateChanged.connect(lambda state, f=folder_frame: self._update_include_sub(f, state))
+        # 默认自动勾选包含子文件夹
+        include_checkbox.setChecked(True)
 
         remove_button = QtWidgets.QPushButton("移除", parent=folder_frame)
         remove_button.setFixedSize(60, 30)
         remove_button.setFont(QtGui.QFont("微软雅黑", 9))
         remove_button.setStyleSheet(
-            "QPushButton {background-color: #FF5A5F; color: white; border: none; border-radius: 6px; font-weight: 500;} QPushButton:hover {background-color: #FF3B30;} QPushButton:pressed {background-color: #E03530;}")
+            "QPushButton {background-color: #FF5A5A; color: white; border: none; border-radius: 6px; font-weight: 500;} QPushButton:hover {background-color: #FF3B3B;} QPushButton:pressed {background-color: #E03535;}")
         remove_button.hide()
 
         # 鼠标悬停时显示移除按钮
