@@ -125,6 +125,11 @@ class SmartArrangeThread(QtCore.QThread):
                 else:
                     self.process_folder_with_classification(folder_info)
             self.process_renaming()
+            
+            # 整理完成后删除所有空文件夹
+            if not self.destination_root:  # 只在移动操作时删除空文件夹
+                self.delete_empty_folders()
+                
         except Exception as e:
             self.log("ERROR", f"发生错误: {str(e)}")
 
@@ -357,6 +362,66 @@ class SmartArrangeThread(QtCore.QThread):
                             self.log("ERROR", f"移动文件 {file_path} 时出错: {str(e)}")
         
         self.log("INFO", f"处理完成，共移动 {file_count} 个文件")
+
+    def delete_empty_folders(self):
+        """删除所有处理过的文件夹中的空文件夹"""
+        self.log("INFO", "开始删除空文件夹...")
+        
+        deleted_count = 0
+        processed_folders = set()
+        
+        # 收集所有处理过的文件夹路径
+        for folder_info in self.folders:
+            folder_path = Path(folder_info['path'])
+            processed_folders.add(folder_path.resolve())
+            
+            # 如果包含子文件夹，还需要处理所有子文件夹
+            if folder_info.get('include_sub', 0):
+                for root, dirs, files in os.walk(folder_path):
+                    processed_folders.add(Path(root).resolve())
+        
+        # 递归删除空文件夹
+        for folder in processed_folders:
+            if folder.exists() and folder.is_dir():
+                try:
+                    # 递归删除空文件夹
+                    deleted_in_this_folder = self._recursive_delete_empty_folders(folder)
+                    deleted_count += deleted_in_this_folder
+                except Exception as e:
+                    self.log("ERROR", f"删除文件夹 {folder} 时出错: {str(e)}")
+        
+        self.log("INFO", f"删除空文件夹完成，共删除 {deleted_count} 个空文件夹")
+    
+    def _recursive_delete_empty_folders(self, folder_path):
+        """递归删除空文件夹"""
+        deleted_count = 0
+        
+        if not folder_path.exists() or not folder_path.is_dir():
+            return deleted_count
+        
+        try:
+            # 先递归处理子文件夹
+            for item in folder_path.iterdir():
+                if item.is_dir():
+                    deleted_count += self._recursive_delete_empty_folders(item)
+            
+            # 检查当前文件夹是否为空（不包含任何文件或文件夹）
+            if not any(folder_path.iterdir()):
+                # 确保不是根目录（避免误删重要文件夹）
+                if folder_path != folder_path.resolve().anchor:
+                    try:
+                        folder_path.rmdir()
+                        self.log("DEBUG", f"删除空文件夹: {folder_path}")
+                        deleted_count += 1
+                    except Exception as e:
+                        self.log("WARNING", f"无法删除文件夹 {folder_path}: {str(e)}")
+                        
+        except PermissionError:
+            self.log("WARNING", f"权限不足，无法访问文件夹: {folder_path}")
+        except Exception as e:
+            self.log("ERROR", f"处理文件夹 {folder_path} 时出错: {str(e)}")
+        
+        return deleted_count
 
     def log(self, level, message):
         current_time = datetime.datetime.now().strftime('%H:%M:%S')
