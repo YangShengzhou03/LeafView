@@ -182,16 +182,16 @@ class SmartArrange(QtWidgets.QWidget):
         
         self.parent.label_PreviewRoute.setText(preview_text)
         
-        # 更新操作类型显示
-        self.update_operation_display()
-        
-        # 记录分类设置以便后续使用
+        # 记录分类设置以便后续使用 - 必须在这里更新，而不是在最后
         self.SmartArrange_settings = [
             getattr(self.parent, f'comboBox_level_{i}').currentText()
             for i in range(1, 6)
             if getattr(self.parent, f'comboBox_level_{i}').isEnabled() and
                getattr(self.parent, f'comboBox_level_{i}').currentText() != "不分类"
         ]
+        
+        # 更新操作类型显示
+        self.update_operation_display()
     
     def update_operation_display(self):
         """更新操作类型显示"""
@@ -214,14 +214,34 @@ class SmartArrange(QtWidgets.QWidget):
         # 获取当前操作模式（移动/复制）
         operation_mode = "移动" if self.parent.comboBox_operation.currentIndex() == 0 else "复制"
         
+        # 设置不同操作的颜色
+        move_color = "#FF6B6B"  # 红色系，表示移动操作
+        copy_color = "#4ECDC4"  # 青色系，表示复制操作
+        
         # 更新显示
         if self.destination_root:
             display_path = str(self.destination_root)
             if len(display_path) > 20:
                 display_path = f"{display_path[:8]}...{display_path[-6:]}"
-            self.parent.label_CopyRoute.setText(f"{operation_mode}到: {display_path} ({operation_type})")
+            # 使用HTML格式设置颜色
+            if operation_mode == "移动":
+                self.parent.label_CopyRoute.setText(
+                    f'<span style="color:{move_color}">{operation_mode}到: {display_path} ({operation_type})</span>'
+                )
+            else:
+                self.parent.label_CopyRoute.setText(
+                    f'<span style="color:{copy_color}">{operation_mode}到: {display_path} ({operation_type})</span>'
+                )
         else:
-            self.parent.label_CopyRoute.setText(f"{operation_mode}文件 ({operation_type})")
+            # 使用HTML格式设置颜色
+            if operation_mode == "移动":
+                self.parent.label_CopyRoute.setText(
+                    f'<span style="color:{move_color}">{operation_mode}文件 ({operation_type})</span>'
+                )
+            else:
+                self.parent.label_CopyRoute.setText(
+                    f'<span style="color:{copy_color}">{operation_mode}文件 ({operation_type})</span>'
+                )
     
     def set_combo_box_states(self):
         """设置分类级别的初始启用/禁用状态"""
@@ -276,7 +296,16 @@ class SmartArrange(QtWidgets.QWidget):
         # 特殊处理自定义标签
         if original_text == '自定义':
             # 弹出单行文本框让用户输入
-            custom_text, ok = QInputDialog.getText(self, "自定义标签", "请输入自定义部分的文件名内容:")
+            input_dialog = QInputDialog(self)
+            input_dialog.setWindowTitle("自定义标签")
+            input_dialog.setLabelText("请输入自定义部分的文件名内容:")
+            input_dialog.setTextEchoMode(QtWidgets.QLineEdit.EchoMode.Normal)
+            input_dialog.setTextValue("")
+            # 设置最大长度为255个字符（Windows文件名限制）
+            input_dialog.findChild(QtWidgets.QLineEdit).setMaxLength(255)
+            
+            ok = input_dialog.exec()
+            custom_text = input_dialog.textValue()
             
             if ok and custom_text:
                 # 检查是否符合Windows命名规范
@@ -287,6 +316,8 @@ class SmartArrange(QtWidgets.QWidget):
                 # 在已选区域显示前三个字
                 display_text = custom_text[:3] if len(custom_text) > 3 else custom_text
                 button.setText(display_text)
+                # 存储用户实际输入的内容到新属性中
+                button.setProperty('custom_content', custom_text)
             else:
                 # 用户取消或未输入，不移动标签
                 return
@@ -327,6 +358,10 @@ class SmartArrange(QtWidgets.QWidget):
         if button.property('original_text') is not None:
             button.setText(button.property('original_text'))
         
+        # 清理自定义内容属性
+        if button.property('custom_content') is not None:
+            button.setProperty('custom_content', None)
+        
         # 添加回原布局
         self.available_layout.addWidget(button)
         
@@ -344,21 +379,38 @@ class SmartArrange(QtWidgets.QWidget):
 
     def update_example_label(self):
         now = datetime.now()
-        selected = [self.selected_layout.itemAt(i).widget().text() for i in range(self.selected_layout.count())
+        selected_buttons = [self.selected_layout.itemAt(i).widget() for i in range(self.selected_layout.count())
                     if isinstance(self.selected_layout.itemAt(i).widget(), QtWidgets.QPushButton)]
         current_separator = self.separator_mapping.get(self.parent.comboBox_separator.currentText(), "")
-        parts = {
-            "原文件名": "DSC_1234",
-            "年份": f"{now.year}",
-            "月份": f"{now.month:02d}",
-            "日": f"{now.day:02d}",
-            "星期": f"{self._get_weekday(now)}",
-            "时间": f"{now.strftime('%H%M%S')}",
-            "品牌": "佳能",
-            "位置": "浙大",
-            "自定义": "家庭聚会"
-        }
-        example_text = current_separator.join(parts.get(b, "") for b in selected) if selected else "请点击标签以组成文件名"
+        
+        # 构建示例部分
+        example_parts = []
+        for button in selected_buttons:
+            button_text = button.text()
+            # 如果是自定义标签，使用用户输入的实际内容
+            if button.property('original_text') == '自定义' and button.property('custom_content') is not None:
+                # 获取用户实际输入的自定义内容，但只显示前3个字
+                custom_content = button.property('custom_content')
+                display_content = custom_content[:3] if len(custom_content) > 3 else custom_content
+                example_parts.append(display_content)
+            else:
+                # 其他标签使用预设的示例值，也只显示前3个字
+                parts = {
+                    "原文件名": "DSC_1234",
+                    "年份": f"{now.year}",
+                    "月份": f"{now.month:02d}",
+                    "日": f"{now.day:02d}",
+                    "星期": f"{self._get_weekday(now)}",
+                    "时间": f"{now.strftime('%H%M%S')}",
+                    "品牌": "佳能",
+                    "位置": "浙大",
+                    "自定义": "自定义内容"
+                }
+                full_text = parts.get(button_text, button_text)
+                display_text = full_text[:3] if len(full_text) > 3 else full_text
+                example_parts.append(display_text)
+        
+        example_text = current_separator.join(example_parts) if example_parts else "请点击标签以组成文件名"
         self.parent.label_PreviewName.setText(example_text)
 
     @staticmethod
