@@ -58,7 +58,7 @@ class SmartArrange(QtWidgets.QWidget):
         self.parent.toolButton_startSmartArrange.clicked.connect(self.toggle_SmartArrange)
 
     def update_progress_bar(self, value):
-        self.parent.progressBar_SmartArrange.setValue(value)
+        self.parent.progressBar_classification.setValue(value)
 
     def handle_operation_change(self, index):
         if index == 1:
@@ -92,7 +92,7 @@ class SmartArrange(QtWidgets.QWidget):
         if self.SmartArrange_thread and self.SmartArrange_thread.isRunning():
             self.SmartArrange_thread.stop()
             self.parent.toolButton_startSmartArrange.setText("开始整理")
-            self.parent.progressBar_SmartArrange.setValue(0)
+            self.parent.progressBar_classification.setValue(0)
         else:
             folders = self.folder_page.get_all_folders() if self.folder_page else []
             if not folders:
@@ -131,7 +131,7 @@ class SmartArrange(QtWidgets.QWidget):
             self.SmartArrange_thread = SmartArrangeThread(
                 parent=self,
                 folders=folders,
-                SmartArrange_structure=SmartArrange_structure or None,
+                classification_structure=SmartArrange_structure or None,
                 file_name_structure=file_name_structure or None,
                 destination_root=self.destination_root,
                 separator=separator,

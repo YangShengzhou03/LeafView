@@ -54,7 +54,9 @@ class ThumbnailLoader(QRunnable):
             progress = 80 + int((1 / self.total_images) * 20)
             self.signals.progress_updated.emit(progress)
         self.signals.progress_updated.emit(100)
-        del image
+        # 修复内存泄漏：显式释放图像资源
+        if not image.isNull():
+            image = QImage()
 
 
 class Contrast(QtWidgets.QWidget):
@@ -150,6 +152,17 @@ class Contrast(QtWidgets.QWidget):
             else:
                 image_paths.extend(os.path.join(folder_path, f) for f in os.listdir(folder_path)
                                    if os.path.splitext(f)[1].lower() in supported_formats)
+        
+        # 限制处理图片数量，避免内存溢出
+        if len(image_paths) > 1000:
+            reply = QtWidgets.QMessageBox.question(self, "图片数量过多", 
+                                                  f"检测到 {len(image_paths)} 张图片，处理可能较慢。是否继续？",
+                                                  QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
+            if reply != QtWidgets.QMessageBox.StandardButton.Yes:
+                self._running = False
+                self.parent.toolButton_startContrast.setEnabled(True)
+                return
+        
         self.parent.toolButton_startContrast.setEnabled(False)
         self.hash_worker = HashWorker(image_paths)
         self.hash_worker.hash_completed.connect(self.on_hashes_computed)
@@ -186,6 +199,10 @@ class Contrast(QtWidgets.QWidget):
         total_images = sum(len(v) for v in duplicate_groups.values())
         no_images = True
         row = col = 0
+        
+        # 清空之前的缩略图加载器
+        self.thumbnail_loaders.clear()
+        
         for idx, (gid, paths) in enumerate(duplicate_groups.items(), 1):
             if not paths or not self._running:
                 continue
@@ -256,7 +273,8 @@ class Contrast(QtWidgets.QWidget):
         pixmap = QPixmap.fromImage(image)
         label.setPixmap(pixmap)
         label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        del image
+        # 修复内存泄漏：释放图像资源
+        image = QImage()
 
     def show_images_from_thread(self, src, match):
         self.set_empty(False)
@@ -325,3 +343,5 @@ class Contrast(QtWidgets.QWidget):
             self.hash_worker.stop()
         if hasattr(self, 'contrast_worker'):
             self.contrast_worker.stop()
+        # 停止所有缩略图加载器
+        self.thumbnail_loaders.clear()

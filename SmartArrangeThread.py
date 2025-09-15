@@ -153,9 +153,7 @@ class SmartArrangeThread(QtCore.QThread):
                     percent_complete = int((processed_files / total_files) * 100)
                     self.progress_signal.emit(percent_complete)
 
-    def organize_without_classification(self, folder_path):
-        # 这里是原ClassificationThread.py中剩余的代码，为了保持简洁我省略了部分实现
-        pass
+
 
     def process_single_file(self, file_path, base_folder=None):
         try:
@@ -170,7 +168,7 @@ class SmartArrangeThread(QtCore.QThread):
             # 根据不同的情况构建目标路径和文件名
             if not self.classification_structure and not self.file_name_structure:
                 # 情况3：什么都不做，将文件从子文件夹提取到顶层目录
-                target_dir = file_path.parent
+                target_dir = file_path.parent.parent if base_folder else file_path.parent
                 new_file_name = file_name  # 保持原文件名
             elif not self.classification_structure:
                 # 情况2：只构建文件名，目录不变
@@ -319,9 +317,10 @@ class SmartArrangeThread(QtCore.QThread):
                     shutil.copy2(old_path, unique_path)
                     self.log("INFO", f"复制文件: {old_path} -> {unique_path}")
                 else:
-                    # 重命名文件
-                    old_path.rename(unique_path)
-                    self.log("INFO", f"重命名文件: {old_path} -> {unique_path}")
+                    # 移动文件到目标目录（使用shutil.move而不是rename）
+                    import shutil
+                    shutil.move(old_path, unique_path)
+                    self.log("DEBUG", f"移动文件: {old_path} -> {unique_path}")
                 
             except Exception as e:
                 self.log("ERROR", f"处理文件 {old_path} 时出错: {str(e)}")
@@ -330,15 +329,34 @@ class SmartArrangeThread(QtCore.QThread):
         self.log("INFO", f"不进行分类，仅重命名文件在 {folder_path}")
         folder_path = Path(folder_path)
         
-        # 简单地处理每个文件
-        for file in os.listdir(folder_path):
+        # 添加调试信息
+        self.log("DEBUG", f"开始处理文件夹: {folder_path}")
+        
+        # 递归处理所有子文件夹中的文件
+        file_count = 0
+        for root, dirs, files in os.walk(folder_path):
             if self._stop_flag:
                 self.log("WARNING", "处理被用户中断")
                 break
             
-            file_path = folder_path / file
-            if file_path.is_file() and file_path.suffix.lower() in SUPPORTED_EXTENSIONS:
-                self.process_single_file(file_path)
+            self.log("DEBUG", f"处理子文件夹: {root}, 文件数: {len(files)}")
+            
+            for file in files:
+                file_path = Path(root) / file
+                if file_path.suffix.lower() in SUPPORTED_EXTENSIONS:
+                    # 将文件从当前子文件夹移动到导入文件夹的顶层目录
+                    target_path = folder_path / file_path.name
+                    if file_path != target_path:
+                        try:
+                            import shutil
+                            self.log("DEBUG", f"准备移动文件: {file_path} -> {target_path}")
+                            shutil.move(file_path, target_path)
+                            self.log("DEBUG", f"成功移动文件: {file_path} -> {target_path}")
+                            file_count += 1
+                        except Exception as e:
+                            self.log("ERROR", f"移动文件 {file_path} 时出错: {str(e)}")
+        
+        self.log("INFO", f"处理完成，共移动 {file_count} 个文件")
 
     def log(self, level, message):
         current_time = datetime.datetime.now().strftime('%H:%M:%S')
