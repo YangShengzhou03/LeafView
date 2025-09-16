@@ -1,10 +1,3 @@
-import numpy as np
-from PIL import Image
-from PyQt6 import QtCore
-import pillow_heif
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from collections import defaultdict
-
 """
 重复图片删除线程模块
 
@@ -14,11 +7,32 @@ from collections import defaultdict
 - ContrastWorker: 对比图像哈希值，找出相似图像组
 """
 
+import numpy as np
+from PIL import Image
+from PyQt6 import QtCore
+import pillow_heif
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from collections import defaultdict
+
+
 class ImageHasher:
+    """图像哈希计算工具类 - 提供感知哈希算法相关功能"""
+    
     @staticmethod
     def dhash(image_path, hash_size=8):
+        """
+        计算图像的差异哈希（dHash）值
+        
+        Args:
+            image_path (str): 图像文件路径
+            hash_size (int): 哈希尺寸，默认为8（生成64位哈希）
+            
+        Returns:
+            np.ndarray: 哈希位数组，失败时返回None
+        """
         try:
             ext = image_path.lower().split('.')[-1]
+            # 特殊处理HEIC/HEIF格式
             if ext in ('heic', 'heif'):
                 heif_file = pillow_heif.read_heif(image_path)
                 img = Image.frombytes(
@@ -34,16 +48,19 @@ class ImageHasher:
                     img.load()
 
             w, h = img.size
+            # 过滤过小或宽高比异常的图片
             if w < 50 or h < 50:
                 return None
             if (w / h) < 0.2 or (w / h) > 5:
                 return None
 
+            # 转换为灰度图并缩放到指定尺寸
             image = img.convert('L').resize(
                 (hash_size + 1, hash_size),
                 Image.Resampling.BILINEAR
             )
 
+            # 计算相邻像素差异并生成哈希位
             pixels = np.array(image, dtype=np.int16)
             diff = pixels[:, 1:] > pixels[:, :-1]
             return diff.flatten()
@@ -53,6 +70,16 @@ class ImageHasher:
 
     @staticmethod
     def hamming_distance(bits1, bits2):
+        """
+        计算两个哈希位数组的汉明距离
+        
+        Args:
+            bits1 (np.ndarray): 第一个哈希位数组
+            bits2 (np.ndarray): 第二个哈希位数组
+            
+        Returns:
+            int: 汉明距离（不同位的数量）
+        """
         return np.count_nonzero(bits1 != bits2)
 
     @staticmethod
@@ -62,31 +89,45 @@ class ImageHasher:
 
 
 class HashWorker(QtCore.QThread):
-    hash_completed = QtCore.pyqtSignal(dict)
-    progress_updated = QtCore.pyqtSignal(int)
-    error_occurred = QtCore.pyqtSignal(str)
+    """哈希计算工作线程 - 多线程计算图像哈希值"""
+    
+    hash_completed = QtCore.pyqtSignal(dict)  # 哈希计算完成信号
+    progress_updated = QtCore.pyqtSignal(int)  # 进度更新信号
+    error_occurred = QtCore.pyqtSignal(str)    # 错误发生信号
 
     def __init__(self, image_paths, hash_size=8, max_workers=4):
+        """
+        初始化哈希计算工作线程
+        
+        Args:
+            image_paths (list): 图像路径列表
+            hash_size (int): 哈希尺寸
+            max_workers (int): 最大工作线程数
+        """
         super().__init__()
         self.image_paths = image_paths
         self.hash_size = hash_size
         self.max_workers = max_workers
-        self._is_running = True
+        self._is_running = True  # 线程运行状态标志
 
     def run(self):
+        """线程主执行方法 - 多线程计算图像哈希"""
         try:
             hashes = {}
+            # 支持的图片格式集合
             supported_extensions = (
                 '.jpg', '.jpeg', '.png', '.bmp', '.gif',
                 '.heic', '.heif', '.webp', '.tif', '.tiff'
             )
 
+            # 过滤支持的图片格式
             filtered_paths = [
                 path for path in self.image_paths
                 if path.lower().endswith(supported_extensions)
             ]
             total = len(filtered_paths)
 
+            # 使用线程池并行计算哈希
             with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
                 future_to_path = {
                     executor.submit(ImageHasher.dhash, path, self.hash_size): path
@@ -102,7 +143,7 @@ class HashWorker(QtCore.QThread):
                     if result is not None:
                         hashes[path] = result
 
-                    # 减少进度更新频率
+                    # 减少进度更新频率，每10张图片或最后一张时更新
                     if (i + 1) % 10 == 0 or (i + 1) == total:
                         self.progress_updated.emit(int((i + 1) / total * 40))
 
@@ -112,21 +153,32 @@ class HashWorker(QtCore.QThread):
             self.error_occurred.emit(str(e))
 
     def stop(self):
+        """停止线程执行"""
         self._is_running = False
 
 
 class ContrastWorker(QtCore.QThread):
-    groups_completed = QtCore.pyqtSignal(dict)
-    progress_updated = QtCore.pyqtSignal(int)
-    image_matched = QtCore.pyqtSignal(str, str)
+    """相似度对比工作线程 - 对比图像哈希值找出相似图像"""
+    
+    groups_completed = QtCore.pyqtSignal(dict)  # 分组完成信号
+    progress_updated = QtCore.pyqtSignal(int)    # 进度更新信号
+    image_matched = QtCore.pyqtSignal(str, str)  # 图片匹配信号
 
     def __init__(self, image_hashes, threshold):
+        """
+        初始化相似度对比工作线程
+        
+        Args:
+            image_hashes (dict): 图像哈希字典 {路径: 哈希值}
+            threshold (int): 相似度阈值（汉明距离）
+        """
         super().__init__()
         self.image_hashes = image_hashes
         self.threshold = threshold
-        self._is_running = True
+        self._is_running = True  # 线程运行状态标志
 
     def run(self):
+        """线程主执行方法 - 对比图像哈希值进行分组"""
         try:
             if not self.image_hashes:
                 self.groups_completed.emit({})
@@ -176,7 +228,7 @@ class ContrastWorker(QtCore.QThread):
                             groups[group_id].append(path)
                             to_remove.append(i)
                             
-                            # 发送匹配信号
+                            # 发送匹配信号（当组内有两张图片时）
                             if len(groups[group_id]) == 2:
                                 self.image_matched.emit(seed_path, path)
 
@@ -235,4 +287,5 @@ class ContrastWorker(QtCore.QThread):
             self.groups_completed.emit({})
 
     def stop(self):
+        """停止线程执行"""
         self._is_running = False

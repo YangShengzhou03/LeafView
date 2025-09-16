@@ -22,18 +22,29 @@ from common import get_resource_path
 
 
 class WriteExif(QWidget):
+    """EXIF写入功能的主控制类，负责UI交互和参数传递"""
+    
     def __init__(self, parent=None, folder_page=None):
+        """
+        初始化EXIF写入模块
+        
+        Args:
+            parent: 父窗口组件
+            folder_page: 文件夹页面实例，用于获取文件夹信息
+        """
         super().__init__(parent)
         self.parent = parent
         self.folder_page = folder_page
-        self.selected_star = 0
-        self.worker = None
-        self.star_buttons = []
-        self.is_running = False
+        self.selected_star = 0  # 当前选中的星级评分
+        self.worker = None  # EXIF写入工作线程
+        self.star_buttons = []  # 星级按钮列表
+        self.is_running = False  # 是否正在运行
         self.init_ui()
         self.setup_connections()
 
     def init_ui(self):
+        """初始化用户界面组件"""
+        # 初始化星级评分按钮
         for i in range(1, 6):
             btn = getattr(self.parent, f'pushButton_star_{i}')
             btn.setStyleSheet(
@@ -110,23 +121,27 @@ class WriteExif(QWidget):
                     self.parent.comboBox_model.addItem(model)
 
     def setup_connections(self):
+        """设置信号和槽的连接"""
         self.parent.toolButton_StartEXIF.clicked.connect(self.toggle_exif_writing)
         self.parent.pushButton_Position.clicked.connect(self.update_position_by_ip)
         self.parent.comboBox_shootTime.currentIndexChanged.connect(self.on_combobox_time_changed)
 
     def on_combobox_time_changed(self, index):
+        """拍摄时间下拉框选择变化处理"""
         if index == 2:
             self.parent.dateTimeEdit_shootTime.show()
         else:
             self.parent.dateTimeEdit_shootTime.hide()
 
     def update_button_state(self):
+        """更新开始/停止按钮状态"""
         if self.is_running:
             self.parent.toolButton_StartEXIF.setText("停止")
         else:
             self.parent.toolButton_StartEXIF.setText("开始")
 
     def toggle_exif_writing(self):
+        """切换EXIF写入状态"""
         if self.is_running:
             self.stop_exif_writing()
             self.is_running = False
@@ -137,6 +152,7 @@ class WriteExif(QWidget):
         self.update_button_state()
 
     def connect_worker_signals(self):
+        """连接工作线程的信号"""
         if self.worker:
             self.worker.progress_updated.connect(self.update_progress)
             self.worker.log.connect(self.log)
@@ -144,16 +160,27 @@ class WriteExif(QWidget):
 
     @pyqtSlot(int)
     def highlight_stars(self, count):
+        """高亮显示指定数量的星级"""
         for i, btn in enumerate(self.star_buttons, 1):
             icon = "星级_亮.svg" if i <= count else "星级_暗.svg"
             btn.setStyleSheet(f"QPushButton {{ image: url({get_resource_path(f'resources/img/page_4/{icon}')}); border: none; padding: 0; }}")
 
     @pyqtSlot(int)
     def set_selected_star(self, star):
+        """设置选中的星级"""
         self.selected_star = star
         self.highlight_stars(star)
 
     def get_location(self, address):
+        """
+        通过高德地图API获取地址的地理坐标
+        
+        Args:
+            address: 地址字符串
+            
+        Returns:
+            tuple: (纬度, 经度)坐标，失败返回None
+        """
         try:
             url = "https://restapi.amap.com/v3/geocode/geo"
             # 从环境变量中获取API密钥，避免硬编码
@@ -174,6 +201,7 @@ class WriteExif(QWidget):
         return None
 
     def get_location_by_ip(self):
+        """通过IP地址获取当前位置信息"""
         try:
             response = requests.get('https://ipinfo.io', timeout=5)
             data = response.json()
@@ -190,6 +218,7 @@ class WriteExif(QWidget):
             return None
 
     def update_position_by_ip(self):
+        """通过IP地址更新位置信息"""
         location_info = self.get_location_by_ip()
         if location_info is not None:
             lat, lon = location_info
@@ -198,6 +227,12 @@ class WriteExif(QWidget):
             self.log("ERROR", "获取位置信息失败，请检查网络连接。")
 
     def start_exif_writing(self):
+        """
+        开始EXIF写入操作
+        
+        Returns:
+            bool: 是否成功启动
+        """
         if not self.folder_page:
             self.log("ERROR", "文件夹页面未初始化")
             return False
@@ -206,6 +241,8 @@ class WriteExif(QWidget):
         if not folders:
             self.log("WARNING", "请先导入一个有效的文件夹。")
             return False
+        
+        # 准备EXIF写入参数
         params = {
             'folders_dict': folders,
             'autoMark': self.parent.checkBox_autoMark.isChecked(),
@@ -223,6 +260,8 @@ class WriteExif(QWidget):
             'cameraBrand': self.parent.comboBox_brand.currentText() if self.parent.comboBox_brand.currentIndex() > 0 else None,
             'cameraModel': self.parent.comboBox_model.currentText() if self.parent.comboBox_model.currentIndex() > 0 else None
         }
+        
+        # 处理位置信息
         address = self.parent.lineEdit_EXIF_Position.text()
         if address:
             if coords := self.get_location(address):
@@ -230,6 +269,8 @@ class WriteExif(QWidget):
             else:
                 self.log("ERROR", f"无法找到地址'{address}'对应的地理坐标")
                 return False
+        
+        # 创建并启动工作线程
         self.worker = WriteExifThread(**params)
         self.connect_worker_signals()
         self.worker.start()
@@ -237,6 +278,7 @@ class WriteExif(QWidget):
         return True
 
     def stop_exif_writing(self):
+        """停止EXIF写入操作"""
         if self.worker:
             self.worker.stop()
             self.worker.wait(1000)
@@ -247,14 +289,23 @@ class WriteExif(QWidget):
         self.update_button_state()
 
     def update_progress(self, value):
+        """更新进度条"""
         self.parent.progressBar_EXIF.setValue(value)
 
     def log(self, level, message):
+        """
+        记录日志信息
+        
+        Args:
+            level: 日志级别 (ERROR, WARNING, DEBUG, INFO)
+            message: 日志消息
+        """
         c = {'ERROR': '#FF0000', 'WARNING': '#FFA500', 'DEBUG': '#008000', 'INFO': '#8677FD'}
         self.parent.textEdit_WriteEXIF_Log.append(
             f'<span style="color:{c.get(level, "#000000")}">[{datetime.now().strftime("%H:%M:%S")}] [{level}] {message}</span>')
 
     def on_finished(self):
+        """EXIF写入完成处理"""
         self.log("DEBUG", "EXIF信息写入任务结束!")
         self.is_running = False
         self.update_button_state()

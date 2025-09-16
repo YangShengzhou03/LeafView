@@ -1,3 +1,13 @@
+"""
+媒体导入功能模块 - FolderPage类
+
+负责处理:
+1. 文件夹的拖拽和选择导入
+2. 路径冲突检测和验证
+3. 文件夹项UI的创建和管理
+4. 子文件夹包含选项处理
+"""
+
 from PyQt6 import QtWidgets, QtCore, QtGui
 from PyQt6.QtWidgets import QFileDialog, QMessageBox
 import os
@@ -6,36 +16,77 @@ from common import get_resource_path, detect_media_type
 
 
 class FolderPage(QtWidgets.QWidget):
+    """
+    媒体导入页面控制器
+    
+    管理文件夹的添加、移除和冲突检测，提供拖拽和对话框两种导入方式
+    """
+    
     def __init__(self, parent=None):
+        """初始化媒体导入页面"""
         super().__init__(parent)
-        self.parent = parent
+        self.parent = parent  # 主窗口引用
+        self.folder_items = []  # 存储所有文件夹项数据
+        
+        # 初始化页面设置
         self.init_page()
-        self.folder_items = []
+        
+        # 配置拖拽功能
+        self._setup_drag_drop()
+        
+        # 设置点击功能
+        self._setup_click_behavior()
+    
+    def _setup_drag_drop(self):
+        """设置拖拽相关配置"""
         self.parent.widget_add_folder.setAcceptDrops(True)
         self.parent.widget_add_folder.dragEnterEvent = self.dragEnterEvent
         self.parent.widget_add_folder.dropEvent = self.dropEvent
-        # 设置 widget_add_folder 为可点击区域并更改鼠标指针
+    
+    def _setup_click_behavior(self):
+        """设置点击行为配置"""
+        # 设置鼠标指针为手型，提示可点击
         self.parent.widget_add_folder.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
-        # 连接整个 widget 的点击事件
+        # 连接整个widget的点击事件
         self.parent.widget_add_folder.mousePressEvent = self._open_folder_dialog_on_click
 
     def init_page(self):
-        self._connect_buttons()
+        """初始化页面连接信号槽"""
+        # 连接按钮信号
+        self.parent.pushButton_add_folder.clicked.connect(self._open_folder_dialog)  # 添加文件夹按钮
+        # 移除不存在的按钮连接
+        # self.parent.btn_clear_folders.clicked.connect(self._clear_all_folders)  # 清空文件夹按钮（按钮不存在）
+        # self.parent.btn_next.clicked.connect(self._on_next_clicked)  # 下一步按钮（按钮不存在）
 
     def _connect_buttons(self):
         # 保持原有按钮的连接
         self.parent.pushButton_add_folder.clicked.connect(self._open_folder_dialog)
     
     def _open_folder_dialog_on_click(self, event):
-        # 捕获 widget_add_folder 的点击事件并打开文件夹对话框
-        self._open_folder_dialog()
+        """
+        点击widget时打开文件夹选择对话框
+        
+        处理widget_add_folder区域的点击事件，提供额外的交互方式
+        """
+        if event.button() == QtCore.Qt.MouseButton.LeftButton:
+            self._open_folder_dialog()
 
     def _open_folder_dialog(self):
-        folder_paths = QFileDialog.getExistingDirectory(self, "选择文件夹")
-        if folder_paths:
-            self._check_and_add_folder(folder_paths)
+        """
+        打开文件夹选择对话框
+        
+        使用系统原生对话框选择文件夹，选择后自动添加到列表
+        """
+        folder_path = QFileDialog.getExistingDirectory(self, "选择文件夹")
+        if folder_path:
+            self._check_and_add_folder(folder_path)
 
     def _check_and_add_folder(self, folder_path):
+        """
+        检查并添加文件夹
+        
+        执行路径验证、冲突检查，通过后创建文件夹项
+        """
         folder_path = os.path.normpath(folder_path)
         folder_name = os.path.basename(folder_path) if os.path.basename(folder_path) else folder_path
         
@@ -61,6 +112,12 @@ class FolderPage(QtWidgets.QWidget):
         self._check_media_files(folder_path)
 
     def _create_folder_item(self, folder_path, folder_name):
+        """
+        创建文件夹项UI
+        
+        构建包含图标、名称、路径、包含子文件夹选项和移除按钮的文件夹项
+        """
+        # 创建文件夹项框架
         folder_frame = QtWidgets.QFrame(parent=self.parent.scrollAreaWidgetContents_folds)
         folder_frame.setFixedHeight(48)
         folder_frame.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.ArrowCursor))
@@ -68,21 +125,25 @@ class FolderPage(QtWidgets.QWidget):
         layout.setContentsMargins(8, 0, 8, 0)
         layout.setSpacing(10)
 
+        # 文件夹图标
         icon_widget = QtWidgets.QWidget(parent=folder_frame)
         icon_widget.setFixedSize(42, 42)
         icon_widget.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
         icon_widget.setStyleSheet(f"image: url({get_resource_path('resources/img/page_0/导入文件夹.svg')}); background-color: transparent;")
 
+        # 文本布局（名称和路径）
         text_layout = QtWidgets.QVBoxLayout()
         text_layout.setSpacing(2)
         text_layout.setContentsMargins(0, 0, 0, 0)
 
+        # 文件夹名称标签
         name_label = QtWidgets.QLabel(folder_name, parent=folder_frame)
         name_label.setMaximumWidth(180)
         name_label.setFont(QtGui.QFont("微软雅黑", 12))
         name_label.setStyleSheet(
             "QLabel {background: transparent; border: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #333; font-weight: 500;}")
 
+        # 文件夹路径标签
         path_label = QtWidgets.QLabel(folder_path, parent=folder_frame)
         path_label.setMaximumWidth(180)
         path_label.setFont(QtGui.QFont("微软雅黑", 9))
@@ -92,6 +153,7 @@ class FolderPage(QtWidgets.QWidget):
         text_layout.addWidget(name_label)
         text_layout.addWidget(path_label)
 
+        # 包含子文件夹复选框
         include_checkbox = QtWidgets.QCheckBox("包含子文件夹", parent=folder_frame)
         include_checkbox.setFont(QtGui.QFont("微软雅黑", 9))
         include_checkbox.setStyleSheet("QCheckBox {spacing: 4px; background: transparent; color: #666;}")
@@ -99,6 +161,7 @@ class FolderPage(QtWidgets.QWidget):
         # 默认自动勾选包含子文件夹
         include_checkbox.setChecked(True)
 
+        # 移除按钮（默认隐藏）
         remove_button = QtWidgets.QPushButton("移除", parent=folder_frame)
         remove_button.setFixedSize(60, 30)
         remove_button.setFont(QtGui.QFont("微软雅黑", 9))
@@ -113,18 +176,21 @@ class FolderPage(QtWidgets.QWidget):
         # 连接移除按钮信号
         remove_button.clicked.connect(lambda: self._remove_folder_item(folder_frame))
 
+        # 添加到布局
         layout.addWidget(icon_widget)
         layout.addLayout(text_layout)
         layout.addStretch(1)
         layout.addWidget(include_checkbox)
         layout.addWidget(remove_button)
 
+        # 设置文件夹项样式
         folder_frame.setStyleSheet(
             "QFrame {background-color: #F5F7FA; border: 1px solid #E0E3E9; border-radius: 8px; margin: 2px;} QFrame:hover {background-color: #EBEFF5; border-color: #C2C9D6;}")
 
         # 添加到滚动区域
         self.parent.gridLayout_6.addWidget(folder_frame)
         
+        # 自定义鼠标悬停事件处理
         def enter_event(event):
             remove_button.show()
             QtWidgets.QFrame.enterEvent(folder_frame, event)
@@ -151,13 +217,20 @@ class FolderPage(QtWidgets.QWidget):
         self.folder_items.append(item_data)
         self.parent.gridLayout_6.addWidget(folder_frame, 0, 0)
 
+        # 重新排列所有文件夹项
         for i, item in enumerate(self.folder_items[1:], 1):
             self.parent.gridLayout_6.addWidget(item['frame'], i, 0)
 
+        # 更新空状态显示
         self.parent._update_empty_state(bool(self.folder_items))
         remove_button.clicked.connect(lambda: self.remove_folder_item(folder_frame))
 
     def _update_include_sub(self, folder_frame, state):
+        """
+        更新包含子文件夹状态
+        
+        处理复选框状态变化，检查路径冲突并更新状态
+        """
         # 更新文件夹项的包含子文件夹状态
         for item in self.folder_items:
             if item['frame'] == folder_frame:
@@ -180,6 +253,11 @@ class FolderPage(QtWidgets.QWidget):
                 break
 
     def remove_folder_item(self, folder_frame):
+        """
+        移除文件夹项
+        
+        从UI和数据中完全移除指定的文件夹项
+        """
         for item in self.folder_items[:]:
             if item['frame'] == folder_frame:
                 item['remove_button'].clicked.disconnect()
@@ -192,14 +270,22 @@ class FolderPage(QtWidgets.QWidget):
                 self.parent._update_empty_state(bool(self.folder_items))
                 break
 
-
-
     def _paths_equal(self, path1, path2):
+        """
+        检查两个路径是否相等
+        
+        使用规范化路径比较，处理Windows大小写不敏感
+        """
         if os.name == 'nt':
             return os.path.normcase(os.path.normpath(path1)) == os.path.normcase(os.path.normpath(path2))
         return os.path.normpath(path1) == os.path.normpath(path2)
 
     def _is_subpath(self, path, parent_path):
+        """
+        检查路径是否为子路径
+        
+        判断一个路径是否是另一个路径的子目录
+        """
         try:
             path = os.path.normcase(os.path.normpath(path))
             parent_path = os.path.normcase(os.path.normpath(parent_path))
@@ -207,14 +293,8 @@ class FolderPage(QtWidgets.QWidget):
         except (TypeError, AttributeError):
             return False
 
-    def _update_include_sub(self, folder_frame, state):
-        # 更新文件夹项的包含子文件夹状态
-        for item in self.folder_items:
-            if item['frame'] == folder_frame:
-                item['include_sub'] = state == QtCore.Qt.CheckState.Checked
-                break
-
     def _show_remove_button(self, folder_frame):
+        """显示移除按钮（鼠标悬停时）"""
         # 显示移除按钮
         for item in self.parent.gridLayout_6.children():
             if item == folder_frame:
@@ -224,6 +304,7 @@ class FolderPage(QtWidgets.QWidget):
                 break
 
     def _hide_remove_button(self, folder_frame):
+        """隐藏移除按钮（鼠标离开时）"""
         # 隐藏移除按钮
         for item in self.parent.gridLayout_6.children():
             if item == folder_frame:
@@ -233,6 +314,7 @@ class FolderPage(QtWidgets.QWidget):
                 break
 
     def _remove_folder_item(self, folder_frame):
+        """移除文件夹项（内部方法）"""
         # 移除文件夹项
         for i, item in enumerate(self.folder_items):
             if item['frame'] == folder_frame:
@@ -248,6 +330,11 @@ class FolderPage(QtWidgets.QWidget):
             self.parent._update_empty_state(False)
 
     def _check_media_files(self, folder_path):
+        """
+        检查文件夹中是否有媒体文件
+        
+        快速扫描顶层文件夹，检测支持的媒体文件格式
+        """
         # 检查文件夹中是否有媒体文件
         has_media = False
         try:
@@ -274,12 +361,23 @@ class FolderPage(QtWidgets.QWidget):
         return self.folder_items
 
     def dragEnterEvent(self, event):
+        """
+        拖拽进入事件处理
+        
+        检查拖拽内容是否包含URL（文件/文件夹路径），如果是则接受拖拽操作
+        """
         if event.mimeData().hasUrls():
             event.acceptProposedAction()
 
     def dropEvent(self, event):
-        for url in event.mimeData().urls():
+        """
+        拖拽释放事件处理
+        
+        处理拖拽释放的文件/文件夹，只处理本地文件夹路径
+        """
+        urls = event.mimeData().urls()
+        for url in urls:
             if url.isLocalFile():
-                folder_path = url.toLocalFile()
-                if os.path.isdir(folder_path):
-                    self._check_and_add_folder(folder_path)
+                path = url.toLocalFile()
+                if os.path.isdir(path):
+                    self._check_and_add_folder(path)

@@ -1,3 +1,14 @@
+"""
+LeafView 智能整理模块
+
+负责媒体文件的智能分类和重命名功能，包括：
+1. 多级分类结构设置（年份、月份、设备等）
+2. 文件名标签组合和自定义
+3. 文件操作（移动/复制）管理
+4. 实时预览和示例显示
+5. 后台整理线程管理
+"""
+
 from datetime import datetime
 from PyQt6 import QtWidgets
 from PyQt6.QtCore import pyqtSignal
@@ -7,14 +18,28 @@ from SmartArrangeThread import SmartArrangeThread
 
 
 class SmartArrange(QtWidgets.QWidget):
-    log_signal = pyqtSignal(str, str)
+    """
+    智能整理功能主类
+    
+    实现媒体文件的分类整理、重命名和文件操作功能
+    """
+    log_signal = pyqtSignal(str, str)  # 日志信号，用于线程间日志传递
 
     def __init__(self, parent=None, folder_page=None):
+        """
+        初始化智能整理模块
+        
+        Args:
+            parent: 父窗口对象
+            folder_page: 文件夹页面对象，用于获取媒体文件夹信息
+        """
         super().__init__(parent)
-        self.parent = parent
-        self.folder_page = folder_page
-        self.last_selected_button_index = -1
-        self.destination_root = None
+        self.parent = parent  # 父窗口引用
+        self.folder_page = folder_page  # 文件夹页面引用
+        self.last_selected_button_index = -1  # 最后选中的按钮索引
+        self.destination_root = None  # 复制操作的目标根目录
+        
+        # 标签按钮映射字典，将标签名称映射到对应的UI按钮
         self.tag_buttons = {
             '原文件名': self.parent.pushButton_original_tag,
             '年份': self.parent.pushButton_year_tag,
@@ -26,51 +51,74 @@ class SmartArrange(QtWidgets.QWidget):
             '位置': self.parent.pushButton_address_tag,
             '自定义': self.parent.pushButton_customize_tag
         }
+        
+        # 分隔符映射字典，将显示文本映射到实际分隔符
         self.separator_mapping = {
             "-": "-",
             "无": "",
             "空格": " ",
             "_": "_"
         }
-        self.available_layout = self.parent.horizontalLayout_57
-        self.selected_layout = self.parent.horizontalLayout_53
-        self.SmartArrange_thread = None
-        self.SmartArrange_settings = []  # 初始化分类设置
-        self.init_page()
-        # 设置分类级别的启用/禁用状态
-        self.set_combo_box_states()
-        # 连接日志信号到日志处理方法
-        self.log_signal.connect(self.handle_log_signal)
+        
+        # 布局引用
+        self.available_layout = self.parent.horizontalLayout_57  # 可用标签布局
+        self.selected_layout = self.parent.horizontalLayout_53  # 已选标签布局
+        
+        self.SmartArrange_thread = None  # 整理线程实例
+        self.SmartArrange_settings = []  # 分类设置列表
+        
+        self.init_page()  # 初始化页面
+        self.set_combo_box_states()  # 设置分类下拉框状态
+        self.log_signal.connect(self.handle_log_signal)  # 连接日志信号
 
     def init_page(self):
-        self.connect_signals()
+        """初始化页面，连接信号槽和设置初始状态"""
+        self.connect_signals()  # 连接按钮信号
+        
+        # 连接分类级别下拉框的信号
         for i in range(1, 6):
             getattr(self.parent, f'comboBox_level_{i}').currentIndexChanged.connect(
                 lambda index, level=i: self.handle_combobox_selection(level, index))
+        
+        # 连接标签按钮的点击信号
         for button in self.tag_buttons.values():
             button.clicked.connect(lambda checked, b=button: self.move_tag(b))
+        
+        # 连接操作类型下拉框的信号
         self.parent.comboBox_operation.currentIndexChanged.connect(self.handle_operation_change)
+        
         # 连接分隔符下拉框的信号
         self.parent.comboBox_separator.currentIndexChanged.connect(self.update_example_label)
+        
         self.log("DEBUG", "欢迎使用图像分类整理，您可在上方构建文件路径与文件名结构。")
 
     def connect_signals(self):
+        """连接开始整理按钮的信号"""
         self.parent.toolButton_startSmartArrange.clicked.connect(self.toggle_SmartArrange)
 
     def update_progress_bar(self, value):
+        """更新进度条显示
+        
+        Args:
+            value: 进度值 (0-100)
+        """
         self.parent.progressBar_classification.setValue(value)
 
     def handle_operation_change(self, index):
+        """处理操作类型变更
+        
+        Args:
+            index: 操作类型索引 (0:移动, 1:复制)
+        """
         if index == 1:
             # 复制操作需要选择目标文件夹
             folder = QFileDialog.getExistingDirectory(self, "选择复制目标文件夹",
                                                       options=QFileDialog.Option.ShowDirsOnly)
             if folder:
-                self.destination_root = folder
+                self.destination_root = folder  # 设置目标根目录
                 display_path = folder + '/'
                 if len(display_path) > 20:
-                    display_path = f"{display_path[:8]}...{display_path[-6:]}"
-                # 更清晰的显示操作类型
+                    display_path = f"{display_path[:8]}...{display_path[-6:]}"  # 长路径截断显示
                 operation_text = "复制到: "
                 self.parent.label_CopyRoute.setText(f"{operation_text}{display_path}")
             else:
@@ -81,24 +129,26 @@ class SmartArrange(QtWidgets.QWidget):
         else:
             # 移动操作
             self.destination_root = None
-            # 显示当前操作类型
             operation_text = "移动文件"
             self.parent.label_CopyRoute.setText(f"{operation_text}")
         
-        # 更新操作类型显示
-        self.update_operation_display()
+        self.update_operation_display()  # 更新操作显示
 
     def toggle_SmartArrange(self):
+        """切换整理任务的启动/停止状态"""
         if self.SmartArrange_thread and self.SmartArrange_thread.isRunning():
+            # 停止正在运行的整理线程
             self.SmartArrange_thread.stop()
             self.parent.toolButton_startSmartArrange.setText("开始整理")
             self.parent.progressBar_classification.setValue(0)
         else:
+            # 获取所有文件夹信息
             folders = self.folder_page.get_all_folders() if self.folder_page else []
             if not folders:
                 self.log("WARNING", "请先导入一个有效的文件夹。")
                 return
 
+            # 构建分类结构
             SmartArrange_structure = [
                 getattr(self.parent, f'comboBox_level_{i}').currentText()
                 for i in range(1, 6)
@@ -106,6 +156,7 @@ class SmartArrange(QtWidgets.QWidget):
                    getattr(self.parent, f'comboBox_level_{i}').currentText() != "不分类"
             ]
 
+            # 构建文件名结构
             file_name_structure = [self.selected_layout.itemAt(i).widget().text()
                                    for i in range(self.selected_layout.count())
                                    if isinstance(self.selected_layout.itemAt(i).widget(), QtWidgets.QPushButton)]
@@ -118,7 +169,7 @@ class SmartArrange(QtWidgets.QWidget):
             operation_type = self.parent.comboBox_operation.currentIndex()
             operation_text = "移动" if operation_type == 0 else "复制"
 
-            # 检查是否什么都不做（不分类且不重命名）
+            # 根据设置显示不同的操作信息
             if not SmartArrange_structure and not file_name_structure:
                 self.log("INFO", f"将执行{operation_text}操作：将文件夹中的所有文件提取到顶层目录")
             elif not SmartArrange_structure:
@@ -128,6 +179,7 @@ class SmartArrange(QtWidgets.QWidget):
             else:
                 self.log("INFO", f"将执行{operation_text}操作：进行分类和重命名")
 
+            # 创建并启动整理线程
             self.SmartArrange_thread = SmartArrangeThread(
                 parent=self,
                 folders=folders,
@@ -142,16 +194,27 @@ class SmartArrange(QtWidgets.QWidget):
             self.parent.toolButton_startSmartArrange.setText("停止整理")
 
     def on_thread_finished(self):
+        """整理线程完成时的处理"""
         self.parent.toolButton_startSmartArrange.setText("开始整理")
         self.SmartArrange_thread = None
         self.log("DEBUG", "整理任务已结束。")
         self.update_progress_bar(100)
 
     def handle_combobox_selection(self, level, index):
-        # 直接调用update_combobox_state方法来处理所有级别的状态更新
-        self.update_combobox_state(level)
+        """处理分类下拉框选择变更
+        
+        Args:
+            level: 分类级别 (1-5)
+            index: 选择的索引
+        """
+        self.update_combobox_state(level)  # 更新下拉框状态
 
     def update_combobox_state(self, level):
+        """更新分类下拉框的启用状态
+        
+        Args:
+            level: 当前变更的分类级别
+        """
         # 检查当前级别的选择
         current_text = getattr(self.parent, f'comboBox_level_{level}').currentText()
         
@@ -164,10 +227,9 @@ class SmartArrange(QtWidgets.QWidget):
             # 如果没有选择"不分类"，则启用下一级组合框
             if level < 5:
                 getattr(self.parent, f'comboBox_level_{level + 1}').setEnabled(True)
-                # 递归更新下一级状态
-                self.update_combobox_state(level + 1)
+                self.update_combobox_state(level + 1)  # 递归更新下一级状态
         
-        # 更新预览路径 - 更友好的显示
+        # 更新预览路径显示
         SmartArrange_paths = [
             self.get_specific_value(getattr(self.parent, f'comboBox_level_{i}').currentText())
             for i in range(1, 6)
@@ -176,13 +238,13 @@ class SmartArrange(QtWidgets.QWidget):
         ]
         
         if SmartArrange_paths:
-            preview_text = "/".join(SmartArrange_paths)
+            preview_text = "/".join(SmartArrange_paths)  # 用斜杠连接路径部分
         else:
-            preview_text = "顶层目录（不分类）"
+            preview_text = "顶层目录（不分类）"  # 无分类时的显示文本
         
         self.parent.label_PreviewRoute.setText(preview_text)
         
-        # 记录分类设置以便后续使用 - 必须在这里更新，而不是在最后
+        # 更新分类设置
         self.SmartArrange_settings = [
             getattr(self.parent, f'comboBox_level_{i}').currentText()
             for i in range(1, 6)
@@ -190,11 +252,10 @@ class SmartArrange(QtWidgets.QWidget):
                getattr(self.parent, f'comboBox_level_{i}').currentText() != "不分类"
         ]
         
-        # 更新操作类型显示
-        self.update_operation_display()
+        self.update_operation_display()  # 更新操作显示
     
     def update_operation_display(self):
-        """更新操作类型显示"""
+        """更新操作类型显示，包括分类和重命名状态"""
         # 检查分类设置
         has_SmartArrange = len(self.SmartArrange_settings) > 0
         
@@ -222,7 +283,7 @@ class SmartArrange(QtWidgets.QWidget):
         if self.destination_root:
             display_path = str(self.destination_root)
             if len(display_path) > 20:
-                display_path = f"{display_path[:8]}...{display_path[-6:]}"
+                display_path = f"{display_path[:8]}...{display_path[-6:]}"  # 长路径截断显示
             # 使用HTML格式设置颜色
             if operation_mode == "移动":
                 self.parent.label_CopyRoute.setText(
@@ -253,10 +314,17 @@ class SmartArrange(QtWidgets.QWidget):
             combo_box.setEnabled(False)
             combo_box.setCurrentIndex(0)
         
-        # 初始化预览路径显示
-        self.update_combobox_state(1)
+        self.update_combobox_state(1)  # 初始化预览路径显示
 
     def get_specific_value(self, text):
+        """获取分类选项对应的示例值
+        
+        Args:
+            text: 分类选项文本
+            
+        Returns:
+            str: 对应的示例值
+        """
         now = datetime.now()
         return {
             "年份": str(now.year),
@@ -267,21 +335,33 @@ class SmartArrange(QtWidgets.QWidget):
         }.get(text, text)
 
     def is_valid_windows_filename(self, filename):
-        # 检查文件名是否符合Windows命名规范
-        invalid_chars = '<>:"/\\|?*'
+        """检查文件名是否符合Windows命名规范
+        
+        Args:
+            filename: 要检查的文件名
+            
+        Returns:
+            bool: 是否有效
+        """
+        invalid_chars = '<>:"/\\|?*'  # Windows不允许的字符
         if any(char in filename for char in invalid_chars):
             return False
+        # 检查保留文件名
         if filename in ('CON', 'PRN', 'AUX', 'NUL', 'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9', 'LPT1', 'LPT2', 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9'):
             return False
-        if filename.endswith('.') or filename.endswith(' '):
+        if filename.endswith('.') or filename.endswith(' '):  # 不能以点或空格结尾
             return False
-        if len(filename) > 255:
+        if len(filename) > 255:  # 长度限制
             return False
         return True
     
     def move_tag(self, button):
-        # 移动标签到已选区域
-        # 检查标签数量限制
+        """移动标签到已选区域
+        
+        Args:
+            button: 要移动的按钮对象
+        """
+        # 检查标签数量限制（最多5个）
         if self.selected_layout.count() >= 5:
             return
         
@@ -325,7 +405,6 @@ class SmartArrange(QtWidgets.QWidget):
         # 从原布局中移除按钮
         self.available_layout.removeWidget(button)
         
-        # 保持完全相同的样式
         # 添加到已选区域
         self.selected_layout.addWidget(button)
         
@@ -339,15 +418,19 @@ class SmartArrange(QtWidgets.QWidget):
         # 更新操作类型显示
         self.update_operation_display()
         
-        # 限制标签数量
+        # 限制标签数量，达到上限时禁用所有可用标签
         if self.selected_layout.count() >= 5:
-            # 禁用所有原始标签按钮
             for btn in self.tag_buttons.values():
                 if btn.parent() == self.available_layout:
                     btn.setEnabled(False)
     
     def move_tag_back(self, button):
-        # 将标签移回可用区域
+        """将标签移回可用区域
+        
+        Args:
+            button: 要移回的按钮对象
+        """
+        # 从已选布局中移除按钮
         self.selected_layout.removeWidget(button)
         
         # 恢复原始样式
@@ -378,9 +461,12 @@ class SmartArrange(QtWidgets.QWidget):
         self.update_example_label()
 
     def update_example_label(self):
+        """更新示例文件名显示"""
         now = datetime.now()
+        # 获取所有已选按钮
         selected_buttons = [self.selected_layout.itemAt(i).widget() for i in range(self.selected_layout.count())
                     if isinstance(self.selected_layout.itemAt(i).widget(), QtWidgets.QPushButton)]
+        # 获取当前分隔符
         current_separator = self.separator_mapping.get(self.parent.comboBox_separator.currentText(), "")
         
         # 构建示例部分
@@ -389,12 +475,11 @@ class SmartArrange(QtWidgets.QWidget):
             button_text = button.text()
             # 如果是自定义标签，使用用户输入的实际内容
             if button.property('original_text') == '自定义' and button.property('custom_content') is not None:
-                # 获取用户实际输入的自定义内容，但只显示前3个字
                 custom_content = button.property('custom_content')
                 display_content = custom_content[:3] if len(custom_content) > 3 else custom_content
                 example_parts.append(display_content)
             else:
-                # 其他标签使用预设的示例值，也只显示前3个字
+                # 其他标签使用预设的示例值
                 parts = {
                     "原文件名": "DSC_1234",
                     "年份": f"{now.year}",
@@ -410,24 +495,36 @@ class SmartArrange(QtWidgets.QWidget):
                 display_text = full_text[:3] if len(full_text) > 3 else full_text
                 example_parts.append(display_text)
         
+        # 构建示例文本
         example_text = current_separator.join(example_parts) if example_parts else "请点击标签以组成文件名"
         self.parent.label_PreviewName.setText(example_text)
 
     @staticmethod
     def _get_weekday(date):
+        """获取星期几的中文表示
+        
+        Args:
+            date: 日期对象
+            
+        Returns:
+            str: 星期几的中文表示
+        """
         return ["周一", "周二", "周三", "周四", "周五", "周六", "周日"][date.weekday()]
 
     def handle_log_signal(self, level, message):
-        # 处理日志信号，避免递归调用
+        """处理日志信号，避免递归调用
+        
+        Args:
+            level: 日志级别
+            message: 日志消息
+        """
         current_time = datetime.now().strftime('%H:%M:%S')
         log_message = f"[{current_time}] [{level}] {message}"
         
-        # 输出到控制台用于调试
-        print(log_message)
+        print(log_message)  # 输出到控制台用于调试
         
         # 更新到日志显示区域，使用HTML颜色格式
         if hasattr(self.parent, 'textEdit_SmartArrange_Log'):
-            # 定义颜色映射
             color_map = {
                 'ERROR': '#FF0000',    # 红色
                 'WARNING': '#FFA500',  # 橙色
@@ -439,17 +536,20 @@ class SmartArrange(QtWidgets.QWidget):
                 f'<span style="color:{color}">{log_message}</span>')
     
     def log(self, level, message):
-        # 记录日志
+        """记录日志
+        
+        Args:
+            level: 日志级别
+            message: 日志消息
+        """
         current_time = datetime.now().strftime('%H:%M:%S')
         log_message = f"[{current_time}] [{level}] {message}"
-        self.log_signal.emit(level, log_message)
+        self.log_signal.emit(level, log_message)  # 发射日志信号
         
-        # 输出到控制台用于调试
-        print(log_message)
+        print(log_message)  # 输出到控制台用于调试
         
-        # 更新到日志显示区域，使用HTML颜色格式
+        # 更新到日志显示区域
         if hasattr(self.parent, 'textEdit_SmartArrange_Log'):
-            # 定义颜色映射
             color_map = {
                 'ERROR': '#FF0000',    # 红色
                 'WARNING': '#FFA500',  # 橙色
