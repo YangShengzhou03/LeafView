@@ -1,9 +1,17 @@
 import os
 import json
 import datetime
+import shutil
+import time
+import io
 from pathlib import Path
 
 from PyQt6 import QtCore
+import exifread
+import piexif
+import requests
+from PIL import Image
+import pillow_heif
 
 from common import get_resource_path
 
@@ -235,28 +243,38 @@ class SmartArrangeThread(QtCore.QThread):
         elif category == "星期":
             return ["周一", "周二", "周三", "周四", "周五", "周六", "周日"][file_time.weekday()]
         elif category == "拍摄设备":
-            # 这里应该从文件元数据中获取设备信息，这里简单返回一个示例值
-            return "未知设备"
+            # 从文件元数据中获取设备信息
+            exif_data = self.get_exif_data(file_path)
+            make = exif_data.get('Make', '')
+            model = exif_data.get('Model', '')
+            if make and model:
+                return f"{make}_{model}"
+            elif make:
+                return make
+            elif model:
+                return model
+            else:
+                return "未知设备"
         elif category == "拍摄省份":
-            # 这里应该从地理数据中获取省份信息，这里简单返回一个示例值
+            # 从GPS数据中获取省份信息
+            exif_data = self.get_exif_data(file_path)
+            lat = exif_data.get('GPS GPSLatitude')
+            lon = exif_data.get('GPS GPSLongitude')
+            if lat and lon:
+                province, city = self.get_city_and_province(lat, lon)
+                return province
             return "未知省份"
         elif category == "拍摄城市":
-            # 这里应该从地理数据中获取城市信息，这里简单返回一个示例值
+            # 从GPS数据中获取城市信息
+            exif_data = self.get_exif_data(file_path)
+            lat = exif_data.get('GPS GPSLatitude')
+            lon = exif_data.get('GPS GPSLongitude')
+            if lat and lon:
+                province, city = self.get_city_and_province(lat, lon)
+                return city
             return "未知城市"
         else:
             return category
-
-    def build_new_file_name(self, file_path, file_time, original_name):
-        if not self.file_name_structure:
-            return original_name
-        
-        # 根据选择的标签和顺序构建文件名
-        parts = []
-        for tag in self.file_name_structure:
-            parts.append(self.get_file_name_part(tag, file_path, file_time, original_name))
-        
-        # 使用分隔符连接各个部分
-        return self.separator.join(parts)
 
     def get_file_name_part(self, tag, file_path, file_time, original_name):
         if tag == "原始名称":
@@ -272,17 +290,39 @@ class SmartArrangeThread(QtCore.QThread):
         elif tag == "时间":
             return file_time.strftime("%H%M%S")
         elif tag == "位置":
-            # 这里应该从地理数据中获取位置信息，这里简单返回一个示例值
+            # 从GPS数据中获取位置信息
+            exif_data = self.get_exif_data(file_path)
+            lat = exif_data.get('GPS GPSLatitude')
+            lon = exif_data.get('GPS GPSLongitude')
+            if lat and lon:
+                address = self.get_address(lat, lon)
+                if address:
+                    return address.replace(" ", "").replace(",", "_")
             return "未知位置"
         elif tag == "品牌":
-            # 这里应该从文件元数据中获取品牌信息，这里简单返回一个示例值
+            # 从文件元数据中获取品牌信息
+            exif_data = self.get_exif_data(file_path)
+            make = exif_data.get('Make', '')
+            if make:
+                return make
             return "未知品牌"
         else:
             return tag
 
     def get_file_time(self, file_path):
         # 根据选择的时间源获取文件时间
-        if self.time_derive == "最早时间":
+        if self.time_derive == "拍摄日期":
+            # 从EXIF数据中获取拍摄时间
+            exif_data = self.get_exif_data(file_path)
+            date_time_str = exif_data.get('DateTime')
+            if date_time_str:
+                try:
+                    return datetime.datetime.strptime(date_time_str, '%Y-%m-%d %H:%M:%S')
+                except (ValueError, TypeError):
+                    pass
+            # 如果无法获取拍摄时间，使用文件创建时间
+            return datetime.datetime.fromtimestamp(file_path.stat().st_ctime)
+        elif self.time_derive == "最早时间":
             return datetime.datetime.fromtimestamp(file_path.stat().st_ctime)
         elif self.time_derive == "修改时间":
             return datetime.datetime.fromtimestamp(file_path.stat().st_mtime)
@@ -428,3 +468,209 @@ class SmartArrangeThread(QtCore.QThread):
         log_message = f"[{current_time}] [{level}] {message}"
         self.log_signal.emit(level, log_message)
         print(log_message)
+    
+    def get_exif_data(self, file_path):
+        """获取文件的EXIF元数据"""
+        exif_data = {}
+        suffix = file_path.suffix.lower()
+        create_time = datetime.datetime.fromtimestamp(file_path.stat().st_ctime)
+        modify_time = datetime.datetime.fromtimestamp(file_path.stat().st_mtime)
+        
+        try:
+            if suffix in ('.jpg', '.jpeg', '.tiff', '.tif'):
+                with open(file_path, 'rb') as f:
+                    tags = exifread.process_file(f, details=False)
+                date_taken = self.parse_exif_datetime(tags)
+                lat_ref = str(tags.get('GPS GPSLatitudeRef', '')).strip()
+                lon_ref = str(tags.get('GPS GPSLongitudeRef', '')).strip()
+                lat = self.convert_to_degrees(tags.get('GPS GPSLatitude'))
+                lon = self.convert_to_degrees(tags.get('GPS GPSLongitude'))
+                if lat and lon:
+                    lat = -lat if lat_ref.lower() == 's' else lat
+                    lon = -lon if lon_ref.lower() == 'w' else lon
+                    exif_data.update({'GPS GPSLatitude': lat, 'GPS GPSLongitude': lon})
+                exif_data.update({
+                    'Make': str(tags.get('Image Make', '')).strip() or None,
+                    'Model': str(tags.get('Image Model', '')).strip() or None
+                })
+            elif suffix == '.heic':
+                heif_file = pillow_heif.read_heif(file_path)
+                exif_raw = heif_file.info.get('exif', b'')
+                if exif_raw.startswith(b'Exif\x00\x00'):
+                    exif_raw = exif_raw[6:]
+                if exif_raw:
+                    tags = exifread.process_file(io.BytesIO(exif_raw), details=False)
+                    date_taken = self.parse_exif_datetime(tags)
+                    lat_ref = str(tags.get('GPS GPSLatitudeRef', '')).strip()
+                    lon_ref = str(tags.get('GPS GPSLongitudeRef', '')).strip()
+                    lat = self.convert_to_degrees(tags.get('GPS GPSLatitude'))
+                    lon = self.convert_to_degrees(tags.get('GPS GPSLongitude'))
+                    if lat and lon:
+                        lat = -lat if lat_ref.lower() == 's' else lat
+                        lon = -lon if lon_ref.lower() == 'w' else lon
+                        exif_data.update({'GPS GPSLatitude': lat, 'GPS GPSLongitude': lon})
+                    exif_data.update({
+                        'Make': str(tags.get('Image Make', '')).strip() or None,
+                        'Model': str(tags.get('Image Model', '')).strip() or None,
+                    })
+            elif suffix == '.png':
+                with Image.open(file_path) as img:
+                    # 尝试从PNG元数据中获取创建时间
+                    creation_time = img.info.get('Creation Time')
+                    if creation_time:
+                        date_taken = self.parse_datetime(creation_time)
+                    else:
+                        date_taken = None
+            else:
+                date_taken = None
+
+            # 设置日期时间
+            if self.time_derive == "拍摄日期":
+                exif_data['DateTime'] = date_taken.strftime('%Y-%m-%d %H:%M:%S') if date_taken else None
+            elif self.time_derive == "创建时间":
+                exif_data['DateTime'] = create_time.strftime('%Y-%m-%d %H:%M:%S')
+            elif self.time_derive == "修改时间":
+                exif_data['DateTime'] = modify_time.strftime('%Y-%m-%d %H:%M:%S')
+            else:
+                times = [t for t in [date_taken, create_time, modify_time] if t is not None]
+                earliest_time = min(times) if times else modify_time
+                exif_data['DateTime'] = earliest_time.strftime('%Y-%m-%d %H:%M:%S')
+                
+        except Exception as e:
+            self.log("DEBUG", f"获取 {file_path} 的EXIF数据时出错: {str(e)}")
+            # 出错时使用文件系统时间
+            exif_data['DateTime'] = create_time.strftime('%Y-%m-%d %H:%M:%S')
+            
+        return exif_data
+
+    def parse_exif_datetime(self, tags):
+        """解析EXIF中的日期时间信息"""
+        try:
+            # 尝试获取DateTimeOriginal（原始拍摄时间）
+            datetime_str = str(tags.get('EXIF DateTimeOriginal', ''))
+            if datetime_str and datetime_str != 'None':
+                return datetime.datetime.strptime(datetime_str, '%Y:%m:%d %H:%M:%S')
+            
+            # 尝试获取DateTime（修改时间）
+            datetime_str = str(tags.get('Image DateTime', ''))
+            if datetime_str and datetime_str != 'None':
+                return datetime.datetime.strptime(datetime_str, '%Y:%m:%d %H:%M:%S')
+                
+        except (ValueError, TypeError):
+            pass
+            
+        return None
+
+    def parse_datetime(self, datetime_str):
+        """解析各种格式的日期时间字符串"""
+        if not datetime_str:
+            return None
+            
+        try:
+            # 尝试常见格式
+            formats = [
+                '%Y:%m:%d %H:%M:%S',
+                '%Y-%m-%d %H:%M:%S', 
+                '%Y/%m/%d %H:%M:%S',
+                '%Y%m%d%H%M%S',
+                '%Y-%m-%d',
+                '%Y/%m/%d',
+                '%Y%m%d'
+            ]
+            
+            for fmt in formats:
+                try:
+                    return datetime.datetime.strptime(datetime_str, fmt)
+                except ValueError:
+                    continue
+                    
+        except (ValueError, TypeError):
+            pass
+            
+        return None
+
+    def get_city_and_province(self, lat, lon):
+        """根据经纬度获取省份和城市信息"""
+        if not hasattr(self, 'province_data') or not hasattr(self, 'city_data'):
+            return "未知省份", "未知城市"
+
+        def is_point_in_polygon(x, y, polygon):
+            """判断点是否在多边形内"""
+            if not isinstance(polygon, (list, tuple)) or len(polygon) < 3:
+                return False
+            inside, n = False, len(polygon)
+            for i in range(n + 1):
+                p1x, p1y = polygon[i % n]
+                p2x, p2y = polygon[(i + 1) % n]
+                if y > min(p1y, p2y) and y <= max(p1y, p2y) and x <= max(p1x, p2x):
+                    if p1y != p2y: 
+                        x_intercept = (y - p1y) * (p2x - p1x) / (p2y - p1y) + p1x
+                    if p1x == p2x or x <= x_intercept: 
+                        inside = not inside
+            return inside
+
+        def query_location(longitude, latitude, data):
+            """查询位置信息"""
+            for feature in data['features']:
+                name, coordinates = feature['properties']['name'], feature['geometry']['coordinates']
+                polygons = [polygon for multi_polygon in coordinates for polygon in
+                            ([multi_polygon] if isinstance(multi_polygon[0][0], (float, int)) else multi_polygon)]
+                if any(is_point_in_polygon(longitude, latitude, polygon) for polygon in polygons):
+                    return name
+            return None
+
+        province = query_location(lon, lat, self.province_data)
+        city = query_location(lon, lat, self.city_data)
+
+        return (
+            province if province else "未知省份",
+            city if city else "未知城市"
+        )
+
+    @staticmethod
+    def get_address(lat, lon, max_retries=3, wait_time_on_limit=2):
+        """通过高德地图API获取详细地址"""
+        key = 'bc383698582923d55b5137c3439cf4b2'
+        url = f'https://restapi.amap.com/v3/geocode/regeo?key={key}&location={lon},{lat}'
+
+        for retry in range(max_retries):
+            try:
+                response = requests.get(url, timeout=10).json()
+                if response.get('status') == '1' and response.get('info', '').lower() == 'ok':
+                    address = response['regeocode']['formatted_address']
+                    return address
+                elif 'cuqps_has_exceeded_the_limit' in response.get('info', '').lower() and retry < max_retries - 1:
+                    time.sleep(wait_time_on_limit)
+            except Exception as e:
+                pass
+            if retry < max_retries - 1:
+                time.sleep(wait_time_on_limit)
+        return None
+
+    @staticmethod
+    def convert_to_degrees(value):
+        """将EXIF中的GPS坐标转换为十进制度数"""
+        if not value:
+            return None
+        try:
+            d = float(value.values[0].num) / float(value.values[0].den)
+            m = float(value.values[1].num) / float(value.values[1].den)
+            s = float(value.values[2].num) / float(value.values[2].den)
+            result = d + (m / 60.0) + (s / 3600.0)
+            return result
+        except Exception as e:
+            return None
+
+    def build_new_file_name(self, file_path, file_time, original_name):
+        """构建新的文件名"""
+        if not self.file_name_structure:
+            return original_name
+        
+        # 根据选择的标签和顺序构建文件名
+        parts = []
+        for tag in self.file_name_structure:
+            parts.append(self.get_file_name_part(tag, file_path, file_time, original_name))
+        
+        # 使用分隔符连接各个部分
+        return self.separator.join(parts)
+        

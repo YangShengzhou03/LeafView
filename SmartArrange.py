@@ -148,6 +148,19 @@ class SmartArrange(QtWidgets.QWidget):
                 self.log("WARNING", "请先导入一个有效的文件夹。")
                 return
 
+            # 弹出确认对话框
+            reply = QMessageBox.question(
+                self,
+                "确认整理操作",
+                "一旦开始整理，操作的文件将无法恢复，请务必备份好数据！\n\n是否确认开始整理？",
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                QMessageBox.StandardButton.No
+            )
+            
+            if reply != QMessageBox.StandardButton.Yes:
+                self.log("INFO", "用户取消了整理操作")
+                return
+
             # 构建分类结构
             SmartArrange_structure = [
                 getattr(self.parent, f'comboBox_level_{i}').currentText()
