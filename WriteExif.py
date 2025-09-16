@@ -64,6 +64,9 @@ class WriteExif(QWidget):
         self.update_button_state()
         self.parent.dateTimeEdit_shootTime.setDateTime(QDateTime.currentDateTime())
         self.parent.dateTimeEdit_shootTime.hide()
+        # 初始化时隐藏经纬度文本框
+        self.parent.lineEdit_EXIF_longitude.hide()
+        self.parent.lineEdit_EXIF_latitude.hide()
         self.log("DEBUG", "欢迎使用图像属性写入功能，不写入项目留空即可。")
         
     def init_camera_brand_model(self):
@@ -83,9 +86,6 @@ class WriteExif(QWidget):
                 "奥林巴斯": ["OM-1", "EM-1 Mark III", "EM-5 Mark III"],
                 "宾得": ["K-1 II", "K-3 Mark III", "KP"]
             }
-        
-        # 添加品牌到下拉框
-        self.parent.comboBox_brand.addItem("不设置")
         for brand in sorted(camera_data.keys()):
             self.parent.comboBox_brand.addItem(brand)
         
@@ -111,7 +111,6 @@ class WriteExif(QWidget):
         """当相机品牌选择变化时，更新型号下拉框"""
         # 清空型号下拉框
         self.parent.comboBox_model.clear()
-        self.parent.comboBox_model.addItem("不设置")
         
         # 如果选择了具体品牌，添加对应的型号
         if index > 0:
@@ -125,6 +124,21 @@ class WriteExif(QWidget):
         self.parent.toolButton_StartEXIF.clicked.connect(self.toggle_exif_writing)
         self.parent.pushButton_Position.clicked.connect(self.update_position_by_ip)
         self.parent.comboBox_shootTime.currentIndexChanged.connect(self.on_combobox_time_changed)
+        # 添加位置下拉框的信号连接
+        self.parent.comboBox_location.currentIndexChanged.connect(self.on_combobox_location_changed)
+
+    def on_combobox_location_changed(self, index):
+        """位置下拉框选择变化处理"""
+        if index == 1:  # 选择"经纬度"
+            # 显示经纬度文本框，隐藏位置输入框
+            self.parent.lineEdit_EXIF_longitude.show()
+            self.parent.lineEdit_EXIF_latitude.show()
+            self.parent.horizontalFrame.hide()  # 隐藏位置输入框和按钮
+        else:  # 选择"搜位置"或其他
+            # 隐藏经纬度文本框，显示位置输入框
+            self.parent.lineEdit_EXIF_longitude.hide()
+            self.parent.lineEdit_EXIF_latitude.hide()
+            self.parent.horizontalFrame.show()  # 显示位置输入框和按钮
 
     def on_combobox_time_changed(self, index):
         """拍摄时间下拉框选择变化处理"""
@@ -262,12 +276,33 @@ class WriteExif(QWidget):
         }
         
         # 处理位置信息
-        address = self.parent.lineEdit_EXIF_Position.text()
-        if address:
-            if coords := self.get_location(address):
-                params['position'] = ','.join(coords)
+        location_type = self.parent.comboBox_location.currentIndex()
+        if location_type == 0:  # 搜位置
+            address = self.parent.lineEdit_EXIF_Position.text()
+            if address:
+                if coords := self.get_location(address):
+                    params['position'] = ','.join(coords)
+                else:
+                    self.log("ERROR", f"无法找到地址'{address}'对应的地理坐标")
+                    return False
+        elif location_type == 1:  # 经纬度
+            longitude = self.parent.lineEdit_EXIF_longitude.text()
+            latitude = self.parent.lineEdit_EXIF_latitude.text()
+            if longitude and latitude:
+                # 验证经纬度格式
+                try:
+                    lon = float(longitude)
+                    lat = float(latitude)
+                    if -180 <= lon <= 180 and -90 <= lat <= 90:
+                        params['position'] = f"{lat},{lon}"
+                    else:
+                        self.log("ERROR", "经纬度范围无效，经度应在-180到180之间，纬度应在-90到90之间")
+                        return False
+                except ValueError:
+                    self.log("ERROR", "经纬度格式无效，请输入有效的数字")
+                    return False
             else:
-                self.log("ERROR", f"无法找到地址'{address}'对应的地理坐标")
+                self.log("ERROR", "请输入经纬度信息")
                 return False
         
         # 创建并启动工作线程

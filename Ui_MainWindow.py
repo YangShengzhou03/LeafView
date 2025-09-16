@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(922, 572)
+        MainWindow.resize(949, 572)
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
@@ -518,7 +518,7 @@ class Ui_MainWindow(object):
         self.scrollArea_page0.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.scrollArea_page0.setObjectName("scrollArea_page0")
         self.scrollAreaWidgetContents_folds = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_folds.setGeometry(QtCore.QRect(0, 0, 506, 516))
+        self.scrollAreaWidgetContents_folds.setGeometry(QtCore.QRect(0, 0, 533, 516))
         self.scrollAreaWidgetContents_folds.setObjectName("scrollAreaWidgetContents_folds")
         self.gridLayout_6 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents_folds)
         self.gridLayout_6.setContentsMargins(0, 0, 0, 0)
@@ -2262,7 +2262,7 @@ class Ui_MainWindow(object):
         self.verticalFrame_12.setObjectName("verticalFrame_12")
         self.horizontalLayout_64 = QtWidgets.QHBoxLayout(self.verticalFrame_12)
         self.horizontalLayout_64.setContentsMargins(9, 6, 9, 6)
-        self.horizontalLayout_64.setSpacing(9)
+        self.horizontalLayout_64.setSpacing(12)
         self.horizontalLayout_64.setObjectName("horizontalLayout_64")
         self.label_8 = QtWidgets.QLabel(parent=self.verticalFrame_12)
         font = QtGui.QFont()
@@ -2328,6 +2328,7 @@ class Ui_MainWindow(object):
 "}")
         self.label_levelContrast.setObjectName("label_levelContrast")
         self.horizontalLayout_64.addWidget(self.label_levelContrast)
+        self.horizontalLayout_64.setStretch(1, 1)
         self.verticalLayout_37.addWidget(self.verticalFrame_12)
         self.verticalFrame_9 = QtWidgets.QFrame(parent=self.verticalWidget)
         self.verticalFrame_9.setStyleSheet("background:rgb(255, 255, 255);\n"
@@ -2515,7 +2516,7 @@ class Ui_MainWindow(object):
         self.scrollArea_pageSimilar.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.scrollArea_pageSimilar.setObjectName("scrollArea_pageSimilar")
         self.scrollAreaWidgetContents_Contrast = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_Contrast.setGeometry(QtCore.QRect(0, 0, 231, 474))
+        self.scrollAreaWidgetContents_Contrast.setGeometry(QtCore.QRect(0, 0, 100, 30))
         self.scrollAreaWidgetContents_Contrast.setObjectName("scrollAreaWidgetContents_Contrast")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents_Contrast)
         self.gridLayout_2.setObjectName("gridLayout_2")
@@ -2671,6 +2672,11 @@ class Ui_MainWindow(object):
         self.label_35.setObjectName("label_35")
         self.horizontalLayout_3.addWidget(self.label_35)
         self.lineEdit_EXIF_Title = QtWidgets.QLineEdit(parent=self.horizontalFrame_9)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.lineEdit_EXIF_Title.sizePolicy().hasHeightForWidth())
+        self.lineEdit_EXIF_Title.setSizePolicy(sizePolicy)
         self.lineEdit_EXIF_Title.setStyleSheet("QLineEdit {\n"
 "    border: 1px solid qradialgradient(\n"
 "        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
@@ -2702,6 +2708,7 @@ class Ui_MainWindow(object):
         self.lineEdit_EXIF_Title.setInputMask("")
         self.lineEdit_EXIF_Title.setObjectName("lineEdit_EXIF_Title")
         self.horizontalLayout_3.addWidget(self.lineEdit_EXIF_Title)
+        self.horizontalLayout_3.setStretch(1, 1)
         self.horizontalLayout_69.addLayout(self.horizontalLayout_3)
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_5.setSpacing(6)
@@ -2776,11 +2783,17 @@ class Ui_MainWindow(object):
         self.pushButton_star_5.setObjectName("pushButton_star_5")
         self.horizontalLayout_star.addWidget(self.pushButton_star_5)
         self.horizontalLayout_5.addLayout(self.horizontalLayout_star)
+        self.horizontalLayout_5.setStretch(1, 1)
         self.horizontalLayout_69.addLayout(self.horizontalLayout_5)
         self.horizontalLayout_7 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_7.setSpacing(6)
         self.horizontalLayout_7.setObjectName("horizontalLayout_7")
         self.label_36 = QtWidgets.QLabel(parent=self.horizontalFrame_9)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label_36.sizePolicy().hasHeightForWidth())
+        self.label_36.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_36.setFont(font)
@@ -2791,6 +2804,7 @@ class Ui_MainWindow(object):
         self.label_36.setObjectName("label_36")
         self.horizontalLayout_7.addWidget(self.label_36)
         self.comboBox_brand = QtWidgets.QComboBox(parent=self.horizontalFrame_9)
+        self.comboBox_brand.setMinimumSize(QtCore.QSize(82, 30))
         self.comboBox_brand.setStyleSheet("QComboBox {\n"
 "    background-color: #ffffff;\n"
 "    border: 1px solid #d1d5db;\n"
@@ -2894,10 +2908,66 @@ class Ui_MainWindow(object):
 "    border: 1px solid #8b5cf6;\n"
 "    outline: none;\n"
 "    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
-"}")
+"}\n"
+"\n"
+"/* QComboBox下拉列表中的滚动条样式 */\n"
+"QComboBox QAbstractItemView QScrollBar:vertical {\n"
+"    width: 8px;\n"
+"    background: transparent;\n"
+"    margin: 2px 0;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView QScrollBar::handle:vertical {\n"
+"    background: rgba(134, 119, 253, 0.3);\n"
+"    border-radius: 4px;\n"
+"    min-height: 20px;\n"
+"    margin: 2px;\n"
+"    transition: background 0.2s;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView QScrollBar::handle:vertical:hover {\n"
+"    background: rgba(134, 119, 253, 0.6);\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView QScrollBar::handle:vertical:pressed {\n"
+"    background: rgba(134, 119, 253, 0.8);\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView QScrollBar:horizontal {\n"
+"    height: 8px;\n"
+"    background: transparent;\n"
+"    margin: 0 2px;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView QScrollBar::handle:horizontal {\n"
+"    background: rgba(134, 119, 253, 0.3);\n"
+"    border-radius: 4px;\n"
+"    min-width: 20px;\n"
+"    margin: 2px;\n"
+"}\n"
+"\n"
+"/* 隐藏滚动条的页面区域 */\n"
+"QComboBox QAbstractItemView QScrollBar::add-page:vertical,\n"
+"QComboBox QAbstractItemView QScrollBar::sub-page:vertical,\n"
+"QComboBox QAbstractItemView QScrollBar::add-page:horizontal,\n"
+"QComboBox QAbstractItemView QScrollBar::sub-page:horizontal {\n"
+"    background: transparent;\n"
+"}\n"
+"\n"
+"/* 隐藏滚动条的箭头按钮 */\n"
+"QComboBox QAbstractItemView QScrollBar::add-line:vertical,\n"
+"QComboBox QAbstractItemView QScrollBar::sub-line:vertical,\n"
+"QComboBox QAbstractItemView QScrollBar::add-line:horizontal,\n"
+"QComboBox QAbstractItemView QScrollBar::sub-line:horizontal {\n"
+"    height: 0;\n"
+"    width: 0;\n"
+"    background: transparent;\n"
+"}\n"
+"")
         self.comboBox_brand.setObjectName("comboBox_brand")
         self.comboBox_brand.addItem("")
         self.horizontalLayout_7.addWidget(self.comboBox_brand)
+        self.horizontalLayout_7.setStretch(1, 1)
         self.horizontalLayout_69.addLayout(self.horizontalLayout_7)
         self.horizontalLayout_13 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_13.setSpacing(6)
@@ -2913,6 +2983,7 @@ class Ui_MainWindow(object):
         self.label_37.setObjectName("label_37")
         self.horizontalLayout_13.addWidget(self.label_37)
         self.comboBox_model = QtWidgets.QComboBox(parent=self.horizontalFrame_9)
+        self.comboBox_model.setMinimumSize(QtCore.QSize(82, 30))
         self.comboBox_model.setStyleSheet("QComboBox {\n"
 "    background-color: #ffffff;\n"
 "    border: 1px solid #d1d5db;\n"
@@ -3018,8 +3089,8 @@ class Ui_MainWindow(object):
 "    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
 "}")
         self.comboBox_model.setObjectName("comboBox_model")
-        self.comboBox_model.addItem("")
         self.horizontalLayout_13.addWidget(self.comboBox_model)
+        self.horizontalLayout_13.setStretch(1, 1)
         self.horizontalLayout_69.addLayout(self.horizontalLayout_13)
         self.verticalLayout_47.addWidget(self.horizontalFrame_9)
         self.horizontalFrame_8 = QtWidgets.QFrame(parent=self.page_4)
@@ -3076,6 +3147,7 @@ class Ui_MainWindow(object):
 "}")
         self.lineEdit_EXIF_Author.setObjectName("lineEdit_EXIF_Author")
         self.horizontalLayout_9.addWidget(self.lineEdit_EXIF_Author)
+        self.horizontalLayout_9.setStretch(1, 1)
         self.horizontalLayout_68.addLayout(self.horizontalLayout_9)
         self.horizontalLayout_10 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_10.setObjectName("horizontalLayout_10")
@@ -3120,6 +3192,7 @@ class Ui_MainWindow(object):
 "}")
         self.lineEdit_EXIF_Theme.setObjectName("lineEdit_EXIF_Theme")
         self.horizontalLayout_10.addWidget(self.lineEdit_EXIF_Theme)
+        self.horizontalLayout_10.setStretch(1, 1)
         self.horizontalLayout_68.addLayout(self.horizontalLayout_10)
         self.horizontalLayout_11 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_11.setObjectName("horizontalLayout_11")
@@ -3165,6 +3238,7 @@ class Ui_MainWindow(object):
 "}")
         self.lineEdit_EXIF_Copyright.setObjectName("lineEdit_EXIF_Copyright")
         self.horizontalLayout_11.addWidget(self.lineEdit_EXIF_Copyright)
+        self.horizontalLayout_11.setStretch(1, 1)
         self.horizontalLayout_68.addLayout(self.horizontalLayout_11)
         self.verticalLayout_47.addWidget(self.horizontalFrame_8)
         self.horizontalFrame_10 = QtWidgets.QFrame(parent=self.page_4)
@@ -3179,6 +3253,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_72.setSpacing(12)
         self.horizontalLayout_72.setObjectName("horizontalLayout_72")
         self.horizontalLayout_15 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_15.setContentsMargins(6, 6, 6, 6)
         self.horizontalLayout_15.setObjectName("horizontalLayout_15")
         self.label_44 = QtWidgets.QLabel(parent=self.horizontalFrame_10)
         font = QtGui.QFont()
@@ -3191,6 +3266,7 @@ class Ui_MainWindow(object):
         self.label_44.setObjectName("label_44")
         self.horizontalLayout_15.addWidget(self.label_44)
         self.comboBox_shootTime = QtWidgets.QComboBox(parent=self.horizontalFrame_10)
+        self.comboBox_shootTime.setMinimumSize(QtCore.QSize(82, 30))
         self.comboBox_shootTime.setStyleSheet("QComboBox {\n"
 "    background-color: #ffffff;\n"
 "    border: 1px solid #d1d5db;\n"
@@ -3301,6 +3377,11 @@ class Ui_MainWindow(object):
         self.comboBox_shootTime.addItem("")
         self.horizontalLayout_15.addWidget(self.comboBox_shootTime)
         self.dateTimeEdit_shootTime = QtWidgets.QDateTimeEdit(parent=self.horizontalFrame_10)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.dateTimeEdit_shootTime.sizePolicy().hasHeightForWidth())
+        self.dateTimeEdit_shootTime.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setPointSize(-1)
         self.dateTimeEdit_shootTime.setFont(font)
@@ -3311,7 +3392,7 @@ class Ui_MainWindow(object):
 "        stop:1 rgba(119, 111, 252, 255)\n"
 "    );\n"
 "    background: rgb(245, 249, 254);\n"
-"    padding: 8px 4px;\n"
+"    padding: 4px 2px;\n"
 "    border-radius: 6px;\n"
 "    color: #333;\n"
 "    selection-background-color: rgba(134, 119, 253, 180);\n"
@@ -3349,6 +3430,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_15.setStretch(1, 1)
         self.horizontalLayout_72.addLayout(self.horizontalLayout_15)
         self.horizontalLayout_12 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_12.setContentsMargins(6, 6, 6, 6)
         self.horizontalLayout_12.setSpacing(6)
         self.horizontalLayout_12.setObjectName("horizontalLayout_12")
         self.label_41 = QtWidgets.QLabel(parent=self.horizontalFrame_10)
@@ -3361,6 +3443,177 @@ class Ui_MainWindow(object):
 "}")
         self.label_41.setObjectName("label_41")
         self.horizontalLayout_12.addWidget(self.label_41)
+        self.comboBox_location = QtWidgets.QComboBox(parent=self.horizontalFrame_10)
+        self.comboBox_location.setStyleSheet("QComboBox {\n"
+"    background-color: #ffffff;\n"
+"    border: 1px solid #d1d5db;\n"
+"    border-radius: 6px;\n"
+"    padding: 6px 12px;\n"
+"    color: rgb(0, 0, 0);\n"
+"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
+"    font-size: 13px;\n"
+"    min-width: 56px;\n"
+"    min-height: 16px;\n"
+"    selection-background-color: #6d28d9;\n"
+"    selection-color: white;\n"
+"    transition: all 0.2s ease-out;\n"
+"}\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    width: 0;\n"
+"    border: none;\n"
+"    padding: 0;\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow {\n"
+"    image: none;\n"
+"}\n"
+"\n"
+"QComboBox:hover {\n"
+"    border-color: #a5b4fc;\n"
+"    background-color: #f8fafc;\n"
+"    box-shadow: 0 1px 3px rgba(166, 175, 195, 0.2);\n"
+"}\n"
+"\n"
+"QComboBox:on {\n"
+"    background-color: #f5f3ff;\n"
+"    border-bottom-left-radius: 0;\n"
+"    border-bottom-right-radius: 0;\n"
+"    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);\n"
+"}\n"
+"\n"
+"QComboBox:pressed {\n"
+"    background-color: #ede9fe;\n"
+"    transform: translateY(1px);\n"
+"}\n"
+"\n"
+"QComboBox:disabled {\n"
+"    background-color: #f3f4f6;\n"
+"    color: #9ca3af;\n"
+"    border-color: #e5e7eb;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView {\n"
+"    border: 1px solid #e5e7eb;\n"
+"    border-top: none;\n"
+"    border-radius: 0 0 6px 6px;\n"
+"    background: white;\n"
+"    padding: 4px 0;\n"
+"    margin-top: -1px;\n"
+"    selection-background-color: #6d28d9;\n"
+"    selection-color: white;\n"
+"    outline: none;\n"
+"    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);\n"
+"    min-width: 88px;\n"
+"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
+"    font-size: 13px;\n"
+"    color: black;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item {\n"
+"    padding: 6px 2px;\n"
+"    margin: 0 4px;\n"
+"    border-radius: 3px;\n"
+"    border-left: 1px solid transparent;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item:hover {\n"
+"    background-color: #f8f5ff;\n"
+"    color: #6d28d9;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item:selected {\n"
+"    background-color: #faf7ff;\n"
+"    color: #6d28d9;\n"
+"    border-left: 1px solid #6d28d9;\n"
+"    font-weight: normal;\n"
+"    padding-left: 11px;\n"
+"}\n"
+"\n"
+"QComboBox:editable {\n"
+"    background: white;\n"
+"    padding-right: 12px;\n"
+"}\n"
+"\n"
+"QComboBox:editable:on {\n"
+"    background: #f5f3ff;\n"
+"}\n"
+"\n"
+"QComboBox:!editable {\n"
+"    background: #f9fafb;\n"
+"}\n"
+"\n"
+"QComboBox:focus {\n"
+"    border: 1px solid #8b5cf6;\n"
+"    outline: none;\n"
+"    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
+"}")
+        self.comboBox_location.setObjectName("comboBox_location")
+        self.comboBox_location.addItem("")
+        self.comboBox_location.addItem("")
+        self.horizontalLayout_12.addWidget(self.comboBox_location)
+        self.lineEdit_EXIF_longitude = QtWidgets.QLineEdit(parent=self.horizontalFrame_10)
+        self.lineEdit_EXIF_longitude.setStyleSheet("QLineEdit {\n"
+"    border: 1px solid qradialgradient(\n"
+"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
+"        stop:0.66 rgba(134, 119, 253, 255),\n"
+"        stop:1 rgba(119, 111, 252, 255)\n"
+"    );\n"
+"    background: rgb(245, 249, 254);\n"
+"    padding: 8px 6px;\n"
+"    border-radius: 6px;\n"
+"    color: #333;\n"
+"    selection-background-color: rgba(134, 119, 253, 180);\n"
+"    selection-color: white;\n"
+"    font-size: 12px;\n"
+"}\n"
+"\n"
+"QLineEdit:focus {\n"
+"    border: 2px solid qradialgradient(\n"
+"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
+"        stop:0.66 rgba(134, 119, 253, 255),\n"
+"        stop:1 rgba(119, 111, 252, 255)\n"
+"    );\n"
+"    outline: none;\n"
+"}\n"
+"\n"
+"QLineEdit:disabled {\n"
+"    background: #eaeaea;\n"
+"    color: #aaa;\n"
+"}")
+        self.lineEdit_EXIF_longitude.setObjectName("lineEdit_EXIF_longitude")
+        self.horizontalLayout_12.addWidget(self.lineEdit_EXIF_longitude)
+        self.lineEdit_EXIF_latitude = QtWidgets.QLineEdit(parent=self.horizontalFrame_10)
+        self.lineEdit_EXIF_latitude.setStyleSheet("QLineEdit {\n"
+"    border: 1px solid qradialgradient(\n"
+"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
+"        stop:0.66 rgba(134, 119, 253, 255),\n"
+"        stop:1 rgba(119, 111, 252, 255)\n"
+"    );\n"
+"    background: rgb(245, 249, 254);\n"
+"    padding: 8px 6px;\n"
+"    border-radius: 6px;\n"
+"    color: #333;\n"
+"    selection-background-color: rgba(134, 119, 253, 180);\n"
+"    selection-color: white;\n"
+"    font-size: 12px;\n"
+"}\n"
+"\n"
+"QLineEdit:focus {\n"
+"    border: 2px solid qradialgradient(\n"
+"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
+"        stop:0.66 rgba(134, 119, 253, 255),\n"
+"        stop:1 rgba(119, 111, 252, 255)\n"
+"    );\n"
+"    outline: none;\n"
+"}\n"
+"\n"
+"QLineEdit:disabled {\n"
+"    background: #eaeaea;\n"
+"    color: #aaa;\n"
+"}")
+        self.lineEdit_EXIF_latitude.setObjectName("lineEdit_EXIF_latitude")
+        self.horizontalLayout_12.addWidget(self.lineEdit_EXIF_latitude)
         self.horizontalFrame = QtWidgets.QFrame(parent=self.horizontalFrame_10)
         self.horizontalFrame.setStyleSheet("QFrame {\n"
 "    border: 1px solid qradialgradient(\n"
@@ -3435,6 +3688,7 @@ class Ui_MainWindow(object):
         self.pushButton_Position = QtWidgets.QPushButton(parent=self.horizontalFrame)
         self.pushButton_Position.setMinimumSize(QtCore.QSize(20, 20))
         self.pushButton_Position.setMaximumSize(QtCore.QSize(20, 20))
+        self.pushButton_Position.setStyleSheet("background:rgba(0, 0, 0, 0);")
         self.pushButton_Position.setText("")
         icon12 = QtGui.QIcon()
         icon12.addPixmap(QtGui.QPixmap("resources/img/page_4/位置.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
@@ -3443,6 +3697,7 @@ class Ui_MainWindow(object):
         self.pushButton_Position.setObjectName("pushButton_Position")
         self.horizontalLayout_2.addWidget(self.pushButton_Position)
         self.horizontalLayout_12.addWidget(self.horizontalFrame)
+        self.horizontalLayout_12.setStretch(4, 1)
         self.horizontalLayout_72.addLayout(self.horizontalLayout_12)
         self.verticalLayout_47.addWidget(self.horizontalFrame_10)
         self.verticalFrame_15 = QtWidgets.QFrame(parent=self.page_4)
@@ -3732,7 +3987,7 @@ class Ui_MainWindow(object):
         self.label_PreviewName.setText(_translate("MainWindow", "文件名不变"))
         self.toolButton_startSmartArrange.setText(_translate("MainWindow", "开始整理"))
         self.label_8.setText(_translate("MainWindow", "相似度"))
-        self.label_levelContrast.setText(_translate("MainWindow", "完全一致"))
+        self.label_levelContrast.setText(_translate("MainWindow", "完全一致（100%）"))
         self.toolButton_startContrast.setText(_translate("MainWindow", "开始对比"))
         self.toolButton_delete.setText(_translate("MainWindow", "删除"))
         self.toolButton_move.setText(_translate("MainWindow", "移动"))
@@ -3743,7 +3998,6 @@ class Ui_MainWindow(object):
         self.label_36.setText(_translate("MainWindow", "品牌"))
         self.comboBox_brand.setItemText(0, _translate("MainWindow", "不写入"))
         self.label_37.setText(_translate("MainWindow", "机型"))
-        self.comboBox_model.setItemText(0, _translate("MainWindow", "不写入"))
         self.label_38.setText(_translate("MainWindow", "作者"))
         self.lineEdit_EXIF_Author.setPlaceholderText(_translate("MainWindow", "YangShengzhou"))
         self.label_39.setText(_translate("MainWindow", "主题"))
@@ -3755,6 +4009,10 @@ class Ui_MainWindow(object):
         self.comboBox_shootTime.setItemText(1, _translate("MainWindow", "从文件名"))
         self.comboBox_shootTime.setItemText(2, _translate("MainWindow", "指定时间"))
         self.dateTimeEdit_shootTime.setDisplayFormat(_translate("MainWindow", "yyyy/MM/dd HH:mm:ss"))
-        self.label_41.setText(_translate("MainWindow", "拍摄位置 "))
+        self.label_41.setText(_translate("MainWindow", "拍摄地点 "))
+        self.comboBox_location.setItemText(0, _translate("MainWindow", "搜位置"))
+        self.comboBox_location.setItemText(1, _translate("MainWindow", "经纬度"))
+        self.lineEdit_EXIF_longitude.setPlaceholderText(_translate("MainWindow", "经度"))
+        self.lineEdit_EXIF_latitude.setPlaceholderText(_translate("MainWindow", "维度"))
         self.lineEdit_EXIF_Position.setPlaceholderText(_translate("MainWindow", "江西科技师范大学"))
         self.toolButton_StartEXIF.setText(_translate("MainWindow", "开始写入"))
