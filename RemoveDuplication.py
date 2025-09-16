@@ -158,7 +158,7 @@ class Contrast(QtWidgets.QWidget):
             text, color = "巨大差异", "#F44336"
         
         self.parent.label_levelContrast.setText(f"{text} ({val}%)")
-        self.parent.label_levelContrast.setStyleSheet(f"QLabel{{color:{color};font-weight:bold;}}")
+        self.parent.label_levelContrast.setStyleSheet(f"QLabel{{color:{color};}}")
 
     def connect_signals(self):
         """连接信号和槽函数"""
