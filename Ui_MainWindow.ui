@@ -2958,7 +2958,7 @@ QPushButton:pressed {
                           </widget>
                          </item>
                          <item>
-                          <layout class="QHBoxLayout" name="horizontalLayout_46">
+                          <layout class="QHBoxLayout" name="horizontalLayout_46" stretch="0,0,1">
                            <property name="spacing">
                             <number>4</number>
                            </property>

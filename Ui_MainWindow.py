@@ -1856,6 +1856,7 @@ class Ui_MainWindow(object):
         self.comboBox_separator.addItem("")
         self.comboBox_separator.addItem("")
         self.horizontalLayout_46.addWidget(self.comboBox_separator)
+        self.horizontalLayout_46.setStretch(2, 1)
         self.horizontalLayout_54.addLayout(self.horizontalLayout_46)
         self.verticalLayout_35.addWidget(self.Frame_tags)
         self.horizontalLayout_55 = QtWidgets.QHBoxLayout()

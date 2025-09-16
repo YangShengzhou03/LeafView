@@ -277,7 +277,7 @@ class SmartArrangeThread(QtCore.QThread):
             return category
 
     def get_file_name_part(self, tag, file_path, file_time, original_name):
-        if tag == "原始名称":
+        if tag == "原文件名":
             return original_name
         elif tag == "年份":
             return str(file_time.year)
