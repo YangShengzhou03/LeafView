@@ -118,6 +118,10 @@ class SmartArrangeThread(QtCore.QThread):
             # 加载地理位置数据
             self.load_geographic_data()
 
+            # 记录成功和失败的文件数
+            success_count = 0
+            fail_count = 0
+
             for folder_info in self.folders:
                 if self._stop_flag:
                     self.log("WARNING", "智能整理操作已被用户中断")
@@ -130,24 +134,36 @@ class SmartArrangeThread(QtCore.QThread):
                                                                                     folder_path.parts)] == folder_path.parts:
                         self.log("ERROR", "目标路径不能是待整理文件夹的子路径，这会导致无限循环！")
                         break
-                if not self.classification_structure and not self.file_name_structure:
-                    self.organize_without_classification(folder_info['path'])
-                else:
-                    self.process_folder_with_classification(folder_info)
+                try:
+                    if not self.classification_structure and not self.file_name_structure:
+                        self.organize_without_classification(folder_info['path'])
+                    else:
+                        self.process_folder_with_classification(folder_info)
+                except Exception as e:
+                    self.log("ERROR", f"处理文件夹 {folder_info['path']} 时发生错误: {str(e)}")
+                    fail_count += 1
             
             if not self._stop_flag:
-                self.process_renaming()
+                try:
+                    self.process_renaming()
+                    success_count = len(self.files_to_rename) - fail_count
+                except Exception as e:
+                    self.log("ERROR", f"文件重命名过程中发生错误: {str(e)}")
+                    fail_count += 1
                 
                 # 整理完成后删除所有空文件夹
                 if not self.destination_root:  # 只在移动操作时删除空文件夹
-                    self.delete_empty_folders()
+                    try:
+                        self.delete_empty_folders()
+                    except Exception as e:
+                        self.log("WARNING", f"删除空文件夹时发生错误: {str(e)}")
                 
-                self.log("INFO", "智能整理操作已完成")
+                self.log("INFO", f"智能整理操作已完成，共处理 {success_count} 个文件成功，{fail_count} 个文件失败")
             else:
                 self.log("WARNING", "智能整理操作已被用户取消")
                 
         except Exception as e:
-            self.log("ERROR", f"智能整理过程中发生错误: {str(e)}")
+            self.log("ERROR", f"智能整理过程中发生严重错误: {str(e)}")
 
     def process_folder_with_classification(self, folder_info):
         folder_path = Path(folder_info['path'])
@@ -266,6 +282,9 @@ class SmartArrangeThread(QtCore.QThread):
         deleted_count = 0
         processed_folders = set()
         
+        # 保存所有源文件夹路径，防止误删
+        source_folders = [Path(folder_info['path']).resolve() for folder_info in self.folders]
+        
         # 收集所有处理过的文件夹路径
         for folder_info in self.folders:
             folder_path = Path(folder_info['path'])
@@ -285,7 +304,7 @@ class SmartArrangeThread(QtCore.QThread):
             if folder.exists() and folder.is_dir():
                 try:
                     # 递归删除空文件夹
-                    deleted_in_this_folder = self._recursive_delete_empty_folders(folder)
+                    deleted_in_this_folder = self._recursive_delete_empty_folders(folder, source_folders)
                     deleted_count += deleted_in_this_folder
                 except Exception as e:
                     self.log("ERROR", f"删除文件夹 {folder} 时出错: {str(e)}")
@@ -297,18 +316,22 @@ class SmartArrangeThread(QtCore.QThread):
         self._stop_flag = True
         self.log("INFO", "正在停止智能整理操作...")
 
-    def _recursive_delete_empty_folders(self, folder_path):
+    def _recursive_delete_empty_folders(self, folder_path, source_folders):
         """递归删除空文件夹"""
         deleted_count = 0
         
         if not folder_path.exists() or not folder_path.is_dir():
             return deleted_count
         
+        # 检查是否为源文件夹或系统保护的文件夹
+        if self._is_protected_folder(folder_path, source_folders):
+            return deleted_count
+            
         try:
             # 先递归处理子文件夹
             for item in folder_path.iterdir():
                 if item.is_dir():
-                    deleted_count += self._recursive_delete_empty_folders(item)
+                    deleted_count += self._recursive_delete_empty_folders(item, source_folders)
             
             # 检查当前文件夹是否为空（不包含任何文件或文件夹）
             if not any(folder_path.iterdir()):
@@ -320,13 +343,37 @@ class SmartArrangeThread(QtCore.QThread):
                         deleted_count += 1
                     except Exception as e:
                         self.log("WARNING", f"无法删除文件夹 {folder_path}: {str(e)}")
-                        
+                         
         except PermissionError:
             self.log("WARNING", f"权限不足，无法访问文件夹: {folder_path}")
         except Exception as e:
             self.log("ERROR", f"处理文件夹 {folder_path} 时出错: {str(e)}")
         
         return deleted_count
+        
+    def _is_protected_folder(self, folder_path, source_folders):
+        """检查文件夹是否为用户指定的源文件夹或系统保护的文件夹"""
+        # 检查是否为源文件夹
+        if folder_path in source_folders:
+            return True
+            
+        # 检查是否为系统目录（Windows系统）
+        windows_system_dirs = [
+            Path(os.environ.get('WINDIR', 'C:\Windows')),
+            Path(os.environ.get('SYSTEMROOT', 'C:\Windows')),
+            Path(os.environ.get('ProgramFiles', 'C:\Program Files')),
+            Path(os.environ.get('ProgramFiles(x86)', 'C:\Program Files (x86)')),
+            Path(os.path.expanduser('~')),  # 用户目录
+            Path('C:\\')
+        ]
+        
+        # 规范化路径进行比较
+        folder_path = folder_path.resolve()
+        for system_dir in windows_system_dirs:
+            if system_dir and folder_path.is_relative_to(system_dir):
+                return True
+                
+        return False
 
     def log(self, level, message):
         current_time = datetime.datetime.now().strftime('%H:%M:%S')

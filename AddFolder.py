@@ -28,6 +28,7 @@ class FolderPage(QtWidgets.QWidget):
         super().__init__(parent)
         self.parent = parent  # 主窗口引用
         self.folder_items = []  # 存储所有文件夹项数据
+        self._batch_adding = False  # 批量添加标志，用于控制消息框显示
         
         # 初始化页面设置
         self.init_page()
@@ -90,49 +91,157 @@ class FolderPage(QtWidgets.QWidget):
         检查并添加文件夹
         
         执行路径验证、冲突检查，通过后创建文件夹项
+        增强版：更健壮地处理各种路径关系和重复导入场景
         """
-        folder_path = os.path.normpath(folder_path)
-        folder_name = os.path.basename(folder_path) if os.path.basename(folder_path) else folder_path
-        
-        # 检查是否已经添加了相同的路径或存在路径冲突
-        for item in self.folder_items:
-            item_path = os.path.normpath(item['path'])
-            if self._paths_equal(item_path, folder_path):
+        try:
+            # 规范化路径，处理不同表示形式的相同路径
+            folder_path = os.path.normpath(folder_path)
+            folder_name = os.path.basename(folder_path) if os.path.basename(folder_path) else folder_path
+            
+            # 检查文件夹是否存在
+            if not os.path.exists(folder_path):
                 QMessageBox.warning(
                     self, 
-                    "路径已存在", 
-                    f"📁 文件夹路径已经添加:\n\n{folder_path}\n\n"
-                    "无需重复添加相同的文件夹。"
+                    "路径不存在", 
+                    f"❌ 文件夹路径不存在:\n\n{folder_path}\n\n"
+                    "请确认文件夹位置没有被移动或删除。"
                 )
                 return
-            if item['include_sub'] and self._is_subpath(folder_path, item_path):
+                
+            if not os.path.isdir(folder_path):
                 QMessageBox.warning(
                     self, 
-                    "路径冲突",
-                    f"⚠️ 路径冲突检测到！\n\n"
-                    f"您选择的路径是已添加路径（且勾选了包含子文件夹）的子目录:\n\n"
-                    f"• 已添加路径: {item_path}\n"
-                    f"• 当前路径: {folder_path}\n\n"
-                    "为了避免重复处理文件，请移除其中一个路径。"
+                    "不是文件夹", 
+                    f"❌ 选择的路径不是一个文件夹:\n\n{folder_path}\n\n"
+                    "请选择一个有效的文件夹。"
                 )
                 return
-            if self._is_subpath(item_path, folder_path) and item['include_sub']:
+                
+            # 检查是否有权限访问该文件夹
+            try:
+                # 尝试列出文件夹内容以检查权限
+                os.listdir(folder_path)
+            except PermissionError:
                 QMessageBox.warning(
                     self, 
-                    "路径冲突",
-                    f"⚠️ 路径冲突检测到！\n\n"
-                    f"您选择的路径包含已添加的路径（且已勾选包含子文件夹）:\n\n"
-                    f"• 已添加路径: {item_path}\n"
-                    f"• 当前路径: {folder_path}\n\n"
-                    "为了避免重复处理文件，请移除其中一个路径。"
+                    "无访问权限", 
+                    f"❌ 没有足够的权限访问文件夹:\n\n{folder_path}\n\n"
+                    "请确保您拥有访问该文件夹的权限。"
                 )
                 return
-        
-        # 创建文件夹项并添加到列表
-        self._create_folder_item(folder_path, folder_name)
-        
-        # 检查文件夹中是否有媒体文件
-        self._check_media_files(folder_path)
+            except Exception as e:
+                QMessageBox.warning(
+                    self, 
+                    "访问错误", 
+                    f"❌ 访问文件夹时发生错误:\n\n{folder_path}\n\n"
+                    f"错误信息: {str(e)}"
+                )
+                return
+                
+            # 检查是否已经添加了相同的路径
+            for item in self.folder_items:
+                if self._paths_equal(item['path'], folder_path):
+                    QMessageBox.information(
+                        self, 
+                        "路径已存在", 
+                        f"📁 文件夹 '{folder_name}' 已经添加:\n\n{folder_path}\n\n"
+                        "无需重复添加相同的文件夹。"
+                    )
+                    return
+                    
+            # 检查路径冲突（子目录关系和包含关系）
+            conflict_info = None
+            
+            # 先检查是否存在父目录关系且父目录勾选了包含子文件夹
+            for item in self.folder_items:
+                item_path = os.path.normpath(item['path'])
+                
+                # 情况1: 待添加路径是已存在路径的子目录，且父路径勾选了包含子文件夹
+                if item['include_sub'] and self._is_subpath(folder_path, item_path):
+                    conflict_info = {
+                        'type': 1,
+                        'parent_path': item_path,
+                        'parent_name': os.path.basename(item_path)
+                    }
+                    break
+                
+                # 情况2: 待添加路径包含已存在的路径，且子路径勾选了包含子文件夹
+                if self._is_subpath(item_path, folder_path) and item['include_sub']:
+                    conflict_info = {
+                        'type': 2,
+                        'child_path': item_path,
+                        'child_name': os.path.basename(item_path)
+                    }
+                    break
+            
+            # 处理路径冲突
+            if conflict_info:
+                if conflict_info['type'] == 1:
+                    # 创建自定义消息框，提供解决方案选项
+                    msg_box = QMessageBox(self)
+                    msg_box.setWindowTitle("路径冲突")
+                    msg_box.setText(f"⚠️ 该文件夹是 '{conflict_info['parent_name']}' 的子目录，且 '{conflict_info['parent_name']}' 已选择包含子文件夹")
+                    msg_box.setInformativeText("您可以选择以下操作：")
+                    
+                    # 添加按钮
+                    continue_btn = msg_box.addButton("继续添加", QMessageBox.ButtonRole.ActionRole)
+                    disable_sub_btn = msg_box.addButton("取消父文件夹的子文件夹选项", QMessageBox.ButtonRole.ActionRole)
+                    cancel_btn = msg_box.addButton("取消", QMessageBox.ButtonRole.RejectRole)
+                    
+                    # 设置默认按钮
+                    msg_box.setDefaultButton(cancel_btn)
+                    
+                    # 显示消息框并获取用户选择
+                    msg_box.exec()
+                    
+                    # 处理用户选择
+                    if msg_box.clickedButton() == continue_btn:
+                        # 用户选择继续添加，即使存在冲突
+                        pass  # 继续执行下面的代码
+                    elif msg_box.clickedButton() == disable_sub_btn:
+                        # 用户选择取消父文件夹的子文件夹选项
+                        for item in self.folder_items:
+                            if self._paths_equal(item['path'], conflict_info['parent_path']):
+                                item['checkbox'].setChecked(False)
+                                # 立即更新配置
+                                config_manager.update_folder_include_sub(item['path'], False)
+                                break
+                        # 取消后再次尝试添加
+                        self._check_and_add_folder(folder_path)
+                        return
+                    else:
+                        # 用户选择取消添加
+                        return
+                else:  # conflict_info['type'] == 2
+                    QMessageBox.warning(
+                        self, 
+                        "路径冲突",
+                        f"⚠️ '{conflict_info['child_name']}' 是该文件夹的子目录，且 '{conflict_info['child_name']}' 已选择包含子文件夹\n\n"
+                        f"请先取消勾选 '{conflict_info['child_name']}' 的'包含子文件夹'选项，再添加该文件夹。"
+                    )
+                    return
+            
+            # 创建文件夹项并添加到列表
+            self._create_folder_item(folder_path, folder_name)
+            
+            # 检查文件夹中是否有媒体文件
+            self._check_media_files(folder_path)
+            
+            # 添加成功提示
+            QMessageBox.information(
+                self, 
+                "添加成功", 
+                f"✅ 成功添加文件夹: {folder_name}\n\n"
+                f"路径: {folder_path}"
+            )
+        except Exception as e:
+            print(f"添加文件夹过程中发生错误: {e}")
+            QMessageBox.critical(
+                self, 
+                "添加失败", 
+                f"❌ 添加文件夹时发生错误：{str(e)}\n\n"
+                f"请检查文件夹路径和权限后重试。"
+            )
 
     def _create_folder_item(self, folder_path, folder_name):
         """
@@ -266,46 +375,108 @@ class FolderPage(QtWidgets.QWidget):
         """
         更新包含子文件夹状态
         
-        处理复选框状态变化，检查路径冲突并更新状态
+        增强版：处理复选框状态变化，更全面地检查路径冲突并更新状态
         """
-        # 更新文件夹项的包含子文件夹状态
-        for item in self.folder_items:
-            if item['frame'] == folder_frame:
-                current_path = os.path.normpath(item['path'])
-                include_sub = state == QtCore.Qt.CheckState.Checked
-                
-                if state:
-                    for other in self.folder_items:
-                        other_path = os.path.normpath(other['path'])
-                        if other['frame'] != folder_frame:
+        try:
+            # 更新文件夹项的包含子文件夹状态
+            for item in self.folder_items:
+                if item['frame'] == folder_frame:
+                    current_path = os.path.normpath(item['path'])
+                    include_sub = state == QtCore.Qt.CheckState.Checked
+                    
+                    # 当用户尝试勾选包含子文件夹时，进行全面的冲突检查
+                    if include_sub:
+                        # 遍历所有其他已添加的文件夹
+                        conflict_found = False
+                        conflict_type = 0
+                        conflict_path = ""
+                        
+                        for other in self.folder_items:
+                            if other['frame'] == folder_frame:
+                                continue  # 跳过当前文件夹
+                                
+                            other_path = os.path.normpath(other['path'])
+                            
+                            # 情况1: 当前路径是其他文件夹的子目录，且父文件夹已勾选包含子文件夹
                             if self._is_subpath(current_path, other_path) and other['include_sub']:
-                                QMessageBox.warning(
-                                                    self, 
-                                                    "操作不允许",
-                                                    f"❌ 操作被阻止！\n\n"
-                                                    f"您不能勾选此选项，因为该路径是其他已勾选包含子文件夹的路径的子目录:\n\n"
-                                                    f"• 父路径: {other_path}\n"
-                                                    f"• 当前路径: {current_path}\n\n"
-                                                    "为了避免文件处理冲突，请先移除父路径或取消其包含子文件夹选项。"
-                                                )
-                                item['checkbox'].setChecked(False)
-                                return
+                                conflict_found = True
+                                conflict_type = 1
+                                conflict_path = other_path
+                                break
+                                
+                            # 情况2: 当前路径包含其他文件夹，且该文件夹已存在
                             if self._is_subpath(other_path, current_path):
-                                QMessageBox.warning(
-                                                    self, 
-                                                    "操作不允许",
-                                                    f"❌ 操作被阻止！\n\n"
-                                                    f"您不能勾选此选项，因为该路径包含其他已添加的路径:\n\n"
-                                                    f"• 子路径: {other_path}\n"
-                                                    f"• 当前路径: {current_path}\n\n"
-                                                    "为了避免文件处理冲突，请先移除子路径。"
-                                                )
+                                conflict_found = True
+                                conflict_type = 2
+                                conflict_path = other_path
+                                break
+                        
+                        if conflict_found:
+                            # 如果是批量添加模式，我们静默拒绝而不显示消息框
+                            if hasattr(self, '_batch_adding') and self._batch_adding:
                                 item['checkbox'].setChecked(False)
                                 return
-                item['include_sub'] = include_sub
-                # 更新配置文件中的包含子文件夹状态
-                config_manager.update_folder_include_sub(current_path, include_sub)
-                break
+                            
+                            if conflict_type == 1:
+                                # 创建自定义消息框，提供解决方案选项
+                                msg_box = QMessageBox(self)
+                                msg_box.setWindowTitle("操作不允许")
+                                msg_box.setText(f"❌ 操作被阻止！\n\n"
+                                "您要勾选的文件夹是其他已勾选包含子文件夹的路径的子目录。")
+                                msg_box.setInformativeText(f"• 父路径: {os.path.basename(conflict_path)}\n"
+                                f"• 当前路径: {os.path.basename(current_path)}")
+                                
+                                # 添加按钮
+                                cancel_btn = msg_box.addButton("取消", QMessageBox.ButtonRole.RejectRole)
+                                disable_parent_btn = msg_box.addButton("取消父文件夹的子文件夹选项", QMessageBox.ButtonRole.ActionRole)
+                                
+                                # 设置默认按钮
+                                msg_box.setDefaultButton(cancel_btn)
+                                
+                                # 显示消息框并获取用户选择
+                                msg_box.exec()
+                                
+                                # 处理用户选择
+                                if msg_box.clickedButton() == disable_parent_btn:
+                                    # 用户选择取消父文件夹的子文件夹选项
+                                    for other_item in self.folder_items:
+                                        if self._paths_equal(other_item['path'], conflict_path):
+                                            other_item['checkbox'].setChecked(False)
+                                            # 立即更新配置
+                                            config_manager.update_folder_include_sub(other_item['path'], False)
+                                            # 现在可以安全地启用当前文件夹的选项
+                                            item['include_sub'] = True
+                                            config_manager.update_folder_include_sub(current_path, True)
+                                            break
+                            else:
+                                QMessageBox.warning(
+                                    self, 
+                                    "操作不允许",
+                                    f"❌ 操作被阻止！\n\n"
+                                    f"您不能勾选此选项，因为该路径包含其他已添加的路径:\n\n"
+                                    f"• 子路径: {os.path.basename(conflict_path)}\n"
+                                    f"• 当前路径: {os.path.basename(current_path)}\n\n"
+                                    "为了避免文件处理冲突，请先移除子路径。"
+                                )
+                                
+                                item['checkbox'].setChecked(False)
+                                return
+                            
+                    # 没有冲突，可以安全地更新状态
+                    item['include_sub'] = include_sub
+                    # 更新配置文件中的包含子文件夹状态
+                    config_manager.update_folder_include_sub(current_path, include_sub)
+                    break
+        except Exception as e:
+            print(f"更新包含子文件夹选项时出错: {e}")
+            # 在非批量模式下显示错误消息
+            if not (hasattr(self, '_batch_adding') and self._batch_adding):
+                QMessageBox.critical(
+                    self, 
+                    "操作失败", 
+                    f"❌ 更新文件夹选项时发生错误：{str(e)}\n\n"
+                    f"请稍后重试。"
+                )
 
     def remove_folder_item(self, folder_frame):
         """
@@ -313,51 +484,56 @@ class FolderPage(QtWidgets.QWidget):
         
         从UI和数据中完全移除指定的文件夹项
         """
-        for item in self.folder_items[:]:
-            if item['frame'] == folder_frame:
-                item['remove_button'].clicked.disconnect()
-                item['checkbox'].stateChanged.disconnect()
-                self.parent.gridLayout_6.removeWidget(folder_frame)
-                folder_frame.deleteLater()
-                
-                # 先保存要移除的文件夹路径
-                folder_path = item['path']
-                
-                # 从列表中移除项
-                self.folder_items.remove(item)
-                
-                # 重新排列剩余的文件夹项
-                for row, item in enumerate(self.folder_items):
-                    self.parent.gridLayout_6.addWidget(item['frame'], row, 0)
-                
-                # 更新空状态
-                self.parent._update_empty_state(bool(self.folder_items))
-                
-                # 从配置中移除文件夹路径
-                config_manager.remove_folder(folder_path)
-                break
+        # 统一使用内部方法处理，避免代码冗余
+        self._remove_folder_item(folder_frame)
 
     def _paths_equal(self, path1, path2):
         """
         检查两个路径是否相等
         
-        使用规范化路径比较，处理Windows大小写不敏感
+        增强版：更健壮地处理Windows大小写不敏感和不同表示形式的相同路径
         """
-        if os.name == 'nt':
-            return os.path.normcase(os.path.normpath(path1)) == os.path.normcase(os.path.normpath(path2))
-        return os.path.normpath(path1) == os.path.normpath(path2)
+        try:
+            # 规范化路径，处理尾部斜杠、相对路径等差异
+            norm_path1 = os.path.normcase(os.path.normpath(path1))
+            norm_path2 = os.path.normcase(os.path.normpath(path2))
+            
+            # 在Windows上，额外确保驱动器号大小写一致
+            if os.name == 'nt':
+                # 处理UNC路径和本地路径
+                if norm_path1.startswith('//') and norm_path2.startswith('//'):
+                    return norm_path1 == norm_path2
+                # 处理本地路径
+                drive1 = os.path.splitdrive(norm_path1)[0].lower()
+                drive2 = os.path.splitdrive(norm_path2)[0].lower()
+                path_part1 = norm_path1[len(drive1):]
+                path_part2 = norm_path2[len(drive2):]
+                return drive1 == drive2 and path_part1 == path_part2
+            
+            return norm_path1 == norm_path2
+        except (TypeError, AttributeError):
+            return False
 
     def _is_subpath(self, path, parent_path):
         """
         检查路径是否为子路径
         
-        判断一个路径是否是另一个路径的子目录
+        增强版：更精确地判断一个路径是否是另一个路径的子目录，处理各种边界情况
         """
         try:
+            # 规范化路径
             path = os.path.normcase(os.path.normpath(path))
             parent_path = os.path.normcase(os.path.normpath(parent_path))
-            return path.startswith(parent_path + os.sep) or path == parent_path
-        except (TypeError, AttributeError):
+            
+            # 确保父路径以路径分隔符结尾，避免部分匹配问题
+            # 例如，避免将 'C:\folder123' 误认为是 'C:\folder' 的子目录
+            parent_path_with_sep = parent_path
+            if not parent_path.endswith(os.sep):
+                parent_path_with_sep = parent_path + os.sep
+            
+            # 完全相等的路径或真正的子目录路径
+            return path == parent_path or path.startswith(parent_path_with_sep)
+        except (TypeError, AttributeError, ValueError):
             return False
 
     def _show_remove_button(self, folder_frame):
@@ -382,29 +558,65 @@ class FolderPage(QtWidgets.QWidget):
 
     def _remove_folder_item(self, folder_frame):
         """移除文件夹项（内部方法）"""
-        # 移除文件夹项
-        for i, item in enumerate(self.folder_items):
-            if item['frame'] == folder_frame:
-                # 从布局中移除
-                self.parent.gridLayout_6.removeWidget(folder_frame)
-                folder_frame.deleteLater()
-                
-                # 先保存要移除的文件夹路径
-                folder_path = item['path']
-                
-                # 从列表中移除
-                self.folder_items.pop(i)
-                
-                # 从配置中移除文件夹路径
-                config_manager.remove_folder(folder_path)
-                break
-        
-        # 更新布局，重新排列剩余的文件夹项
-        for row, item in enumerate(self.folder_items):
-            self.parent.gridLayout_6.addWidget(item['frame'], row, 0)
+        try:
+            # 移除文件夹项
+            for i, item in enumerate(self.folder_items):
+                if item['frame'] == folder_frame:
+                    # 断开信号连接，避免内存泄漏
+                    try:
+                        item['remove_button'].clicked.disconnect()
+                        item['checkbox'].stateChanged.disconnect()
+                    except TypeError:
+                        # 信号可能已经被断开，忽略错误
+                        pass
+                    
+                    # 从布局中移除
+                    self.parent.gridLayout_6.removeWidget(folder_frame)
+                    folder_frame.deleteLater()
+                    
+                    # 先保存要移除的文件夹路径
+                    folder_path = item['path']
+                    
+                    # 从列表中移除
+                    self.folder_items.pop(i)
+                    
+                    # 从配置中移除文件夹路径，添加错误处理
+                    try:
+                        config_manager.remove_folder(folder_path)
+                    except Exception as e:
+                        print(f"移除文件夹配置失败: {e}")
+                    break
             
-        # 更新空状态
-        self.parent._update_empty_state(bool(self.folder_items))
+            # 更新布局，重新排列剩余的文件夹项
+            # 先清空所有行
+            while self.parent.gridLayout_6.count() > 0:
+                item = self.parent.gridLayout_6.takeAt(0)
+                if item.widget():
+                    item.widget().deleteLater()
+            
+            # 重新添加所有文件夹项
+            for row, item in enumerate(self.folder_items):
+                self.parent.gridLayout_6.addWidget(item['frame'], row, 0)
+            
+            # 设置布局对齐方式
+            if len(self.folder_items) == 1:
+                self.parent.gridLayout_6.setRowStretch(0, 0)  # 第一行不拉伸
+                self.parent.gridLayout_6.setRowStretch(1, 1)   # 第二行拉伸以填充剩余空间
+            elif len(self.folder_items) > 1:
+                # 多个项目时恢复默认拉伸
+                for i in range(len(self.folder_items)):
+                    self.parent.gridLayout_6.setRowStretch(i, 0)
+                self.parent.gridLayout_6.setRowStretch(len(self.folder_items), 1)
+            
+            # 更新空状态
+            self.parent._update_empty_state(bool(self.folder_items))
+        except Exception as e:
+            print(f"移除文件夹项失败: {e}")
+            QMessageBox.warning(
+                self, 
+                "操作失败", 
+                f"❌ 移除文件夹时发生错误：{str(e)}"
+            )
 
     def _check_media_files(self, folder_path):
         """
@@ -415,17 +627,38 @@ class FolderPage(QtWidgets.QWidget):
         # 检查文件夹中是否有媒体文件
         has_media = False
         try:
-            # 只检查顶层文件夹
+            # 只检查顶层文件夹以保持性能
+            file_count = 0
+            max_check_files = 200  # 最多检查200个文件以避免性能问题
+            
             for file in os.listdir(folder_path):
                 file_path = os.path.join(folder_path, file)
                 if os.path.isfile(file_path):
                     try:
+                        # 先通过扩展名快速判断，减少不必要的文件读取
+                        ext = os.path.splitext(file)[1].lower()
+                        common_media_exts = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.tiff', '.heic', '.heif',
+                                            '.mp4', '.mov', '.avi', '.mkv', '.flv', '.3gp', '.wmv',
+                                            '.mp3', '.flac', '.wav', '.aac', '.ogg']
+                        
+                        if ext in common_media_exts:
+                            has_media = True
+                            break
+                        
+                        # 对于不常见的扩展名，使用detect_media_type函数进一步检查
                         media_info = detect_media_type(file_path)
                         if media_info['valid']:
                             has_media = True
                             break
-                    except:
+                    except Exception as e:
+                        # 忽略单个文件的检查错误
+                        print(f"检查文件 {file} 失败: {e}")
                         continue
+                    
+                # 限制检查的文件数量
+                file_count += 1
+                if file_count >= max_check_files:
+                    break
         except Exception as e:
             print(f"检查媒体文件失败: {e}")
         
@@ -453,23 +686,240 @@ class FolderPage(QtWidgets.QWidget):
         处理拖拽释放的文件/文件夹，只处理本地文件夹路径
         """
         urls = event.mimeData().urls()
+        
+        # 过滤出本地文件夹
+        folder_paths = []
         for url in urls:
             if url.isLocalFile():
                 path = url.toLocalFile()
                 if os.path.isdir(path):
-                    self._check_and_add_folder(path)
+                    folder_paths.append(path)
+        
+        if not folder_paths:
+            QMessageBox.information(
+                self, 
+                "操作提示", 
+                "⚠️ 未找到有效的文件夹路径。请确保您拖拽的是本地文件夹。"
+            )
+            return
+        
+        # 批量添加文件夹
+        total = len(folder_paths)
+        added_count = 0
+        skipped_count = 0
+        error_count = 0
+        
+        # 创建一个临时标志来控制_check_and_add_folder中的消息框显示
+        self._batch_adding = True
+        
+        # 显示进度对话框
+        progress_dialog = QProgressDialog(self)
+        progress_dialog.setWindowTitle("正在添加文件夹")
+        progress_dialog.setLabelText(f"准备处理 {total} 个文件夹...")
+        progress_dialog.setRange(0, total)
+        progress_dialog.setCancelButtonText("取消")
+        progress_dialog.setValue(0)
+        progress_dialog.show()
+        
+        # 为每个文件夹创建结果记录
+        results = {
+            'added': [],
+            'skipped': [],
+            'error': []
+        }
+        
+        for i, folder_path in enumerate(folder_paths):
+            # 检查用户是否取消
+            if progress_dialog.wasCanceled():
+                QMessageBox.information(self, "操作已取消", "文件夹添加操作已被取消。")
+                break
+            
+            # 更新进度
+            folder_name = os.path.basename(folder_path) if os.path.basename(folder_path) else folder_path
+            progress_dialog.setLabelText(f"正在处理第 {i+1}/{total} 个文件夹...\n\n当前: {folder_name}")
+            progress_dialog.setValue(i)
+            
+            # 强制更新UI
+            QtCore.QCoreApplication.processEvents()
+            
+            try:
+                # 检查路径基本有效性
+                if not os.path.exists(folder_path) or not os.path.isdir(folder_path):
+                    skipped_count += 1
+                    results['skipped'].append((folder_path, "路径不存在或不是文件夹"))
+                    continue
+                
+                # 检查是否有权限访问该文件夹
+                try:
+                    os.listdir(folder_path)
+                except PermissionError:
+                    skipped_count += 1
+                    results['skipped'].append((folder_path, "无访问权限"))
+                    continue
+                
+                # 规范化路径
+                folder_path = os.path.normpath(folder_path)
+                
+                # 执行冲突检查（使用简化版逻辑，避免在批量处理中弹出过多对话框）
+                has_conflict = False
+                conflict_reason = ""
+                
+                for item in self.folder_items:
+                    item_path = os.path.normpath(item['path'])
+                    
+                    # 情况1: 完全相同的路径
+                    if self._paths_equal(item_path, folder_path):
+                        has_conflict = True
+                        conflict_reason = "已存在相同路径"
+                        break
+                        
+                    # 情况2: 待添加路径是已存在路径的子目录，且父路径勾选了包含子文件夹
+                    if item['include_sub'] and self._is_subpath(folder_path, item_path):
+                        has_conflict = True
+                        conflict_reason = f"是已添加文件夹 '{os.path.basename(item_path)}' 的子目录且父目录已勾选包含子文件夹"
+                        break
+                        
+                    # 情况3: 待添加路径包含已存在的路径，且子路径勾选了包含子文件夹
+                    if self._is_subpath(item_path, folder_path) and item['include_sub']:
+                        has_conflict = True
+                        conflict_reason = f"包含已添加文件夹 '{os.path.basename(item_path)}' 且子目录已勾选包含子文件夹"
+                        break
+                
+                if has_conflict:
+                    skipped_count += 1
+                    results['skipped'].append((folder_path, conflict_reason))
+                    continue
+                
+                # 无冲突，添加文件夹
+                folder_name = os.path.basename(folder_path) if os.path.basename(folder_path) else folder_path
+                self._create_folder_item(folder_path, folder_name)
+                added_count += 1
+                results['added'].append(folder_path)
+                
+                # 检查文件夹中是否有媒体文件
+                self._check_media_files(folder_path)
+                
+            except Exception as e:
+                print(f"添加文件夹 {folder_path} 失败: {e}")
+                error_count += 1
+                results['error'].append((folder_path, str(e)))
+        
+        # 重置批量添加标志
+        self._batch_adding = False
+        
+        # 关闭进度对话框
+        progress_dialog.close()
+        
+        # 显示详细总结
+        if added_count > 0 or skipped_count > 0 or error_count > 0:
+            message = ""
+            details = []
+            
+            if added_count > 0:
+                message += f"✅ 成功添加 {added_count} 个文件夹\n"
+                for path in results['added']:
+                    details.append(f"  ✓ {os.path.basename(path)} ({path})")
+                details.append("")
+            
+            if skipped_count > 0:
+                message += f"⚠️ 跳过 {skipped_count} 个文件夹\n"
+                for path, reason in results['skipped']:
+                    details.append(f"  ⚠️ {os.path.basename(path)} - {reason}")
+                details.append("")
+            
+            if error_count > 0:
+                message += f"❌ {error_count} 个文件夹添加失败\n"
+                for path, reason in results['error']:
+                    details.append(f"  ✗ {os.path.basename(path)} - {reason}")
+            
+            # 创建详细信息对话框
+            if details:
+                msg_box = QMessageBox(self)
+                msg_box.setWindowTitle("添加完成")
+                msg_box.setText(message)
+                
+                # 添加详细信息按钮
+                details_btn = msg_box.addButton("查看详情", QMessageBox.ButtonRole.ActionRole)
+                msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)
+                msg_box.setDefaultButton(QMessageBox.StandardButton.Ok)
+                
+                # 显示消息框并处理按钮点击
+                msg_box.exec()
+                
+                # 如果用户点击了查看详情按钮
+                if msg_box.clickedButton() == details_btn:
+                    details_dialog = QDialog(self)
+                    details_dialog.setWindowTitle("添加详情")
+                    details_dialog.resize(600, 400)
+                    
+                    # 创建文本浏览器显示详细信息
+                    text_browser = QTextEdit()
+                    text_browser.setReadOnly(True)
+                    text_browser.setPlainText("\n".join(details))
+                    
+                    # 创建关闭按钮
+                    close_btn = QPushButton("关闭")
+                    close_btn.clicked.connect(details_dialog.close)
+                    
+                    # 创建布局
+                    layout = QVBoxLayout()
+                    layout.addWidget(text_browser)
+                    layout.addWidget(close_btn, alignment=QtCore.Qt.AlignmentFlag.AlignRight)
+                    
+                    details_dialog.setLayout(layout)
+                    details_dialog.exec()
+            else:
+                QMessageBox.information(
+                    self, 
+                    "添加完成", 
+                    message
+                )
 
     def _load_saved_folders(self):
-        """加载已保存的文件夹路径"""
-        # 检查保存的文件夹是否仍然存在
+        """
+        加载已保存的文件夹路径
+        
+        增强版：在加载过程中进行路径冲突检测，自动处理无效路径和重复路径
+        """
+        # 获取所有保存的文件夹
         saved_folders = config_manager.get_folders()
+        loaded_paths = []  # 跟踪已加载的有效路径
+        invalid_paths = []  # 跟踪无效路径
+        
         for folder_info in saved_folders:
             folder_path = folder_info["path"]
-            if os.path.exists(folder_path):
-                self._create_folder_item(folder_path, os.path.basename(folder_path))
+            folder_path = os.path.normpath(folder_path)
+            
+            # 检查路径是否存在且有效
+            if os.path.exists(folder_path) and os.path.isdir(folder_path):
+                # 检查是否与已加载的路径存在冲突
+                has_conflict = False
+                for loaded_path in loaded_paths:
+                    if self._paths_equal(folder_path, loaded_path):
+                        # 重复路径，跳过
+                        has_conflict = True
+                        break
+                    
+                if not has_conflict:
+                    # 无冲突，加载文件夹
+                    self._create_folder_item(folder_path, os.path.basename(folder_path))
+                    loaded_paths.append(folder_path)
             else:
-                # 路径无效，从配置中移除
-                config_manager.remove_folder(folder_path)
+                # 路径无效，记录以便后续移除
+                invalid_paths.append(folder_path)
+        
+        # 从配置中移除所有无效路径
+        for invalid_path in invalid_paths:
+            config_manager.remove_folder(invalid_path)
+            
+        # 如果有无效路径，通知用户
+        if invalid_paths:
+            QMessageBox.information(
+                self, 
+                "文件夹更新", 
+                f"📁 检测到 {len(invalid_paths)} 个文件夹路径已无效（可能已被移动或删除），\n\n" \
+                "这些路径已从配置中自动移除。"
+            )
         
         # 确保在加载完成后更新空状态
         self.parent._update_empty_state(bool(self.folder_items))

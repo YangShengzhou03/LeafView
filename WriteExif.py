@@ -41,6 +41,7 @@ class WriteExif(QWidget):
         self.star_buttons = []  # 星级按钮列表
         self.is_running = False  # 是否正在运行
         self.camera_lens_mapping = {}  # 相机型号到镜头的映射
+        self.error_messages = []  # 存储错误信息，便于用户查看详情
         self.init_ui()
         self.setup_connections()
 
@@ -436,6 +437,9 @@ class WriteExif(QWidget):
         
         self.log("INFO", f"EXIF写入操作摘要: {operation_summary}")
         
+        # 清空错误记录
+        self.error_messages = []
+        
         # 创建并启动工作线程
         self.worker = WriteExifThread(**params)
         self.connect_worker_signals()
@@ -467,8 +471,18 @@ class WriteExif(QWidget):
             message: 日志消息
         """
         c = {'ERROR': '#FF0000', 'WARNING': '#FFA500', 'DEBUG': '#008000', 'INFO': '#8677FD'}
-        self.parent.textEdit_WriteEXIF_Log.append(
-            f'<span style="color:{c.get(level, "#000000")}">[{datetime.now().strftime("%H:%M:%S")}] [{level}] {message}</span>')
+        
+        # 保存错误信息
+        if level == 'ERROR':
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            self.error_messages.append(f"[{timestamp}] [{level}] {message}")
+        
+        try:
+            self.parent.textEdit_WriteEXIF_Log.append(
+                f'<span style="color:{c.get(level, "#000000")}">[{datetime.now().strftime("%H:%M:%S")}] [{level}] {message}</span>')
+        except Exception as e:
+            # 避免UI更新错误导致程序崩溃
+            print(f"日志更新错误: {e}")
 
     def on_finished(self):
         """EXIF写入完成处理"""
@@ -476,11 +490,49 @@ class WriteExif(QWidget):
         self.is_running = False
         self.update_button_state()
         
-        # 显示完成提示
-        QMessageBox.information(
-            self.parent, 
-            "操作完成", 
-            "EXIF信息写入操作已完成！\n\n"
-            "所有选定的图片文件已成功更新EXIF信息。\n\n"
-            "您可以在原文件夹中查看更新后的文件。"
-        )
+        # 根据是否有错误显示不同的提示信息
+        if self.error_messages:
+            msg = QMessageBox(self.parent)
+            msg.setWindowTitle("完成")
+            msg.setText(f"EXIF信息写入已完成，但有 {len(self.error_messages)} 个错误")
+            msg.setInformativeText("是否查看详细错误日志？")
+            msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            msg.setDefaultButton(QMessageBox.Yes)
+            
+            # 显示错误对话框并处理用户响应
+            response = msg.exec()
+            if response == QMessageBox.Yes:
+                # 创建错误日志对话框
+                error_dialog = QWidget(self.parent)
+                error_dialog.setWindowTitle("错误日志")
+                error_dialog.resize(800, 600)
+                
+                # 添加文本框显示错误日志
+                text_edit = QTextEdit(error_dialog)
+                text_edit.setReadOnly(True)
+                text_edit.setPlainText("\n\n".join(self.error_messages))
+                
+                # 添加滚动条
+                scroll_area = QScrollArea(error_dialog)
+                scroll_area.setWidgetResizable(True)
+                scroll_area.setWidget(text_edit)
+                
+                # 添加关闭按钮
+                button_box = QDialogButtonBox(QDialogButtonBox.Close)
+                button_box.rejected.connect(error_dialog.close)
+                
+                # 设置布局
+                layout = QVBoxLayout(error_dialog)
+                layout.addWidget(scroll_area)
+                layout.addWidget(button_box)
+                
+                error_dialog.show()
+        else:
+            # 没有错误时显示简单的完成提示
+            QMessageBox.information(
+                self.parent, 
+                "操作完成", 
+                "EXIF信息写入操作已完成！\n\n"
+                "所有选定的图片文件已成功更新EXIF信息。\n\n"
+                "您可以在原文件夹中查看更新后的文件。"
+            )

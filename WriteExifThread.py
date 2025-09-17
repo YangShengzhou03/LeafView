@@ -77,49 +77,84 @@ class WriteExifThread(QThread):
 
     def run(self):
         """线程主执行方法"""
-        # 收集所有图像路径
-        image_paths = self._collect_image_paths()
-        total_files = len(image_paths)
-        if not image_paths:
-            self.log.emit("WARNING", "⚠️ 未找到任何图像文件\n\n"
-                           "请检查：\n"
-                           "• 文件夹路径是否正确\n"
-                           "• 是否包含支持的图像格式(.jpg/.jpeg/.png/.webp)")
-            self.finished_conversion.emit()
-            return
+        total_files = 0
+        success_count = 0
+        error_count = 0
         
-        # 显示操作统计
-        self.log.emit("INFO", f"📊 开始处理 {total_files} 个图像文件")
-        
-        # 初始化进度
-        self.progress_updated.emit(0)
-        
-        # 使用线程池并行处理
-        with ThreadPoolExecutor(max_workers=min(4, os.cpu_count() or 1)) as executor:
-            futures = {executor.submit(self.process_image, path): path for path in image_paths}
-            try:
-                for i, future in enumerate(as_completed(futures), 1):
+        try:
+            # 收集所有图像路径
+            image_paths = self._collect_image_paths()
+            total_files = len(image_paths)
+            if not image_paths:
+                self.log.emit("WARNING", "⚠️ 未找到任何图像文件\n\n"
+                               "请检查：\n"
+                               "• 文件夹路径是否正确\n"
+                               "• 是否包含支持的图像格式(.jpg/.jpeg/.png/.webp)")
+                self.finished_conversion.emit()
+                return
+            
+            # 显示操作统计
+            self.log.emit("INFO", f"📊 开始处理 {total_files} 个图像文件")
+            
+            # 初始化进度
+            self.progress_updated.emit(0)
+            
+            # 使用线程池并行处理
+            with ThreadPoolExecutor(max_workers=min(4, os.cpu_count() or 1)) as executor:
+                futures = {}
+                # 为每个图像创建任务，添加文件大小检查
+                for path in image_paths:
                     if self._stop_requested:
-                        # 取消所有未完成的任务
-                        for f in futures:
-                            f.cancel()
-                        time.sleep(0.1)
-                        self.log.emit("INFO", "⏹️ EXIF写入操作已成功中止")
                         break
                     try:
-                        future.result()
-                        # 更新进度
-                        progress = int((i / total_files) * 100)
-                        self.progress_updated.emit(progress)
+                        # 检查文件大小，跳过过大的文件
+                        file_size = os.path.getsize(path)
+                        if file_size > 500 * 1024 * 1024:  # 超过500MB的文件
+                            self.log.emit("ERROR", f"❌ 文件 {os.path.basename(path)} 过大(>{500}MB)，跳过处理")
+                            error_count += 1
+                            continue
+                        futures[executor.submit(self.process_image, path)] = path
                     except Exception as e:
-                        file_path = futures[future]
-                        self.log.emit("ERROR", f"❌ 处理文件 {os.path.basename(file_path)} 时出错: {str(e)}")
-            finally:
-                executor.shutdown(wait=False)
-        
-        # 发送完成信号
-        self.log.emit("INFO", f"✅ EXIF写入任务完成，共处理 {total_files} 个文件")
-        self.finished_conversion.emit()
+                        self.log.emit("ERROR", f"❌ 添加文件 {os.path.basename(path)} 到任务队列失败: {str(e)}")
+                        error_count += 1
+                
+                # 处理完成的任务
+                if futures:
+                    try:
+                        for i, future in enumerate(as_completed(futures), 1):
+                            if self._stop_requested:
+                                # 取消所有未完成的任务
+                                for f in futures:
+                                    f.cancel()
+                                time.sleep(0.1)
+                                self.log.emit("INFO", "⏹️ EXIF写入操作已成功中止")
+                                break
+                            try:
+                                # 设置任务超时（例如30秒）
+                                future.result(timeout=30)
+                                success_count += 1
+                            except TimeoutError:
+                                file_path = futures[future]
+                                self.log.emit("ERROR", f"❌ 处理文件 {os.path.basename(file_path)} 超时")
+                                error_count += 1
+                            except Exception as e:
+                                file_path = futures[future]
+                                self.log.emit("ERROR", f"❌ 处理文件 {os.path.basename(file_path)} 时出错: {str(e)}")
+                                error_count += 1
+                            finally:
+                                # 更新进度
+                                progress = int((i / len(futures)) * 100)
+                                self.progress_updated.emit(progress)
+                    except Exception as e:
+                        self.log.emit("ERROR", f"❌ 任务调度过程中发生错误: {str(e)}")
+                        error_count += 1
+        except Exception as e:
+            self.log.emit("ERROR", f"❌ 全局错误: {str(e)}")
+            error_count += 1
+        finally:
+            # 发送完成信号
+            self.log.emit("INFO", f"✅ EXIF写入任务完成，成功: {success_count}，失败: {error_count}，总计: {total_files}")
+            self.finished_conversion.emit()
 
     def _collect_image_paths(self):
         """

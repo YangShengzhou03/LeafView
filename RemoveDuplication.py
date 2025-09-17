@@ -127,6 +127,8 @@ class Contrast(QtWidgets.QWidget):
         self.init_page()
         self.connect_signals()
         self.thumbnail_loaders = []  # 缩略图加载器列表
+        self.max_cache_size = 1000  # 最大缓存缩略图数量，防止内存溢出
+        self.current_progress = 0  # 当前进度
 
     def init_page(self):
         """初始化界面组件状态"""
@@ -475,6 +477,13 @@ class Contrast(QtWidgets.QWidget):
         if path in self.thumbnail_cache:
             label.setPixmap(QtGui.QPixmap.fromImage(self.thumbnail_cache[path]))
         else:
+            # 限制缓存大小，防止内存溢出
+            if len(self.thumbnail_cache) >= self.max_cache_size:
+                # 删除最早添加的10%的缓存项
+                to_remove = int(len(self.thumbnail_cache) * 0.1)
+                for key in list(self.thumbnail_cache.keys())[:to_remove]:
+                    del self.thumbnail_cache[key]
+            
             # 创建并启动缩略图加载器
             loader = ThumbnailLoader(path, QtCore.QSize(95, 95), total_images)
             loader.signals.thumbnail_ready.connect(lambda p, img: self.on_thumbnail_ready(p, img, label))
@@ -570,8 +579,10 @@ class Contrast(QtWidgets.QWidget):
         image = QImage()
 
     def update_progress(self, value):
-        """更新进度条显示"""
-        self.parent.progressBar_Contrast.setValue(value)
+        """更新进度条显示，确保进度单调递增"""
+        if value > self.current_progress:
+            self.current_progress = value
+            self.parent.progressBar_Contrast.setValue(value)
 
     def add_separator(self, layout, row):
         """添加分隔线"""
@@ -615,11 +626,22 @@ class Contrast(QtWidgets.QWidget):
             label.setPixmap(pix)
 
     def stop_processing(self):
-        """停止所有处理任务"""
+        """停止所有处理任务并释放资源"""
         self._running = False
         if hasattr(self, 'hash_worker'):
             self.hash_worker.stop()
         if hasattr(self, 'contrast_worker'):
             self.contrast_worker.stop()
-        # 停止所有缩略图加载器
+        # 停止所有缩略图加载器并释放资源
+        for loader in self.thumbnail_loaders:
+            if hasattr(loader, 'stop'):
+                loader.stop()
         self.thumbnail_loaders.clear()
+        
+        # 清空缩略图缓存，释放内存
+        self.thumbnail_cache.clear()
+        self.current_progress = 0
+        
+        # 调用Python的垃圾回收
+        import gc
+        gc.collect()
