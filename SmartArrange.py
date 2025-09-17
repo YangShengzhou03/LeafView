@@ -588,11 +588,7 @@ class SmartArrange(QtWidgets.QWidget):
             level: 日志级别
             message: 日志消息
         """
-        current_time = datetime.now().strftime('%H:%M:%S')
-        log_message = f"[{current_time}] [{level}] {message}"
-        
-        print(log_message)  # 输出到控制台用于调试
-        
+        # 直接使用传入的message参数，不再添加时间戳和级别标记
         # 更新到日志显示区域，使用HTML颜色格式
         if hasattr(self.parent, 'textEdit_SmartArrange_Log'):
             color_map = {
@@ -603,7 +599,7 @@ class SmartArrange(QtWidgets.QWidget):
             }
             color = color_map.get(level, '#000000')  # 默认黑色
             self.parent.textEdit_SmartArrange_Log.append(
-                f'<span style="color:{color}">{log_message}</span>')
+                f'<span style="color:{color}">{message}</span>')
     
     def log(self, level, message):
         """记录日志
@@ -615,17 +611,3 @@ class SmartArrange(QtWidgets.QWidget):
         current_time = datetime.now().strftime('%H:%M:%S')
         log_message = f"[{current_time}] [{level}] {message}"
         self.log_signal.emit(level, log_message)  # 发射日志信号
-        
-        print(log_message)  # 输出到控制台用于调试
-        
-        # 更新到日志显示区域
-        if hasattr(self.parent, 'textEdit_SmartArrange_Log'):
-            color_map = {
-                'ERROR': '#FF0000',    # 红色
-                'WARNING': '#FFA500',  # 橙色
-                'DEBUG': '#008000',    # 绿色
-                'INFO': '#8677FD'      # 紫色
-            }
-            color = color_map.get(level, '#000000')  # 默认黑色
-            self.parent.textEdit_SmartArrange_Log.append(
-                f'<span style="color:{color}">{log_message}</span>')

@@ -332,7 +332,6 @@ class SmartArrangeThread(QtCore.QThread):
         current_time = datetime.datetime.now().strftime('%H:%M:%S')
         log_message = f"[{current_time}] [{level}] {message}"
         self.log_signal.emit(level, log_message)
-        print(log_message)
     
     def get_exif_data(self, file_path):
         """获取文件的EXIF元数据"""
