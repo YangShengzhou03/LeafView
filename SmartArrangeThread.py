@@ -1,17 +1,15 @@
-import os
-import json
 import datetime
-import shutil
-import time
 import io
+import json
+import os
+import time
 from pathlib import Path
 
-from PyQt6 import QtCore
 import exifread
-import piexif
+import pillow_heif
 import requests
 from PIL import Image
-import pillow_heif
+from PyQt6 import QtCore
 
 from common import get_resource_path
 from config_manager import config_manager
@@ -119,8 +117,7 @@ class SmartArrangeThread(QtCore.QThread):
         try:
             # 加载地理位置数据
             self.load_geographic_data()
-            
-            self.log("INFO", f"正在处理 {len(self.folders)} 个文件夹")
+
             for folder_info in self.folders:
                 if self._stop_flag:
                     self.log("WARNING", "智能整理操作已被用户中断")
@@ -360,40 +357,24 @@ class SmartArrangeThread(QtCore.QThread):
                 gps_lat = tags.get('GPS GPSLatitude')
                 gps_lon = tags.get('GPS GPSLongitude')
                 
-                # 添加GPS坐标调试信息
-                self.log("DEBUG", f"GPS坐标原始数据 - 纬度: {gps_lat}, 经度: {gps_lon}")
-                self.log("DEBUG", f"GPS坐标参考方向 - 纬度: {lat_ref}, 经度: {lon_ref}")
-                
                 if gps_lat and gps_lon:
-                    # 检查坐标是否为十进制格式
                     if isinstance(gps_lat, (int, float)) and isinstance(gps_lon, (int, float)):
                         lat = gps_lat
                         lon = gps_lon
-                        self.log("DEBUG", f"GPS坐标已经是十进制格式 - 纬度: {lat}, 经度: {lon}")
                     else:
                         # 转换为十进制度数
                         lat = self.convert_to_degrees(gps_lat)
                         lon = self.convert_to_degrees(gps_lon)
-                        self.log("DEBUG", f"GPS坐标转换为十进制格式 - 纬度: {lat}, 经度: {lon}")
                     
                     if lat and lon:
                         lat = -lat if lat_ref and lat_ref.lower() == 's' else lat
                         lon = -lon if lon_ref and lon_ref.lower() == 'w' else lon
                         exif_data.update({'GPS GPSLatitude': lat, 'GPS GPSLongitude': lon})
-                        self.log("DEBUG", f"GPS坐标处理完成 - 纬度: {lat}, 经度: {lon}")
-                    else:
-                        self.log("DEBUG", f"GPS坐标转换失败 - 纬度: {lat}, 经度: {lon}")
                 else:
                     self.log("DEBUG", "GPS坐标数据不存在")
                 
                 make = str(tags.get('Image Make', '')).strip()
                 model = str(tags.get('Image Model', '')).strip()
-                
-                # 添加相机品牌和型号调试信息
-                self.log("DEBUG", f"相机品牌原始数据: {tags.get('Image Make')}")
-                self.log("DEBUG", f"相机型号原始数据: {tags.get('Image Model')}")
-                self.log("DEBUG", f"相机品牌处理后: {make}")
-                self.log("DEBUG", f"相机型号处理后: {model}")
                 
                 exif_data.update({
                     'Make': make or None,
@@ -414,40 +395,25 @@ class SmartArrangeThread(QtCore.QThread):
                     gps_lat = tags.get('GPS GPSLatitude')
                     gps_lon = tags.get('GPS GPSLongitude')
                     
-                    # 添加GPS坐标调试信息
-                    self.log("DEBUG", f"HEIC文件GPS坐标原始数据 - 纬度: {gps_lat}, 经度: {gps_lon}")
-                    self.log("DEBUG", f"HEIC文件GPS坐标参考方向 - 纬度: {lat_ref}, 经度: {lon_ref}")
-                    
                     if gps_lat and gps_lon:
                         # 检查坐标是否为十进制格式
                         if isinstance(gps_lat, (int, float)) and isinstance(gps_lon, (int, float)):
                             lat = gps_lat
                             lon = gps_lon
-                            self.log("DEBUG", f"HEIC文件GPS坐标已经是十进制格式 - 纬度: {lat}, 经度: {lon}")
                         else:
                             # 转换为十进制度数
                             lat = self.convert_to_degrees(gps_lat)
                             lon = self.convert_to_degrees(gps_lon)
-                            self.log("DEBUG", f"HEIC文件GPS坐标转换为十进制格式 - 纬度: {lat}, 经度: {lon}")
                         
                         if lat and lon:
                             lat = -lat if lat_ref and lat_ref.lower() == 's' else lat
                             lon = -lon if lon_ref and lon_ref.lower() == 'w' else lon
                             exif_data.update({'GPS GPSLatitude': lat, 'GPS GPSLongitude': lon})
-                            self.log("DEBUG", f"HEIC文件GPS坐标处理完成 - 纬度: {lat}, 经度: {lon}")
-                        else:
-                            self.log("DEBUG", f"HEIC文件GPS坐标转换失败 - 纬度: {lat}, 经度: {lon}")
                     else:
                         self.log("DEBUG", "HEIC文件GPS坐标数据不存在")
                     
                     make = str(tags.get('Image Make', '')).strip()
                     model = str(tags.get('Image Model', '')).strip()
-                    
-                    # 添加相机品牌和型号调试信息
-                    self.log("DEBUG", f"HEIC文件相机品牌原始数据: {tags.get('Image Make')}")
-                    self.log("DEBUG", f"HEIC文件相机型号原始数据: {tags.get('Image Model')}")
-                    self.log("DEBUG", f"HEIC文件相机品牌处理后: {make}")
-                    self.log("DEBUG", f"HEIC文件相机型号处理后: {model}")
                     
                     exif_data.update({
                         'Make': make or None,
@@ -463,7 +429,6 @@ class SmartArrangeThread(QtCore.QThread):
                         date_taken = self.parse_datetime(creation_time)
                     else:
                         date_taken = None
-                    self.log("DEBUG", f"PNG文件创建时间: {creation_time}, 解析后: {date_taken}")
             else:
                 date_taken = None
                 self.log("DEBUG", f"不支持的文件类型或无EXIF数据: {suffix}")
@@ -471,26 +436,19 @@ class SmartArrangeThread(QtCore.QThread):
             # 设置日期时间
             if self.time_derive == "拍摄日期":
                 exif_data['DateTime'] = date_taken.strftime('%Y-%m-%d %H:%M:%S') if date_taken else None
-                self.log("DEBUG", f"使用拍摄日期: {exif_data['DateTime']}")
             elif self.time_derive == "创建时间":
                 exif_data['DateTime'] = create_time.strftime('%Y-%m-%d %H:%M:%S')
-                self.log("DEBUG", f"使用创建时间: {exif_data['DateTime']}")
             elif self.time_derive == "修改时间":
                 exif_data['DateTime'] = modify_time.strftime('%Y-%m-%d %H:%M:%S')
-                self.log("DEBUG", f"使用修改时间: {exif_data['DateTime']}")
             else:
                 times = [t for t in [date_taken, create_time, modify_time] if t is not None]
                 earliest_time = min(times) if times else modify_time
                 exif_data['DateTime'] = earliest_time.strftime('%Y-%m-%d %H:%M:%S')
-                self.log("DEBUG", f"使用最早时间: {exif_data['DateTime']}")
                 
         except Exception as e:
             self.log("DEBUG", f"获取 {file_path} 的EXIF数据时出错: {str(e)}")
             # 出错时使用文件系统时间
             exif_data['DateTime'] = create_time.strftime('%Y-%m-%d %H:%M:%S')
-            
-        # 添加最终EXIF数据调试信息
-        self.log("DEBUG", f"最终EXIF数据: {exif_data}")
         return exif_data
 
     def parse_exif_datetime(self, tags):
@@ -541,16 +499,8 @@ class SmartArrangeThread(QtCore.QThread):
 
     def get_city_and_province(self, lat, lon):
         """根据经纬度获取省份和城市信息"""
-        # 添加调试信息
-        self.log("DEBUG", f"开始获取地理位置，输入坐标 - 纬度: {lat}, 经度: {lon}")
-        
         if not hasattr(self, 'province_data') or not hasattr(self, 'city_data'):
-            self.log("DEBUG", "地理位置数据未加载，返回未知位置")
             return "未知省份", "未知城市"
-
-        # 添加地理位置数据加载状态调试信息
-        self.log("DEBUG", f"省份数据加载状态: {len(self.province_data.get('features', []))} 个特征")
-        self.log("DEBUG", f"城市数据加载状态: {len(self.city_data.get('features', []))} 个特征")
 
         def is_point_in_polygon(x, y, polygon):
             """判断点是否在多边形内（使用射线法）"""
@@ -576,48 +526,36 @@ class SmartArrangeThread(QtCore.QThread):
 
         def query_location(longitude, latitude, data):
             """查询位置信息"""
-            self.log("DEBUG", f"查询位置信息 - 经度: {longitude}, 纬度: {latitude}, 数据类型: {'省份' if data == self.province_data else '城市'}")
-            
             for i, feature in enumerate(data['features']):
                 name, coordinates = feature['properties']['name'], feature['geometry']['coordinates']
                 polygons = [polygon for multi_polygon in coordinates for polygon in
                             ([multi_polygon] if isinstance(multi_polygon[0][0], (float, int)) else multi_polygon)]
                 
-                # 添加多边形检查调试信息
-                self.log("DEBUG", f"检查第 {i+1} 个区域: {name}, 多边形数量: {len(polygons)}")
-                
                 for j, polygon in enumerate(polygons):
                     if is_point_in_polygon(longitude, latitude, polygon):
-                        self.log("DEBUG", f"点在多边形 {j+1} 内，找到位置: {name}")
                         return name
-            
-            self.log("DEBUG", "未找到匹配的位置")
+
             return None
 
         # 检查坐标是否为十进制格式
         if isinstance(lat, (int, float)) and isinstance(lon, (int, float)):
             lat_deg = lat
             lon_deg = lon
-            self.log("DEBUG", f"坐标已经是十进制格式 - 纬度: {lat_deg}, 经度: {lon_deg}")
         else:
             # 转换为十进制度数
             lat_deg = self.convert_to_degrees(lat)
             lon_deg = self.convert_to_degrees(lon)
-            self.log("DEBUG", f"坐标转换为十进制格式 - 纬度: {lat_deg}, 经度: {lon_deg}")
         
         if lat_deg and lon_deg:
             province = query_location(lon_deg, lat_deg, self.province_data)
             city = query_location(lon_deg, lat_deg, self.city_data)
-            
-            # 添加查询结果调试信息
-            self.log("DEBUG", f"查询结果 - 省份: {province}, 城市: {city}")
+
             
             return (
                 province if province else "未知省份",
                 city if city else "未知城市"
             )
         else:
-            self.log("DEBUG", "坐标转换失败，返回未知位置")
             return "未知省份", "未知城市"
 
     @staticmethod
@@ -663,22 +601,14 @@ class SmartArrangeThread(QtCore.QThread):
         if not value:
             return None
         
-        # 添加调试信息
-        print(f"DEBUG: 开始转换坐标值: {value}, 类型: {type(value)}")
-        
         try:
             d = float(value.values[0].num) / float(value.values[0].den)
             m = float(value.values[1].num) / float(value.values[1].den)
             s = float(value.values[2].num) / float(value.values[2].den)
             result = d + (m / 60.0) + (s / 3600.0)
-            
-            # 添加转换过程调试信息
-            print(f"DEBUG: 坐标转换过程 - 度: {d}, 分: {m}, 秒: {s}, 结果: {result}")
-            
+
             return result
         except Exception as e:
-            # 添加转换失败调试信息
-            print(f"DEBUG: 坐标转换失败: {str(e)}, 值: {value}")
             return None
 
     def build_new_file_name(self, file_path, file_time, original_name):

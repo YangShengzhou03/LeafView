@@ -12,7 +12,6 @@
 import os
 import shutil
 
-import numpy as np
 import pillow_heif
 import send2trash
 from PIL import Image
@@ -21,7 +20,6 @@ from PyQt6.QtCore import pyqtSignal, QRunnable, QObject, Qt, QThreadPool
 from PyQt6.QtGui import QPixmap, QImage
 
 from RemoveDuplicationThread import HashWorker, ContrastWorker
-from common import get_resource_path
 
 
 class ThumbnailLoaderSignals(QObject):
