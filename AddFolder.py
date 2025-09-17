@@ -13,6 +13,7 @@ from PyQt6.QtWidgets import QFileDialog, QMessageBox
 import os
 
 from common import get_resource_path, detect_media_type
+from config_manager import config_manager  # 导入配置管理器
 
 
 class FolderPage(QtWidgets.QWidget):
@@ -36,6 +37,9 @@ class FolderPage(QtWidgets.QWidget):
         
         # 设置点击功能
         self._setup_click_behavior()
+        
+        # 加载已保存的文件夹路径
+        self._load_saved_folders()
     
     def _setup_drag_drop(self):
         """设置拖拽相关配置"""
@@ -254,6 +258,9 @@ class FolderPage(QtWidgets.QWidget):
         # 更新空状态显示
         self.parent._update_empty_state(bool(self.folder_items))
         remove_button.clicked.connect(lambda: self.remove_folder_item(folder_frame))
+        
+        # 保存文件夹路径到配置
+        config_manager.add_folder(folder_path)
 
     def _update_include_sub(self, folder_frame, state):
         """
@@ -312,6 +319,9 @@ class FolderPage(QtWidgets.QWidget):
                 for row, item in enumerate(self.folder_items):
                     self.parent.gridLayout_6.addWidget(item['frame'], row, 0)
                 self.parent._update_empty_state(bool(self.folder_items))
+                
+                # 从配置中移除文件夹路径
+                config_manager.remove_folder(item['path'])
                 break
 
     def _paths_equal(self, path1, path2):
@@ -425,3 +435,13 @@ class FolderPage(QtWidgets.QWidget):
                 path = url.toLocalFile()
                 if os.path.isdir(path):
                     self._check_and_add_folder(path)
+
+    def _load_saved_folders(self):
+        """加载已保存的文件夹路径"""
+        saved_folders = config_manager.get_folders()
+        for folder_path in saved_folders:
+            if os.path.exists(folder_path):
+                self._create_folder_item(folder_path, os.path.basename(folder_path))
+            else:
+                # 路径无效，从配置中移除
+                config_manager.remove_folder(folder_path)

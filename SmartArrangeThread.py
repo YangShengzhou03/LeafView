@@ -493,28 +493,43 @@ class SmartArrangeThread(QtCore.QThread):
 
     @staticmethod
     def get_address(lat, lon, max_retries=3, wait_time_on_limit=2):
-        """通过高德地图API获取详细地址"""
-        # 从环境变量中获取API密钥，避免硬编码
-        amap_key = os.environ.get('AMAP_API_KEY', 'default_key')
+        """通过高德地图API获取详细地址，支持缓存机制"""
+        # 首先检查缓存中是否有该经纬度的地址
+        cached_address = config_manager.get_location(lat, lon)
+        if cached_address:
+            return cached_address
         
-        if amap_key == 'default_key':
-            # 如果未设置环境变量，记录错误并返回None
-            return None
+        # 硬编码的高德地图API密钥
+        hardcoded_key = 'bc383698582923d55b5137c3439cf4b2'
+        # 用户设置的高德地图API密钥
+        user_key = os.environ.get('AMAP_API_KEY', '')
+        
+        # 优先使用硬编码密钥，如果硬编码密钥超过限制，则使用用户密钥
+        keys_to_try = [hardcoded_key]
+        if user_key and user_key != hardcoded_key:
+            keys_to_try.append(user_key)
+        
+        for key in keys_to_try:
+            url = f'https://restapi.amap.com/v3/geocode/regeo?key={key}&location={lon},{lat}'
             
-        url = f'https://restapi.amap.com/v3/geocode/regeo?key={amap_key}&location={lon},{lat}'
-
-        for retry in range(max_retries):
-            try:
-                response = requests.get(url, timeout=10).json()
-                if response.get('status') == '1' and response.get('info', '').lower() == 'ok':
-                    address = response['regeocode']['formatted_address']
-                    return address
-                elif 'cuqps_has_exceeded_the_limit' in response.get('info', '').lower() and retry < max_retries - 1:
+            for retry in range(max_retries):
+                try:
+                    response = requests.get(url, timeout=10).json()
+                    if response.get('status') == '1' and response.get('info', '').lower() == 'ok':
+                        address = response['regeocode']['formatted_address']
+                        # 将获取到的地址保存到缓存中
+                        config_manager.cache_location(lat, lon, address)
+                        return address
+                    elif 'cuqps_has_exceeded_the_limit' in response.get('info', '').lower() and retry < max_retries - 1:
+                        time.sleep(wait_time_on_limit)
+                    elif 'invalid' in response.get('info', '').lower() or 'invalid_key' in response.get('info', '').lower():
+                        # 密钥无效，尝试下一个密钥
+                        break
+                except Exception as e:
+                    pass
+                if retry < max_retries - 1:
                     time.sleep(wait_time_on_limit)
-            except Exception as e:
-                pass
-            if retry < max_retries - 1:
-                time.sleep(wait_time_on_limit)
+        
         return None
 
     @staticmethod
@@ -666,6 +681,11 @@ class SmartArrangeThread(QtCore.QThread):
         elif tag == "位置":
             exif_data = self.get_exif_data(file_path)
             if exif_data.get('GPS GPSLatitude') and exif_data.get('GPS GPSLongitude'):
+                # 使用高德地图API获取详细地址
+                address = self.get_address(exif_data['GPS GPSLatitude'], exif_data['GPS GPSLongitude'])
+                if address:
+                    return address
+                # 如果API调用失败，回退到本地数据
                 province, city = self.get_city_and_province(exif_data['GPS GPSLatitude'], exif_data['GPS GPSLongitude'])
                 return f"{province}{city}" if city != "未知城市" else province
             return "未知位置"
