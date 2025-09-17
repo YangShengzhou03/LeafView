@@ -68,8 +68,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.write_exif = WriteExif(self, self.folder_page)  # 属性写入模块
         self.text_recognition = TextRecognition(self, self.folder_page)  # 识字整理模块
         
-        # 初始显示空状态（无媒体文件）
-        self._update_empty_state(False)
+        # 移除强制显示空状态的代码，让UI根据实际加载的文件夹情况来显示
+        # self._update_empty_state(False)
 
     def _connect_buttons(self):
         """连接窗口控制按钮和功能按钮的信号槽"""

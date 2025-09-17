@@ -108,6 +108,26 @@ class ConfigManager:
         
         return False
     
+    def update_folder_include_sub(self, folder_path: str, include_sub: bool) -> bool:
+        """
+        更新文件夹的包含子文件夹状态
+        
+        Args:
+            folder_path: 文件夹路径
+            include_sub: 是否包含子文件夹
+            
+        Returns:
+            bool: 是否成功更新
+        """
+        folder_path = os.path.normpath(folder_path)
+        
+        for folder in self.config["folders"]:
+            if folder["path"] == folder_path:
+                folder["include_sub"] = include_sub
+                return self.save_config()
+        
+        return False
+    
     def get_folders(self) -> List[Dict[str, Any]]:
         """获取所有文件夹配置"""
         return self.config["folders"]

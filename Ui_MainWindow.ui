@@ -1280,7 +1280,7 @@ QLabel#ImageLabel:hover {
     </string>
                       </property>
                       <property name="text">
-                       <string>功能正在建设中</string>
+                       <string>功能正在建设中...</string>
                       </property>
                      </widget>
                     </item>

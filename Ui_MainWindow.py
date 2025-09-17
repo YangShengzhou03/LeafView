@@ -3989,7 +3989,7 @@ class Ui_MainWindow(object):
         self.listWidget_base.setSortingEnabled(__sortingEnabled)
         self.pushButton_add_folder.setText(_translate("MainWindow", "添加文件夹"))
         self.label_add_folder.setText(_translate("MainWindow", "手动添加或拖动文件夹到此处"))
-        self.label.setText(_translate("MainWindow", "功能正在建设中"))
+        self.label.setText(_translate("MainWindow", "功能正在建设中..."))
         self.label_classification.setText(_translate("MainWindow", "文件夹整理："))
         self.label_route.setText(_translate("MainWindow", "目录"))
         self.label_25.setText(_translate("MainWindow", "\\"))

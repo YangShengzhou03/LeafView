@@ -272,6 +272,8 @@ class FolderPage(QtWidgets.QWidget):
         for item in self.folder_items:
             if item['frame'] == folder_frame:
                 current_path = os.path.normpath(item['path'])
+                include_sub = state == QtCore.Qt.CheckState.Checked
+                
                 if state:
                     for other in self.folder_items:
                         other_path = os.path.normpath(other['path'])
@@ -300,7 +302,9 @@ class FolderPage(QtWidgets.QWidget):
                                                 )
                                 item['checkbox'].setChecked(False)
                                 return
-                item['include_sub'] = state == QtCore.Qt.CheckState.Checked
+                item['include_sub'] = include_sub
+                # 更新配置文件中的包含子文件夹状态
+                config_manager.update_folder_include_sub(current_path, include_sub)
                 break
 
     def remove_folder_item(self, folder_frame):
@@ -315,13 +319,22 @@ class FolderPage(QtWidgets.QWidget):
                 item['checkbox'].stateChanged.disconnect()
                 self.parent.gridLayout_6.removeWidget(folder_frame)
                 folder_frame.deleteLater()
+                
+                # 先保存要移除的文件夹路径
+                folder_path = item['path']
+                
+                # 从列表中移除项
                 self.folder_items.remove(item)
+                
+                # 重新排列剩余的文件夹项
                 for row, item in enumerate(self.folder_items):
                     self.parent.gridLayout_6.addWidget(item['frame'], row, 0)
+                
+                # 更新空状态
                 self.parent._update_empty_state(bool(self.folder_items))
                 
                 # 从配置中移除文件夹路径
-                config_manager.remove_folder(item['path'])
+                config_manager.remove_folder(folder_path)
                 break
 
     def _paths_equal(self, path1, path2):
@@ -375,13 +388,23 @@ class FolderPage(QtWidgets.QWidget):
                 # 从布局中移除
                 self.parent.gridLayout_6.removeWidget(folder_frame)
                 folder_frame.deleteLater()
+                
+                # 先保存要移除的文件夹路径
+                folder_path = item['path']
+                
                 # 从列表中移除
                 self.folder_items.pop(i)
+                
+                # 从配置中移除文件夹路径
+                config_manager.remove_folder(folder_path)
                 break
         
-        # 检查是否还有文件夹，如果没有则显示空状态
-        if not self.folder_items:
-            self.parent._update_empty_state(False)
+        # 更新布局，重新排列剩余的文件夹项
+        for row, item in enumerate(self.folder_items):
+            self.parent.gridLayout_6.addWidget(item['frame'], row, 0)
+            
+        # 更新空状态
+        self.parent._update_empty_state(bool(self.folder_items))
 
     def _check_media_files(self, folder_path):
         """
@@ -438,7 +461,7 @@ class FolderPage(QtWidgets.QWidget):
 
     def _load_saved_folders(self):
         """加载已保存的文件夹路径"""
-# 检查保存的文件夹是否仍然存在
+        # 检查保存的文件夹是否仍然存在
         saved_folders = config_manager.get_folders()
         for folder_info in saved_folders:
             folder_path = folder_info["path"]
@@ -447,3 +470,6 @@ class FolderPage(QtWidgets.QWidget):
             else:
                 # 路径无效，从配置中移除
                 config_manager.remove_folder(folder_path)
+        
+        # 确保在加载完成后更新空状态
+        self.parent._update_empty_state(bool(self.folder_items))
