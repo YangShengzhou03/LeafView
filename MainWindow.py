@@ -186,15 +186,51 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def log(self, level, message):
         """
-        记录日志信息
+        记录日志信息，提供更友好的用户提示
         
         Args:
-            level: 日志级别（如INFO、WARNING、ERROR）
+            level: 日志级别（INFO、WARNING、ERROR）
             message: 日志消息内容
         """
         # 生成带时间戳的日志消息
         current_time = QtCore.QTime.currentTime().toString("HH:mm:ss")
         log_message = f"[{current_time}] [{level}] {message}"
         
+        # 根据日志级别提供不同的用户提示
+        if level == "ERROR":
+            # 错误级别：显示红色警告图标和提示
+            self._show_user_notification("❌ 错误", message, "error")
+        elif level == "WARNING":
+            # 警告级别：显示黄色警告图标和提示
+            self._show_user_notification("⚠️ 警告", message, "warning")
+        elif level == "INFO":
+            # 信息级别：显示蓝色信息图标和提示（重要信息才显示）
+            if any(keyword in message for keyword in ["完成", "成功", "开始", "停止", "中断"]):
+                self._show_user_notification("ℹ️ 提示", message, "info")
+        
         # 如果有专门的日志区域，可以在这里添加显示逻辑
         print(log_message)  # 临时输出到控制台
+
+    def _show_user_notification(self, title, message, level):
+        """
+        显示用户友好的通知消息
+        
+        Args:
+            title: 通知标题
+            message: 通知内容
+            level: 通知级别（error、warning、info）
+        """
+        try:
+            from PyQt6.QtWidgets import QMessageBox
+            
+            # 根据级别选择不同的图标和按钮
+            if level == "error":
+                QMessageBox.critical(self, title, message)
+            elif level == "warning":
+                QMessageBox.warning(self, title, message)
+            elif level == "info":
+                QMessageBox.information(self, title, message)
+                
+        except ImportError:
+            # 如果无法导入QMessageBox，则使用简单的控制台输出
+            print(f"[{level.upper()}] {title}: {message}")

@@ -177,7 +177,12 @@ class Contrast(QtWidgets.QWidget):
             try:
                 shutil.move(img, os.path.join(dest_folder, os.path.basename(img)))
             except Exception as e:
-                QtWidgets.QMessageBox.warning(self, "无法移动图片", f"无法移动图片 {img}: {e}")
+                QtWidgets.QMessageBox.warning(self, "❌ 无法移动图片", 
+                                           f"无法移动图片 {os.path.basename(img)}: {e}\n\n"
+                                           "可能的原因：\n"
+                                           "• 目标文件夹权限不足\n"
+                                           "• 文件正在被其他程序使用\n"
+                                           "• 磁盘空间不足")
         self.display_all_images()
 
     def auto_select_images(self):
@@ -193,16 +198,42 @@ class Contrast(QtWidgets.QWidget):
 
     def delete_selected_images(self):
         """删除选中的图片（移动到回收站）"""
-        reply = QtWidgets.QMessageBox.question(self, '移动到回收站', "确定要将选中的图片移动至回收站吗？",
-                                               QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No,
-                                               QtWidgets.QMessageBox.StandardButton.No)
+        if not self.selected_images:
+            QtWidgets.QMessageBox.information(self, "ℹ️ 提示", "当前没有选中任何图片\n\n"
+                                           "请先选择要删除的重复图片")
+            return
+            
+        reply = QtWidgets.QMessageBox.question(self, '⚠️ 确认删除', 
+                                             f"确定要将选中的 {len(self.selected_images)} 张图片移动到回收站吗？\n\n"
+                                             "⚠️ 此操作不可撤销，建议先备份重要文件。\n\n"
+                                             "删除后可在回收站中恢复。",
+                                             QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No,
+                                             QtWidgets.QMessageBox.StandardButton.No)
         if reply != QtWidgets.QMessageBox.StandardButton.Yes:
             return
+            
+        success_count = 0
+        failed_count = 0
+        
         for img in self.selected_images:
             try:
                 send2trash.send2trash(img)
+                success_count += 1
             except Exception as e:
-                QtWidgets.QMessageBox.warning(self, "无法删除图片", f"删除图片{img}出错: {e}")
+                failed_count += 1
+                QtWidgets.QMessageBox.warning(self, "❌ 删除失败", 
+                                           f"无法删除图片 {os.path.basename(img)}: {str(e)}\n\n"
+                                           "可能的原因：\n"
+                                           "• 文件正在被其他程序使用\n"
+                                           "• 回收站功能异常\n"
+                                           "• 权限不足")
+        
+        # 显示操作结果
+        if success_count > 0:
+            QtWidgets.QMessageBox.information(self, "✅ 操作完成", 
+                                             f"成功删除 {success_count} 张图片到回收站{f'，{failed_count} 张删除失败' if failed_count > 0 else ''}\n\n"
+                                             "您可以在回收站中查看或恢复已删除的文件。")
+        
         self.selected_images.clear()
         self.display_all_images()
 
@@ -221,7 +252,9 @@ class Contrast(QtWidgets.QWidget):
         """开始相似图片检测流程"""
         folders = self.folder_page.get_all_folders() if self.folder_page else []
         if not folders:
-            QtWidgets.QMessageBox.warning(self, "警告", "请先设置有效的文件夹路径")
+            QtWidgets.QMessageBox.warning(self, "⚠️ 操作提示", 
+                                       "请先导入包含图片的文件夹\n\n"
+                                       "点击"导入文件夹"按钮添加要检测的文件夹")
             return
 
         self._running = True
@@ -244,11 +277,25 @@ class Contrast(QtWidgets.QWidget):
                 image_paths.extend(os.path.join(folder_path, f) for f in os.listdir(folder_path)
                                    if os.path.splitext(f)[1].lower() in supported_formats)
         
+        # 检查是否找到图片
+        if not image_paths:
+            QtWidgets.QMessageBox.information(self, "ℹ️ 提示", 
+                                           "在所选文件夹中未找到支持的图片文件\n\n"
+                                           "支持的格式：.jpg/.jpeg/.png/.bmp/.gif/.webp/.tif/.tiff/.heif/.heic\n"
+                                           "请检查文件夹路径和文件格式")
+            self._running = False
+            self.parent.toolButton_startContrast.setEnabled(True)
+            return
+        
         # 限制处理图片数量，避免内存溢出
         if len(image_paths) > 1000:
-            reply = QtWidgets.QMessageBox.question(self, "图片数量过多", 
-                                                  f"检测到 {len(image_paths)} 张图片，处理可能较慢。是否继续？",
-                                                  QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
+            reply = QtWidgets.QMessageBox.question(self, "⚠️ 图片数量较多", 
+                                                  f"检测到 {len(image_paths)} 张图片，处理可能需要一些时间。是否继续？\n\n"
+                                                  "处理大量图片时：\n"
+                                                  "• 可能需要几分钟到几十分钟\n"
+                                                  "• 会占用较多内存资源",
+                                                  QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No,
+                                                  QtWidgets.QMessageBox.StandardButton.Yes)
             if reply != QtWidgets.QMessageBox.StandardButton.Yes:
                 self._running = False
                 self.parent.toolButton_startContrast.setEnabled(True)
@@ -262,46 +309,16 @@ class Contrast(QtWidgets.QWidget):
         self.hash_worker.error_occurred.connect(self.on_hash_error)
         self.hash_worker.start()
 
-    def on_hashes_computed(self, hashes):
-        """哈希计算完成回调 - 启动相似度对比"""
-        if not self._running:
-            return
-        self.image_hashes = hashes
-        threshold = self.get_similarity_threshold(self.parent.horizontalSlider_levelContrast.value())
-        # 创建并启动相似度对比工作线程
-        self.contrast_worker = ContrastWorker(hashes, threshold)
-        self.contrast_worker.groups_completed.connect(self.on_groups_computed)
-        self.contrast_worker.progress_updated.connect(self.update_progress)
-        self.contrast_worker.image_matched.connect(self.show_images_from_thread)
-        self.contrast_worker.start()
-
-    def on_groups_computed(self, groups):
-        """相似度分组完成回调 - 显示分组结果"""
-        if not self._running:
-            return
-        self.groups = groups
-        self.display_all_images()
-
     def on_hash_error(self, error_msg):
         """哈希计算错误处理"""
-        QtWidgets.QMessageBox.warning(self, "图像Hash计算错误", error_msg)
+        QtWidgets.QMessageBox.warning(self, "❌ 计算错误", 
+                                   f"图片哈希计算过程中发生错误：{error_msg}\n\n"
+                                   "可能的原因：\n"
+                                   "• 图片文件损坏\n"
+                                   "• 内存不足\n"
+                                   "• 系统资源限制")
         self._running = False
         self.parent.toolButton_startContrast.setEnabled(True)
-
-    def thumbnail_clicked(self, path):
-        """缩略图点击事件 - 显示对应的大图对比"""
-        for gid, paths in self.groups.items():
-            if path in paths:
-                self.show_image(self.parent.label_image_A, path)
-                others = [p for p in paths if p != path]
-                if others:
-                    self.show_image(self.parent.label_image_B, np.random.choice(others))
-                break
-
-    def show_images_from_thread(self, src, match):
-        """从线程接收匹配的图片并显示"""
-        self.show_image(self.parent.label_image_A, src)
-        self.show_image(self.parent.label_image_B, match)
 
     def display_all_images(self):
         """显示所有相似图片分组"""
@@ -341,7 +358,9 @@ class Contrast(QtWidgets.QWidget):
         if no_images:
             self.update_progress(100)
             self.parent.verticalFrame_similar.hide()
-            QtWidgets.QMessageBox.information(self, "提示", "没有找到符合相似度条件的图片")
+            QtWidgets.QMessageBox.information(self, "✅ 检测完成", 
+                                           "未发现重复或相似的图片\n\n"
+                                           "所有图片都是唯一的，无需进行去重操作")
         self.parent.toolButton_startContrast.setEnabled(True)
 
     def create_thumbnail(self, path, total_images):

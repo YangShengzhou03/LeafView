@@ -152,7 +152,11 @@ class SmartArrange(QtWidgets.QWidget):
             reply = QMessageBox.question(
                 self,
                 "确认整理操作",
-                "一旦开始整理，操作的文件将无法恢复，请务必备份好数据！\n\n是否确认开始整理？",
+                "⚠️ 重要提醒：文件整理操作一旦开始，将无法撤销！\n\n"
+                "• 移动操作：文件将被移动到新位置，原位置不再保留\n"
+                "• 复制操作：文件将在新位置创建副本，原文件保留\n\n"
+                "强烈建议在开始前备份重要数据！\n\n"
+                "是否确认开始整理？",
                 QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
                 QMessageBox.StandardButton.No
             )
@@ -192,6 +196,17 @@ class SmartArrange(QtWidgets.QWidget):
             else:
                 self.log("INFO", f"将执行{operation_text}操作：进行分类和重命名")
 
+            # 显示操作摘要给用户
+            operation_summary = f"操作类型: {operation_text}"
+            if SmartArrange_structure:
+                operation_summary += f", 分类结构: {' → '.join(SmartArrange_structure)}"
+            if file_name_structure:
+                operation_summary += f", 文件名标签: {'+'.join(file_name_structure)}"
+            if self.destination_root:
+                operation_summary += f", 目标路径: {self.destination_root}"
+            
+            self.log("INFO", f"整理操作摘要: {operation_summary}")
+
             # 创建并启动整理线程
             self.SmartArrange_thread = SmartArrangeThread(
                 parent=self,
@@ -210,8 +225,11 @@ class SmartArrange(QtWidgets.QWidget):
         """整理线程完成时的处理"""
         self.parent.toolButton_startSmartArrange.setText("开始整理")
         self.SmartArrange_thread = None
-        self.log("DEBUG", "整理任务已结束。")
+        self.log("INFO", "整理任务已完成！")
         self.update_progress_bar(100)
+        
+        # 显示完成提示
+        QMessageBox.information(self, "操作完成", "文件整理操作已完成！\n\n您可以在目标位置查看整理后的文件。")
 
     def handle_combobox_selection(self, level, index):
         """处理分类下拉框选择变更
@@ -403,7 +421,16 @@ class SmartArrange(QtWidgets.QWidget):
             if ok and custom_text:
                 # 检查是否符合Windows命名规范
                 if not self.is_valid_windows_filename(custom_text):
-                    QMessageBox.warning(self, "文件名无效", "输入的文件名包含Windows不允许的字符或格式！")
+                    QMessageBox.warning(
+                        self, 
+                        "文件名无效", 
+                        f"输入的文件名 '{custom_text}' 不符合Windows命名规范！\n\n"
+                        "❌ 不允许的字符: < > : " / \\ | ? *\n"
+                        "❌ 不能使用保留文件名: CON, PRN, AUX, NUL, COM1-9, LPT1-9\n"
+                        "❌ 不能以点(.)或空格结尾\n"
+                        "❌ 长度不能超过255个字符\n\n"
+                        "请修改后重试。"
+                    )
                     return
                 
                 # 在已选区域显示前三个字
@@ -413,6 +440,7 @@ class SmartArrange(QtWidgets.QWidget):
                 button.setProperty('custom_content', custom_text)
             else:
                 # 用户取消或未输入，不移动标签
+                self.log("INFO", "用户取消了自定义标签输入")
                 return
         
         # 从原布局中移除按钮

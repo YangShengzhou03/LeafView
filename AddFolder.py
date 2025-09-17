@@ -94,15 +94,34 @@ class FolderPage(QtWidgets.QWidget):
         for item in self.folder_items:
             item_path = os.path.normpath(item['path'])
             if self._paths_equal(item_path, folder_path):
-                QMessageBox.warning(self, "路径已存在", f"文件夹路径已经添加:\n{folder_path}")
+                QMessageBox.warning(
+                    self, 
+                    "路径已存在", 
+                    f"📁 文件夹路径已经添加:\n\n{folder_path}\n\n"
+                    "无需重复添加相同的文件夹。"
+                )
                 return
             if item['include_sub'] and self._is_subpath(folder_path, item_path):
-                QMessageBox.warning(self, "路径冲突",
-                                    f"您选择的路径是已添加路径（且勾选了包含子文件夹）的子目录:\n\n已添加路径: {item_path}\n当前路径: {folder_path}")
+                QMessageBox.warning(
+                    self, 
+                    "路径冲突",
+                    f"⚠️ 路径冲突检测到！\n\n"
+                    f"您选择的路径是已添加路径（且勾选了包含子文件夹）的子目录:\n\n"
+                    f"• 已添加路径: {item_path}\n"
+                    f"• 当前路径: {folder_path}\n\n"
+                    "为了避免重复处理文件，请移除其中一个路径。"
+                )
                 return
             if self._is_subpath(item_path, folder_path) and item['include_sub']:
-                QMessageBox.warning(self, "路径冲突",
-                                    f"您选择的路径包含已添加的路径（且已勾选包含子文件夹）:\n\n已添加路径: {item_path}\n当前路径: {folder_path}")
+                QMessageBox.warning(
+                    self, 
+                    "路径冲突",
+                    f"⚠️ 路径冲突检测到！\n\n"
+                    f"您选择的路径包含已添加的路径（且已勾选包含子文件夹）:\n\n"
+                    f"• 已添加路径: {item_path}\n"
+                    f"• 当前路径: {folder_path}\n\n"
+                    "为了避免重复处理文件，请移除其中一个路径。"
+                )
                 return
         
         # 创建文件夹项并添加到列表
@@ -240,13 +259,27 @@ class FolderPage(QtWidgets.QWidget):
                         other_path = os.path.normpath(other['path'])
                         if other['frame'] != folder_frame:
                             if self._is_subpath(current_path, other_path) and other['include_sub']:
-                                QMessageBox.warning(self, "操作不允许",
-                                                    f"您不能勾选此选项，因为该路径是其他已勾选包含子文件夹的路径的子目录:\n\n父路径: {other_path}\n当前路径: {current_path}")
+                                QMessageBox.warning(
+                                                    self, 
+                                                    "操作不允许",
+                                                    f"❌ 操作被阻止！\n\n"
+                                                    f"您不能勾选此选项，因为该路径是其他已勾选包含子文件夹的路径的子目录:\n\n"
+                                                    f"• 父路径: {other_path}\n"
+                                                    f"• 当前路径: {current_path}\n\n"
+                                                    "为了避免文件处理冲突，请先移除父路径或取消其包含子文件夹选项。"
+                                                )
                                 item['checkbox'].setChecked(False)
                                 return
                             if self._is_subpath(other_path, current_path):
-                                QMessageBox.warning(self, "操作不允许",
-                                                    f"您不能勾选此选项，因为该路径包含其他已添加的路径:\n\n子路径: {other_path}\n当前路径: {current_path}")
+                                QMessageBox.warning(
+                                                    self, 
+                                                    "操作不允许",
+                                                    f"❌ 操作被阻止！\n\n"
+                                                    f"您不能勾选此选项，因为该路径包含其他已添加的路径:\n\n"
+                                                    f"• 子路径: {other_path}\n"
+                                                    f"• 当前路径: {current_path}\n\n"
+                                                    "为了避免文件处理冲突，请先移除子路径。"
+                                                )
                                 item['checkbox'].setChecked(False)
                                 return
                 item['include_sub'] = state == QtCore.Qt.CheckState.Checked

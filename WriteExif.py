@@ -201,7 +201,11 @@ class WriteExif(QWidget):
             amap_key = os.environ.get('AMAP_API_KEY', 'default_key')
             
             if amap_key == 'default_key':
-                self.log("ERROR", "请设置AMAP_API_KEY环境变量")
+                self.log("ERROR", "❌ 高德地图API密钥未设置！\n\n"
+                             "请设置AMAP_API_KEY环境变量：\n"
+                             "1. 获取高德地图开放平台API密钥\n"
+                             "2. 在系统环境变量中设置AMAP_API_KEY=您的密钥\n"
+                             "3. 重启应用程序生效")
                 return None
                 
             params = {'address': address, 'key': amap_key, 'output': 'JSON'}
@@ -211,7 +215,11 @@ class WriteExif(QWidget):
             if data.get('status') == '1' and int(data.get('count', 0)) > 0:
                 return data['geocodes'][0]['location'].split(',')
         except Exception as e:
-            self.log("ERROR", f"获取位置失败: {str(e)}")
+            self.log("ERROR", f"❌ 获取位置信息失败: {str(e)}\n\n"
+                         "可能的原因：\n"
+                         "• 网络连接问题\n"
+                         "• API密钥无效\n"
+                         "• 地址格式不正确")
         return None
 
     def get_location_by_ip(self):
@@ -225,10 +233,12 @@ class WriteExif(QWidget):
                 self.parent.lineEdit_EXIF_Position.setText(location)
                 return lat, lon
             else:
-                self.log("ERROR", "无法解析位置信息")
+                self.log("ERROR", "❌ 无法解析位置信息\n\n"
+                             "IP地址定位服务返回的数据格式异常")
                 return None
         except Exception as e:
-            self.log("ERROR", f"获取位置失败: {str(e)}")
+            self.log("ERROR", f"❌ 获取位置信息失败: {str(e)}\n\n"
+                         "请检查网络连接或稍后重试")
             return None
 
     def update_position_by_ip(self):
@@ -236,9 +246,13 @@ class WriteExif(QWidget):
         location_info = self.get_location_by_ip()
         if location_info is not None:
             lat, lon = location_info
-            self.log("INFO", f"成功获取位置信息: 纬度={lat}, 经度={lon}")
+            self.log("INFO", f"✅ 成功获取位置信息: 纬度={lat}, 经度={lon}")
         else:
-            self.log("ERROR", "获取位置信息失败，请检查网络连接。")
+            self.log("ERROR", "❌ 获取位置信息失败\n\n"
+                         "可能的原因：\n"
+                         "• 网络连接异常\n"
+                         "• 定位服务暂时不可用\n"
+                         "• 防火墙或代理设置阻止了网络请求")
 
     def start_exif_writing(self):
         """
@@ -248,12 +262,14 @@ class WriteExif(QWidget):
             bool: 是否成功启动
         """
         if not self.folder_page:
-            self.log("ERROR", "文件夹页面未初始化")
+            self.log("ERROR", "❌ 文件夹页面未初始化\n\n"
+                         "请重新启动应用程序或联系技术支持")
             return False
             
         folders = self.folder_page.get_all_folders()
         if not folders:
-            self.log("WARNING", "请先导入一个有效的文件夹。")
+            self.log("WARNING", "⚠️ 请先导入一个有效的文件夹\n\n"
+                           "点击"导入文件夹"按钮添加包含图片的文件夹")
             return False
         
         # 准备EXIF写入参数
@@ -283,7 +299,11 @@ class WriteExif(QWidget):
                 if coords := self.get_location(address):
                     params['position'] = ','.join(coords)
                 else:
-                    self.log("ERROR", f"无法找到地址'{address}'对应的地理坐标")
+                    self.log("ERROR", f"❌ 无法找到地址'{address}'对应的地理坐标\n\n"
+                               "请检查：\n"
+                               "• 地址拼写是否正确\n"
+                               "• 是否包含详细的门牌号或地标\n"
+                               "• 高德地图API密钥是否有效")
                     return False
         elif location_type == 1:  # 经纬度
             longitude = self.parent.lineEdit_EXIF_longitude.text()
@@ -296,14 +316,34 @@ class WriteExif(QWidget):
                     if -180 <= lon <= 180 and -90 <= lat <= 90:
                         params['position'] = f"{lat},{lon}"
                     else:
-                        self.log("ERROR", "经纬度范围无效，经度应在-180到180之间，纬度应在-90到90之间")
+                        self.log("ERROR", "❌ 经纬度范围无效\n\n"
+                                 "• 经度应在-180到180之间\n"
+                                 "• 纬度应在-90到90之间\n\n"
+                                 "请检查输入的数值是否正确")
                         return False
                 except ValueError:
-                    self.log("ERROR", "经纬度格式无效，请输入有效的数字")
+                    self.log("ERROR", "❌ 经纬度格式无效\n\n"
+                             "请输入有效的数字格式，例如：\n"
+                             "• 经度: 116.397128\n"
+                             "• 纬度: 39.916527")
                     return False
             else:
-                self.log("ERROR", "请输入经纬度信息")
+                self.log("ERROR", "❌ 请输入经纬度信息\n\n"
+                             "请在对应的文本框中输入经度和纬度值")
                 return False
+        
+        # 显示操作摘要
+        operation_summary = f"操作类型: EXIF信息写入"
+        if params.get('title'):
+            operation_summary += f", 标题: {params['title']}"
+        if params.get('author'):
+            operation_summary += f", 作者: {params['author']}"
+        if params.get('position'):
+            operation_summary += f", 位置: {params['position']}"
+        if params.get('rating') != '0':
+            operation_summary += f", 评分: {params['rating']}星"
+        
+        self.log("INFO", f"📝 EXIF写入操作摘要: {operation_summary}")
         
         # 创建并启动工作线程
         self.worker = WriteExifThread(**params)
@@ -319,7 +359,7 @@ class WriteExif(QWidget):
             self.worker.wait(1000)
             if self.worker.isRunning():
                 self.worker.terminate()
-            self.log("WARNING", "正在停止EXIF写入。")
+            self.log("WARNING", "⏹️ 正在停止EXIF写入操作...")
         self.is_running = False
         self.update_button_state()
 
@@ -341,6 +381,15 @@ class WriteExif(QWidget):
 
     def on_finished(self):
         """EXIF写入完成处理"""
-        self.log("DEBUG", "EXIF信息写入任务结束!")
+        self.log("INFO", "✅ EXIF信息写入任务已完成！")
         self.is_running = False
         self.update_button_state()
+        
+        # 显示完成提示
+        QMessageBox.information(
+            self.parent, 
+            "操作完成", 
+            "✅ EXIF信息写入操作已完成！\n\n"
+            "所有选定的图片文件已成功更新EXIF信息。\n\n"
+            "您可以在原文件夹中查看更新后的文件。"
+        )

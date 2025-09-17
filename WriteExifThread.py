@@ -177,7 +177,11 @@ class WriteExifThread(QThread):
             secret_key = os.environ.get('STONEDT_SECRET_KEY', 'default_key')
             
             if secret_id == 'default_id' or secret_key == 'default_key':
-                self.log.emit("ERROR", "请设置STONEDT_SECRET_ID和STONEDT_SECRET_KEY环境变量")
+                self.log.emit("ERROR", "❌ 图像分析API密钥未设置！\n\n"
+                             "请设置STONEDT_SECRET_ID和STONEDT_SECRET_KEY环境变量：\n"
+                             "1. 获取石盾科技API密钥\n"
+                             "2. 在系统环境变量中设置密钥\n"
+                             "3. 重启应用程序生效")
                 return [], ""
                 
             # 调用图像分析API
@@ -206,10 +210,15 @@ class WriteExifThread(QThread):
                 }
                 self._save_cache()
                 return keywords_list, description
-            self.log.emit("ERROR", f"发送服务器请求出错")
+            self.log.emit("ERROR", f"❌ 图像分析API请求失败 (状态码: {response.status_code})\n\n"
+                         "可能的原因：\n"
+                         "• API密钥无效或过期\n"
+                         "• 网络连接问题\n"
+                         "• 服务器暂时不可用")
             return [], ""
         except Exception as e:
-            self.log.emit("ERROR", f"图像分析服务器请求超时")
+            self.log.emit("ERROR", f"❌ 图像分析请求超时或失败: {str(e)}\n\n"
+                         "请检查网络连接或稍后重试")
             return [], ""
         finally:
             if 'response' in locals():
@@ -221,8 +230,15 @@ class WriteExifThread(QThread):
         image_paths = self._collect_image_paths()
         total_files = len(image_paths)
         if not image_paths:
+            self.log.emit("WARNING", "⚠️ 未找到任何图像文件\n\n"
+                           "请检查：\n"
+                           "• 文件夹路径是否正确\n"
+                           "• 是否包含支持的图像格式(.jpg/.jpeg/.png/.webp)")
             self.finished_conversion.emit()
             return
+        
+        # 显示操作统计
+        self.log.emit("INFO", f"📊 开始处理 {total_files} 个图像文件")
         
         # 初始化进度
         self.progress_updated.emit(0)
@@ -237,6 +253,7 @@ class WriteExifThread(QThread):
                         for f in futures:
                             f.cancel()
                         time.sleep(0.1)
+                        self.log.emit("INFO", "⏹️ EXIF写入操作已成功中止")
                         break
                     try:
                         future.result()
@@ -245,10 +262,12 @@ class WriteExifThread(QThread):
                         self.progress_updated.emit(progress)
                     except Exception as e:
                         file_path = futures[future]
+                        self.log.emit("ERROR", f"❌ 处理文件 {os.path.basename(file_path)} 时出错: {str(e)}")
             finally:
                 executor.shutdown(wait=False)
         
         # 发送完成信号
+        self.log.emit("INFO", f"✅ EXIF写入任务完成，共处理 {total_files} 个文件")
         self.finished_conversion.emit()
 
     def _collect_image_paths(self):
@@ -288,7 +307,7 @@ class WriteExifThread(QThread):
         """
         try:
             if self._stop_requested:
-                self.log.emit("INFO", f"处理被取消: {image_path}")
+                self.log.emit("INFO", f"⏹️ 处理被取消: {os.path.basename(image_path)}")
                 return
             
             # 处理非PNG格式图像（支持EXIF）
@@ -343,7 +362,7 @@ class WriteExifThread(QThread):
                 # 自动标记
                 if self.autoMark:
                     if self._stop_requested:
-                        self.log.emit("INFO", f"操作被终止: {image_path}")
+                        self.log.emit("INFO", f"⏹️ 操作被终止: {os.path.basename(image_path)}")
                         return
                     keywords_list, description = self.analyze_image(image_path)
                     keywords_str = ",".join(keywords_list)
@@ -364,9 +383,12 @@ class WriteExifThread(QThread):
                 piexif.insert(exif_bytes, image_path)
                 
                 if updated_fields:
-                    self.log.emit("INFO", f"已成功更新 {image_path}: {'; '.join(updated_fields)}")
+                    self.log.emit("INFO", f"✅ 成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
                 else:
-                    self.log.emit("WARNING", f"未对 {image_path} 进行任何更改")
+                    self.log.emit("WARNING", f"⚠️ 未对 {os.path.basename(image_path)} 进行任何更改\n\n"
+                                 "可能的原因：\n"
+                                 "• 所有EXIF字段均为空\n"
+                                 "• 自动标记功能被禁用")
             else:
                 # 处理PNG格式图像（不支持EXIF，使用PNG文本信息）
                 if self.shootTime != 0:
@@ -383,7 +405,7 @@ class WriteExifThread(QThread):
                                 temp_path = image_path + ".tmp"
                                 img.save(temp_path, format="PNG", pnginfo=png_info)
                                 os.replace(temp_path, image_path)
-                                self.log.emit("INFO", f"成功写入 {image_path} 的拍摄时间 {date_from_filename}")
+                                self.log.emit("INFO", f"✅ 成功写入 {os.path.basename(image_path)} 的拍摄时间 {date_from_filename}")
                     else:
                         # 使用指定的拍摄时间
                         with Image.open(image_path) as img:
@@ -395,51 +417,24 @@ class WriteExifThread(QThread):
                             temp_path = image_path + ".tmp"
                             img.save(temp_path, format="PNG", pnginfo=png_info)
                             os.replace(temp_path, image_path)
-                            self.log.emit("INFO", f"成功写入 {image_path} 的拍摄时间 {self.shootTime}")
+                            self.log.emit("INFO", f"✅ 成功写入 {os.path.basename(image_path)} 的拍摄时间 {self.shootTime}")
 
         except Exception as e:
             # 错误处理
             result = detect_media_type(image_path)
             if not result["valid"]:
-                self.log("ERROR", f"{image_path}文件已损坏")
+                self.log.emit("ERROR", f"❌ {os.path.basename(image_path)} 文件已损坏或格式不支持\n\n"
+                                 "请检查文件完整性")
             elif not result["extension_match"]:
-                self.log("ERROR", f"扩展名不匹配，{image_path}正确的格式是{result['extension']}")
+                self.log.emit("ERROR", f"❌ {os.path.basename(image_path)} 扩展名不匹配，实际格式为 {result['extension']}\n\n"
+                                 "请检查文件格式")
             else:
-                self.log("ERROR", f"{image_path}出错{e}")
-
-    def _create_gps_data(self, lat: float, lon: float) -> dict:
-        """
-        创建GPS EXIF数据
-        
-        Args:
-            lat: 纬度
-            lon: 经度
-            
-        Returns:
-            dict: GPS EXIF数据字典
-        """
-        def decimal_to_dms(decimal: float) -> tuple:
-            """将十进制坐标转换为度分秒格式"""
-            degrees = int(decimal)
-            minutes_float = (decimal - degrees) * 60
-            minutes = int(minutes_float)
-            seconds = round((minutes_float - minutes) * 60, 4)
-            return ((degrees, 1), (minutes, 1), (int(seconds * 10000), 10000))
-
-        gps_ifd = {
-            piexif.GPSIFD.GPSVersionID: (2, 0, 0, 0),
-            piexif.GPSIFD.GPSLatitudeRef: 'N' if lat >= 0 else 'S',
-            piexif.GPSIFD.GPSLatitude: decimal_to_dms(abs(lat)),
-            piexif.GPSIFD.GPSLongitudeRef: 'E' if lon >= 0 else 'W',
-            piexif.GPSIFD.GPSLongitude: decimal_to_dms(abs(lon)),
-            piexif.GPSIFD.GPSMapDatum: b"WGS-84",
-            piexif.GPSIFD.GPSDateStamp: datetime.now().strftime("%Y:%m:%d").encode('ascii'),
-        }
-        return gps_ifd
+                self.log.emit("ERROR", f"❌ 处理 {os.path.basename(image_path)} 时出错: {str(e)}")
 
     def stop(self):
         """请求停止处理"""
         self._stop_requested = True
+        self.log.emit("INFO", "⏹️ 正在停止EXIF写入操作...")
 
     def get_date_from_filename(self, image_path):
         """

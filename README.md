@@ -195,8 +195,68 @@ LeafView/
 4. **推送分支**：将本地分支推送到个人远程仓库
 5. **创建 Pull Request**：提交合并请求到原仓库，描述修改内容与目的，等待审核
 
+### 👥 核心贡献者
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <a href="https://github.com/YangShengzhou03">
+          <img src="https://avatars.githubusercontent.com/u/YangShengzhou03" width="100px;" alt="YangShengzhou03"/><br />
+          <sub><b>YangShengzhou03</b></sub>
+        </a><br />
+        <sub>项目创始人 & 核心开发者</sub>
+      </td>
+    </tr>
+  </table>
+</div>
+
+### 💖 特别鸣谢
+感谢以下开发者为项目做出的贡献：
+
+- **UI/UX 设计团队** - 提供精美的界面设计和用户体验优化
+- **测试团队** - 进行全面的功能测试和性能优化
+- **社区贡献者** - 提供宝贵的反馈和建议
+
+### 🎯 贡献指南
+
+#### 代码规范
+- 遵循 PEP 8 Python 代码风格指南
+- 使用有意义的变量名和函数名
+- 添加适当的注释和文档字符串
+- 确保代码通过静态检查工具（如flake8、pylint）
+
+#### 提交信息规范
+```
+类型(范围): 简短描述
+
+详细描述（可选）
+
+BREAKING CHANGE: 重大变更说明（可选）
+```
+
+**类型说明**:
+- `feat`: 新功能
+- `fix`: 修复bug
+- `docs`: 文档更新
+- `style`: 代码格式调整
+- `refactor`: 代码重构
+- `test`: 测试相关
+- `chore`: 构建过程或辅助工具变动
+
 ## 📜 开源许可
 本项目采用 [MIT License](https://opensource.org/licenses/MIT) 授权。
+
+---
+
+<div align="center">
+  <p>
+    <strong>🍁 枫叶相册 - 让图片管理更简单 🍁</strong>
+  </p>
+  <p>
+    如果这个项目对您有帮助，请给个 ⭐ Star 支持一下！
+  </p>
+</div>
 
 ```
 MIT License
