@@ -1152,7 +1152,7 @@ border-top-right-radius:0px;
 border-bottom-right-radius:12px;
 border-bottom-left-radius:0px;</string>
                 </property>
-                <layout class="QVBoxLayout" name="verticalLayout_20" stretch="0,0">
+                <layout class="QVBoxLayout" name="verticalLayout_20" stretch="0">
                  <property name="spacing">
                   <number>0</number>
                  </property>
@@ -1168,130 +1168,6 @@ border-bottom-left-radius:0px;</string>
                  <property name="bottomMargin">
                   <number>0</number>
                  </property>
-                 <item>
-                  <widget class="QFrame" name="horizontalFrame_Recognition">
-                   <property name="maximumSize">
-                    <size>
-                     <width>16777215</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">background:rgb(255, 255, 255);
-border-radius: 0px; </string>
-                   </property>
-                   <layout class="QHBoxLayout" name="horizontalLayout_18" stretch="0,0">
-                    <property name="spacing">
-                     <number>12</number>
-                    </property>
-                    <property name="leftMargin">
-                     <number>9</number>
-                    </property>
-                    <property name="topMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="rightMargin">
-                     <number>9</number>
-                    </property>
-                    <property name="bottomMargin">
-                     <number>0</number>
-                    </property>
-                    <item>
-                     <widget class="QProgressBar" name="progressBar_Recognition">
-                      <property name="minimumSize">
-                       <size>
-                        <width>0</width>
-                        <height>0</height>
-                       </size>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>16777215</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">QProgressBar {
-  text-align: center;
-  background-color: #FFFFFF;
-  border: 1px solid #D4D4D4;
-  border-radius: 8px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-  color: #DADADA;
-  font-weight: bold;
-}
-
-QProgressBar::chunk {
-  background-color: qlineargradient(
-    x1:0, y1:0,
-    x2:1, y2:0,
-    stop:0 #A76EFF,
-    stop:0.33 #8C5AE5,
-    stop:0.66 #744AC2,
-    stop:1 #995FFF
-  );
-  border-radius: 4px;
-  margin: 1px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-}</string>
-                      </property>
-                      <property name="value">
-                       <number>0</number>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QToolButton" name="toolButton_startRecognition">
-                      <property name="minimumSize">
-                       <size>
-                        <width>86</width>
-                        <height>0</height>
-                       </size>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">QToolButton {
-    color: white;
-    border: none;
-    padding: 6px 6px;
-    border-radius: 6px;
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
-        stop:0.66 rgba(134, 119, 253, 255),
-        stop:1 rgba(119, 111, 252, 255)
-    );
-    font-size: 12px;
-}
-
-QToolButton:hover {
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
-        stop:0.66 rgba(154, 139, 255, 255),
-        stop:1 rgba(139, 131, 254, 255)
-    );
-}
-
-QToolButton:pressed {
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
-        stop:0.66 rgba(94, 79, 253, 255),
-        stop:1 rgba(79, 71, 252, 255)
-    );
-}</string>
-                      </property>
-                      <property name="text">
-                       <string>开始识字</string>
-                      </property>
-                      <property name="iconSize">
-                       <size>
-                        <width>24</width>
-                        <height>24</height>
-                       </size>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
                  <item>
                   <widget class="QFrame" name="verticalFrame">
                    <property name="styleSheet">
@@ -1317,6 +1193,110 @@ border-bottom-left-radius:0px;</string>
                     <property name="bottomMargin">
                      <number>0</number>
                     </property>
+                    <item>
+                     <spacer name="verticalSpacer">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="label">
+                      <property name="styleSheet">
+                       <string notr="true">QLabel {
+    font-family: &quot;Microsoft YaHei&quot;, &quot;Segoe UI&quot;, sans-serif;
+    font-size: 18px;
+    color: #333740;
+    background-color: transparent;
+    padding: 4px 8px;
+    border-radius: 4px;
+    line-height: 1.5;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    qproperty-alignment: AlignCenter;
+}
+
+QLabel#TitleLabel {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e293b;
+    padding: 8px 12px;
+    background: linear-gradient(90deg, rgba(109, 40, 217, 0.05), rgba(139, 92, 246, 0.03));
+    border-left: 3px solid #6d28d9;
+}
+
+QLabel#HighlightLabel {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background-color: rgba(22, 163, 74, 0.1);
+    color: #16a34a;
+    border: 1px solid rgba(22, 163, 74, 0.2);
+}
+
+QLabel#WarningLabel {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+QLabel#InteractiveLabel {
+    color: #6d28d9;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+QLabel#InteractiveLabel:hover {
+    color: #8b5cf6;
+    background-color: rgba(139, 92, 246, 0.05);
+    text-decoration: underline;
+}
+
+QLabel#InteractiveLabel:pressed {
+    color: #5b21b6;
+    background-color: rgba(139, 92, 246, 0.1);
+}
+
+QLabel:disabled {
+    color: #9ca3af;
+    background-color: transparent;
+}
+
+QLabel#ImageLabel {
+    padding: 0;
+    border-radius: 8px;
+    background-color: #f3f4f6;
+}
+
+QLabel#ImageLabel:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+    </string>
+                      </property>
+                      <property name="text">
+                       <string>功能正在建设中</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <spacer name="verticalSpacer_2">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
                    </layout>
                   </widget>
                  </item>
@@ -4246,8 +4226,8 @@ QScrollBar::corner {
                         <rect>
                          <x>0</x>
                          <y>0</y>
-                         <width>228</width>
-                         <height>474</height>
+                         <width>100</width>
+                         <height>30</height>
                         </rect>
                        </property>
                        <layout class="QGridLayout" name="gridLayout_2"/>

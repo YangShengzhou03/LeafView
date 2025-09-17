@@ -438,8 +438,10 @@ class FolderPage(QtWidgets.QWidget):
 
     def _load_saved_folders(self):
         """加载已保存的文件夹路径"""
+# 检查保存的文件夹是否仍然存在
         saved_folders = config_manager.get_folders()
-        for folder_path in saved_folders:
+        for folder_info in saved_folders:
+            folder_path = folder_info["path"]
             if os.path.exists(folder_path):
                 self._create_folder_item(folder_path, os.path.basename(folder_path))
             else:

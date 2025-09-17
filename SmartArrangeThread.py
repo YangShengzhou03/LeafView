@@ -14,6 +14,7 @@ from PIL import Image
 import pillow_heif
 
 from common import get_resource_path
+from config_manager import config_manager
 
 # 扩展支持的文件类型
 IMAGE_EXTENSIONS = (
@@ -116,6 +117,9 @@ class SmartArrangeThread(QtCore.QThread):
 
     def run(self):
         try:
+            # 加载地理位置数据
+            self.load_geographic_data()
+            
             self.log("INFO", f"正在处理 {len(self.folders)} 个文件夹")
             for folder_info in self.folders:
                 if self._stop_flag:
@@ -336,29 +340,67 @@ class SmartArrangeThread(QtCore.QThread):
     def get_exif_data(self, file_path):
         """获取文件的EXIF元数据"""
         exif_data = {}
-        suffix = file_path.suffix.lower()
-        create_time = datetime.datetime.fromtimestamp(file_path.stat().st_ctime)
-        modify_time = datetime.datetime.fromtimestamp(file_path.stat().st_mtime)
+        file_path_obj = Path(file_path)  # 将文件路径转换为Path对象
+        suffix = file_path_obj.suffix.lower()
+        create_time = datetime.datetime.fromtimestamp(file_path_obj.stat().st_ctime)
+        modify_time = datetime.datetime.fromtimestamp(file_path_obj.stat().st_mtime)
+        
+        # 添加调试信息
+        self.log("DEBUG", f"开始处理文件: {file_path}, 文件类型: {suffix}")
         
         try:
             if suffix in ('.jpg', '.jpeg', '.tiff', '.tif'):
-                with open(file_path, 'rb') as f:
+                with open(file_path_obj, 'rb') as f:
                     tags = exifread.process_file(f, details=False)
                 date_taken = self.parse_exif_datetime(tags)
                 lat_ref = str(tags.get('GPS GPSLatitudeRef', '')).strip()
                 lon_ref = str(tags.get('GPS GPSLongitudeRef', '')).strip()
-                lat = self.convert_to_degrees(tags.get('GPS GPSLatitude'))
-                lon = self.convert_to_degrees(tags.get('GPS GPSLongitude'))
-                if lat and lon:
-                    lat = -lat if lat_ref.lower() == 's' else lat
-                    lon = -lon if lon_ref.lower() == 'w' else lon
-                    exif_data.update({'GPS GPSLatitude': lat, 'GPS GPSLongitude': lon})
+                
+                # 获取GPS坐标，正确处理坐标格式
+                gps_lat = tags.get('GPS GPSLatitude')
+                gps_lon = tags.get('GPS GPSLongitude')
+                
+                # 添加GPS坐标调试信息
+                self.log("DEBUG", f"GPS坐标原始数据 - 纬度: {gps_lat}, 经度: {gps_lon}")
+                self.log("DEBUG", f"GPS坐标参考方向 - 纬度: {lat_ref}, 经度: {lon_ref}")
+                
+                if gps_lat and gps_lon:
+                    # 检查坐标是否为十进制格式
+                    if isinstance(gps_lat, (int, float)) and isinstance(gps_lon, (int, float)):
+                        lat = gps_lat
+                        lon = gps_lon
+                        self.log("DEBUG", f"GPS坐标已经是十进制格式 - 纬度: {lat}, 经度: {lon}")
+                    else:
+                        # 转换为十进制度数
+                        lat = self.convert_to_degrees(gps_lat)
+                        lon = self.convert_to_degrees(gps_lon)
+                        self.log("DEBUG", f"GPS坐标转换为十进制格式 - 纬度: {lat}, 经度: {lon}")
+                    
+                    if lat and lon:
+                        lat = -lat if lat_ref and lat_ref.lower() == 's' else lat
+                        lon = -lon if lon_ref and lon_ref.lower() == 'w' else lon
+                        exif_data.update({'GPS GPSLatitude': lat, 'GPS GPSLongitude': lon})
+                        self.log("DEBUG", f"GPS坐标处理完成 - 纬度: {lat}, 经度: {lon}")
+                    else:
+                        self.log("DEBUG", f"GPS坐标转换失败 - 纬度: {lat}, 经度: {lon}")
+                else:
+                    self.log("DEBUG", "GPS坐标数据不存在")
+                
+                make = str(tags.get('Image Make', '')).strip()
+                model = str(tags.get('Image Model', '')).strip()
+                
+                # 添加相机品牌和型号调试信息
+                self.log("DEBUG", f"相机品牌原始数据: {tags.get('Image Make')}")
+                self.log("DEBUG", f"相机型号原始数据: {tags.get('Image Model')}")
+                self.log("DEBUG", f"相机品牌处理后: {make}")
+                self.log("DEBUG", f"相机型号处理后: {model}")
+                
                 exif_data.update({
-                    'Make': str(tags.get('Image Make', '')).strip() or None,
-                    'Model': str(tags.get('Image Model', '')).strip() or None
+                    'Make': make or None,
+                    'Model': model or None
                 })
             elif suffix == '.heic':
-                heif_file = pillow_heif.read_heif(file_path)
+                heif_file = pillow_heif.read_heif(file_path_obj)
                 exif_raw = heif_file.info.get('exif', b'')
                 if exif_raw.startswith(b'Exif\x00\x00'):
                     exif_raw = exif_raw[6:]
@@ -367,44 +409,88 @@ class SmartArrangeThread(QtCore.QThread):
                     date_taken = self.parse_exif_datetime(tags)
                     lat_ref = str(tags.get('GPS GPSLatitudeRef', '')).strip()
                     lon_ref = str(tags.get('GPS GPSLongitudeRef', '')).strip()
-                    lat = self.convert_to_degrees(tags.get('GPS GPSLatitude'))
-                    lon = self.convert_to_degrees(tags.get('GPS GPSLongitude'))
-                    if lat and lon:
-                        lat = -lat if lat_ref.lower() == 's' else lat
-                        lon = -lon if lon_ref.lower() == 'w' else lon
-                        exif_data.update({'GPS GPSLatitude': lat, 'GPS GPSLongitude': lon})
+                    
+                    # 获取GPS坐标，正确处理坐标格式
+                    gps_lat = tags.get('GPS GPSLatitude')
+                    gps_lon = tags.get('GPS GPSLongitude')
+                    
+                    # 添加GPS坐标调试信息
+                    self.log("DEBUG", f"HEIC文件GPS坐标原始数据 - 纬度: {gps_lat}, 经度: {gps_lon}")
+                    self.log("DEBUG", f"HEIC文件GPS坐标参考方向 - 纬度: {lat_ref}, 经度: {lon_ref}")
+                    
+                    if gps_lat and gps_lon:
+                        # 检查坐标是否为十进制格式
+                        if isinstance(gps_lat, (int, float)) and isinstance(gps_lon, (int, float)):
+                            lat = gps_lat
+                            lon = gps_lon
+                            self.log("DEBUG", f"HEIC文件GPS坐标已经是十进制格式 - 纬度: {lat}, 经度: {lon}")
+                        else:
+                            # 转换为十进制度数
+                            lat = self.convert_to_degrees(gps_lat)
+                            lon = self.convert_to_degrees(gps_lon)
+                            self.log("DEBUG", f"HEIC文件GPS坐标转换为十进制格式 - 纬度: {lat}, 经度: {lon}")
+                        
+                        if lat and lon:
+                            lat = -lat if lat_ref and lat_ref.lower() == 's' else lat
+                            lon = -lon if lon_ref and lon_ref.lower() == 'w' else lon
+                            exif_data.update({'GPS GPSLatitude': lat, 'GPS GPSLongitude': lon})
+                            self.log("DEBUG", f"HEIC文件GPS坐标处理完成 - 纬度: {lat}, 经度: {lon}")
+                        else:
+                            self.log("DEBUG", f"HEIC文件GPS坐标转换失败 - 纬度: {lat}, 经度: {lon}")
+                    else:
+                        self.log("DEBUG", "HEIC文件GPS坐标数据不存在")
+                    
+                    make = str(tags.get('Image Make', '')).strip()
+                    model = str(tags.get('Image Model', '')).strip()
+                    
+                    # 添加相机品牌和型号调试信息
+                    self.log("DEBUG", f"HEIC文件相机品牌原始数据: {tags.get('Image Make')}")
+                    self.log("DEBUG", f"HEIC文件相机型号原始数据: {tags.get('Image Model')}")
+                    self.log("DEBUG", f"HEIC文件相机品牌处理后: {make}")
+                    self.log("DEBUG", f"HEIC文件相机型号处理后: {model}")
+                    
                     exif_data.update({
-                        'Make': str(tags.get('Image Make', '')).strip() or None,
-                        'Model': str(tags.get('Image Model', '')).strip() or None,
+                        'Make': make or None,
+                        'Model': model or None,
                     })
+                else:
+                    self.log("DEBUG", "HEIC文件没有EXIF数据")
             elif suffix == '.png':
-                with Image.open(file_path) as img:
+                with Image.open(file_path_obj) as img:
                     # 尝试从PNG元数据中获取创建时间
                     creation_time = img.info.get('Creation Time')
                     if creation_time:
                         date_taken = self.parse_datetime(creation_time)
                     else:
                         date_taken = None
+                    self.log("DEBUG", f"PNG文件创建时间: {creation_time}, 解析后: {date_taken}")
             else:
                 date_taken = None
+                self.log("DEBUG", f"不支持的文件类型或无EXIF数据: {suffix}")
 
             # 设置日期时间
             if self.time_derive == "拍摄日期":
                 exif_data['DateTime'] = date_taken.strftime('%Y-%m-%d %H:%M:%S') if date_taken else None
+                self.log("DEBUG", f"使用拍摄日期: {exif_data['DateTime']}")
             elif self.time_derive == "创建时间":
                 exif_data['DateTime'] = create_time.strftime('%Y-%m-%d %H:%M:%S')
+                self.log("DEBUG", f"使用创建时间: {exif_data['DateTime']}")
             elif self.time_derive == "修改时间":
                 exif_data['DateTime'] = modify_time.strftime('%Y-%m-%d %H:%M:%S')
+                self.log("DEBUG", f"使用修改时间: {exif_data['DateTime']}")
             else:
                 times = [t for t in [date_taken, create_time, modify_time] if t is not None]
                 earliest_time = min(times) if times else modify_time
                 exif_data['DateTime'] = earliest_time.strftime('%Y-%m-%d %H:%M:%S')
+                self.log("DEBUG", f"使用最早时间: {exif_data['DateTime']}")
                 
         except Exception as e:
             self.log("DEBUG", f"获取 {file_path} 的EXIF数据时出错: {str(e)}")
             # 出错时使用文件系统时间
             exif_data['DateTime'] = create_time.strftime('%Y-%m-%d %H:%M:%S')
             
+        # 添加最终EXIF数据调试信息
+        self.log("DEBUG", f"最终EXIF数据: {exif_data}")
         return exif_data
 
     def parse_exif_datetime(self, tags):
@@ -455,59 +541,98 @@ class SmartArrangeThread(QtCore.QThread):
 
     def get_city_and_province(self, lat, lon):
         """根据经纬度获取省份和城市信息"""
+        # 添加调试信息
+        self.log("DEBUG", f"开始获取地理位置，输入坐标 - 纬度: {lat}, 经度: {lon}")
+        
         if not hasattr(self, 'province_data') or not hasattr(self, 'city_data'):
+            self.log("DEBUG", "地理位置数据未加载，返回未知位置")
             return "未知省份", "未知城市"
 
+        # 添加地理位置数据加载状态调试信息
+        self.log("DEBUG", f"省份数据加载状态: {len(self.province_data.get('features', []))} 个特征")
+        self.log("DEBUG", f"城市数据加载状态: {len(self.city_data.get('features', []))} 个特征")
+
         def is_point_in_polygon(x, y, polygon):
-            """判断点是否在多边形内"""
+            """判断点是否在多边形内（使用射线法）"""
             if not isinstance(polygon, (list, tuple)) or len(polygon) < 3:
                 return False
-            inside, n = False, len(polygon)
+            
+            n = len(polygon)
+            inside = False
+            
+            p1x, p1y = polygon[0]
             for i in range(n + 1):
-                p1x, p1y = polygon[i % n]
-                p2x, p2y = polygon[(i + 1) % n]
-                if y > min(p1y, p2y) and y <= max(p1y, p2y) and x <= max(p1x, p2x):
-                    if p1y != p2y: 
-                        x_intercept = (y - p1y) * (p2x - p1x) / (p2y - p1y) + p1x
-                    if p1x == p2x or x <= x_intercept: 
-                        inside = not inside
+                p2x, p2y = polygon[i % n]
+                if y > min(p1y, p2y):
+                    if y <= max(p1y, p2y):
+                        if x <= max(p1x, p2x):
+                            if p1y != p2y:
+                                xinters = (y - p1y) * (p2x - p1x) / (p2y - p1y) + p1x
+                            if p1x == p2x or x <= xinters:
+                                inside = not inside
+                p1x, p1y = p2x, p2y
+            
             return inside
 
         def query_location(longitude, latitude, data):
             """查询位置信息"""
-            for feature in data['features']:
+            self.log("DEBUG", f"查询位置信息 - 经度: {longitude}, 纬度: {latitude}, 数据类型: {'省份' if data == self.province_data else '城市'}")
+            
+            for i, feature in enumerate(data['features']):
                 name, coordinates = feature['properties']['name'], feature['geometry']['coordinates']
                 polygons = [polygon for multi_polygon in coordinates for polygon in
                             ([multi_polygon] if isinstance(multi_polygon[0][0], (float, int)) else multi_polygon)]
-                if any(is_point_in_polygon(longitude, latitude, polygon) for polygon in polygons):
-                    return name
+                
+                # 添加多边形检查调试信息
+                self.log("DEBUG", f"检查第 {i+1} 个区域: {name}, 多边形数量: {len(polygons)}")
+                
+                for j, polygon in enumerate(polygons):
+                    if is_point_in_polygon(longitude, latitude, polygon):
+                        self.log("DEBUG", f"点在多边形 {j+1} 内，找到位置: {name}")
+                        return name
+            
+            self.log("DEBUG", "未找到匹配的位置")
             return None
 
-        province = query_location(lon, lat, self.province_data)
-        city = query_location(lon, lat, self.city_data)
-
-        return (
-            province if province else "未知省份",
-            city if city else "未知城市"
-        )
+        # 检查坐标是否为十进制格式
+        if isinstance(lat, (int, float)) and isinstance(lon, (int, float)):
+            lat_deg = lat
+            lon_deg = lon
+            self.log("DEBUG", f"坐标已经是十进制格式 - 纬度: {lat_deg}, 经度: {lon_deg}")
+        else:
+            # 转换为十进制度数
+            lat_deg = self.convert_to_degrees(lat)
+            lon_deg = self.convert_to_degrees(lon)
+            self.log("DEBUG", f"坐标转换为十进制格式 - 纬度: {lat_deg}, 经度: {lon_deg}")
+        
+        if lat_deg and lon_deg:
+            province = query_location(lon_deg, lat_deg, self.province_data)
+            city = query_location(lon_deg, lat_deg, self.city_data)
+            
+            # 添加查询结果调试信息
+            self.log("DEBUG", f"查询结果 - 省份: {province}, 城市: {city}")
+            
+            return (
+                province if province else "未知省份",
+                city if city else "未知城市"
+            )
+        else:
+            self.log("DEBUG", "坐标转换失败，返回未知位置")
+            return "未知省份", "未知城市"
 
     @staticmethod
     def get_address(lat, lon, max_retries=3, wait_time_on_limit=2):
         """通过高德地图API获取详细地址，支持缓存机制"""
         # 首先检查缓存中是否有该经纬度的地址
-        cached_address = config_manager.get_location(lat, lon)
+        cached_address = config_manager.get_cached_location(lat, lon)
         if cached_address:
             return cached_address
         
-        # 硬编码的高德地图API密钥
-        hardcoded_key = 'bc383698582923d55b5137c3439cf4b2'
-        # 用户设置的高德地图API密钥
-        user_key = os.environ.get('AMAP_API_KEY', '')
+        # 获取用户设置的高德地图API密钥
+        user_key = config_manager.get_setting("amap_api_key", "")
         
-        # 优先使用硬编码密钥，如果硬编码密钥超过限制，则使用用户密钥
-        keys_to_try = [hardcoded_key]
-        if user_key and user_key != hardcoded_key:
-            keys_to_try.append(user_key)
+        # 使用用户配置的API密钥
+        keys_to_try = [user_key] if user_key else []
         
         for key in keys_to_try:
             url = f'https://restapi.amap.com/v3/geocode/regeo?key={key}&location={lon},{lat}'
@@ -537,13 +662,23 @@ class SmartArrangeThread(QtCore.QThread):
         """将EXIF中的GPS坐标转换为十进制度数"""
         if not value:
             return None
+        
+        # 添加调试信息
+        print(f"DEBUG: 开始转换坐标值: {value}, 类型: {type(value)}")
+        
         try:
             d = float(value.values[0].num) / float(value.values[0].den)
             m = float(value.values[1].num) / float(value.values[1].den)
             s = float(value.values[2].num) / float(value.values[2].den)
             result = d + (m / 60.0) + (s / 3600.0)
+            
+            # 添加转换过程调试信息
+            print(f"DEBUG: 坐标转换过程 - 度: {d}, 分: {m}, 秒: {s}, 结果: {result}")
+            
             return result
         except Exception as e:
+            # 添加转换失败调试信息
+            print(f"DEBUG: 坐标转换失败: {str(e)}, 值: {value}")
             return None
 
     def build_new_file_name(self, file_path, file_time, original_name):
@@ -629,6 +764,9 @@ class SmartArrangeThread(QtCore.QThread):
         elif level == "星期" and file_time:
             weekdays = ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"]
             return weekdays[file_time.weekday()]
+        elif level == "拍摄设备" and exif_data.get('Make'):
+            # 拍摄设备：使用相机品牌作为文件夹名称
+            return exif_data['Make']
         elif level == "设备品牌" and exif_data.get('Make'):
             return exif_data['Make']
         elif level == "设备型号" and exif_data.get('Model'):

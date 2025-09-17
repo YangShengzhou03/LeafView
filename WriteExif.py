@@ -19,6 +19,7 @@ from PyQt6.QtCore import pyqtSlot, QDateTime
 from PyQt6.QtWidgets import QWidget, QMessageBox
 from WriteExifThread import WriteExifThread
 from common import get_resource_path
+from config_manager import config_manager
 
 
 class WriteExif(QWidget):
@@ -81,9 +82,9 @@ class WriteExif(QWidget):
             if os.path.exists(data_path):
                 with open(data_path, 'r', encoding='utf-8') as f:
                     self.camera_lens_mapping = json.load(f)
-                    self.log("DEBUG", "✅ 相机镜头映射数据加载成功")
+                    self.log("DEBUG", "相机镜头映射数据加载成功")
             else:
-                self.log("WARNING", "⚠️ 相机镜头映射文件不存在，将使用默认镜头信息")
+                self.log("WARNING", "相机镜头映射文件不存在，将使用默认镜头信息")
         except Exception as e:
             self.log("WARNING", f"加载相机镜头映射数据失败: {str(e)}")
             self.camera_lens_mapping = {}
@@ -286,8 +287,13 @@ class WriteExif(QWidget):
         """
         try:
             url = "https://restapi.amap.com/v3/geocode/geo"
-            # 使用硬编码的API密钥
-            amap_key = 'bc383698582923d55b5137c3439cf4b2'
+            # 使用用户配置的API密钥
+            amap_key = config_manager.get_setting("amap_api_key", "")
+            
+            if not amap_key:
+                self.log("ERROR", "未配置高德地图API密钥\n\n"
+                             "请在设置中配置有效的高德地图API密钥")
+                return None
             
             params = {'address': address, 'key': amap_key, 'output': 'JSON'}
             response = requests.get(url, params=params, timeout=5)
