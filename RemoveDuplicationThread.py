@@ -7,12 +7,13 @@
 - ContrastWorker: 对比图像哈希值，找出相似图像组
 """
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
 import numpy as np
+import pillow_heif
 from PIL import Image
 from PyQt6 import QtCore
-import pillow_heif
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from collections import defaultdict
+from PyQt6.QtCore import QThread, pyqtSignal
 
 
 class ImageHasher:
@@ -157,64 +158,7 @@ class HashWorker(QtCore.QThread):
         self._is_running = False
 
 
-class ContrastWorker(QtCore.QThread):
-    """相似度对比工作线程 - 对比图像哈希值找出相似图像"""
-    
-    groups_completed = QtCore.pyqtSignal(dict)  # 分组完成信号
-    progress_updated = QtCore.pyqtSignal(int)    # 进度更新信号
-    image_matched = QtCore.pyqtSignal(str, str)  # 图片匹配信号
 
-    def __init__(self, image_hashes, threshold):
-        """
-        初始化相似度对比工作线程
-        
-        Args:
-            image_hashes (dict): 图像哈希字典 {路径: 哈希值}
-            threshold (int): 相似度阈值（汉明距离）
-        """
-        super().__init__()
-        self.image_hashes = image_hashes
-        self.threshold = threshold
-        self._is_running = True  # 线程运行状态标志
-
-    def run(self):
-        try:
-            self._is_running = True
-            self.log("INFO", f"开始计算 {len(self.image_paths)} 张图片的哈希值")
-            
-            total_images = len(self.image_paths)
-            for i, image_path in enumerate(self.image_paths):
-                if not self._is_running:
-                    self.log("WARNING", "哈希计算操作已被用户中断")
-                    break
-                    
-                try:
-                    hash_value = ImageHasher.dhash(image_path)
-                    if hash_value:
-                        self.hash_result_signal.emit(image_path, hash_value)
-                    else:
-                        self.log("WARNING", f"无法计算图片哈希值: {image_path}")
-                except Exception as e:
-                    self.log("ERROR", f"计算图片 {image_path} 哈希值时出错: {str(e)}")
-                
-                # 更新进度
-                progress = int((i + 1) / total_images * 100)
-                self.progress_signal.emit(progress)
-            
-            if self._is_running:
-                self.log("INFO", "图片哈希值计算完成")
-                self.finished_signal.emit()
-            else:
-                self.log("WARNING", "图片哈希值计算操作已被用户取消")
-                
-        except Exception as e:
-            self.log("ERROR", f"哈希计算过程中发生严重错误: {str(e)}")
-            self.finished_signal.emit()
-
-    def stop(self):
-        """停止哈希计算"""
-        self._is_running = False
-        self.log("INFO", "正在停止哈希计算操作...")
 
 class ContrastWorker(QThread):
     progress_signal = pyqtSignal(int)
@@ -235,54 +179,17 @@ class ContrastWorker(QThread):
         try:
             self._is_running = True
             image_paths = list(self.hash_dict.keys())
+            
+            if not image_paths:
+                self.log("WARNING", "没有可对比的图片哈希数据")
+                self.result_signal.emit([])
+                return
+                
             total_comparisons = len(image_paths) * (len(image_paths) - 1) // 2
             self.log("INFO", f"开始对比 {len(image_paths)} 张图片的相似度，共需进行 {total_comparisons} 次对比")
             
-            similar_groups = []
-            processed_comparisons = 0
-            
-            for i in range(len(image_paths)):
-                if not self._is_running:
-                    self.log("WARNING", "相似度对比操作已被用户中断")
-                    break
-                    
-                path1 = image_paths[i]
-                hash1 = self.hash_dict[path1]
-                
-                for j in range(i + 1, len(image_paths)):
-                    if not self._is_running:
-                        self.log("WARNING", "相似度对比操作已被用户中断")
-                        break
-                        
-                    path2 = image_paths[j]
-                    hash2 = self.hash_dict[path2]
-                    
-                    try:
-                        distance = ImageHasher.hamming_distance(hash1, hash2)
-                        similarity = 1 - (distance / 64.0)  # dhash 是 64 位哈希
-                        
-                        if similarity >= self.similarity_threshold:
-                            # 找到相似图片对
-                            found_group = None
-                            for group in similar_groups:
-                                if path1 in group or path2 in group:
-                                    found_group = group
-                                    break
-                            
-                            if found_group:
-                                if path1 not in found_group:
-                                    found_group.append(path1)
-                                if path2 not in found_group:
-                                    found_group.append(path2)
-                            else:
-                                similar_groups.append([path1, path2])
-                        
-                    except Exception as e:
-                        self.log("ERROR", f"对比图片 {path1} 和 {path2} 时出错: {str(e)}")
-                    
-                    processed_comparisons += 1
-                    progress = int((processed_comparisons / total_comparisons) * 100)
-                    self.progress_signal.emit(progress)
+            # 使用优化的分组算法
+            similar_groups = self._optimized_grouping(image_paths)
             
             if self._is_running:
                 self.log("INFO", f"相似度对比完成，发现 {len(similar_groups)} 组相似图片")
@@ -294,6 +201,79 @@ class ContrastWorker(QThread):
         except Exception as e:
             self.log("ERROR", f"相似度对比过程中发生严重错误: {str(e)}")
             self.finished_signal.emit()
+    
+    def _optimized_grouping(self, image_paths):
+        """优化的相似图片分组算法"""
+        similar_groups = []
+        processed = 0
+        total = len(image_paths)
+        
+        # 第一遍：快速预分组（基于哈希值的前几位）
+        hash_groups = {}
+        for i, path in enumerate(image_paths):
+            if not self._is_running:
+                break
+                
+            hash_bits = self.hash_dict[path]
+            # 使用前16位作为分组键（可根据需要调整）
+            group_key = tuple(hash_bits[:16])
+            if group_key not in hash_groups:
+                hash_groups[group_key] = []
+            hash_groups[group_key].append(path)
+            
+            processed += 1
+            self.progress_signal.emit(int(processed / total * 50))
+        
+        # 第二遍：在预分组内进行精确对比
+        final_groups = []
+        processed_groups = 0
+        total_groups = len(hash_groups)
+        
+        for group_paths in hash_groups.values():
+            if not self._is_running:
+                break
+                
+            if len(group_paths) == 1:
+                # 单张图片，无需进一步处理
+                continue
+                
+            # 在当前预分组内进行精确对比
+            current_group = []
+            for i in range(len(group_paths)):
+                if not self._is_running:
+                    break
+                    
+                path1 = group_paths[i]
+                hash1 = self.hash_dict[path1]
+                
+                # 检查是否与当前组中的任何图片相似
+                similar_in_group = False
+                for j in range(len(current_group)):
+                    path2 = current_group[j]
+                    hash2 = self.hash_dict[path2]
+                    
+                    try:
+                        distance = ImageHasher.hamming_distance(hash1, hash2)
+                        if distance <= self.similarity_threshold:
+                            similar_in_group = True
+                            break
+                    except Exception:
+                        continue
+                
+                if similar_in_group or not current_group:
+                    current_group.append(path1)
+                else:
+                    # 创建新组
+                    final_groups.append(current_group)
+                    current_group = [path1]
+            
+            if current_group and len(current_group) > 1:
+                final_groups.append(current_group)
+            
+            processed_groups += 1
+            self.progress_signal.emit(50 + int(processed_groups / total_groups * 50))
+        
+        return final_groups
 
     def stop(self):
         """停止相似度对比"""

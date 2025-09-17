@@ -16,7 +16,7 @@ import numpy as np
 import pillow_heif
 import send2trash
 from PIL import Image
-from PyQt6 import QtWidgets, QtCore
+from PyQt6 import QtWidgets, QtCore, QtGui
 from PyQt6.QtCore import pyqtSignal, QRunnable, QObject, Qt, QThreadPool
 from PyQt6.QtGui import QPixmap, QImage
 
@@ -66,9 +66,13 @@ class ThumbnailLoader(QRunnable):
         self.size = size
         self.total_images = total_images
         self.signals = ThumbnailLoaderSignals()
+        self._is_running = True
 
     def run(self):
         """在后台线程中执行缩略图加载任务"""
+        if not self._is_running:
+            return
+            
         image = QImage()
         # 特殊处理HEIC/HEIF格式
         if self.path.lower().endswith(('.heic', '.heif')):
@@ -79,7 +83,7 @@ class ThumbnailLoader(QRunnable):
         else:
             image.load(self.path)
 
-        if not image.isNull():
+        if not image.isNull() and self._is_running:
             # 缩放图片到指定尺寸，保持宽高比
             scaled_image = image.scaled(self.size.width(), self.size.height(),
                                         Qt.AspectRatioMode.KeepAspectRatio,
@@ -88,10 +92,17 @@ class ThumbnailLoader(QRunnable):
             # 计算并发送进度更新（80-100%范围）
             progress = 80 + int((1 / self.total_images) * 20)
             self.signals.progress_updated.emit(progress)
-        self.signals.progress_updated.emit(100)
+        
+        if self._is_running:
+            self.signals.progress_updated.emit(100)
+        
         # 修复内存泄漏：显式释放图像资源
         if not image.isNull():
             image = QImage()
+    
+    def stop(self):
+        """停止缩略图加载"""
+        self._is_running = False
 
 
 class Contrast(QtWidgets.QWidget):
@@ -114,6 +125,7 @@ class Contrast(QtWidgets.QWidget):
         self.thread_pool = QThreadPool.globalInstance()
         self.thread_pool.setMaxThreadCount(4)  # 限制最大线程数
         self.selected_images = []   # 用户选中的图片列表
+        self.thumbnail_cache = {}  # 缩略图缓存字典
         self.init_page()
         self.connect_signals()
         self.thumbnail_loaders = []  # 缩略图加载器列表
@@ -254,7 +266,7 @@ class Contrast(QtWidgets.QWidget):
         if not folders:
             QtWidgets.QMessageBox.warning(self, "⚠️ 操作提示", 
                                        "请先导入包含图片的文件夹\n\n"
-                                       "点击"导入文件夹"按钮添加要检测的文件夹")
+                                       "点击导入文件夹按钮添加要检测的文件夹")
             return
 
         self._running = True
@@ -302,12 +314,65 @@ class Contrast(QtWidgets.QWidget):
                 return
         
         self.parent.toolButton_startContrast.setEnabled(False)
+        # 修改开始按钮为停止功能
+        self.parent.toolButton_startContrast.setText("停止对比")
+        self.parent.toolButton_startContrast.clicked.disconnect()
+        self.parent.toolButton_startContrast.clicked.connect(self.stop_processing)
+        
+        # 保存处理状态信息
+        self.processing_state = {
+            'total_images': len(image_paths),
+            'processed_images': 0,
+            'current_stage': 'hashing'
+        }
+        
         # 创建并启动哈希计算工作线程
         self.hash_worker = HashWorker(image_paths)
         self.hash_worker.hash_completed.connect(self.on_hashes_computed)
         self.hash_worker.progress_updated.connect(self.update_progress)
         self.hash_worker.error_occurred.connect(self.on_hash_error)
         self.hash_worker.start()
+
+    def on_hashes_computed(self, hashes):
+        """哈希计算完成处理"""
+        if not hashes:
+            QtWidgets.QMessageBox.information(self, "ℹ️ 提示", 
+                                           "未成功计算任何图片的哈希值\n\n"
+                                           "可能的原因：\n"
+                                           "• 图片格式不受支持\n"
+                                           "• 图片文件损坏\n"
+                                           "• 图片尺寸过小或宽高比异常")
+            self._running = False
+            self.parent.toolButton_startContrast.setEnabled(True)
+            self.parent.toolButton_startContrast.setText("开始对比")
+            self.parent.toolButton_startContrast.clicked.disconnect()
+            self.parent.toolButton_startContrast.clicked.connect(self.startContrast)
+            return
+        
+        # 保存哈希结果
+        self.image_hashes = hashes
+        
+        # 更新处理状态
+        self.processing_state.update({
+            'current_stage': 'contrasting',
+            'hashed_images': len(hashes)
+        })
+        
+        # 获取相似度阈值
+        similarity_percent = self.parent.horizontalSlider_levelContrast.value()
+        threshold = self.get_similarity_threshold(similarity_percent)
+        
+        # 创建并启动相似度对比工作线程
+        self.contrast_worker = ContrastWorker(self.image_hashes, threshold)
+        self.contrast_worker.result_signal.connect(self.on_groups_computed)
+        self.contrast_worker.progress_signal.connect(self.update_progress)
+        self.contrast_worker.start()
+
+    def on_groups_computed(self, groups):
+        """相似度对比完成处理"""
+        # 将列表格式的相似组转换为字典格式，键为组ID，值为图片路径列表
+        self.groups = {f"group_{i}": group for i, group in enumerate(groups)}
+        self.display_all_images()
 
     def on_hash_error(self, error_msg):
         """哈希计算错误处理"""
@@ -319,11 +384,41 @@ class Contrast(QtWidgets.QWidget):
                                    "• 系统资源限制")
         self._running = False
         self.parent.toolButton_startContrast.setEnabled(True)
+        self.parent.toolButton_startContrast.setText("开始对比")
+        self.parent.toolButton_startContrast.clicked.disconnect()
+        self.parent.toolButton_startContrast.clicked.connect(self.startContrast)
+    
+    def stop_processing(self):
+        """停止正在进行的处理任务"""
+        if hasattr(self, 'hash_worker') and self.hash_worker.isRunning():
+            self.hash_worker.stop()
+            self.hash_worker.wait()
+        
+        if hasattr(self, 'contrast_worker') and self.contrast_worker.isRunning():
+            self.contrast_worker.stop()
+            self.contrast_worker.wait()
+        
+        # 停止所有缩略图加载器
+        for loader in self.thumbnail_loaders:
+            if hasattr(loader, 'stop'):
+                loader.stop()
+        
+        self._running = False
+        self.parent.toolButton_startContrast.setEnabled(True)
+        self.parent.toolButton_startContrast.setText("开始对比")
+        self.parent.toolButton_startContrast.clicked.disconnect()
+        self.parent.toolButton_startContrast.clicked.connect(self.startContrast)
+        
+        QtWidgets.QMessageBox.information(self, "⏹️ 处理已停止", 
+                                       "图片处理任务已被用户中断\n\n"
+                                       "已保存当前处理进度，您可以稍后继续处理。")
 
     def display_all_images(self):
         """显示所有相似图片分组"""
         layout = self.parent.gridLayout_2
         self.clear_layout(layout)
+        # 设置布局对齐方式为顶部对齐，避免单个项目垂直居中
+        layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
         # 只显示有重复的组（图片数量>1）
         duplicate_groups = {k: v for k, v in self.groups.items() if len(v) > 1}
         total_images = sum(len(v) for v in duplicate_groups.values())
@@ -344,7 +439,7 @@ class Contrast(QtWidgets.QWidget):
             row += 1
             # 添加该组的所有图片缩略图
             for path in paths:
-                if col >= 4:
+                if col >= 2:
                     col = 0
                     row += 1
                 thumb = self.create_thumbnail(path, total_images)
@@ -358,28 +453,97 @@ class Contrast(QtWidgets.QWidget):
         if no_images:
             self.update_progress(100)
             self.parent.verticalFrame_similar.hide()
-            QtWidgets.QMessageBox.information(self, "✅ 检测完成", 
+            QtWidgets.QMessageBox.information(self, "检测完成", 
                                            "未发现重复或相似的图片\n\n"
                                            "所有图片都是唯一的，无需进行去重操作")
+        # 恢复开始按钮状态
         self.parent.toolButton_startContrast.setEnabled(True)
+        self.parent.toolButton_startContrast.setText("开始对比")
+        self.parent.toolButton_startContrast.clicked.disconnect()
+        self.parent.toolButton_startContrast.clicked.connect(self.startContrast)
 
     def create_thumbnail(self, path, total_images):
         """创建单个图片缩略图组件"""
         label = QtWidgets.QLabel()
-        label.setFixedSize(80, 80)
+        label.setFixedSize(95, 95)
         label.setProperty("image_path", path)
         label.setProperty("selected", False)
         label.setStyleSheet("QLabel{background:#F5F5F5;border:2px solid #E0E0E0;border-radius:4px;}"
                             "QLabel:hover{border:2px solid #2196F3;}QLabel[selected=true]{border:3px solid #FF5722;}")
-        label.mousePressEvent = lambda e, p=path: self.thumbnail_clicked(p)
+        label.mousePressEvent = lambda e, p=path: self.preview_image(p)
         label.mouseDoubleClickEvent = lambda e, l=label: self.toggle_thumbnail_selection(l)
-        # 创建并启动缩略图加载器
-        loader = ThumbnailLoader(path, QtCore.QSize(80, 80), total_images)
-        loader.signals.thumbnail_ready.connect(lambda p, img: self.on_thumbnail_ready(p, img, label))
-        loader.signals.progress_updated.connect(self.update_progress)
-        self.thumbnail_loaders.append(loader)
-        self.thread_pool.start(loader)
+        
+        # 检查缓存中是否已有缩略图
+        if path in self.thumbnail_cache:
+            label.setPixmap(QtGui.QPixmap.fromImage(self.thumbnail_cache[path]))
+        else:
+            # 创建并启动缩略图加载器
+            loader = ThumbnailLoader(path, QtCore.QSize(95, 95), total_images)
+            loader.signals.thumbnail_ready.connect(lambda p, img: self.on_thumbnail_ready(p, img, label))
+            loader.signals.progress_updated.connect(self.update_progress)
+            self.thumbnail_loaders.append(loader)
+            self.thread_pool.start(loader)
+        
         return label
+
+    def preview_image(self, path):
+        """在对比窗口中预览图片"""
+        if not hasattr(self.parent, 'label_image_A') or not hasattr(self.parent, 'label_image_B'):
+            return
+            
+        # 获取当前选中的缩略图组
+        current_group = None
+        for group_id, paths in self.groups.items():
+            if path in paths and len(paths) >= 2:
+                current_group = paths
+                break
+        
+        if not current_group or len(current_group) < 2:
+            return
+        
+        # 找到当前图片在组中的索引
+        current_index = current_group.index(path)
+        
+        # 确定要对比的另一张图片
+        if current_index == 0:
+            compare_path = current_group[1]
+        else:
+            compare_path = current_group[0]
+        
+        # 加载并显示第一张图片到label_image_A
+        pixmap_a = self.load_image_to_pixmap(path)
+        if pixmap_a:
+            self.parent.label_image_A.setPixmap(pixmap_a.scaled(
+                self.parent.label_image_A.width(), 
+                self.parent.label_image_A.height(),
+                Qt.AspectRatioMode.KeepAspectRatio,
+                Qt.TransformationMode.SmoothTransformation
+            ))
+        
+        # 加载并显示第二张图片到label_image_B
+        pixmap_b = self.load_image_to_pixmap(compare_path)
+        if pixmap_b:
+            self.parent.label_image_B.setPixmap(pixmap_b.scaled(
+                self.parent.label_image_B.width(), 
+                self.parent.label_image_B.height(),
+                Qt.AspectRatioMode.KeepAspectRatio,
+                Qt.TransformationMode.SmoothTransformation
+            ))
+        
+        # 显示对比窗口
+        self.parent.verticalFrame_13.show()
+
+    def load_image_to_pixmap(self, path):
+        """加载图片并转换为QPixmap"""
+        if path.lower().endswith(('.heic', '.heif')):
+            try:
+                qimage = load_heic_as_qimage(path)
+                return QPixmap.fromImage(qimage)
+            except Exception:
+                return None
+        else:
+            pixmap = QPixmap(path)
+            return pixmap if not pixmap.isNull() else None
 
     def toggle_thumbnail_selection(self, label):
         """切换缩略图选中状态"""
@@ -398,9 +562,12 @@ class Contrast(QtWidgets.QWidget):
         """缩略图加载完成回调 - 设置缩略图显示"""
         if image.isNull():
             return
+        # 缓存缩略图
+        self.thumbnail_cache[path] = image.copy()
         pixmap = QPixmap.fromImage(image)
         label.setPixmap(pixmap)
         label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        label.setScaledContents(True)
         # 修复内存泄漏：释放图像资源
         image = QImage()
 

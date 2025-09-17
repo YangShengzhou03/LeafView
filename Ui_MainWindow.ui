@@ -2352,16 +2352,16 @@ background:rgb(255, 255, 255);</string>
                           </property>
                           <layout class="QHBoxLayout" name="horizontalLayout_53">
                            <property name="spacing">
-                            <number>6</number>
+                            <number>9</number>
                            </property>
                            <property name="leftMargin">
-                            <number>0</number>
+                            <number>9</number>
                            </property>
                            <property name="topMargin">
                             <number>6</number>
                            </property>
                            <property name="rightMargin">
-                            <number>0</number>
+                            <number>9</number>
                            </property>
                            <property name="bottomMargin">
                             <number>6</number>
@@ -3004,6 +3004,12 @@ QPushButton:pressed {
                                <height>0</height>
                               </size>
                              </property>
+                             <property name="maximumSize">
+                              <size>
+                               <width>87</width>
+                               <height>16777215</height>
+                              </size>
+                             </property>
                              <property name="font">
                               <font>
                                <family>Microsoft YaHei</family>
@@ -3438,7 +3444,7 @@ QComboBox QAbstractItemView::item {
                              <property name="font">
                               <font>
                                <pointsize>12</pointsize>
-                               <bold>true</bold>
+                               <bold>false</bold>
                               </font>
                              </property>
                              <property name="styleSheet">
@@ -4152,6 +4158,12 @@ background:rgb(248, 250, 251);</string>
                     </property>
                     <item>
                      <widget class="QScrollArea" name="scrollArea_pageSimilar">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
                       <property name="focusPolicy">
                        <enum>Qt::NoFocus</enum>
                       </property>
@@ -4234,8 +4246,8 @@ QScrollBar::corner {
                         <rect>
                          <x>0</x>
                          <y>0</y>
-                         <width>100</width>
-                         <height>30</height>
+                         <width>228</width>
+                         <height>474</height>
                         </rect>
                        </property>
                        <layout class="QGridLayout" name="gridLayout_2"/>
@@ -5097,7 +5109,62 @@ QComboBox:focus {
     border: 1px solid #8b5cf6;
     outline: none;
     box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
-}</string>
+}
+
+/* QComboBox下拉列表中的滚动条样式 */
+QComboBox QAbstractItemView QScrollBar:vertical {
+    width: 8px;
+    background: transparent;
+    margin: 2px 0;
+}
+
+QComboBox QAbstractItemView QScrollBar::handle:vertical {
+    background: rgba(134, 119, 253, 0.3);
+    border-radius: 4px;
+    min-height: 20px;
+    margin: 2px;
+    transition: background 0.2s;
+}
+
+QComboBox QAbstractItemView QScrollBar::handle:vertical:hover {
+    background: rgba(134, 119, 253, 0.6);
+}
+
+QComboBox QAbstractItemView QScrollBar::handle:vertical:pressed {
+    background: rgba(134, 119, 253, 0.8);
+}
+
+QComboBox QAbstractItemView QScrollBar:horizontal {
+    height: 8px;
+    background: transparent;
+    margin: 0 2px;
+}
+
+QComboBox QAbstractItemView QScrollBar::handle:horizontal {
+    background: rgba(134, 119, 253, 0.3);
+    border-radius: 4px;
+    min-width: 20px;
+    margin: 2px;
+}
+
+/* 隐藏滚动条的页面区域 */
+QComboBox QAbstractItemView QScrollBar::add-page:vertical,
+QComboBox QAbstractItemView QScrollBar::sub-page:vertical,
+QComboBox QAbstractItemView QScrollBar::add-page:horizontal,
+QComboBox QAbstractItemView QScrollBar::sub-page:horizontal {
+    background: transparent;
+}
+
+/* 隐藏滚动条的箭头按钮 */
+QComboBox QAbstractItemView QScrollBar::add-line:vertical,
+QComboBox QAbstractItemView QScrollBar::sub-line:vertical,
+QComboBox QAbstractItemView QScrollBar::add-line:horizontal,
+QComboBox QAbstractItemView QScrollBar::sub-line:horizontal {
+    height: 0;
+    width: 0;
+    background: transparent;
+}
+</string>
                         </property>
                        </widget>
                       </item>
@@ -5726,6 +5793,12 @@ QComboBox:focus {
                       </item>
                       <item>
                        <widget class="QLineEdit" name="lineEdit_EXIF_longitude">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
                         <property name="styleSheet">
                          <string notr="true">QLineEdit {
     border: 1px solid qradialgradient(
@@ -5763,6 +5836,12 @@ QLineEdit:disabled {
                       </item>
                       <item>
                        <widget class="QLineEdit" name="lineEdit_EXIF_latitude">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
                         <property name="styleSheet">
                          <string notr="true">QLineEdit {
     border: 1px solid qradialgradient(

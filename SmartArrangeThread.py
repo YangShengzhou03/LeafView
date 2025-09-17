@@ -89,17 +89,21 @@ class SmartArrangeThread(QtCore.QThread):
     progress_signal = QtCore.pyqtSignal(int)
 
     def __init__(self, parent=None, folders=None, classification_structure=None, file_name_structure=None,
-                 destination_root=None, separator=None, time_derive="最早时间"):
-        super().__init__()
-        self.parent, self.folders, self.classification_structure = parent, folders or [], classification_structure or []
-        self.file_name_structure, self.time_derive = file_name_structure or [], time_derive
-        self.destination_root = Path(destination_root) if destination_root else None
+                 destination_root=None, separator="-", time_derive="文件创建时间"):
+        super().__init__(parent)
+        self.parent = parent
+        self.folders = folders or []
+        self.classification_structure = classification_structure
+        self.file_name_structure = file_name_structure  # 现在这是一个包含tag和content的字典列表
+        self.destination_root = destination_root
         self.separator = separator
-        self._stop_flag = False
-        self.load_geographic_data()
-        self.files_to_rename = []
-        self.log_signal.connect(parent.log_signal.emit)
-        self.progress_signal.connect(parent.update_progress_bar)
+        self.time_derive = time_derive
+        self._is_running = True
+        self._stop_flag = False  # 添加_stop_flag属性初始化
+        self.total_files = 0
+        self.processed_files = 0
+        self.log_signal = parent.log_signal if parent else None
+        self.files_to_rename = []  # 初始化文件重命名列表
 
     def load_geographic_data(self):
         try:
@@ -158,18 +162,19 @@ class SmartArrangeThread(QtCore.QThread):
                         self.log("WARNING", "文件夹处理被用户中断")
                         return
                     full_file_path = Path(root) / file
-                    if full_file_path.suffix.lower() in SUPPORTED_EXTENSIONS:
-                        self.process_single_file(full_file_path, base_folder=folder_path)
-                        processed_files += 1
-                        percent_complete = int((processed_files / total_files) * 100)
-                        self.progress_signal.emit(percent_complete)
+                    # 移除文件类型过滤，处理所有文件
+                    self.process_single_file(full_file_path, base_folder=folder_path)
+                    processed_files += 1
+                    percent_complete = int((processed_files / total_files) * 100)
+                    self.progress_signal.emit(percent_complete)
         else:
             for file in os.listdir(folder_path):
                 if self._stop_flag:
                     self.log("WARNING", "文件夹处理被用户中断")
                     return
                 full_file_path = folder_path / file
-                if full_file_path.is_file() and full_file_path.suffix.lower() in SUPPORTED_EXTENSIONS:
+                if full_file_path.is_file():
+                    # 移除文件类型过滤，处理所有文件
                     self.process_single_file(full_file_path)
                     processed_files += 1
                     percent_complete = int((processed_files / total_files) * 100)
@@ -186,6 +191,9 @@ class SmartArrangeThread(QtCore.QThread):
             
             old_path = Path(file_info['old_path'])
             new_path = Path(file_info['new_path'])
+            
+            # 确保目标目录存在
+            new_path.parent.mkdir(parents=True, exist_ok=True)
             
             # 确保文件名唯一
             base_name = new_path.stem
@@ -235,18 +243,18 @@ class SmartArrangeThread(QtCore.QThread):
                     break
                 
                 file_path = Path(root) / file
-                if file_path.suffix.lower() in SUPPORTED_EXTENSIONS:
-                    # 将文件从当前子文件夹移动到导入文件夹的顶层目录
-                    target_path = folder_path / file_path.name
-                    if file_path != target_path:
-                        try:
-                            import shutil
-                            self.log("DEBUG", f"准备移动文件: {file_path} -> {target_path}")
-                            shutil.move(file_path, target_path)
-                            self.log("DEBUG", f"成功移动文件: {file_path} -> {target_path}")
-                            file_count += 1
-                        except Exception as e:
-                            self.log("ERROR", f"移动文件 {file_path} 时出错: {str(e)}")
+                # 移除文件类型过滤，处理所有文件
+                # 将文件从当前子文件夹移动到导入文件夹的顶层目录
+                target_path = folder_path / file_path.name
+                if file_path != target_path:
+                    try:
+                        import shutil
+                        self.log("DEBUG", f"准备移动文件: {file_path} -> {target_path}")
+                        shutil.move(file_path, target_path)
+                        self.log("DEBUG", f"成功移动文件: {file_path} -> {target_path}")
+                        file_count += 1
+                    except Exception as e:
+                        self.log("ERROR", f"移动文件 {file_path} 时出错: {str(e)}")
         
         self.log("INFO", f"处理完成，共移动 {file_count} 个文件")
 
@@ -529,4 +537,135 @@ class SmartArrangeThread(QtCore.QThread):
         
         # 使用分隔符连接各个部分
         return self.separator.join(parts)
+        
+    def process_single_file(self, file_path, base_folder=None):
+        """处理单个文件，根据分类结构和文件名结构决定文件的目标位置和名称"""
+        try:
+            # 获取文件的EXIF数据
+            exif_data = self.get_exif_data(file_path)
+            
+            # 获取文件时间信息
+            file_time = datetime.datetime.strptime(exif_data['DateTime'], '%Y-%m-%d %H:%M:%S') if exif_data.get('DateTime') else None
+            
+            # 构建目标路径
+            target_path = self.build_target_path(file_path, exif_data, file_time, base_folder)
+            
+            # 构建新的文件名
+            original_name = file_path.stem
+            new_file_name = self.build_new_file_name(file_path, file_time, original_name)
+            
+            # 添加文件扩展名
+            new_file_name_with_ext = f"{new_file_name}{file_path.suffix}"
+            
+            # 构建完整的目标路径
+            full_target_path = target_path / new_file_name_with_ext
+            
+            # 记录需要重命名的文件信息
+            self.files_to_rename.append({
+                'old_path': str(file_path),
+                'new_path': str(full_target_path)
+            })
+            
+            self.log("DEBUG", f"处理文件: {file_path.name} -> {full_target_path}")
+            
+        except Exception as e:
+            self.log("ERROR", f"处理文件 {file_path} 时出错: {str(e)}")
+
+    def build_target_path(self, file_path, exif_data, file_time, base_folder):
+        """构建文件的目标路径"""
+        if not self.classification_structure:
+            # 如果没有分类结构，使用原文件夹
+            return file_path.parent
+        
+        # 从基础文件夹开始构建路径
+        if base_folder:
+            target_path = Path(base_folder)
+        else:
+            target_path = file_path.parent
+        
+        # 根据分类结构构建子目录
+        for level in self.classification_structure:
+            folder_name = self.get_folder_name(level, exif_data, file_time, file_path)
+            if folder_name:
+                target_path = target_path / folder_name
+        
+        # 无论用户设置什么分类结构，始终在最终目录下按文件类型分类
+        file_type = get_file_type(file_path)
+        target_path = target_path / file_type
+        
+        return target_path
+
+    def get_folder_name(self, level, exif_data, file_time, file_path):
+        """根据分类级别获取文件夹名称"""
+        if level == "不分类":
+            return None
+        elif level == "年份" and file_time:
+            return str(file_time.year)
+        elif level == "月份" and file_time:
+            return f"{file_time.month:02d}"
+        elif level == "日期" and file_time:
+            return f"{file_time.day:02d}"
+        elif level == "星期" and file_time:
+            weekdays = ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"]
+            return weekdays[file_time.weekday()]
+        elif level == "设备品牌" and exif_data.get('Make'):
+            return exif_data['Make']
+        elif level == "设备型号" and exif_data.get('Model'):
+            return exif_data['Model']
+        elif level == "拍摄省份" and exif_data.get('GPS GPSLatitude') and exif_data.get('GPS GPSLongitude'):
+            province, city = self.get_city_and_province(exif_data['GPS GPSLatitude'], exif_data['GPS GPSLongitude'])
+            return province
+        elif level == "拍摄城市" and exif_data.get('GPS GPSLatitude') and exif_data.get('GPS GPSLongitude'):
+            province, city = self.get_city_and_province(exif_data['GPS GPSLatitude'], exif_data['GPS GPSLongitude'])
+            return city
+        elif level == "文件类型":
+            return get_file_type(file_path)
+        else:
+            # 对于未知的分类级别，使用原文件名或其他默认值
+            return "其他"
+
+    def get_file_name_part(self, tag, file_path, file_time, original_name):
+        """根据标签获取文件名的组成部分"""
+        if isinstance(tag, dict) and 'tag' in tag and 'content' in tag:
+            # 处理包含tag和content的字典结构
+            tag_name = tag['tag']
+            if tag_name == "自定义":
+                return tag['content']  # 返回用户输入的自定义内容
+            else:
+                # 对于其他标签，使用原始逻辑，但保留content信息
+                # 如果content不为None，使用content；否则使用原始标签逻辑
+                if tag['content'] is not None:
+                    return tag['content']
+                else:
+                    # 对于其他标签，使用原始逻辑
+                    tag = tag_name
+        
+        if tag == "原文件名":
+            return original_name
+        elif tag == "年份" and file_time:
+            return str(file_time.year)
+        elif tag == "月份" and file_time:
+            return f"{file_time.month:02d}"
+        elif tag == "日" and file_time:
+            return f"{file_time.day:02d}"
+        elif tag == "星期" and file_time:
+            weekdays = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
+            return weekdays[file_time.weekday()]
+        elif tag == "时间" and file_time:
+            return file_time.strftime('%H%M%S')
+        elif tag == "品牌":
+            exif_data = self.get_exif_data(file_path)
+            brand = exif_data.get('Make', '未知品牌')
+            return str(brand) if brand is not None else '未知品牌'
+        elif tag == "位置":
+            exif_data = self.get_exif_data(file_path)
+            if exif_data.get('GPS GPSLatitude') and exif_data.get('GPS GPSLongitude'):
+                province, city = self.get_city_and_province(exif_data['GPS GPSLatitude'], exif_data['GPS GPSLongitude'])
+                return f"{province}{city}" if city != "未知城市" else province
+            return "未知位置"
+        elif tag == "自定义":
+            # 这里可以添加自定义标签的处理逻辑
+            return "自定义"
+        else:
+            return ""
         

@@ -240,6 +240,17 @@ class FolderPage(QtWidgets.QWidget):
         for i, item in enumerate(self.folder_items[1:], 1):
             self.parent.gridLayout_6.addWidget(item['frame'], i, 0)
 
+        # 设置布局对齐方式为顶部对齐，避免单个项目垂直居中
+        # 只在有文件夹项时设置拉伸策略，空状态时保持默认居中
+        if len(self.folder_items) == 1:
+            self.parent.gridLayout_6.setRowStretch(0, 0)  # 第一行不拉伸
+            self.parent.gridLayout_6.setRowStretch(1, 1)   # 第二行拉伸以填充剩余空间
+        elif len(self.folder_items) > 1:
+            # 多个项目时恢复默认拉伸
+            for i in range(len(self.folder_items)):
+                self.parent.gridLayout_6.setRowStretch(i, 0)
+            self.parent.gridLayout_6.setRowStretch(len(self.folder_items), 1)
+
         # 更新空状态显示
         self.parent._update_empty_state(bool(self.folder_items))
         remove_button.clicked.connect(lambda: self.remove_folder_item(folder_frame))

@@ -141,7 +141,7 @@ class TextRecognition(QtWidgets.QWidget):
         folders = self.folder_page.get_all_folders() if self.folder_page else []
         if not folders:
             self.log("WARNING", "⚠️ 请先导入一个有效的文件夹\n\n"
-                           "点击"导入文件夹"按钮添加包含图片的文件夹")
+                           "点击\"导入文件夹\"按钮添加包含图片的文件夹")
             return
         
         # 收集所有图片文件

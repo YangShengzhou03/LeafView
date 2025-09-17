@@ -1423,8 +1423,8 @@ class Ui_MainWindow(object):
         self.frame_Rename.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.frame_Rename.setObjectName("frame_Rename")
         self.horizontalLayout_53 = QtWidgets.QHBoxLayout(self.frame_Rename)
-        self.horizontalLayout_53.setContentsMargins(0, 6, 0, 6)
-        self.horizontalLayout_53.setSpacing(6)
+        self.horizontalLayout_53.setContentsMargins(9, 6, 9, 6)
+        self.horizontalLayout_53.setSpacing(9)
         self.horizontalLayout_53.setObjectName("horizontalLayout_53")
         self.horizontalLayout_45.addWidget(self.frame_Rename)
         self.pushButton_unique = QtWidgets.QPushButton(parent=self.rename_Frame)
@@ -1809,6 +1809,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_46.addWidget(self.label_operation_2)
         self.comboBox_separator = QtWidgets.QComboBox(parent=self.Frame_tags)
         self.comboBox_separator.setMinimumSize(QtCore.QSize(0, 0))
+        self.comboBox_separator.setMaximumSize(QtCore.QSize(87, 16777215))
         font = QtGui.QFont()
         font.setFamily("Microsoft YaHei")
         font.setPointSize(-1)
@@ -2036,7 +2037,7 @@ class Ui_MainWindow(object):
         self.label_21 = QtWidgets.QLabel(parent=self.rename_Frame_2)
         font = QtGui.QFont()
         font.setPointSize(12)
-        font.setBold(True)
+        font.setBold(False)
         self.label_21.setFont(font)
         self.label_21.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
@@ -2448,6 +2449,11 @@ class Ui_MainWindow(object):
         self.verticalLayout_38.setSpacing(0)
         self.verticalLayout_38.setObjectName("verticalLayout_38")
         self.scrollArea_pageSimilar = QtWidgets.QScrollArea(parent=self.verticalFrame_similar)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.scrollArea_pageSimilar.sizePolicy().hasHeightForWidth())
+        self.scrollArea_pageSimilar.setSizePolicy(sizePolicy)
         self.scrollArea_pageSimilar.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
         self.scrollArea_pageSimilar.setLayoutDirection(QtCore.Qt.LayoutDirection.LeftToRight)
         self.scrollArea_pageSimilar.setStyleSheet("\n"
@@ -2517,7 +2523,7 @@ class Ui_MainWindow(object):
         self.scrollArea_pageSimilar.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.scrollArea_pageSimilar.setObjectName("scrollArea_pageSimilar")
         self.scrollAreaWidgetContents_Contrast = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_Contrast.setGeometry(QtCore.QRect(0, 0, 100, 30))
+        self.scrollAreaWidgetContents_Contrast.setGeometry(QtCore.QRect(0, 0, 228, 474))
         self.scrollAreaWidgetContents_Contrast.setObjectName("scrollAreaWidgetContents_Contrast")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents_Contrast)
         self.gridLayout_2.setObjectName("gridLayout_2")
@@ -3088,7 +3094,62 @@ class Ui_MainWindow(object):
 "    border: 1px solid #8b5cf6;\n"
 "    outline: none;\n"
 "    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
-"}")
+"}\n"
+"\n"
+"/* QComboBox下拉列表中的滚动条样式 */\n"
+"QComboBox QAbstractItemView QScrollBar:vertical {\n"
+"    width: 8px;\n"
+"    background: transparent;\n"
+"    margin: 2px 0;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView QScrollBar::handle:vertical {\n"
+"    background: rgba(134, 119, 253, 0.3);\n"
+"    border-radius: 4px;\n"
+"    min-height: 20px;\n"
+"    margin: 2px;\n"
+"    transition: background 0.2s;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView QScrollBar::handle:vertical:hover {\n"
+"    background: rgba(134, 119, 253, 0.6);\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView QScrollBar::handle:vertical:pressed {\n"
+"    background: rgba(134, 119, 253, 0.8);\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView QScrollBar:horizontal {\n"
+"    height: 8px;\n"
+"    background: transparent;\n"
+"    margin: 0 2px;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView QScrollBar::handle:horizontal {\n"
+"    background: rgba(134, 119, 253, 0.3);\n"
+"    border-radius: 4px;\n"
+"    min-width: 20px;\n"
+"    margin: 2px;\n"
+"}\n"
+"\n"
+"/* 隐藏滚动条的页面区域 */\n"
+"QComboBox QAbstractItemView QScrollBar::add-page:vertical,\n"
+"QComboBox QAbstractItemView QScrollBar::sub-page:vertical,\n"
+"QComboBox QAbstractItemView QScrollBar::add-page:horizontal,\n"
+"QComboBox QAbstractItemView QScrollBar::sub-page:horizontal {\n"
+"    background: transparent;\n"
+"}\n"
+"\n"
+"/* 隐藏滚动条的箭头按钮 */\n"
+"QComboBox QAbstractItemView QScrollBar::add-line:vertical,\n"
+"QComboBox QAbstractItemView QScrollBar::sub-line:vertical,\n"
+"QComboBox QAbstractItemView QScrollBar::add-line:horizontal,\n"
+"QComboBox QAbstractItemView QScrollBar::sub-line:horizontal {\n"
+"    height: 0;\n"
+"    width: 0;\n"
+"    background: transparent;\n"
+"}\n"
+"")
         self.comboBox_model.setObjectName("comboBox_model")
         self.horizontalLayout_13.addWidget(self.comboBox_model)
         self.horizontalLayout_13.setStretch(1, 1)
@@ -3554,6 +3615,11 @@ class Ui_MainWindow(object):
         self.comboBox_location.addItem("")
         self.horizontalLayout_12.addWidget(self.comboBox_location)
         self.lineEdit_EXIF_longitude = QtWidgets.QLineEdit(parent=self.horizontalFrame_10)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.lineEdit_EXIF_longitude.sizePolicy().hasHeightForWidth())
+        self.lineEdit_EXIF_longitude.setSizePolicy(sizePolicy)
         self.lineEdit_EXIF_longitude.setStyleSheet("QLineEdit {\n"
 "    border: 1px solid qradialgradient(\n"
 "        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
@@ -3585,6 +3651,11 @@ class Ui_MainWindow(object):
         self.lineEdit_EXIF_longitude.setObjectName("lineEdit_EXIF_longitude")
         self.horizontalLayout_12.addWidget(self.lineEdit_EXIF_longitude)
         self.lineEdit_EXIF_latitude = QtWidgets.QLineEdit(parent=self.horizontalFrame_10)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.lineEdit_EXIF_latitude.sizePolicy().hasHeightForWidth())
+        self.lineEdit_EXIF_latitude.setSizePolicy(sizePolicy)
         self.lineEdit_EXIF_latitude.setStyleSheet("QLineEdit {\n"
 "    border: 1px solid qradialgradient(\n"
 "        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"

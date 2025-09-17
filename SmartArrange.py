@@ -57,7 +57,11 @@ class SmartArrange(QtWidgets.QWidget):
             "-": "-",
             "无": "",
             "空格": " ",
-            "_": "_"
+            "_": "_",
+            ".": ".",
+            ",": ",",
+            "|": "|",
+            "~": "~"
         }
         
         # 布局引用
@@ -177,15 +181,15 @@ class SmartArrange(QtWidgets.QWidget):
             file_name_structure = [self.selected_layout.itemAt(i).widget().text()
                                    for i in range(self.selected_layout.count())
                                    if isinstance(self.selected_layout.itemAt(i).widget(), QtWidgets.QPushButton)]
-
+            
             # 获取分隔符
             separator_text = self.parent.comboBox_separator.currentText()
             separator = self.separator_mapping.get(separator_text, "-")
-
+            
             # 获取操作类型
             operation_type = self.parent.comboBox_operation.currentIndex()
             operation_text = "移动" if operation_type == 0 else "复制"
-
+            
             # 根据设置显示不同的操作信息
             if not SmartArrange_structure and not file_name_structure:
                 self.log("INFO", f"将执行{operation_text}操作：将文件夹中的所有文件提取到顶层目录")
@@ -195,24 +199,49 @@ class SmartArrange(QtWidgets.QWidget):
                 self.log("INFO", f"将执行{operation_text}操作：仅进行分类，不重命名文件")
             else:
                 self.log("INFO", f"将执行{operation_text}操作：进行分类和重命名")
+            
+            # 收集自定义标签的实际内容
+            file_name_parts = []
+            for i in range(self.selected_layout.count()):
+                button = self.selected_layout.itemAt(i).widget()
+                if isinstance(button, QtWidgets.QPushButton):
+                    tag_name = button.text()
+                    # 如果是自定义标签，获取用户输入的实际内容
+                    if button.property('original_text') == '自定义' and button.property('custom_content') is not None:
+                        file_name_parts.append({
+                            'tag': tag_name,
+                            'content': button.property('custom_content')
+                        })
+                    else:
+                        file_name_parts.append({
+                            'tag': tag_name,
+                            'content': None  # 其他标签在运行时动态生成内容
+                        })
 
             # 显示操作摘要给用户
             operation_summary = f"操作类型: {operation_text}"
             if SmartArrange_structure:
                 operation_summary += f", 分类结构: {' → '.join(SmartArrange_structure)}"
-            if file_name_structure:
-                operation_summary += f", 文件名标签: {'+'.join(file_name_structure)}"
+            if file_name_parts:
+                # 构建文件名标签摘要，显示自定义标签的实际内容
+                filename_tags = []
+                for tag_info in file_name_parts:
+                    if tag_info['content'] is not None:
+                        filename_tags.append(tag_info['content'])  # 显示自定义内容
+                    else:
+                        filename_tags.append(tag_info['tag'])  # 显示标签名称
+                operation_summary += f", 文件名标签: {'+'.join(filename_tags)}"
             if self.destination_root:
                 operation_summary += f", 目标路径: {self.destination_root}"
             
             self.log("INFO", f"整理操作摘要: {operation_summary}")
-
+            
             # 创建并启动整理线程
             self.SmartArrange_thread = SmartArrangeThread(
                 parent=self,
                 folders=folders,
                 classification_structure=SmartArrange_structure or None,
-                file_name_structure=file_name_structure or None,
+                file_name_structure=file_name_parts or None,
                 destination_root=self.destination_root,
                 separator=separator,
                 time_derive=self.parent.comboBox_timeSource.currentText()
@@ -425,7 +454,7 @@ class SmartArrange(QtWidgets.QWidget):
                         self, 
                         "文件名无效", 
                         f"输入的文件名 '{custom_text}' 不符合Windows命名规范！\n\n"
-                        "❌ 不允许的字符: < > : " / \\ | ? *\n"
+                        "❌ 不允许的字符"
                         "❌ 不能使用保留文件名: CON, PRN, AUX, NUL, COM1-9, LPT1-9\n"
                         "❌ 不能以点(.)或空格结尾\n"
                         "❌ 长度不能超过255个字符\n\n"

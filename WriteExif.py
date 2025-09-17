@@ -16,7 +16,7 @@ import os
 import requests
 from datetime import datetime
 from PyQt6.QtCore import pyqtSlot, QDateTime
-from PyQt6.QtWidgets import QWidget
+from PyQt6.QtWidgets import QWidget, QMessageBox
 from WriteExifThread import WriteExifThread
 from common import get_resource_path
 
@@ -269,13 +269,13 @@ class WriteExif(QWidget):
         folders = self.folder_page.get_all_folders()
         if not folders:
             self.log("WARNING", "⚠️ 请先导入一个有效的文件夹\n\n"
-                           "点击"导入文件夹"按钮添加包含图片的文件夹")
+                           "点击\"导入文件夹\"按钮添加包含图片的文件夹")
             return False
         
         # 准备EXIF写入参数
         params = {
             'folders_dict': folders,
-            'autoMark': self.parent.checkBox_autoMark.isChecked(),
+            'autoMark': True,  # 默认启用自动标记功能
             'title': self.parent.lineEdit_EXIF_Title.text(),
             'author': self.parent.lineEdit_EXIF_Author.text(),
             'subject': self.parent.lineEdit_EXIF_Theme.text(),
