@@ -16,6 +16,7 @@ from WriteExif import WriteExif
 from TextRecognition import TextRecognition
 from Ui_MainWindow import Ui_MainWindow
 from UpdateDialog import check_update
+from SettingsDialog import SettingsDialog
 from common import get_resource_path, author
 
 
@@ -79,7 +80,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
         # 功能按钮
         self.toolButton_serve.clicked.connect(author)  # 服务按钮（显示作者信息）
-        self.toolButton_setting.clicked.connect(author)  # 设置按钮（显示作者信息）
+        self.toolButton_setting.clicked.connect(self.open_settings)  # 设置按钮（打开设置对话框）
         
         # 页面切换通过listWidget_base自动实现，不需要手动连接按钮
         pass
@@ -87,6 +88,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def _init_text_recognition(self):
         """初始化识字整理功能 - 根据要求暂不实现"""
         pass
+    
+    def open_settings(self):
+        """打开设置对话框"""
+        dialog = SettingsDialog(self)
+        dialog.exec()
 
     def _setup_drag_handlers(self):
         """设置窗口拖拽事件处理器"""

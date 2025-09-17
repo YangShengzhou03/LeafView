@@ -1,13 +1,10 @@
-import json
 import os
 import re
 import time
 from concurrent.futures import as_completed, ThreadPoolExecutor
 from datetime import datetime
 
-import imagehash
 import piexif
-import requests
 from PIL import Image, PngImagePlugin
 from PyQt6.QtCore import QThread, pyqtSignal
 
@@ -20,7 +17,6 @@ class WriteExifThread(QThread):
     
     负责在后台线程中执行图像EXIF元数据的批量写入操作，支持：
     - 多线程并行处理
-    - 图像内容自动分析标记
     - 地理位置信息写入
     - 相机品牌型号信息写入
     - 拍摄时间自动识别
@@ -31,14 +27,13 @@ class WriteExifThread(QThread):
     finished_conversion = pyqtSignal()  # 完成转换信号
     log = pyqtSignal(str, str)  # 日志信号
 
-    def __init__(self, folders_dict, autoMark=True, title='', author='', subject='', rating='', copyright='',
-                 position='', shootTime='', cameraBrand=None, cameraModel=None):
+    def __init__(self, folders_dict, title='', author='', subject='', rating='', copyright='',
+                 position='', shootTime='', cameraBrand=None, cameraModel=None, lensBrand=None, lensModel=None):
         """
         初始化EXIF写入线程
         
         Args:
             folders_dict: 文件夹字典，包含路径和是否包含子文件夹标志
-            autoMark: 是否自动分析图像内容并标记
             title: 图像标题
             author: 作者信息
             subject: 主题信息
@@ -48,10 +43,11 @@ class WriteExifThread(QThread):
             shootTime: 拍摄时间
             cameraBrand: 相机品牌
             cameraModel: 相机型号
+            lensBrand: 镜头品牌
+            lensModel: 镜头型号
         """
         super().__init__()
         self.folders_dict = {item['path']: item['include_sub'] for item in folders_dict}
-        self.autoMark = autoMark
         self.title = title
         self.author = author
         self.subject = subject
@@ -61,15 +57,11 @@ class WriteExifThread(QThread):
         self.shootTime = shootTime
         self.cameraBrand = cameraBrand
         self.cameraModel = cameraModel
+        self.lensBrand = lensBrand
+        self.lensModel = lensModel
         self._stop_requested = False  # 停止请求标志
         self.lat = None  # 纬度
         self.lon = None  # 经度
-        self.cache_file = "_internal/analyze_image_cache.json"  # 图像分析缓存文件
-        self.image_cache = {}  # 图像分析缓存
-
-        # 如果启用自动标记，加载缓存
-        if self.autoMark:
-            self._load_cache()
 
         # 解析位置坐标
         if position and ',' in position:
@@ -81,148 +73,7 @@ class WriteExifThread(QThread):
             except ValueError:
                 pass
 
-    def _load_cache(self):
-        """加载图像分析缓存"""
-        if os.path.exists(self.cache_file):
-            try:
-                with open(self.cache_file, 'r') as f:
-                    self.image_cache = json.load(f)
-            except:
-                try:
-                    self.image_cache = {}
-                    with open(self.cache_file, 'r') as f:
-                        for line in f:
-                            try:
-                                data = json.loads(line)
-                                self.image_cache.update(data)
-                            except:
-                                continue
-                except:
-                    pass
 
-    def _save_cache(self):
-        """保存图像分析缓存"""
-        try:
-            os.makedirs("_internal", exist_ok=True)
-            with open(self.cache_file, 'w') as f:
-                for img_hash, data in self.image_cache.items():
-                    line = json.dumps({img_hash: data})
-                    f.write(line + '\n')
-        except Exception as e:
-            self.log.emit("ERROR", f"保存数据失败: {str(e)}")
-
-    def _calculate_image_hash(self, file_path):
-        """
-        计算图像哈希值用于缓存查找
-        
-        Args:
-            file_path: 图像文件路径
-            
-        Returns:
-            str: 图像哈希值，失败返回None
-        """
-        try:
-            with Image.open(file_path) as img:
-                img = img.convert('L').resize((8, 8), Image.Resampling.LANCZOS)
-                return str(imagehash.dhash(img))
-        except:
-            return None
-
-    def _find_similar_in_cache(self, img_hash):
-        """
-        在缓存中查找相似的图像分析结果
-        
-        Args:
-            img_hash: 图像哈希值
-            
-        Returns:
-            dict: 相似图像的缓存数据，未找到返回None
-        """
-        for cached_hash in self.image_cache:
-            if imagehash.hex_to_hash(img_hash) - imagehash.hex_to_hash(cached_hash) <= 24:
-                return self.image_cache[cached_hash]
-        return None
-
-    def analyze_image(self, file_path):
-        """
-        分析图像内容并生成关键词和描述
-        
-        Args:
-            file_path: 图像文件路径
-            
-        Returns:
-            tuple: (关键词列表, 描述文本)
-        """
-        if not self.autoMark or self._stop_requested:
-            return [], ""
-
-        # 跳过大于10MB的文件
-        file_size = os.path.getsize(file_path) / (1024 * 1024)
-        if file_size > 10:
-            return [], ""
-
-        # 计算图像哈希
-        img_hash = self._calculate_image_hash(file_path)
-        if not img_hash:
-            return [], ""
-
-        # 在缓存中查找相似图像
-        cached_result = self._find_similar_in_cache(img_hash)
-        if cached_result:
-            return cached_result['keywords'], cached_result['description']
-
-        try:
-            # 从环境变量中获取API密钥
-            secret_id = os.environ.get('STONEDT_SECRET_ID', 'default_id')
-            secret_key = os.environ.get('STONEDT_SECRET_KEY', 'default_key')
-            
-            if secret_id == 'default_id' or secret_key == 'default_key':
-                self.log.emit("ERROR", "❌ 图像分析API密钥未设置！\n\n"
-                             "请设置STONEDT_SECRET_ID和STONEDT_SECRET_KEY环境变量：\n"
-                             "1. 获取石盾科技API密钥\n"
-                             "2. 在系统环境变量中设置密钥\n"
-                             "3. 重启应用程序生效")
-                return [], ""
-                
-            # 调用图像分析API
-            response = requests.post(
-                "https://nlp.stonedt.com/api/classpic",
-                headers={
-                    'secret-id': secret_id,
-                    'secret-key': secret_key
-                },
-                files={'images': ('filename.jpg', open(file_path, 'rb'), 'image/jpeg')},
-                timeout=60
-            )
-
-            if self._stop_requested:
-                return [], ""
-
-            if response.status_code == 200:
-                result = response.json()
-                keywords_list = [item['keyword'] for item in result['results']['result']]
-                description = result['results']['describe']
-
-                # 缓存分析结果
-                self.image_cache[img_hash] = {
-                    'keywords': keywords_list,
-                    'description': description
-                }
-                self._save_cache()
-                return keywords_list, description
-            self.log.emit("ERROR", f"❌ 图像分析API请求失败 (状态码: {response.status_code})\n\n"
-                         "可能的原因：\n"
-                         "• API密钥无效或过期\n"
-                         "• 网络连接问题\n"
-                         "• 服务器暂时不可用")
-            return [], ""
-        except Exception as e:
-            self.log.emit("ERROR", f"❌ 图像分析请求超时或失败: {str(e)}\n\n"
-                         "请检查网络连接或稍后重试")
-            return [], ""
-        finally:
-            if 'response' in locals():
-                response.close()
 
     def run(self):
         """线程主执行方法"""
@@ -340,6 +191,23 @@ class WriteExifThread(QThread):
                     exif_dict["0th"][piexif.ImageIFD.Copyright] = self.copyright.encode('utf-8')
                     updated_fields.append(f"版权: {self.copyright}")
                 
+                # 相机品牌和型号
+                if self.cameraBrand:
+                    exif_dict["0th"][piexif.ImageIFD.Make] = self.cameraBrand.encode('utf-8')
+                    updated_fields.append(f"相机品牌: {self.cameraBrand}")
+                
+                if self.cameraModel:
+                    exif_dict["0th"][piexif.ImageIFD.Model] = self.cameraModel.encode('utf-8')
+                    updated_fields.append(f"相机型号: {self.cameraModel}")
+                
+                # 镜头信息
+                if self.lensModel:
+                    # 写入镜头型号到EXIF数据
+                    if "Exif" not in exif_dict:
+                        exif_dict["Exif"] = {}
+                    exif_dict["Exif"][piexif.ExifIFD.LensModel] = self.lensModel.encode('utf-8')
+                    updated_fields.append(f"镜头型号: {self.lensModel}")
+                
                 # 拍摄时间处理
                 if self.shootTime != 0:
                     if self.shootTime == 1:
@@ -359,18 +227,7 @@ class WriteExifThread(QThread):
                         exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = self.shootTime
                         updated_fields.append(f"拍摄时间: {self.shootTime}")
                 
-                # 自动标记
-                if self.autoMark:
-                    if self._stop_requested:
-                        self.log.emit("INFO", f"⏹️ 操作被终止: {os.path.basename(image_path)}")
-                        return
-                    keywords_list, description = self.analyze_image(image_path)
-                    keywords_str = ",".join(keywords_list)
-                    exif_dict["0th"][piexif.ImageIFD.XPComment] = description.encode('utf-16le')
-                    exif_dict["Exif"][piexif.ExifIFD.UserComment] = description.encode('utf-8')
-                    exif_dict["0th"][piexif.ImageIFD.XPKeywords] = (keywords_str + "\x00").encode(
-                        "utf-16-le") + b'\x00\x00'
-                    updated_fields.append(f"标记:{keywords_str}；描述:{description}")
+
                 
                 # GPS坐标
                 if self.lat is not None and self.lon is not None:
@@ -387,8 +244,7 @@ class WriteExifThread(QThread):
                 else:
                     self.log.emit("WARNING", f"⚠️ 未对 {os.path.basename(image_path)} 进行任何更改\n\n"
                                  "可能的原因：\n"
-                                 "• 所有EXIF字段均为空\n"
-                                 "• 自动标记功能被禁用")
+                                 "• 所有EXIF字段均为空")
             else:
                 # 处理PNG格式图像（不支持EXIF，使用PNG文本信息）
                 if self.shootTime != 0:
@@ -463,7 +319,78 @@ class WriteExifThread(QThread):
             # 验证年月日是否完整
             if not all([groups.get('year'), groups.get('month'), groups.get('day')]):
                 return None
+
+    def _create_gps_data(self, lat, lon):
+        """
+        创建GPS EXIF数据字典
+        
+        Args:
+            lat: 纬度（十进制）
+            lon: 经度（十进制）
             
+        Returns:
+            dict: GPS EXIF数据字典
+        """
+        def decimal_to_dms(decimal):
+            """将十进制度数转换为度分秒格式"""
+            degrees = int(abs(decimal))
+            minutes_decimal = (abs(decimal) - degrees) * 60
+            minutes = int(minutes_decimal)
+            seconds = (minutes_decimal - minutes) * 60
+            return [(degrees, 1), (minutes, 1), (int(seconds * 100), 100)]
+        
+        gps_dict = {}
+        
+        # 纬度
+        gps_dict[piexif.GPSIFD.GPSLatitude] = decimal_to_dms(abs(lat))
+        gps_dict[piexif.GPSIFD.GPSLatitudeRef] = b'N' if lat >= 0 else b'S'
+        
+        # 经度
+        gps_dict[piexif.GPSIFD.GPSLongitude] = decimal_to_dms(abs(lon))
+        gps_dict[piexif.GPSIFD.GPSLongitudeRef] = b'E' if lon >= 0 else b'W'
+        
+        # 时间戳
+        current_time = datetime.now()
+        gps_dict[piexif.GPSIFD.GPSDateStamp] = current_time.strftime("%Y:%m:%d")
+        gps_dict[piexif.GPSIFD.GPSTimeStamp] = [
+            (current_time.hour, 1),
+            (current_time.minute, 1),
+            (current_time.second, 1)
+        ]
+        
+        # GPS处理方式
+        gps_dict[piexif.GPSIFD.GPSProcessingMethod] = b'GPS'
+        
+        return gps_dict
+
+    def get_date_from_filename(self, image_path):
+        """
+        从文件名中提取日期时间信息
+        
+        Args:
+            image_path: 图像文件路径
+            
+        Returns:
+            datetime: 提取的日期时间对象，失败返回None
+        """
+        base_name = os.path.basename(image_path)
+        name_without_ext = os.path.splitext(base_name)[0]
+        
+        # 日期时间正则表达式模式
+        date_pattern = r'(?P<year>\d{4})[^0-9]*' \
+                       r'(?P<month>1[0-2]|0?[1-9])[^0-9]*' \
+                       r'(?P<day>3[01]|[12]\d|0?[1-9])[^0-9]*' \
+                       r'(?P<hour>2[0-3]|[01]?\d)?[^0-9]*' \
+                       r'(?P<minute>[0-5]?\d)?[^0-9]*' \
+                       r'(?P<second>[0-5]?\d)?'
+        
+        match = re.search(date_pattern, name_without_ext)
+        if match:
+            groups = match.groupdict()
+            # 验证年月日是否完整
+            if not all([groups.get('year'), groups.get('month'), groups.get('day')]):
+                return None
+
             # 构建日期时间字符串
             date_str_parts = [
                 groups['year'],

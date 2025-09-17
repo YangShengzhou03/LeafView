@@ -39,6 +39,7 @@ class WriteExif(QWidget):
         self.worker = None  # EXIF写入工作线程
         self.star_buttons = []  # 星级按钮列表
         self.is_running = False  # 是否正在运行
+        self.camera_lens_mapping = {}  # 相机型号到镜头的映射
         self.init_ui()
         self.setup_connections()
 
@@ -61,6 +62,9 @@ class WriteExif(QWidget):
         # 初始化相机品牌和型号下拉框
         self.init_camera_brand_model()
         
+        # 加载相机镜头映射数据
+        self.load_camera_lens_mapping()
+        
         self.update_button_state()
         self.parent.dateTimeEdit_shootTime.setDateTime(QDateTime.currentDateTime())
         self.parent.dateTimeEdit_shootTime.hide()
@@ -69,6 +73,87 @@ class WriteExif(QWidget):
         self.parent.lineEdit_EXIF_latitude.hide()
         self.log("DEBUG", "欢迎使用图像属性写入功能，不写入项目留空即可。")
         
+    def load_camera_lens_mapping(self):
+        """加载相机型号到镜头的映射数据"""
+        try:
+            data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                    'resources', 'json', 'camera_lens_mapping.json')
+            if os.path.exists(data_path):
+                with open(data_path, 'r', encoding='utf-8') as f:
+                    self.camera_lens_mapping = json.load(f)
+                    self.log("DEBUG", "✅ 相机镜头映射数据加载成功")
+            else:
+                self.log("WARNING", "⚠️ 相机镜头映射文件不存在，将使用默认镜头信息")
+        except Exception as e:
+            self.log("WARNING", f"加载相机镜头映射数据失败: {str(e)}")
+            self.camera_lens_mapping = {}
+
+    def get_lens_info_for_camera(self, brand, model):
+        """
+        根据相机品牌和型号获取对应的镜头信息
+        
+        Args:
+            brand: 相机品牌
+            model: 相机型号
+            
+        Returns:
+            str: 镜头信息，如果找不到返回None
+        """
+        if brand in self.camera_lens_mapping:
+            brand_data = self.camera_lens_mapping[brand]
+            if model in brand_data:
+                return brand_data[model]
+        return None
+
+    def get_default_model_for_brand(self, brand):
+        """
+        为指定品牌获取默认的相机型号
+        
+        Args:
+            brand: 相机品牌
+            
+        Returns:
+            str: 默认相机型号，如果找不到返回None
+        """
+        if brand in self.camera_data:
+            models = self.camera_data[brand]
+            if models:
+                return models[0]  # 返回该品牌的第一个型号
+        return None
+
+    def _on_model_changed(self, index):
+        """当相机型号选择变化时，自动设置对应的镜头信息"""
+        if index > 0:
+            brand = self.parent.comboBox_brand.currentText()
+            model = self.parent.comboBox_model.currentText()
+            
+            # 获取对应的镜头信息
+            lens_info = self.get_lens_info_for_camera(brand, model)
+            
+            if lens_info:
+                # 自动设置镜头信息
+                self.parent.comboBox_lensBrand.setCurrentText(brand)
+                self.parent.comboBox_lensModel.setCurrentText(lens_info)
+                self.log("INFO", f"已自动设置镜头: {brand} {lens_info}")
+            else:
+                # 如果没有找到对应的镜头信息，清空镜头选择
+                self.parent.comboBox_lensBrand.setCurrentIndex(0)
+                self.parent.comboBox_lensModel.clear()
+                self.log("DEBUG", f"未找到 {brand} {model} 对应的镜头信息")
+        
+        # 初始化镜头品牌和型号下拉框
+        # self.init_lens_brand_model()
+        
+        self.update_button_state()
+        self.parent.dateTimeEdit_shootTime.setDateTime(QDateTime.currentDateTime())
+        self.parent.dateTimeEdit_shootTime.hide()
+        # 初始化时隐藏经纬度文本框
+        self.parent.lineEdit_EXIF_longitude.hide()
+        self.parent.lineEdit_EXIF_latitude.hide()
+        self.log("DEBUG", "欢迎使用图像属性写入功能，不写入项目留空即可。")
+        
+
+
     def init_camera_brand_model(self):
         """初始化相机品牌和型号下拉框"""
         # 尝试从JSON文件加载相机品牌和型号数据
@@ -94,6 +179,8 @@ class WriteExif(QWidget):
         
         # 连接品牌选择变化信号
         self.parent.comboBox_brand.currentIndexChanged.connect(self._on_brand_changed)
+        # 连接型号选择变化信号
+        self.parent.comboBox_model.currentIndexChanged.connect(self._on_model_changed)
         
     def _load_camera_data(self):
         """从JSON文件加载相机品牌和型号数据"""
@@ -118,6 +205,8 @@ class WriteExif(QWidget):
             if brand in self.camera_data:
                 for model in sorted(self.camera_data[brand]):
                     self.parent.comboBox_model.addItem(model)
+        
+
 
     def setup_connections(self):
         """设置信号和槽的连接"""
@@ -197,17 +286,9 @@ class WriteExif(QWidget):
         """
         try:
             url = "https://restapi.amap.com/v3/geocode/geo"
-            # 从环境变量中获取API密钥，避免硬编码
-            amap_key = os.environ.get('AMAP_API_KEY', 'default_key')
+            # 使用硬编码的API密钥
+            amap_key = 'bc383698582923d55b5137c3439cf4b2'
             
-            if amap_key == 'default_key':
-                self.log("ERROR", "❌ 高德地图API密钥未设置！\n\n"
-                             "请设置AMAP_API_KEY环境变量：\n"
-                             "1. 获取高德地图开放平台API密钥\n"
-                             "2. 在系统环境变量中设置AMAP_API_KEY=您的密钥\n"
-                             "3. 重启应用程序生效")
-                return None
-                
             params = {'address': address, 'key': amap_key, 'output': 'JSON'}
             response = requests.get(url, params=params, timeout=5)
             response.raise_for_status()
@@ -215,11 +296,7 @@ class WriteExif(QWidget):
             if data.get('status') == '1' and int(data.get('count', 0)) > 0:
                 return data['geocodes'][0]['location'].split(',')
         except Exception as e:
-            self.log("ERROR", f"❌ 获取位置信息失败: {str(e)}\n\n"
-                         "可能的原因：\n"
-                         "• 网络连接问题\n"
-                         "• API密钥无效\n"
-                         "• 地址格式不正确")
+            self.log("ERROR", f"获取位置失败: {str(e)}")
         return None
 
     def get_location_by_ip(self):
@@ -233,11 +310,11 @@ class WriteExif(QWidget):
                 self.parent.lineEdit_EXIF_Position.setText(location)
                 return lat, lon
             else:
-                self.log("ERROR", "❌ 无法解析位置信息\n\n"
+                self.log("ERROR", "无法解析位置信息\n\n"
                              "IP地址定位服务返回的数据格式异常")
                 return None
         except Exception as e:
-            self.log("ERROR", f"❌ 获取位置信息失败: {str(e)}\n\n"
+            self.log("ERROR", f"获取位置信息失败: {str(e)}\n\n"
                          "请检查网络连接或稍后重试")
             return None
 
@@ -246,9 +323,9 @@ class WriteExif(QWidget):
         location_info = self.get_location_by_ip()
         if location_info is not None:
             lat, lon = location_info
-            self.log("INFO", f"✅ 成功获取位置信息: 纬度={lat}, 经度={lon}")
+            self.log("INFO", f"成功获取位置信息: 纬度={lat}, 经度={lon}")
         else:
-            self.log("ERROR", "❌ 获取位置信息失败\n\n"
+            self.log("ERROR", "获取位置信息失败\n\n"
                          "可能的原因：\n"
                          "• 网络连接异常\n"
                          "• 定位服务暂时不可用\n"
@@ -262,20 +339,26 @@ class WriteExif(QWidget):
             bool: 是否成功启动
         """
         if not self.folder_page:
-            self.log("ERROR", "❌ 文件夹页面未初始化\n\n"
+            self.log("ERROR", "文件夹页面未初始化\n\n"
                          "请重新启动应用程序或联系技术支持")
             return False
             
         folders = self.folder_page.get_all_folders()
         if not folders:
-            self.log("WARNING", "⚠️ 请先导入一个有效的文件夹\n\n"
+            self.log("WARNING", "请先导入一个有效的文件夹\n\n"
                            "点击\"导入文件夹\"按钮添加包含图片的文件夹")
             return False
         
         # 准备EXIF写入参数
+        camera_brand = self.parent.comboBox_brand.currentText() if self.parent.comboBox_brand.currentIndex() > 0 else None
+        camera_model = self.parent.comboBox_model.currentText() if self.parent.comboBox_model.currentIndex() > 0 else None
+        
+        # 如果用户只选择了品牌但没有选择型号，自动选择该品牌的第一个型号
+        if camera_brand and not camera_model:
+            camera_model = self.get_default_model_for_brand(camera_brand)
+        
         params = {
             'folders_dict': folders,
-            'autoMark': True,  # 默认启用自动标记功能
             'title': self.parent.lineEdit_EXIF_Title.text(),
             'author': self.parent.lineEdit_EXIF_Author.text(),
             'subject': self.parent.lineEdit_EXIF_Theme.text(),
@@ -287,8 +370,10 @@ class WriteExif(QWidget):
             if self.parent.comboBox_shootTime.currentIndex() == 2
             else self.parent.comboBox_shootTime.currentIndex(),
             # 添加相机品牌和型号信息
-            'cameraBrand': self.parent.comboBox_brand.currentText() if self.parent.comboBox_brand.currentIndex() > 0 else None,
-            'cameraModel': self.parent.comboBox_model.currentText() if self.parent.comboBox_model.currentIndex() > 0 else None
+            'cameraBrand': camera_brand,
+            'cameraModel': camera_model,
+            # 自动获取镜头信息（基于相机品牌和型号）
+            'lensModel': self.get_lens_info_for_camera(camera_brand, camera_model)
         }
         
         # 处理位置信息
@@ -299,7 +384,7 @@ class WriteExif(QWidget):
                 if coords := self.get_location(address):
                     params['position'] = ','.join(coords)
                 else:
-                    self.log("ERROR", f"❌ 无法找到地址'{address}'对应的地理坐标\n\n"
+                    self.log("ERROR", f"无法找到地址'{address}'对应的地理坐标\n\n"
                                "请检查：\n"
                                "• 地址拼写是否正确\n"
                                "• 是否包含详细的门牌号或地标\n"
@@ -316,19 +401,19 @@ class WriteExif(QWidget):
                     if -180 <= lon <= 180 and -90 <= lat <= 90:
                         params['position'] = f"{lat},{lon}"
                     else:
-                        self.log("ERROR", "❌ 经纬度范围无效\n\n"
+                        self.log("ERROR", "经纬度范围无效\n\n"
                                  "• 经度应在-180到180之间\n"
                                  "• 纬度应在-90到90之间\n\n"
                                  "请检查输入的数值是否正确")
                         return False
                 except ValueError:
-                    self.log("ERROR", "❌ 经纬度格式无效\n\n"
+                    self.log("ERROR", "经纬度格式无效\n\n"
                              "请输入有效的数字格式，例如：\n"
                              "• 经度: 116.397128\n"
                              "• 纬度: 39.916527")
                     return False
             else:
-                self.log("ERROR", "❌ 请输入经纬度信息\n\n"
+                self.log("ERROR", "请输入经纬度信息\n\n"
                              "请在对应的文本框中输入经度和纬度值")
                 return False
         
@@ -343,7 +428,7 @@ class WriteExif(QWidget):
         if params.get('rating') != '0':
             operation_summary += f", 评分: {params['rating']}星"
         
-        self.log("INFO", f"📝 EXIF写入操作摘要: {operation_summary}")
+        self.log("INFO", f"EXIF写入操作摘要: {operation_summary}")
         
         # 创建并启动工作线程
         self.worker = WriteExifThread(**params)
@@ -359,7 +444,7 @@ class WriteExif(QWidget):
             self.worker.wait(1000)
             if self.worker.isRunning():
                 self.worker.terminate()
-            self.log("WARNING", "⏹️ 正在停止EXIF写入操作...")
+            self.log("WARNING", "正在停止EXIF写入操作...")
         self.is_running = False
         self.update_button_state()
 
@@ -381,7 +466,7 @@ class WriteExif(QWidget):
 
     def on_finished(self):
         """EXIF写入完成处理"""
-        self.log("INFO", "✅ EXIF信息写入任务已完成！")
+        self.log("INFO", "EXIF信息写入任务已完成！")
         self.is_running = False
         self.update_button_state()
         
@@ -389,7 +474,7 @@ class WriteExif(QWidget):
         QMessageBox.information(
             self.parent, 
             "操作完成", 
-            "✅ EXIF信息写入操作已完成！\n\n"
+            "EXIF信息写入操作已完成！\n\n"
             "所有选定的图片文件已成功更新EXIF信息。\n\n"
             "您可以在原文件夹中查看更新后的文件。"
         )

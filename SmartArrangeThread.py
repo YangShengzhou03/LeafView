@@ -494,8 +494,14 @@ class SmartArrangeThread(QtCore.QThread):
     @staticmethod
     def get_address(lat, lon, max_retries=3, wait_time_on_limit=2):
         """通过高德地图API获取详细地址"""
-        key = 'bc383698582923d55b5137c3439cf4b2'
-        url = f'https://restapi.amap.com/v3/geocode/regeo?key={key}&location={lon},{lat}'
+        # 从环境变量中获取API密钥，避免硬编码
+        amap_key = os.environ.get('AMAP_API_KEY', 'default_key')
+        
+        if amap_key == 'default_key':
+            # 如果未设置环境变量，记录错误并返回None
+            return None
+            
+        url = f'https://restapi.amap.com/v3/geocode/regeo?key={amap_key}&location={lon},{lat}'
 
         for retry in range(max_retries):
             try:
