@@ -813,19 +813,19 @@ class FolderPage(QtWidgets.QWidget):
             if added_count > 0:
                 message += f"成功添加 {added_count} 个文件夹\n"
                 for path in results['added']:
-                    details.append(f"  ✓ {os.path.basename(path)} ({path})")
+                    details.append(f"  已添加: {os.path.basename(path)} ({path})")
                 details.append("")
             
             if skipped_count > 0:
                 message += f"跳过 {skipped_count} 个文件夹\n"
                 for path, reason in results['skipped']:
-                    details.append(f"  ⚠️ {os.path.basename(path)} - {reason}")
+                    details.append(f"  {os.path.basename(path)} - {reason}")
                 details.append("")
             
             if error_count > 0:
                 message += f"{error_count} 个文件夹添加失败\n"
                 for path, reason in results['error']:
-                    details.append(f"  ✗ {os.path.basename(path)} - {reason}")
+                    details.append(f"  已跳过: {os.path.basename(path)} - {reason}")
             
             # 创建详细信息对话框
             if details:

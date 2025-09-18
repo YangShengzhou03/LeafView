@@ -115,6 +115,9 @@ def main():
     window.move(300, 100)  # 初始位置偏移，避免完全重叠
     window.show()
     
+    # 添加启动警告日志
+    window.log("WARNING", "文件整理、重命名和属性写入操作一旦执行就无法撤销，请务必备份原数据")
+    
     # 进入主事件循环
     exit_code = app.exec()
     

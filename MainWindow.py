@@ -201,15 +201,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
         # 根据日志级别提供不同的用户提示
         if level == "ERROR":
-            # 错误级别：显示红色警告图标和提示
-            self._show_user_notification("❌ 错误", message, "error")
+            # 错误级别：显示红色警告和提示
+            self._show_user_notification("错误", message, "error")
         elif level == "WARNING":
-            # 警告级别：显示黄色警告图标和提示
-            self._show_user_notification("⚠️ 警告", message, "warning")
+            # 警告级别：显示黄色警告和提示
+            self._show_user_notification("警告", message, "warning")
         elif level == "INFO":
-            # 信息级别：显示蓝色信息图标和提示（重要信息才显示）
+            # 信息级别：显示蓝色信息和提示（重要信息才显示）
             if any(keyword in message for keyword in ["完成", "成功", "开始", "停止", "中断"]):
-                self._show_user_notification("ℹ️ 提示", message, "info")
+                self._show_user_notification("提示", message, "info")
         
         # 如果有专门的日志区域，可以在这里添加显示逻辑
         print(log_message)  # 临时输出到控制台

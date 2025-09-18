@@ -86,15 +86,15 @@ class WriteExifThread(QThread):
             image_paths = self._collect_image_paths()
             total_files = len(image_paths)
             if not image_paths:
-                self.log.emit("WARNING", "⚠️ 未找到任何图像文件\n\n"
+                self.log.emit("WARNING", "没有找到任何可以处理的图像文件\n\n"
                                "请检查：\n"
-                               "• 文件夹路径是否正确\n"
-                               "• 是否包含支持的图像格式(.jpg/.jpeg/.png/.webp)")
+                               "• 您选择的文件夹路径是否正确\n"
+                               "• 文件夹里是否有.jpg、.jpeg、.png、.webp等格式的图片")
                 self.finished_conversion.emit()
                 return
             
             # 显示操作统计
-            self.log.emit("INFO", f"📊 开始处理 {total_files} 个图像文件")
+            self.log.emit("INFO", f"开始处理 {total_files} 张图片")
             
             # 初始化进度
             self.progress_updated.emit(0)
@@ -110,12 +110,12 @@ class WriteExifThread(QThread):
                         # 检查文件大小，跳过过大的文件
                         file_size = os.path.getsize(path)
                         if file_size > 500 * 1024 * 1024:  # 超过500MB的文件
-                            self.log.emit("ERROR", f"❌ 文件 {os.path.basename(path)} 过大(>{500}MB)，跳过处理")
+                            self.log.emit("ERROR", f"文件 {os.path.basename(path)} 太大了(超过500MB)，暂不支持处理")
                             error_count += 1
                             continue
                         futures[executor.submit(self.process_image, path)] = path
                     except Exception as e:
-                        self.log.emit("ERROR", f"❌ 添加文件 {os.path.basename(path)} 到任务队列失败: {str(e)}")
+                        self.log.emit("ERROR", f"添加文件 {os.path.basename(path)} 到任务队列失败: {str(e)}")
                         error_count += 1
                 
                 # 处理完成的任务
@@ -127,7 +127,7 @@ class WriteExifThread(QThread):
                                 for f in futures:
                                     f.cancel()
                                 time.sleep(0.1)
-                                self.log.emit("INFO", "⏹️ EXIF写入操作已成功中止")
+                                self.log.emit("INFO", "EXIF写入操作已成功中止")
                                 break
                             try:
                                 # 设置任务超时（例如30秒）
@@ -135,25 +135,25 @@ class WriteExifThread(QThread):
                                 success_count += 1
                             except TimeoutError:
                                 file_path = futures[future]
-                                self.log.emit("ERROR", f"❌ 处理文件 {os.path.basename(file_path)} 超时")
+                                self.log.emit("ERROR", f"处理文件 {os.path.basename(file_path)} 时间太长，已超时")
                                 error_count += 1
                             except Exception as e:
                                 file_path = futures[future]
-                                self.log.emit("ERROR", f"❌ 处理文件 {os.path.basename(file_path)} 时出错: {str(e)}")
+                                self.log.emit("ERROR", f"处理文件 {os.path.basename(file_path)} 时出错: {str(e)}")
                                 error_count += 1
                             finally:
                                 # 更新进度
                                 progress = int((i / len(futures)) * 100)
                                 self.progress_updated.emit(progress)
                     except Exception as e:
-                        self.log.emit("ERROR", f"❌ 任务调度过程中发生错误: {str(e)}")
+                        self.log.emit("ERROR", f"任务调度过程中发生错误: {str(e)}")
                         error_count += 1
         except Exception as e:
-            self.log.emit("ERROR", f"❌ 全局错误: {str(e)}")
+            self.log.emit("ERROR", f"全局错误: {str(e)}")
             error_count += 1
         finally:
             # 发送完成信号
-            self.log.emit("INFO", f"✅ EXIF写入任务完成，成功: {success_count}，失败: {error_count}，总计: {total_files}")
+            self.log.emit("INFO", f"图片信息写入完成了，成功处理了 {success_count} 张，失败了 {error_count} 张，总共 {total_files} 张图片")
             self.finished_conversion.emit()
 
     def _collect_image_paths(self):
@@ -193,7 +193,7 @@ class WriteExifThread(QThread):
         """
         try:
             if self._stop_requested:
-                self.log.emit("INFO", f"⏹️ 处理被取消: {os.path.basename(image_path)}")
+                self.log.emit("INFO", f"处理被取消: {os.path.basename(image_path)}")
                 return
             
             file_ext = os.path.splitext(image_path)[1].lower()
@@ -215,19 +215,19 @@ class WriteExifThread(QThread):
                 # 处理RAW格式
                 self._process_raw_format(image_path)
             else:
-                self.log.emit("WARNING", f"⚠️ 不支持的文件格式: {file_ext}")
+                self.log.emit("WARNING", f"不支持的文件格式: {file_ext}")
 
         except Exception as e:
             # 错误处理
             result = detect_media_type(image_path)
             if not result["valid"]:
-                self.log.emit("ERROR", f"❌ {os.path.basename(image_path)} 文件已损坏或格式不支持\n\n"
+                self.log.emit("ERROR", f"{os.path.basename(image_path)} 文件已损坏或格式不支持\n\n"
                                  "请检查文件完整性")
             elif not result["extension_match"]:
-                self.log.emit("ERROR", f"❌ {os.path.basename(image_path)} 扩展名不匹配，实际格式为 {result['extension']}\n\n"
+                self.log.emit("ERROR", f"{os.path.basename(image_path)} 扩展名不匹配，实际格式为 {result['extension']}\n\n"
                                  "请检查文件格式")
             else:
-                self.log.emit("ERROR", f"❌ 处理 {os.path.basename(image_path)} 时出错: {str(e)}")
+                self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 时出错: {str(e)}")
 
     def _process_exif_format(self, image_path):
         """
@@ -311,9 +311,9 @@ class WriteExifThread(QThread):
         piexif.insert(exif_bytes, image_path)
         
         if updated_fields:
-            self.log.emit("INFO", f"✅ 成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
+            self.log.emit("INFO", f"成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
         else:
-            self.log.emit("WARNING", f"⚠️ 未对 {os.path.basename(image_path)} 进行任何更改\n\n"
+            self.log.emit("WARNING", f"未对 {os.path.basename(image_path)} 进行任何更改\n\n"
                              "可能的原因：\n"
                              "• 所有EXIF字段均为空")
 
@@ -338,7 +338,7 @@ class WriteExifThread(QThread):
                         temp_path = image_path + ".tmp"
                         img.save(temp_path, format="PNG", pnginfo=png_info)
                         os.replace(temp_path, image_path)
-                        self.log.emit("INFO", f"✅ 成功写入 {os.path.basename(image_path)} 的拍摄时间 {date_from_filename}")
+                        self.log.emit("INFO", f"成功写入 {os.path.basename(image_path)} 的拍摄时间 {date_from_filename}")
             else:
                 # 使用指定的拍摄时间
                 with Image.open(image_path) as img:
@@ -350,7 +350,7 @@ class WriteExifThread(QThread):
                     temp_path = image_path + ".tmp"
                     img.save(temp_path, format="PNG", pnginfo=png_info)
                     os.replace(temp_path, image_path)
-                    self.log.emit("INFO", f"✅ 成功写入 {os.path.basename(image_path)} 的拍摄时间 {self.shootTime}")
+                    self.log.emit("INFO", f"成功写入 {os.path.basename(image_path)} 的拍摄时间 {self.shootTime}")
 
     def _process_heic_format(self, image_path):
         """
@@ -364,7 +364,7 @@ class WriteExifThread(QThread):
             from pillow_heif import open_heif, register_heif_opener
             register_heif_opener()
         except ImportError:
-            self.log.emit("ERROR", f"❌ 处理 {os.path.basename(image_path)} 需要 pillow-heif 库\n\n"
+            self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 需要 pillow-heif 库\n\n"
                              "请安装: pip install pillow-heif")
             return
         
@@ -407,12 +407,12 @@ class WriteExifThread(QThread):
             os.replace(temp_path, image_path)
             
             if updated_fields:
-                self.log.emit("INFO", f"✅ 成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
+                self.log.emit("INFO", f"成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
             else:
-                self.log.emit("WARNING", f"⚠️ 未对 {os.path.basename(image_path)} 进行任何更改")
+                self.log.emit("WARNING", f"未对 {os.path.basename(image_path)} 进行任何更改")
                 
         except Exception as e:
-            self.log.emit("ERROR", f"❌ 处理 {os.path.basename(image_path)} 时出错: {str(e)}")
+            self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 时出错: {str(e)}")
 
     def _process_video_format(self, image_path):
         """
@@ -425,7 +425,7 @@ class WriteExifThread(QThread):
             # 尝试导入moviepy库
             from moviepy.editor import VideoFileClip
         except ImportError:
-            self.log.emit("ERROR", f"❌ 处理 {os.path.basename(image_path)} 需要 moviepy 库\n\n"
+            self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 需要 moviepy 库\n\n"
                              "请安装: pip install moviepy")
             return
         
@@ -458,13 +458,13 @@ class WriteExifThread(QThread):
             
             # 视频格式需要特殊工具来写入元数据，这里简化处理
             if updated_fields:
-                self.log.emit("INFO", f"✅ 成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
-                self.log.emit("WARNING", f"⚠️ 视频元数据写入需要额外工具支持，仅记录元数据信息")
+                self.log.emit("INFO", f"成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
+                self.log.emit("WARNING", f"视频元数据写入需要额外工具支持，仅记录元数据信息")
             else:
-                self.log.emit("WARNING", f"⚠️ 未对 {os.path.basename(image_path)} 进行任何更改")
+                self.log.emit("WARNING", f"未对 {os.path.basename(image_path)} 进行任何更改")
                 
         except Exception as e:
-            self.log.emit("ERROR", f"❌ 处理 {os.path.basename(image_path)} 时出错: {str(e)}")
+            self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 时出错: {str(e)}")
 
     def _process_raw_format(self, image_path):
         """
@@ -477,7 +477,7 @@ class WriteExifThread(QThread):
             # 尝试导入rawpy库
             import rawpy
         except ImportError:
-            self.log.emit("ERROR", f"❌ 处理 {os.path.basename(image_path)} 需要 rawpy 库\n\n"
+            self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 需要 rawpy 库\n\n"
                              "请安装: pip install rawpy")
             return
         
@@ -507,18 +507,18 @@ class WriteExifThread(QThread):
                 
                 # RAW格式需要特殊工具来写入元数据，这里简化处理
                 if updated_fields:
-                    self.log.emit("INFO", f"✅ 成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
-                    self.log.emit("WARNING", f"⚠️ RAW格式元数据写入需要额外工具支持，仅记录元数据信息")
+                    self.log.emit("INFO", f"成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
+                    self.log.emit("WARNING", f"RAW格式元数据写入需要额外工具支持，仅记录元数据信息")
                 else:
-                    self.log.emit("WARNING", f"⚠️ 未对 {os.path.basename(image_path)} 进行任何更改")
+                    self.log.emit("WARNING", f"未对 {os.path.basename(image_path)} 进行任何更改")
                     
         except Exception as e:
-            self.log.emit("ERROR", f"❌ 处理 {os.path.basename(image_path)} 时出错: {str(e)}")
+            self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 时出错: {str(e)}")
 
     def stop(self):
         """请求停止处理"""
         self._stop_requested = True
-        self.log.emit("INFO", "⏹️ 正在停止EXIF写入操作...")
+        self.log.emit("INFO", "正在停止EXIF写入操作...")
 
     def _create_gps_data(self, lat, lon):
         """

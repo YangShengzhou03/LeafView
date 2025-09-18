@@ -217,7 +217,7 @@ class Contrast(QtWidgets.QWidget):
             
         reply = QtWidgets.QMessageBox.question(self, '确认删除', 
                                              f"确定要将选中的 {len(self.selected_images)} 张图片移动到回收站吗？\n\n"
-                                             "⚠️ 此操作不可撤销，建议先备份重要文件。\n\n"
+                                             "此操作不可撤销，建议先备份重要文件。\n\n"
                                              "删除后可在回收站中恢复。",
                                              QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No,
                                              QtWidgets.QMessageBox.StandardButton.No)

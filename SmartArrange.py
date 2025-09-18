@@ -74,7 +74,7 @@ class SmartArrange(QtWidgets.QWidget):
         self.init_page()  # 初始化页面
         self.set_combo_box_states()  # 设置分类下拉框状态
         self.log_signal.connect(self.handle_log_signal)  # 连接日志信号
-        self.log("DEBUG", "欢迎使用智能整理，可以为您整理目录、重命名文件。")
+        self.log("DEBUG", "欢迎使用智能整理，可以为您整理目录、重命名文件。请注意，操作一旦执行将无法恢复。")
 
     def init_page(self):
         """初始化页面，连接信号槽和设置初始状态"""
@@ -150,24 +150,24 @@ class SmartArrange(QtWidgets.QWidget):
             # 获取所有文件夹信息
             folders = self.folder_page.get_all_folders() if self.folder_page else []
             if not folders:
-                self.log("WARNING", "请先导入一个有效的文件夹。")
+                self.log("WARNING", "请先导入一个包含文件的文件夹。")
                 return
 
             # 弹出确认对话框
             reply = QMessageBox.question(
                 self,
                 "确认整理操作",
-                "⚠️ 重要提醒：文件整理操作一旦开始，将无法撤销！\n\n"
-                "• 移动操作：文件将被移动到新位置，原位置不再保留\n"
-                "• 复制操作：文件将在新位置创建副本，原文件保留\n\n"
-                "强烈建议在开始前备份重要数据！\n\n"
-                "是否确认开始整理？",
+                "重要提醒：整理文件的操作一旦开始就没办法撤销了！\n\n"
+                "• 如果是移动操作：文件会被搬到新位置，原来的地方就没有了\n"
+                "• 如果是复制操作：文件会在新位置创建一份，原来的文件还在\n\n"
+                "一定要先备份好重要文件再开始！\n\n"
+                "确定要开始整理吗？",
                 QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
                 QMessageBox.StandardButton.No
             )
             
             if reply != QMessageBox.StandardButton.Yes:
-                self.log("INFO", "用户取消了整理操作")
+                self.log("INFO", "您取消了整理操作")
                 return
 
             # 构建分类结构
@@ -455,10 +455,10 @@ class SmartArrange(QtWidgets.QWidget):
                         self, 
                         "文件名无效", 
                         f"输入的文件名 '{custom_text}' 不符合Windows命名规范！\n\n"
-                        "❌ 不允许的字符"
-                        "❌ 不能使用保留文件名: CON, PRN, AUX, NUL, COM1-9, LPT1-9\n"
-                        "❌ 不能以点(.)或空格结尾\n"
-                        "❌ 长度不能超过255个字符\n\n"
+                        "不允许的字符"
+                        "不能使用保留文件名: CON, PRN, AUX, NUL, COM1-9, LPT1-9\n"
+                        "不能以点(.)或空格结尾\n"
+                        "长度不能超过255个字符\n\n"
                         "请修改后重试。"
                     )
                     return

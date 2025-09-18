@@ -32,15 +32,15 @@ class TextRecognitionThread(QThread):
         
         for i, image_path in enumerate(self.image_paths):
             if self._stop_requested:
-                self.log_updated.emit('INFO', '⏹️ 文字识别操作已取消')
+                self.log_updated.emit('INFO', '您取消了文字识别操作')
                 return
                 
             try:
                 # 检测文件是否为有效图片
                 media_info = detect_media_type(image_path)
                 if not media_info['valid']:
-                    self.log_updated.emit('ERROR', f'❌ {os.path.basename(image_path)} 不是有效的图片文件\n\n' 
-                                     '请检查文件格式和完整性')
+                    self.log_updated.emit('ERROR', f'{os.path.basename(image_path)} 不是可以识别的图片文件\n\n' 
+                                     '请检查文件格式是否正确，文件是否完整')
                     continue
                 
                 # 执行OCR识别
@@ -51,7 +51,7 @@ class TextRecognitionThread(QThread):
                 self.progress_updated.emit(int((i + 1) / total * 100))
                 
             except Exception as e:
-                self.log_updated.emit('ERROR', f'❌ 处理 {os.path.basename(image_path)} 时出错: {str(e)}')
+                self.log_updated.emit('ERROR', f'处理 {os.path.basename(image_path)} 时出错了: {str(e)}')
                 
         self.recognition_complete.emit(results)
     
@@ -64,11 +64,11 @@ class TextRecognitionThread(QThread):
                 text = pytesseract.image_to_string(gray_img, lang=self.lang)
                 return text.strip()
         except Exception as e:
-            self.log_updated.emit('ERROR', f'❌ OCR识别 {os.path.basename(image_path)} 失败: {str(e)}\n\n' 
+            self.log_updated.emit('ERROR', f'识别 {os.path.basename(image_path)} 里的文字失败了: {str(e)}\n\n' 
                              '可能的原因：\n' 
-                             '• 图像质量较差\n' 
-                             '• Tesseract OCR引擎未正确安装\n' 
-                             '• 语言包缺失')
+                             '• 图片太模糊或质量不好\n' 
+                             '• 电脑上没有正确安装OCR识别软件\n' 
+                             '• 缺少识别所需的语言数据包')
             return ''
     
     def stop(self):
@@ -119,7 +119,7 @@ class TextRecognition(QtWidgets.QWidget):
         
         # 初始化页面，连接信号等
         self._connect_signals()
-        self.log("INFO", "👋 欢迎使用文字识别整理功能")
+        self.log("INFO", "欢迎使用文字识别和整理功能")
         
     def _connect_signals(self):
         # 连接按钮信号
@@ -140,15 +140,15 @@ class TextRecognition(QtWidgets.QWidget):
         """识别图像上的文字"""
         folders = self.folder_page.get_all_folders() if self.folder_page else []
         if not folders:
-            self.log("WARNING", "⚠️ 请先导入一个有效的文件夹\n\n"
-                           "点击\"导入文件夹\"按钮添加包含图片的文件夹")
+            self.log("WARNING", "请先导入一个有图片的文件夹\n\n"
+                           "点击\"导入文件夹\"按钮选择包含图片的文件夹")
             return
         
         # 收集所有图片文件
         image_paths = []
         for folder_path, include_sub in folders:
             if os.path.isdir(folder_path):
-                self.log('INFO', f'📁 正在扫描文件夹: {folder_path}')
+                self.log('INFO', f'正在查看文件夹: {folder_path}')
                 if include_sub:
                     for root, _, files in os.walk(folder_path):
                         for file in files:
@@ -165,13 +165,13 @@ class TextRecognition(QtWidgets.QWidget):
                                 image_paths.append(file_path)
         
         if not image_paths:
-            self.log('WARNING', '⚠️ 未找到任何图片文件\n\n'
+            self.log('WARNING', '没有找到任何可以识别的图片文件\n\n'
                            '请检查：\n'
-                           '• 文件夹是否包含支持的图片格式(.jpg/.jpeg/.png/.webp)\n'
-                           '• 文件夹路径是否正确')
+                           '• 文件夹里有没有.jpg、.jpeg、.png、.webp这些格式的图片\n'
+                           '• 您选择的文件夹路径是否正确')
             return
         
-        self.log('INFO', f'🔍 找到 {len(image_paths)} 个图片文件，开始识别文字...')
+        self.log('INFO', f'找到了 {len(image_paths)} 张图片，现在开始识别里面的文字...')
         
         # 启动识别线程
         self.progress_bar.setValue(0)
@@ -191,17 +191,17 @@ class TextRecognition(QtWidgets.QWidget):
         total = len(results)
         success_count = sum(1 for text in results.values() if text)
         
-        self.log('INFO', f'✅ 文字识别完成！\n\n'
-                   f'📊 统计信息：\n'
-                   f'• 总文件数: {total}\n'
-                   f'• 成功识别: {success_count}\n'
-                   f'• 识别率: {success_count/total*100:.1f}%')
+        self.log('INFO', f'文字识别完成啦！\n\n'
+                   f'统计一下：\n'
+                   f'• 总共有 {total} 张图片\n'
+                   f'• 成功识别了 {success_count} 张\n'
+                   f'• 识别成功率：{success_count/total*100:.1f}%')
         self.organize_btn.setEnabled(True)
     
     def organize_by_text(self):
         """根据识别到的文字进行整理"""
         if not self.recognition_results:
-            self.log('ERROR', '❌ 请先执行文字识别\n\n'
+            self.log('ERROR', '请先执行文字识别\n\n'
                          '点击"识别图片文字"按钮开始识别')
             return
         
@@ -211,7 +211,7 @@ class TextRecognition(QtWidgets.QWidget):
             self.log('INFO', '⏹️ 用户取消了保存目录选择')
             return
         
-        self.log('INFO', f'📂 开始按文字整理图片到目录: {save_dir}')
+        self.log('INFO', f'开始按文字整理图片到目录: {save_dir}')
         
         # 创建基于识别文字的文件夹结构
         success_count = 0
@@ -236,15 +236,15 @@ class TextRecognition(QtWidgets.QWidget):
             try:
                 target_path = os.path.join(target_folder, os.path.basename(image_path))
                 shutil.copy2(image_path, target_path)
-                self.log('INFO', f'✅ 已复制 {os.path.basename(image_path)} 到 {valid_folder_name}')
+                self.log('INFO', f'已复制 {os.path.basename(image_path)} 到 {valid_folder_name}')
                 success_count += 1
             except Exception as e:
-                self.log('ERROR', f'❌ 复制文件 {os.path.basename(image_path)} 时出错: {str(e)}')
+                self.log('ERROR', f'复制文件 {os.path.basename(image_path)} 时出错: {str(e)}')
                 error_count += 1
                 
         # 显示整理结果
-        self.log('INFO', f'🎉 按文字整理完成！\n\n'
-                   f'📊 统计信息：\n'
+        self.log('INFO', f'按文字整理完成！\n\n'
+                   f'统计信息：\n'
                    f'• 成功整理: {success_count} 个文件\n'
                    f'• 失败: {error_count} 个文件\n'
                    f'• 成功率: {success_count/(success_count+error_count)*100:.1f}%')
@@ -253,7 +253,7 @@ class TextRecognition(QtWidgets.QWidget):
         QtWidgets.QMessageBox.information(
             self, 
             "操作完成", 
-            f"✅ 文字识别整理操作已完成！\n\n"
+            f"文字识别整理操作已完成！\n\n"
             f"共成功整理 {success_count} 个文件到目标目录。\n\n"
             f"您可以在 {save_dir} 中查看整理后的文件。"
         )

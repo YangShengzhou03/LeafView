@@ -124,7 +124,7 @@ class SmartArrangeThread(QtCore.QThread):
 
             for folder_info in self.folders:
                 if self._stop_flag:
-                    self.log("WARNING", "智能整理操作已被用户中断")
+                    self.log("WARNING", "您已经取消了整理文件的操作")
                     break
                 if self.destination_root:
                     destination_path = Path(self.destination_root).resolve()
@@ -132,7 +132,7 @@ class SmartArrangeThread(QtCore.QThread):
                     if len(destination_path.parts) > len(folder_path.parts) and destination_path.parts[
                                                                                 :len(
                                                                                     folder_path.parts)] == folder_path.parts:
-                        self.log("ERROR", "目标路径不能是待整理文件夹的子路径，这会导致无限循环！")
+                        self.log("ERROR", "目标文件夹不能是要整理的文件夹的子文件夹，这样会导致重复处理！")
                         break
                 try:
                     if not self.classification_structure and not self.file_name_structure:
@@ -140,7 +140,7 @@ class SmartArrangeThread(QtCore.QThread):
                     else:
                         self.process_folder_with_classification(folder_info)
                 except Exception as e:
-                    self.log("ERROR", f"处理文件夹 {folder_info['path']} 时发生错误: {str(e)}")
+                    self.log("ERROR", f"处理文件夹 {folder_info['path']} 时出错了: {str(e)}")
                     fail_count += 1
             
             if not self._stop_flag:
@@ -148,7 +148,7 @@ class SmartArrangeThread(QtCore.QThread):
                     self.process_renaming()
                     success_count = len(self.files_to_rename) - fail_count
                 except Exception as e:
-                    self.log("ERROR", f"文件重命名过程中发生错误: {str(e)}")
+                    self.log("ERROR", f"给文件重命名时出错了: {str(e)}")
                     fail_count += 1
                 
                 # 整理完成后删除所有空文件夹
@@ -156,14 +156,14 @@ class SmartArrangeThread(QtCore.QThread):
                     try:
                         self.delete_empty_folders()
                     except Exception as e:
-                        self.log("WARNING", f"删除空文件夹时发生错误: {str(e)}")
+                        self.log("WARNING", f"删除空文件夹时出错了: {str(e)}")
                 
-                self.log("INFO", f"智能整理操作已完成，共处理 {success_count} 个文件成功，{fail_count} 个文件失败")
+                self.log("INFO", f"文件整理完成了，成功处理了 {success_count} 个文件，失败了 {fail_count} 个文件")
             else:
-                self.log("WARNING", "智能整理操作已被用户取消")
+                self.log("WARNING", "您已经取消了整理文件的操作")
                 
         except Exception as e:
-            self.log("ERROR", f"智能整理过程中发生严重错误: {str(e)}")
+            self.log("ERROR", f"整理文件时遇到了严重问题: {str(e)}")
 
     def process_folder_with_classification(self, folder_info):
         folder_path = Path(folder_info['path'])
@@ -176,7 +176,7 @@ class SmartArrangeThread(QtCore.QThread):
             for root, _, files in os.walk(folder_path):
                 for file in files:
                     if self._stop_flag:
-                        self.log("WARNING", "文件夹处理被用户中断")
+                        self.log("WARNING", "您已经取消了当前文件夹的处理")
                         return
                     full_file_path = Path(root) / file
                     # 移除文件类型过滤，处理所有文件
@@ -256,7 +256,7 @@ class SmartArrangeThread(QtCore.QThread):
             
             for file in files:
                 if self._stop_flag:
-                    self.log("WARNING", "文件提取操作被用户中断")
+                    self.log("WARNING", "您已经取消了文件提取操作")
                     break
                 
                 file_path = Path(root) / file
@@ -298,7 +298,7 @@ class SmartArrangeThread(QtCore.QThread):
         # 递归删除空文件夹
         for folder in processed_folders:
             if self._stop_flag:
-                self.log("WARNING", "空文件夹删除操作被用户中断")
+                self.log("WARNING", "您已经取消了空文件夹删除操作")
                 break
             
             if folder.exists() and folder.is_dir():
