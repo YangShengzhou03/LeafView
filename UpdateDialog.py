@@ -25,9 +25,10 @@ class UpdateDialog(QDialog):
 
 
 def check_update():
-    url = 'https://www.cnblogs.com/YangShengzhou/p/18679899'
+    url = 'https://www.cnblogs.com/YangShengzhou/p/18679899ysz'
     try:
-        response = requests.get(url)
+        # Set a reasonable timeout for the request
+        response = requests.get(url, timeout=5)
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
         title_element = soup.find('a', class_='postTitle2')
@@ -47,8 +48,15 @@ def check_update():
                 version_text = f"LeafView v{latest_version_str.strip()}"
                 dialog = UpdateDialog(lastlyVersionUrl, title_parts[0], update_content, version_text, necessary)
                 dialog.exec()
-    except Exception:
-        error_message = f"网络连接失败"
+    except requests.exceptions.RequestException:
+        # Handle network connection errors
+        error_message = "网络连接失败，无法检查更新"
         dialog = UpdateDialog('https://blog.csdn.net/Yang_shengzhou', '网络连接失败',
                               '枫叶内测版,须连网启动,感谢您的理解\n' + error_message, "", True)
+        dialog.exec()
+    except Exception as e:
+        # Handle other exceptions
+        error_message = f"检查更新时发生错误: {str(e)}"
+        dialog = UpdateDialog('https://blog.csdn.net/Yang_shengzhou', '更新检查失败',
+                              '枫叶内测版,感谢您的理解\n' + error_message, "", True)
         dialog.exec()
