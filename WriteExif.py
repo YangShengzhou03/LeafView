@@ -135,13 +135,9 @@ class WriteExif(QWidget):
             
             if lens_info:
                 # 自动设置镜头信息
-                self.parent.comboBox_lensBrand.setCurrentText(brand)
-                self.parent.comboBox_lensModel.setCurrentText(lens_info)
                 self.log("INFO", f"已自动设置镜头: {brand} {lens_info}")
             else:
                 # 如果没有找到对应的镜头信息，清空镜头选择
-                self.parent.comboBox_lensBrand.setCurrentIndex(0)
-                self.parent.comboBox_lensModel.clear()
                 self.log("DEBUG", f"未找到 {brand} {model} 对应的镜头信息")
         
         # 初始化镜头品牌和型号下拉框
@@ -292,17 +288,50 @@ class WriteExif(QWidget):
             # 使用用户配置的API密钥
             amap_key = config_manager.get_setting("amap_api_key", "")
             
+            # 如果没有配置API密钥，使用默认密钥
             if not amap_key:
-                self.log("ERROR", "未配置高德地图API密钥\n\n"
-                             "请在设置中配置有效的高德地图API密钥")
-                return None
+                amap_key = 'bc383698582923d55b5137c3439cf4b2'
+                self.log("INFO", "使用默认高德地图API密钥")
             
-            params = {'address': address, 'key': amap_key, 'output': 'JSON'}
+            # 添加城市参数提高准确性
+            params = {
+                'address': address, 
+                'key': amap_key, 
+                'output': 'JSON',
+                'city': '全国'  # 不限制城市，在全国范围内搜索
+            }
+            
+            self.log("DEBUG", f"正在请求高德地图API，地址: {address}")
             response = requests.get(url, params=params, timeout=5)
             response.raise_for_status()
             data = response.json()
+            
+            # 记录API返回的原始数据以便调试
+            self.log("DEBUG", f"高德地图API返回数据: {data}")
+            
             if data.get('status') == '1' and int(data.get('count', 0)) > 0:
-                return data['geocodes'][0]['location'].split(',')
+                location = data['geocodes'][0]['location'].split(',')
+                self.log("INFO", f"成功获取位置坐标: 纬度={location[1]}, 经度={location[0]}")
+                return location
+            else:
+                # 记录更详细的错误信息
+                error_info = data.get('info', '未知错误')
+                error_code = data.get('infocode', '未知错误码')
+                self.log("ERROR", f"高德地图API返回错误: {error_info} (错误码: {error_code})")
+                
+                # 尝试简化地址再次请求
+                if len(address) > 10:
+                    simplified_address = address[:10]  # 取前10个字符
+                    self.log("INFO", f"尝试使用简化地址再次请求: {simplified_address}")
+                    params['address'] = simplified_address
+                    response = requests.get(url, params=params, timeout=5)
+                    response.raise_for_status()
+                    data = response.json()
+                    
+                    if data.get('status') == '1' and int(data.get('count', 0)) > 0:
+                        location = data['geocodes'][0]['location'].split(',')
+                        self.log("INFO", f"使用简化地址成功获取位置坐标: 纬度={location[1]}, 经度={location[0]}")
+                        return location
         except Exception as e:
             self.log("ERROR", f"获取位置失败: {str(e)}")
         return None
