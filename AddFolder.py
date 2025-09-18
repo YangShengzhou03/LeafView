@@ -227,13 +227,6 @@ class FolderPage(QtWidgets.QWidget):
             # 检查文件夹中是否有媒体文件
             self._check_media_files(folder_path)
             
-            # 添加成功提示
-            QMessageBox.information(
-                self, 
-                "添加成功", 
-                f"✅ 成功添加文件夹: {folder_name}\n\n"
-                f"路径: {folder_path}"
-            )
         except Exception as e:
             print(f"添加文件夹过程中发生错误: {e}")
             QMessageBox.critical(
