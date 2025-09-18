@@ -239,7 +239,6 @@ class SmartArrangeThread(QtCore.QThread):
                 self.log("ERROR", f"处理文件 {old_path} 时出错: {str(e)}")
 
     def organize_without_classification(self, folder_path):
-        self.log("INFO", f"不进行分类，仅重命名文件在 {folder_path}")
         folder_path = Path(folder_path)
         
         # 添加调试信息
@@ -276,9 +275,7 @@ class SmartArrangeThread(QtCore.QThread):
         self.log("INFO", f"处理完成，共移动 {file_count} 个文件")
 
     def delete_empty_folders(self):
-        """删除所有处理过的文件夹中的空文件夹"""
-        self.log("INFO", "开始删除空文件夹...")
-        
+        """删除所有处理过的文件夹中的空文件夹"""        
         deleted_count = 0
         processed_folders = set()
         

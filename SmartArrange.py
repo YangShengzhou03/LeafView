@@ -255,7 +255,7 @@ class SmartArrange(QtWidgets.QWidget):
         """整理线程完成时的处理"""
         self.parent.toolButton_startSmartArrange.setText("开始整理")
         self.SmartArrange_thread = None
-        self.log("INFO", "整理任务已完成！")
+        self.log("DEBUG", "智能整理已完成！")
         self.update_progress_bar(100)
         
         # 显示完成提示
