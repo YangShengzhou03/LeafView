@@ -557,7 +557,9 @@ class FolderPage(QtWidgets.QWidget):
                 break
 
     def _remove_folder_item(self, folder_frame):
-        """移除文件夹项（内部方法）"""
+        """
+        移除文件夹项（内部方法）
+        """
         try:
             # 移除文件夹项
             for i, item in enumerate(self.folder_items):
@@ -587,14 +589,14 @@ class FolderPage(QtWidgets.QWidget):
                         print(f"移除文件夹配置失败: {e}")
                     break
             
-            # 更新布局，重新排列剩余的文件夹项
-            # 先清空所有行
-            while self.parent.gridLayout_6.count() > 0:
-                item = self.parent.gridLayout_6.takeAt(0)
-                if item.widget():
-                    item.widget().deleteLater()
+            # 重新排列剩余的文件夹项，修复只移除选中项的问题
+            # 移除所有已有的布局项但不删除widget
+            for i in reversed(range(self.parent.gridLayout_6.count())):
+                layout_item = self.parent.gridLayout_6.itemAt(i)
+                if layout_item and layout_item.widget():
+                    self.parent.gridLayout_6.removeItem(layout_item)
             
-            # 重新添加所有文件夹项
+            # 重新添加所有剩余的文件夹项
             for row, item in enumerate(self.folder_items):
                 self.parent.gridLayout_6.addWidget(item['frame'], row, 0)
             
