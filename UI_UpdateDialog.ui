@@ -194,14 +194,14 @@ color: rgb(255, 255, 255);
                   <widget class="QPushButton" name="pushButton_cancel">
                    <property name="minimumSize">
                     <size>
-                     <width>75</width>
-                     <height>25</height>
+                     <width>88</width>
+                     <height>30</height>
                     </size>
                    </property>
                    <property name="maximumSize">
                     <size>
-                     <width>75</width>
-                     <height>25</height>
+                     <width>88</width>
+                     <height>30</height>
                     </size>
                    </property>
                    <property name="styleSheet">
@@ -248,7 +248,7 @@ QPushButton:pressed {
     border: none;
     border-radius: 8px;
     font-family: 'Microsoft YaHei';
-    font-size: 14px;
+    font-size: 12px;
 }
 
 QPushButton:hover {
