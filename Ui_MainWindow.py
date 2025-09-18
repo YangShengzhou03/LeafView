@@ -580,11 +580,6 @@ class Ui_MainWindow(object):
         self.pushButton_add_folder.setStyleSheet("QPushButton {\n"
 "    color: #333333;\n"
 "    border: none;\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    padding-top: 1px;\n"
-"    padding-left: 2px;\n"
 "}")
         self.pushButton_add_folder.setObjectName("pushButton_add_folder")
         self.horizontalLayout_31.addWidget(self.pushButton_add_folder)
@@ -1416,18 +1411,22 @@ class Ui_MainWindow(object):
         self.label_buildName.setObjectName("label_buildName")
         self.horizontalLayout_45.addWidget(self.label_buildName)
         self.frame_Rename = QtWidgets.QFrame(parent=self.rename_Frame)
-        self.frame_Rename.setMinimumSize(QtCore.QSize(36, 36))
+        self.frame_Rename.setMinimumSize(QtCore.QSize(88, 36))
         self.frame_Rename.setMaximumSize(QtCore.QSize(800, 36))
         self.frame_Rename.setSizeIncrement(QtCore.QSize(0, 32))
-        self.frame_Rename.setStyleSheet("QFrame{\n"
-"    background:rgb(248, 250, 251);\n"
-"    border-radius:12px;\n"
+        self.frame_Rename.setStyleSheet("QFrame {\n"
+"    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, \n"
+"                              stop:0 rgb(251, 253, 254), \n"
+"                              stop:0.4 rgb(248, 250, 251), \n"
+"                              stop:1 rgb(246, 248, 249));\n"
+"    border-radius: 6px;\n"
+"    border: 1px solid rgba(230, 235, 240, 0.8);\n"
 "}")
         self.frame_Rename.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.frame_Rename.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.frame_Rename.setObjectName("frame_Rename")
         self.horizontalLayout_53 = QtWidgets.QHBoxLayout(self.frame_Rename)
-        self.horizontalLayout_53.setContentsMargins(9, 6, 9, 6)
+        self.horizontalLayout_53.setContentsMargins(9, 0, 9, 0)
         self.horizontalLayout_53.setSpacing(9)
         self.horizontalLayout_53.setObjectName("horizontalLayout_53")
         self.horizontalLayout_45.addWidget(self.frame_Rename)
@@ -2084,7 +2083,7 @@ class Ui_MainWindow(object):
 "  text-align: center;\n"
 "  background-color: #FFFFFF;\n"
 "  border: 1px solid #D4D4D4;\n"
-"  border-radius: 10px;\n"
+"  border-radius: 6px;\n"
 "  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);\n"
 "  color: #DADADA;\n"
 "  font-weight: bold;\n"
@@ -2170,7 +2169,7 @@ class Ui_MainWindow(object):
 "    );\n"
 "    background: rgb(245, 249, 254);\n"
 "    padding: 8px;\n"
-"    border-radius: 12px;\n"
+"    border-radius: 6px;\n"
 "    font-family: \'Segoe UI\', \'Microsoft YaHei\', sans-serif;\n"
 "    font-size: 14px;\n"
 "    color: #333;\n"
@@ -2242,6 +2241,7 @@ class Ui_MainWindow(object):
 "    );\n"
 "    box-shadow: 0 0 0 2px rgba(134, 119, 253, 0.15);\n"
 "}")
+        self.textEdit_SmartArrange_Log.setReadOnly(True)
         self.textEdit_SmartArrange_Log.setObjectName("textEdit_SmartArrange_Log")
         self.horizontalLayout_37.addWidget(self.textEdit_SmartArrange_Log)
         self.verticalLayout_34.addWidget(self.horizontalFrame_2)
@@ -2354,10 +2354,9 @@ class Ui_MainWindow(object):
 "  text-align: center;\n"
 "  background-color: #FFFFFF;\n"
 "  border: 1px solid #D4D4D4;\n"
-"  border-radius: 10px;\n"
+"  border-radius: 6px;\n"
 "  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);\n"
 "  color: #DADADA;\n"
-"  font-weight: bold;\n"
 "}\n"
 "\n"
 "QProgressBar::chunk {\n"
@@ -2527,7 +2526,7 @@ class Ui_MainWindow(object):
         self.scrollArea_pageSimilar.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.scrollArea_pageSimilar.setObjectName("scrollArea_pageSimilar")
         self.scrollAreaWidgetContents_Contrast = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_Contrast.setGeometry(QtCore.QRect(0, 0, 100, 30))
+        self.scrollAreaWidgetContents_Contrast.setGeometry(QtCore.QRect(0, 0, 228, 474))
         self.scrollAreaWidgetContents_Contrast.setObjectName("scrollAreaWidgetContents_Contrast")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents_Contrast)
         self.gridLayout_2.setObjectName("gridLayout_2")
@@ -2551,29 +2550,33 @@ class Ui_MainWindow(object):
 "    color: white;\n"
 "    border: none;\n"
 "    padding: 6px 6px;\n"
-"    border-radius: 10px;\n"
+"    border-radius: 6px;\n"
 "    background-color: qradialgradient(\n"
 "        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(204, 0, 0, 255),\n"
-"        stop:1 rgba(153, 0, 0, 255)\n"
+"        stop:0.66 rgba(180, 0, 0, 255),  /* 稍暗的红色 */\n"
+"        stop:1 rgba(130, 0, 0, 255)     /* 更深的暗红色 */\n"
 "    );\n"
 "    font-size: 12px;\n"
+"    /* 增加轻微阴影增强立体感 */\n"
+"    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);\n"
 "}\n"
 "\n"
 "QToolButton:hover {\n"
 "    background-color: qradialgradient(\n"
 "        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(220, 0, 0, 255),\n"
-"        stop:1 rgba(170, 0, 0, 255)\n"
+"        stop:0.66 rgba(200, 0, 0, 255),  /*  hover时稍亮一点 */\n"
+"        stop:1 rgba(150, 0, 0, 255)\n"
 "    );\n"
 "}\n"
 "\n"
 "QToolButton:pressed {\n"
 "    background-color: qradialgradient(\n"
 "        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(180, 0, 0, 255),\n"
-"        stop:1 rgba(128, 0, 0, 255)\n"
+"        stop:0.66 rgba(160, 0, 0, 255),  /* 按下时更暗 */\n"
+"        stop:1 rgba(110, 0, 0, 255)\n"
 "    );\n"
+"    /* 按下时阴影内缩，增强按压感 */\n"
+"    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);\n"
 "}")
         self.toolButton_delete.setIconSize(QtCore.QSize(24, 24))
         self.toolButton_delete.setObjectName("toolButton_delete")
@@ -2584,30 +2587,54 @@ class Ui_MainWindow(object):
         self.toolButton_move.setStyleSheet("QToolButton {\n"
 "    color: white;\n"
 "    border: none;\n"
-"    padding: 6px 6px;\n"
-"    border-radius: 10px;\n"
-"    background-color: qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(134, 119, 253, 255),\n"
-"        stop:1 rgba(119, 111, 252, 255)\n"
+"    padding: 6px 12px; /* 增加水平内边距，视觉更平衡 */\n"
+"    border-radius: 6px;\n"
+"    /* 改用线性渐变，增加层次感和现代感 */\n"
+"    background: qlineargradient(\n"
+"        x1:0, y1:0, x2:0, y2:1,\n"
+"        stop:0 rgba(145, 128, 255, 255),\n"
+"        stop:1 rgba(105, 92, 245, 255)\n"
 "    );\n"
 "    font-size: 12px;\n"
+"    font-weight: 500; /* 轻微加粗文字，提升可读性 */\n"
+"    /* 增加微妙阴影，增强立体感 */\n"
+"    box-shadow: 0 2px 5px rgba(119, 111, 252, 0.3);\n"
+"    /* 过渡动画，使状态变化更平滑 */\n"
+"    transition: all 0.2s ease;\n"
 "}\n"
 "\n"
 "QToolButton:hover {\n"
-"    background-color: qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(154, 139, 255, 255),\n"
-"        stop:1 rgba(139, 131, 254, 255)\n"
+"    background: qlineargradient(\n"
+"        x1:0, y1:0, x2:0, y2:1,\n"
+"        stop:0 rgba(160, 143, 255, 255),\n"
+"        stop:1 rgba(120, 107, 255, 255)\n"
 "    );\n"
+"    /* 悬停时轻微放大并加深阴影 */\n"
+"    transform: translateY(-1px);\n"
+"    box-shadow: 0 4px 8px rgba(119, 111, 252, 0.4);\n"
 "}\n"
 "\n"
 "QToolButton:pressed {\n"
-"    background-color: qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(94, 79, 253, 255),\n"
-"        stop:1 rgba(79, 71, 252, 255)\n"
+"    background: qlineargradient(\n"
+"        x1:0, y1:0, x2:0, y2:1,\n"
+"        stop:0 rgba(100, 85, 240, 255),\n"
+"        stop:1 rgba(80, 68, 225, 255)\n"
 "    );\n"
+"    /* 按下时恢复位置并添加内阴影 */\n"
+"    transform: translateY(0);\n"
+"    box-shadow: inset 0 2px 4px rgba(70, 58, 200, 0.3);\n"
+"}\n"
+"\n"
+"/* 禁用状态样式，提升完整性 */\n"
+"QToolButton:disabled {\n"
+"    background: qlineargradient(\n"
+"        x1:0, y1:0, x2:0, y2:1,\n"
+"        stop:0 rgba(180, 170, 230, 255),\n"
+"        stop:1 rgba(150, 140, 210, 255)\n"
+"    );\n"
+"    color: rgba(255, 255, 255, 0.7);\n"
+"    box-shadow: none;\n"
+"    transform: none;\n"
 "}")
         self.toolButton_move.setIconSize(QtCore.QSize(24, 24))
         self.toolButton_move.setObjectName("toolButton_move")
@@ -2618,30 +2645,50 @@ class Ui_MainWindow(object):
         self.toolButton_autoSelect.setStyleSheet("QToolButton {\n"
 "    color: white;\n"
 "    border: none;\n"
-"    padding: 6px 6px;\n"
-"    border-radius: 10px;\n"
-"    background-color: qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(134, 119, 253, 255),\n"
-"        stop:1 rgba(119, 111, 252, 255)\n"
+"    padding: 2px 4px; /* 优化内边距比例 */\n"
+"    border-radius: 6px;\n"
+"    /* 改用线性渐变增强现代感，使用清新的绿色调 */\n"
+"    background: qlineargradient(\n"
+"        x1:0, y1:0, x2:0, y2:1,\n"
+"        stop:0 rgba(76, 209, 135, 255),  /* 亮绿色 */\n"
+"        stop:1 rgba(57, 181, 114, 255)   /* 深绿色 */\n"
 "    );\n"
 "    font-size: 12px;\n"
+"    font-weight: 500; /* 提升文字清晰度 */\n"
+"    box-shadow: 0 2px 5px rgba(57, 181, 114, 0.3); /* 增加立体感 */\n"
+"    transition: all 0.2s ease; /* 平滑过渡效果 */\n"
 "}\n"
 "\n"
 "QToolButton:hover {\n"
-"    background-color: qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(154, 139, 255, 255),\n"
-"        stop:1 rgba(139, 131, 254, 255)\n"
+"    background: qlineargradient(\n"
+"        x1:0, y1:0, x2:0, y2:1,\n"
+"        stop:0 rgba(86, 219, 145, 255),\n"
+"        stop:1 rgba(67, 191, 124, 255)\n"
 "    );\n"
+"    transform: translateY(-1px); /* 轻微上浮效果 */\n"
+"    box-shadow: 0 4px 8px rgba(57, 181, 114, 0.4); /* 增强阴影 */\n"
 "}\n"
 "\n"
 "QToolButton:pressed {\n"
-"    background-color: qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(94, 79, 253, 255),\n"
-"        stop:1 rgba(79, 71, 252, 255)\n"
+"    background: qlineargradient(\n"
+"        x1:0, y1:0, x2:0, y2:1,\n"
+"        stop:0 rgba(56, 189, 125, 255),\n"
+"        stop:1 rgba(47, 171, 104, 255)\n"
 "    );\n"
+"    transform: translateY(0); /* 恢复位置 */\n"
+"    box-shadow: inset 0 2px 4px rgba(40, 150, 90, 0.3); /* 内阴影增强按压感 */\n"
+"}\n"
+"\n"
+"/* 补充禁用状态样式 */\n"
+"QToolButton:disabled {\n"
+"    background: qlineargradient(\n"
+"        x1:0, y1:0, x2:0, y2:1,\n"
+"        stop:0 rgba(160, 220, 190, 255),\n"
+"        stop:1 rgba(140, 200, 170, 255)\n"
+"    );\n"
+"    color: rgba(255, 255, 255, 0.7);\n"
+"    box-shadow: none;\n"
+"    transform: none;\n"
 "}")
         self.toolButton_autoSelect.setIconSize(QtCore.QSize(24, 24))
         self.toolButton_autoSelect.setObjectName("toolButton_autoSelect")
@@ -3631,7 +3678,7 @@ class Ui_MainWindow(object):
 "        stop:1 rgba(119, 111, 252, 255)\n"
 "    );\n"
 "    background: rgb(245, 249, 254);\n"
-"    padding: 8px 6px;\n"
+"    padding: 4px 2px;\n"
 "    border-radius: 6px;\n"
 "    color: #333;\n"
 "    selection-background-color: rgba(134, 119, 253, 180);\n"
@@ -3667,7 +3714,7 @@ class Ui_MainWindow(object):
 "        stop:1 rgba(119, 111, 252, 255)\n"
 "    );\n"
 "    background: rgb(245, 249, 254);\n"
-"    padding: 8px 6px;\n"
+"    padding: 4px 2px;\n"
 "    border-radius: 6px;\n"
 "    color: #333;\n"
 "    selection-background-color: rgba(134, 119, 253, 180);\n"
@@ -3794,7 +3841,7 @@ class Ui_MainWindow(object):
 "  text-align: center;\n"
 "  background-color: #FFFFFF;\n"
 "  border: 1px solid #D4D4D4;\n"
-"  border-radius: 10px;\n"
+"  border-radius: 6px;\n"
 "  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);\n"
 "  color: #DADADA;\n"
 "  font-weight: bold;\n"
@@ -3880,7 +3927,7 @@ class Ui_MainWindow(object):
 "    );\n"
 "    background: rgb(245, 249, 254);\n"
 "    padding: 8px;\n"
-"    border-radius: 12px;\n"
+"    border-radius: 6px;\n"
 "    font-family: \'Segoe UI\', \'Microsoft YaHei\', sans-serif;\n"
 "    font-size: 14px;\n"
 "    color: #333;\n"
@@ -3988,8 +4035,8 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "属性写入"))
         self.listWidget_base.setSortingEnabled(__sortingEnabled)
         self.pushButton_add_folder.setText(_translate("MainWindow", "添加文件夹"))
-        self.label_add_folder.setText(_translate("MainWindow", "手动添加或拖动文件夹到此处"))
-        self.label.setText(_translate("MainWindow", "功能正在建设中..."))
+        self.label_add_folder.setText(_translate("MainWindow", "点击添加或拖动文件夹到此处"))
+        self.label.setText(_translate("MainWindow", "正在建设中..."))
         self.label_classification.setText(_translate("MainWindow", "文件夹整理："))
         self.label_route.setText(_translate("MainWindow", "目录"))
         self.label_25.setText(_translate("MainWindow", "\\"))
@@ -4069,7 +4116,7 @@ class Ui_MainWindow(object):
         self.toolButton_move.setText(_translate("MainWindow", "移动"))
         self.toolButton_autoSelect.setText(_translate("MainWindow", "自动选择"))
         self.label_35.setText(_translate("MainWindow", "标题"))
-        self.lineEdit_EXIF_Title.setPlaceholderText(_translate("MainWindow", "佳期如梦"))
+        self.lineEdit_EXIF_Title.setPlaceholderText(_translate("MainWindow", "图像标题"))
         self.label_star.setText(_translate("MainWindow", "星级"))
         self.label_36.setText(_translate("MainWindow", "品牌"))
         self.comboBox_brand.setItemText(0, _translate("MainWindow", "不写入"))
@@ -4077,7 +4124,7 @@ class Ui_MainWindow(object):
         self.label_38.setText(_translate("MainWindow", "作者"))
         self.lineEdit_EXIF_Author.setPlaceholderText(_translate("MainWindow", "YangShengzhou"))
         self.label_39.setText(_translate("MainWindow", "主题"))
-        self.lineEdit_EXIF_Theme.setPlaceholderText(_translate("MainWindow", "上海神奇之旅"))
+        self.lineEdit_EXIF_Theme.setPlaceholderText(_translate("MainWindow", "图像主题"))
         self.label_40.setText(_translate("MainWindow", "版权"))
         self.lineEdit_EXIF_Copyright.setPlaceholderText(_translate("MainWindow", "©2025 LeafView. "))
         self.label_44.setText(_translate("MainWindow", "拍摄时间"))

@@ -19,13 +19,14 @@ logger = logging.getLogger(__name__)
 class ConfigManager:
     """配置管理器类"""
     
-    def __init__(self, config_file: str = "leafview_config.json"):
+    def __init__(self, config_file: str = "_internal/leafview_config.json"):
         """
         初始化配置管理器
         
         Args:
             config_file: 配置文件路径
         """
+        # 确保配置文件路径指向_internal文件夹
         self.config_file = Path(config_file)
         self.config = self._load_config()
     

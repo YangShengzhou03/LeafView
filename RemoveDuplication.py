@@ -211,11 +211,11 @@ class Contrast(QtWidgets.QWidget):
     def delete_selected_images(self):
         """删除选中的图片（移动到回收站）"""
         if not self.selected_images:
-            QtWidgets.QMessageBox.information(self, "ℹ️ 提示", "当前没有选中任何图片\n\n"
+            QtWidgets.QMessageBox.information(self, "提示", "当前没有选中任何图片\n\n"
                                            "请先选择要删除的重复图片")
             return
             
-        reply = QtWidgets.QMessageBox.question(self, '⚠️ 确认删除', 
+        reply = QtWidgets.QMessageBox.question(self, '确认删除', 
                                              f"确定要将选中的 {len(self.selected_images)} 张图片移动到回收站吗？\n\n"
                                              "⚠️ 此操作不可撤销，建议先备份重要文件。\n\n"
                                              "删除后可在回收站中恢复。",
@@ -233,7 +233,7 @@ class Contrast(QtWidgets.QWidget):
                 success_count += 1
             except Exception as e:
                 failed_count += 1
-                QtWidgets.QMessageBox.warning(self, "❌ 删除失败", 
+                QtWidgets.QMessageBox.warning(self, "删除失败", 
                                            f"无法删除图片 {os.path.basename(img)}: {str(e)}\n\n"
                                            "可能的原因：\n"
                                            "• 文件正在被其他程序使用\n"
@@ -242,7 +242,7 @@ class Contrast(QtWidgets.QWidget):
         
         # 显示操作结果
         if success_count > 0:
-            QtWidgets.QMessageBox.information(self, "✅ 操作完成", 
+            QtWidgets.QMessageBox.information(self, "操作完成", 
                                              f"成功删除 {success_count} 张图片到回收站{f'，{failed_count} 张删除失败' if failed_count > 0 else ''}\n\n"
                                              "您可以在回收站中查看或恢复已删除的文件。")
         
@@ -264,7 +264,7 @@ class Contrast(QtWidgets.QWidget):
         """开始相似图片检测流程"""
         folders = self.folder_page.get_all_folders() if self.folder_page else []
         if not folders:
-            QtWidgets.QMessageBox.warning(self, "⚠️ 操作提示", 
+            QtWidgets.QMessageBox.warning(self, "操作提示", 
                                        "请先导入包含图片的文件夹\n\n"
                                        "点击导入文件夹按钮添加要检测的文件夹")
             return
@@ -291,7 +291,7 @@ class Contrast(QtWidgets.QWidget):
         
         # 检查是否找到图片
         if not image_paths:
-            QtWidgets.QMessageBox.information(self, "ℹ️ 提示", 
+            QtWidgets.QMessageBox.information(self, "提示", 
                                            "在所选文件夹中未找到支持的图片文件\n\n"
                                            "支持的格式：.jpg/.jpeg/.png/.bmp/.gif/.webp/.tif/.tiff/.heif/.heic\n"
                                            "请检查文件夹路径和文件格式")
@@ -301,11 +301,11 @@ class Contrast(QtWidgets.QWidget):
         
         # 限制处理图片数量，避免内存溢出
         if len(image_paths) > 1000:
-            reply = QtWidgets.QMessageBox.question(self, "⚠️ 图片数量较多", 
-                                                  f"检测到 {len(image_paths)} 张图片，处理可能需要一些时间。是否继续？\n\n"
+            reply = QtWidgets.QMessageBox.question(self, "图片数量较多", 
+                                                  f"检测到 {len(image_paths)} 张图片，您电脑配置较低，可能需要一些时间。还继续吗？\n\n"
                                                   "处理大量图片时：\n"
-                                                  "• 可能需要几分钟到几十分钟\n"
-                                                  "• 会占用较多内存资源",
+                                                  "• 可能需要几分钟甚至几十分钟\n"
+                                                  "• 会占用较多内存和CPU资源",
                                                   QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No,
                                                   QtWidgets.QMessageBox.StandardButton.Yes)
             if reply != QtWidgets.QMessageBox.StandardButton.Yes:
@@ -336,7 +336,7 @@ class Contrast(QtWidgets.QWidget):
     def on_hashes_computed(self, hashes):
         """哈希计算完成处理"""
         if not hashes:
-            QtWidgets.QMessageBox.information(self, "ℹ️ 提示", 
+            QtWidgets.QMessageBox.information(self, "提示", 
                                            "未成功计算任何图片的哈希值\n\n"
                                            "可能的原因：\n"
                                            "• 图片格式不受支持\n"
@@ -376,7 +376,7 @@ class Contrast(QtWidgets.QWidget):
 
     def on_hash_error(self, error_msg):
         """哈希计算错误处理"""
-        QtWidgets.QMessageBox.warning(self, "❌ 计算错误", 
+        QtWidgets.QMessageBox.warning(self, "计算错误", 
                                    f"图片哈希计算过程中发生错误：{error_msg}\n\n"
                                    "可能的原因：\n"
                                    "• 图片文件损坏\n"
@@ -409,7 +409,7 @@ class Contrast(QtWidgets.QWidget):
         self.parent.toolButton_startContrast.clicked.disconnect()
         self.parent.toolButton_startContrast.clicked.connect(self.startContrast)
         
-        QtWidgets.QMessageBox.information(self, "⏹️ 处理已停止", 
+        QtWidgets.QMessageBox.information(self, "处理已停止", 
                                        "图片处理任务已被用户中断\n\n"
                                        "已保存当前处理进度，您可以稍后继续处理。")
 

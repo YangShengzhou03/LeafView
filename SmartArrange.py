@@ -468,9 +468,8 @@ class SmartArrange(QtWidgets.QWidget):
                 # 存储用户实际输入的内容到新属性中
                 button.setProperty('custom_content', custom_text)
             else:
-                # 用户取消或未输入，不移动标签
-                self.log("INFO", "用户取消了自定义标签输入")
                 return
+        # 非自定义标签保持完整显示
         
         # 从原布局中移除按钮
         self.available_layout.removeWidget(button)
@@ -494,42 +493,6 @@ class SmartArrange(QtWidgets.QWidget):
                 if btn.parent() == self.available_layout:
                     btn.setEnabled(False)
     
-    def move_tag_back(self, button):
-        """将标签移回可用区域
-        
-        Args:
-            button: 要移回的按钮对象
-        """
-        # 从已选布局中移除按钮
-        self.selected_layout.removeWidget(button)
-        
-        # 恢复原始样式
-        if button.property('original_style') is not None:
-            button.setStyleSheet(button.property('original_style'))
-        
-        # 恢复原始文本（特别是自定义标签）
-        if button.property('original_text') is not None:
-            button.setText(button.property('original_text'))
-        
-        # 清理自定义内容属性
-        if button.property('custom_content') is not None:
-            button.setProperty('custom_content', None)
-        
-        # 添加回原布局
-        self.available_layout.addWidget(button)
-        
-        # 更新点击事件
-        button.clicked.disconnect()
-        button.clicked.connect(lambda checked, b=button: self.move_tag(b))
-        
-        # 重新启用所有可用标签
-        for btn in self.tag_buttons.values():
-            if btn.parent() == self.available_layout:
-                btn.setEnabled(True)
-        
-        # 更新示例文件名
-        self.update_example_label()
-
     def update_example_label(self):
         """更新示例文件名显示"""
         now = datetime.now()
@@ -549,7 +512,7 @@ class SmartArrange(QtWidgets.QWidget):
                 display_content = custom_content[:3] if len(custom_content) > 3 else custom_content
                 example_parts.append(display_content)
             else:
-                # 其他标签使用预设的示例值
+                # 其他标签使用完整的示例值
                 parts = {
                     "原文件名": "DSC_1234",
                     "年份": f"{now.year}",
@@ -562,8 +525,7 @@ class SmartArrange(QtWidgets.QWidget):
                     "自定义": "自定义内容"
                 }
                 full_text = parts.get(button_text, button_text)
-                display_text = full_text[:3] if len(full_text) > 3 else full_text
-                example_parts.append(display_text)
+                example_parts.append(full_text)  # 显示完整文本
         
         # 构建示例文本
         example_text = current_separator.join(example_parts) if example_parts else "请点击标签以组成文件名"
@@ -611,3 +573,38 @@ class SmartArrange(QtWidgets.QWidget):
         current_time = datetime.now().strftime('%H:%M:%S')
         log_message = f"[{current_time}] [{level}] {message}"
         self.log_signal.emit(level, log_message)  # 发射日志信号
+
+
+    def move_tag_back(self, button):
+        """将标签从已选区域移回可用区域
+        
+        Args:
+            button: 要移回的按钮对象
+        """
+        # 从已选区域移除按钮
+        self.selected_layout.removeWidget(button)
+        
+        # 添加到可用区域
+        self.available_layout.addWidget(button)
+        
+        # 恢复按钮的原始样式
+        if button.property('original_style') is not None:
+            button.setStyleSheet(button.property('original_style'))
+        
+        # 恢复按钮的原始文本
+        if button.property('original_text') is not None:
+            button.setText(button.property('original_text'))
+        
+        # 更新点击事件
+        button.clicked.disconnect()
+        button.clicked.connect(lambda checked, b=button: self.move_tag(b))
+        
+        # 更新示例文件名
+        self.update_example_label()
+        
+        # 更新操作类型显示
+        self.update_operation_display()
+        
+        # 重新启用所有可用标签
+        for btn in self.tag_buttons.values():
+            btn.setEnabled(True)

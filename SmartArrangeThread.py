@@ -740,24 +740,39 @@ class SmartArrangeThread(QtCore.QThread):
         elif level == "星期" and file_time:
             weekdays = ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"]
             return weekdays[file_time.weekday()]
-        elif level == "拍摄设备" and exif_data.get('Make'):
-            # 拍摄设备：使用相机品牌作为文件夹名称
-            return exif_data['Make']
-        elif level == "设备品牌" and exif_data.get('Make'):
-            return exif_data['Make']
-        elif level == "设备型号" and exif_data.get('Model'):
-            return exif_data['Model']
-        elif level == "拍摄省份" and exif_data.get('GPS GPSLatitude') and exif_data.get('GPS GPSLongitude'):
-            province, city = self.get_city_and_province(exif_data['GPS GPSLatitude'], exif_data['GPS GPSLongitude'])
-            return province
-        elif level == "拍摄城市" and exif_data.get('GPS GPSLatitude') and exif_data.get('GPS GPSLongitude'):
-            province, city = self.get_city_and_province(exif_data['GPS GPSLatitude'], exif_data['GPS GPSLongitude'])
-            return city
+        elif level == "拍摄设备":
+            if exif_data.get('Make'):
+                # 拍摄设备：使用相机品牌作为文件夹名称
+                return exif_data['Make']
+            else:
+                return "未知设备"
+        elif level == "设备品牌":
+            if exif_data.get('Make'):
+                return exif_data['Make']
+            else:
+                return "未知设备"
+        elif level == "设备型号":
+            if exif_data.get('Model'):
+                return exif_data['Model']
+            else:
+                return "未知设备"
+        elif level == "拍摄省份":
+            if exif_data.get('GPS GPSLatitude') and exif_data.get('GPS GPSLongitude'):
+                province, city = self.get_city_and_province(exif_data['GPS GPSLatitude'], exif_data['GPS GPSLongitude'])
+                return province
+            else:
+                return "未知省份"
+        elif level == "拍摄城市":
+            if exif_data.get('GPS GPSLatitude') and exif_data.get('GPS GPSLongitude'):
+                province, city = self.get_city_and_province(exif_data['GPS GPSLatitude'], exif_data['GPS GPSLongitude'])
+                return city
+            else:
+                return "未知城市"
         elif level == "文件类型":
             return get_file_type(file_path)
         else:
-            # 对于未知的分类级别，使用原文件名或其他默认值
-            return "其他"
+            # 对于未知的分类级别，使用具体的未知描述
+            return "未知"
 
     def get_file_name_part(self, tag, file_path, file_time, original_name):
         """根据标签获取文件名的组成部分"""
