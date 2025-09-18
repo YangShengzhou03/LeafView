@@ -400,7 +400,7 @@ class WriteExifThread(QThread):
 
     def get_date_from_filename(self, image_path):
         """
-        从文件名中提取日期时间信息
+        从文件名中提取日期时间信息，支持多种格式，包括中文日期格式
         
         Args:
             image_path: 图像文件路径
@@ -411,13 +411,14 @@ class WriteExifThread(QThread):
         base_name = os.path.basename(image_path)
         name_without_ext = os.path.splitext(base_name)[0]
         
-        # 日期时间正则表达式模式
-        date_pattern = r'(?P<year>\d{4})[^0-9]*' \
-                       r'(?P<month>1[0-2]|0?[1-9])[^0-9]*' \
-                       r'(?P<day>3[01]|[12]\d|0?[1-9])[^0-9]*' \
-                       r'(?P<hour>2[0-3]|[01]?\d)?[^0-9]*' \
-                       r'(?P<minute>[0-5]?\d)?[^0-9]*' \
-                       r'(?P<second>[0-5]?\d)?'
+        # 日期时间正则表达式模式 - 增强版支持中文格式
+        # 匹配格式如：2024年9月23日、2024-09-23、2024.09.23、2024/09/23等
+        date_pattern = r'(?P<year>\d{4})[年\-\.\/\s]?' \
+                       r'(?P<month>1[0-2]|0?[1-9])[月\-\.\/\s]?' \
+                       r'(?P<day>3[01]|[12]\d|0?[1-9])[日号\-\.\/\s]?' \
+                       r'(?P<hour>2[0-3]|[01]?\d)?[:点\-\.\/\s]?' \
+                       r'(?P<minute>[0-5]?\d)?[:分\-\.\/\s]?' \
+                       r'(?P<second>[0-5]?\d)?[秒\-\.\/\s]?'
         
         match = re.search(date_pattern, name_without_ext)
         if match:
@@ -463,8 +464,6 @@ class WriteExifThread(QThread):
                             0 <= date_obj.minute <= 59 and
                             0 <= date_obj.second <= 59):
                         return date_obj
-                    else:
-                        return None
                 except ValueError:
                     continue
         return None
