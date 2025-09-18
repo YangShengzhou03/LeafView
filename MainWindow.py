@@ -9,6 +9,9 @@ LeafView 主窗口控制器模块
 """
 
 from PyQt6 import QtWidgets, QtCore, QtGui
+from PyQt6.QtCore import QUrl
+from PyQt6.QtGui import QDesktopServices
+
 from AddFolder import FolderPage
 from SmartArrange import SmartArrange
 from RemoveDuplication import Contrast
@@ -16,7 +19,6 @@ from WriteExif import WriteExif
 from TextRecognition import TextRecognition
 from Ui_MainWindow import Ui_MainWindow
 from UpdateDialog import check_update
-from SettingsDialog import SettingsDialog
 from common import get_resource_path, author
 
 
@@ -79,8 +81,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.toolButton_minimum.clicked.connect(self.showMinimized)  # 最小化窗口
         
         # 功能按钮
-        self.toolButton_serve.clicked.connect(author)  # 服务按钮（显示作者信息）
-        self.toolButton_setting.clicked.connect(self.open_settings)  # 设置按钮（打开设置对话框）
+        self.toolButton_serve.clicked.connect(self.feedback)
+        self.toolButton_setting.clicked.connect(author)
         
         # 页面切换通过listWidget_base自动实现，不需要手动连接按钮
         pass
@@ -88,11 +90,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def _init_text_recognition(self):
         """初始化识字整理功能 - 根据要求暂不实现"""
         pass
-    
-    def open_settings(self):
-        """打开设置对话框"""
-        dialog = SettingsDialog(self)
-        dialog.exec()
 
     def _setup_drag_handlers(self):
         """设置窗口拖拽事件处理器"""
@@ -240,3 +237,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         except ImportError:
             # 如果无法导入QMessageBox，则使用简单的控制台输出
             print(f"[{level.upper()}] {title}: {message}")
+
+    def feedback(self):
+        QDesktopServices.openUrl(QUrl('https://qun.qq.com/universal-share/share?ac=1&authKey=wjyQkU9iG7wc'
+                                      '%2BsIEOWFE6cA0ayLLBdYwpMsKYveyufXSOE5FBe7bb9xxvuNYVsEn&busi_data'
+                                      '=eyJncm91cENvZGUiOiIxMDIxNDcxODEzIiwidG9rZW4iOiJDaFYxYVpySU9FUVJr'
+                                      'RzkwdUZ2QlFVUTQzZzV2VS83TE9mY0NNREluaUZCR05YcnNjWmpKU2V5Q2FYTllFVlJ'
+                                      'MIiwidWluIjoiMzU1NTg0NDY3OSJ9&data=M7fVC3YlI68T2S2VpmsR20t9s_xJj6HNpF'
+                                      '0GGk2ImSQ9iCE8fZomQgrn_ADRZF0Ee4OSY0x6k2tI5P47NlkWug&svctype=4&tempid'
+                                      '=h5_group_info'))
