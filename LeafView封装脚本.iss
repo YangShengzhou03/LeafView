@@ -2,7 +2,7 @@
 ; 有关创建 Inno Setup 脚本文件的详细资料请查阅帮助文档！
 
 #define MyAppName "LeafView"
-#define MyAppVersion "1.2.0.0"
+#define MyAppVersion "1.3.0.0"
 #define MyAppPublisher "Yangshengzhou"
 #define MyAppURL "https://blog.csdn.net/Yang_shengzhou"
 #define AppSupportURL "https://blog.csdn.net/Yang_shengzhou/article/details/143782041"
