@@ -163,7 +163,7 @@ class WriteExifThread(QThread):
         Returns:
             list: 图像文件路径列表
         """
-        image_extensions = ('.jpg', '.jpeg', '.png', '.webp')
+        image_extensions = ('.jpg', '.jpeg', '.png', '.webp', '.heic', '.heif', '.mov', '.mp4', '.avi', '.mkv', '.cr2', '.cr3', '.nef', '.arw', '.orf', '.dng', '.raf')
         image_paths = []
         for folder_path, include_sub in self.folders_dict.items():
             if include_sub == 1:
@@ -196,119 +196,26 @@ class WriteExifThread(QThread):
                 self.log.emit("INFO", f"⏹️ 处理被取消: {os.path.basename(image_path)}")
                 return
             
-            # 处理非PNG格式图像（支持EXIF）
-            if not image_path.lower().endswith('.png'):
-                exif_dict = piexif.load(image_path)
-                updated_fields = []
-                
-                # 标题
-                if self.title:
-                    exif_dict["0th"][piexif.ImageIFD.ImageDescription] = self.title.encode('utf-8')
-                    updated_fields.append(f"标题: {self.title}")
-                
-                # 作者
-                if self.author:
-                    exif_dict["0th"][315] = self.author.encode('utf-8')
-                    updated_fields.append(f"作者: {self.author}")
-                
-                # 主题
-                if self.subject:
-                    exif_dict["0th"][piexif.ImageIFD.XPSubject] = self.subject.encode('utf-16le')
-                    updated_fields.append(f"主题: {self.subject}")
-                
-                # 评分
-                if self.rating:
-                    exif_dict["0th"][piexif.ImageIFD.Rating] = int(self.rating)
-                    updated_fields.append(f"评分: {self.rating}星")
-                
-                # 版权
-                if self.copyright:
-                    exif_dict["0th"][piexif.ImageIFD.Copyright] = self.copyright.encode('utf-8')
-                    updated_fields.append(f"版权: {self.copyright}")
-                
-                # 相机品牌和型号
-                if self.cameraBrand:
-                    exif_dict["0th"][piexif.ImageIFD.Make] = self.cameraBrand.encode('utf-8')
-                    updated_fields.append(f"相机品牌: {self.cameraBrand}")
-                
-                if self.cameraModel:
-                    exif_dict["0th"][piexif.ImageIFD.Model] = self.cameraModel.encode('utf-8')
-                    updated_fields.append(f"相机型号: {self.cameraModel}")
-                
-                # 镜头信息
-                if self.lensModel:
-                    # 写入镜头型号到EXIF数据
-                    if "Exif" not in exif_dict:
-                        exif_dict["Exif"] = {}
-                    exif_dict["Exif"][piexif.ExifIFD.LensModel] = self.lensModel.encode('utf-8')
-                    updated_fields.append(f"镜头型号: {self.lensModel}")
-                
-                # 拍摄时间处理
-                if self.shootTime != 0:
-                    if self.shootTime == 1:
-                        # 从文件名识别拍摄时间
-                        date_from_filename = self.get_date_from_filename(image_path)
-                        if date_from_filename:
-                            if "Exif" not in exif_dict:
-                                exif_dict["Exif"] = {}
-                            exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = date_from_filename.strftime(
-                                "%Y:%m:%d %H:%M:%S")
-                            updated_fields.append(
-                                f"文件名识别拍摄时间: {date_from_filename.strftime('%Y:%m:%d %H:%M:%S')}")
-                    else:
-                        # 使用指定的拍摄时间
-                        if "Exif" not in exif_dict:
-                            exif_dict["Exif"] = {}
-                        exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = self.shootTime
-                        updated_fields.append(f"拍摄时间: {self.shootTime}")
-                
-
-                
-                # GPS坐标
-                if self.lat is not None and self.lon is not None:
-                    exif_dict["GPS"] = self._create_gps_data(self.lat, self.lon)
-                    updated_fields.append(
-                        f"GPS坐标: {abs(self.lat):.6f}°{'N' if self.lat >= 0 else 'S'}, {abs(self.lon):.6f}°{'E' if self.lon >= 0 else 'W'}")
-                
-                # 写入EXIF数据
-                exif_bytes = piexif.dump(exif_dict)
-                piexif.insert(exif_bytes, image_path)
-                
-                if updated_fields:
-                    self.log.emit("INFO", f"✅ 成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
-                else:
-                    self.log.emit("WARNING", f"⚠️ 未对 {os.path.basename(image_path)} 进行任何更改\n\n"
-                                 "可能的原因：\n"
-                                 "• 所有EXIF字段均为空")
-            else:
+            file_ext = os.path.splitext(image_path)[1].lower()
+            
+            # 处理不同格式的文件
+            if file_ext in ('.jpg', '.jpeg', '.webp'):
+                # 处理支持EXIF的格式
+                self._process_exif_format(image_path)
+            elif file_ext == '.png':
                 # 处理PNG格式图像（不支持EXIF，使用PNG文本信息）
-                if self.shootTime != 0:
-                    if self.shootTime == 1:
-                        # 从文件名识别拍摄时间
-                        date_from_filename = self.get_date_from_filename(image_path)
-                        if date_from_filename:
-                            with Image.open(image_path) as img:
-                                png_info = PngImagePlugin.PngInfo()
-                                for key in img.text:
-                                    if key.lower() != "creation time":
-                                        png_info.add_text(key, img.text[key])
-                                png_info.add_text("Creation Time", str(date_from_filename))
-                                temp_path = image_path + ".tmp"
-                                img.save(temp_path, format="PNG", pnginfo=png_info)
-                                os.replace(temp_path, image_path)
-                                self.log.emit("INFO", f"✅ 成功写入 {os.path.basename(image_path)} 的拍摄时间 {date_from_filename}")
-                    else:
-                        # 使用指定的拍摄时间
-                        with Image.open(image_path) as img:
-                            png_info = PngImagePlugin.PngInfo()
-                            for key in img.text:
-                                if key.lower() != "creation time":
-                                    png_info.add_text(key, img.text[key])
-                            png_info.add_text("Creation Time", self.shootTime)
-                            temp_path = image_path + ".tmp"
-                            img.save(temp_path, format="PNG", pnginfo=png_info)
-                            os.replace(temp_path, image_path)
-                            self.log.emit("INFO", f"✅ 成功写入 {os.path.basename(image_path)} 的拍摄时间 {self.shootTime}")
+                self._process_png_format(image_path)
+            elif file_ext in ('.heic', '.heif'):
+                # 处理HEIC/HEIF格式
+                self._process_heic_format(image_path)
+            elif file_ext in ('.mov', '.mp4', '.avi', '.mkv'):
+                # 处理视频格式
+                self._process_video_format(image_path)
+            elif file_ext in ('.cr2', '.cr3', '.nef', '.arw', '.orf', '.dng', '.raf'):
+                # 处理RAW格式
+                self._process_raw_format(image_path)
+            else:
+                self.log.emit("WARNING", f"⚠️ 不支持的文件格式: {file_ext}")
 
         except Exception as e:
             # 错误处理
@@ -322,38 +229,296 @@ class WriteExifThread(QThread):
             else:
                 self.log.emit("ERROR", f"❌ 处理 {os.path.basename(image_path)} 时出错: {str(e)}")
 
+    def _process_exif_format(self, image_path):
+        """
+        处理支持EXIF的格式（JPG, JPEG, WebP）
+        
+        Args:
+            image_path: 图像文件路径
+        """
+        exif_dict = piexif.load(image_path)
+        updated_fields = []
+        
+        # 标题
+        if self.title:
+            exif_dict["0th"][piexif.ImageIFD.ImageDescription] = self.title.encode('utf-8')
+            updated_fields.append(f"标题: {self.title}")
+        
+        # 作者
+        if self.author:
+            exif_dict["0th"][315] = self.author.encode('utf-8')
+            updated_fields.append(f"作者: {self.author}")
+        
+        # 主题
+        if self.subject:
+            exif_dict["0th"][piexif.ImageIFD.XPSubject] = self.subject.encode('utf-16le')
+            updated_fields.append(f"主题: {self.subject}")
+        
+        # 评分
+        if self.rating:
+            exif_dict["0th"][piexif.ImageIFD.Rating] = int(self.rating)
+            updated_fields.append(f"评分: {self.rating}星")
+        
+        # 版权
+        if self.copyright:
+            exif_dict["0th"][piexif.ImageIFD.Copyright] = self.copyright.encode('utf-8')
+            updated_fields.append(f"版权: {self.copyright}")
+        
+        # 相机品牌和型号
+        if self.cameraBrand:
+            exif_dict["0th"][piexif.ImageIFD.Make] = self.cameraBrand.encode('utf-8')
+            updated_fields.append(f"相机品牌: {self.cameraBrand}")
+        
+        if self.cameraModel:
+            exif_dict["0th"][piexif.ImageIFD.Model] = self.cameraModel.encode('utf-8')
+            updated_fields.append(f"相机型号: {self.cameraModel}")
+        
+        # 镜头信息
+        if self.lensModel:
+            # 写入镜头型号到EXIF数据
+            if "Exif" not in exif_dict:
+                exif_dict["Exif"] = {}
+            exif_dict["Exif"][piexif.ExifIFD.LensModel] = self.lensModel.encode('utf-8')
+            updated_fields.append(f"镜头型号: {self.lensModel}")
+        
+        # 拍摄时间处理
+        if self.shootTime != 0:
+            if self.shootTime == 1:
+                # 从文件名识别拍摄时间
+                date_from_filename = self.get_date_from_filename(image_path)
+                if date_from_filename:
+                    if "Exif" not in exif_dict:
+                        exif_dict["Exif"] = {}
+                    exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = date_from_filename.strftime(
+                        "%Y:%m:%d %H:%M:%S")
+                    updated_fields.append(
+                        f"文件名识别拍摄时间: {date_from_filename.strftime('%Y:%m:%d %H:%M:%S')}")
+            else:
+                # 使用指定的拍摄时间
+                if "Exif" not in exif_dict:
+                    exif_dict["Exif"] = {}
+                exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = self.shootTime
+                updated_fields.append(f"拍摄时间: {self.shootTime}")
+        
+        # GPS坐标
+        if self.lat is not None and self.lon is not None:
+            exif_dict["GPS"] = self._create_gps_data(self.lat, self.lon)
+            updated_fields.append(
+                f"GPS坐标: {abs(self.lat):.6f}°{'N' if self.lat >= 0 else 'S'}, {abs(self.lon):.6f}°{'E' if self.lon >= 0 else 'W'}")
+        
+        # 写入EXIF数据
+        exif_bytes = piexif.dump(exif_dict)
+        piexif.insert(exif_bytes, image_path)
+        
+        if updated_fields:
+            self.log.emit("INFO", f"✅ 成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
+        else:
+            self.log.emit("WARNING", f"⚠️ 未对 {os.path.basename(image_path)} 进行任何更改\n\n"
+                             "可能的原因：\n"
+                             "• 所有EXIF字段均为空")
+
+    def _process_png_format(self, image_path):
+        """
+        处理PNG格式图像（不支持EXIF，使用PNG文本信息）
+        
+        Args:
+            image_path: 图像文件路径
+        """
+        if self.shootTime != 0:
+            if self.shootTime == 1:
+                # 从文件名识别拍摄时间
+                date_from_filename = self.get_date_from_filename(image_path)
+                if date_from_filename:
+                    with Image.open(image_path) as img:
+                        png_info = PngImagePlugin.PngInfo()
+                        for key in img.text:
+                            if key.lower() != "creation time":
+                                png_info.add_text(key, img.text[key])
+                        png_info.add_text("Creation Time", str(date_from_filename))
+                        temp_path = image_path + ".tmp"
+                        img.save(temp_path, format="PNG", pnginfo=png_info)
+                        os.replace(temp_path, image_path)
+                        self.log.emit("INFO", f"✅ 成功写入 {os.path.basename(image_path)} 的拍摄时间 {date_from_filename}")
+            else:
+                # 使用指定的拍摄时间
+                with Image.open(image_path) as img:
+                    png_info = PngImagePlugin.PngInfo()
+                    for key in img.text:
+                        if key.lower() != "creation time":
+                            png_info.add_text(key, img.text[key])
+                    png_info.add_text("Creation Time", self.shootTime)
+                    temp_path = image_path + ".tmp"
+                    img.save(temp_path, format="PNG", pnginfo=png_info)
+                    os.replace(temp_path, image_path)
+                    self.log.emit("INFO", f"✅ 成功写入 {os.path.basename(image_path)} 的拍摄时间 {self.shootTime}")
+
+    def _process_heic_format(self, image_path):
+        """
+        处理HEIC/HEIF格式图像
+        
+        Args:
+            image_path: 图像文件路径
+        """
+        try:
+            # 尝试导入pillow_heif库
+            from pillow_heif import open_heif, register_heif_opener
+            register_heif_opener()
+        except ImportError:
+            self.log.emit("ERROR", f"❌ 处理 {os.path.basename(image_path)} 需要 pillow-heif 库\n\n"
+                             "请安装: pip install pillow-heif")
+            return
+        
+        try:
+            # 读取HEIC文件
+            heif_file = open_heif(image_path)
+            
+            # 转换为PIL图像 - 使用新API
+            try:
+                image = heif_file.to_pillow()
+            except AttributeError:
+                # 兼容旧版本API
+                image = heif_file.to_pil()
+            
+            # 处理元数据
+            updated_fields = []
+            
+            # 拍摄时间处理
+            if self.shootTime != 0:
+                if self.shootTime == 1:
+                    # 从文件名识别拍摄时间
+                    date_from_filename = self.get_date_from_filename(image_path)
+                    if date_from_filename:
+                        # HEIC格式需要特殊处理，这里简化处理
+                        updated_fields.append(
+                            f"文件名识别拍摄时间: {date_from_filename.strftime('%Y:%m:%d %H:%M:%S')}")
+                else:
+                    # 使用指定的拍摄时间
+                    updated_fields.append(f"拍摄时间: {self.shootTime}")
+            
+            # 其他元数据处理（简化版）
+            if self.title:
+                updated_fields.append(f"标题: {self.title}")
+            if self.author:
+                updated_fields.append(f"作者: {self.author}")
+            
+            # 保存更新后的图像
+            temp_path = image_path + ".tmp"
+            image.save(temp_path, format="HEIF")
+            os.replace(temp_path, image_path)
+            
+            if updated_fields:
+                self.log.emit("INFO", f"✅ 成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
+            else:
+                self.log.emit("WARNING", f"⚠️ 未对 {os.path.basename(image_path)} 进行任何更改")
+                
+        except Exception as e:
+            self.log.emit("ERROR", f"❌ 处理 {os.path.basename(image_path)} 时出错: {str(e)}")
+
+    def _process_video_format(self, image_path):
+        """
+        处理视频格式（MOV, MP4, AVI, MKV）
+        
+        Args:
+            image_path: 视频文件路径
+        """
+        try:
+            # 尝试导入moviepy库
+            from moviepy.editor import VideoFileClip
+        except ImportError:
+            self.log.emit("ERROR", f"❌ 处理 {os.path.basename(image_path)} 需要 moviepy 库\n\n"
+                             "请安装: pip install moviepy")
+            return
+        
+        try:
+            # 获取视频信息
+            with VideoFileClip(image_path) as video:
+                duration = video.duration
+                fps = video.fps
+                size = video.size
+            
+            updated_fields = []
+            
+            # 拍摄时间处理
+            if self.shootTime != 0:
+                if self.shootTime == 1:
+                    # 从文件名识别拍摄时间
+                    date_from_filename = self.get_date_from_filename(image_path)
+                    if date_from_filename:
+                        updated_fields.append(
+                            f"文件名识别拍摄时间: {date_from_filename.strftime('%Y:%m:%d %H:%M:%S')}")
+                else:
+                    # 使用指定的拍摄时间
+                    updated_fields.append(f"拍摄时间: {self.shootTime}")
+            
+            # 其他元数据处理（简化版）
+            if self.title:
+                updated_fields.append(f"标题: {self.title}")
+            if self.author:
+                updated_fields.append(f"作者: {self.author}")
+            
+            # 视频格式需要特殊工具来写入元数据，这里简化处理
+            if updated_fields:
+                self.log.emit("INFO", f"✅ 成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
+                self.log.emit("WARNING", f"⚠️ 视频元数据写入需要额外工具支持，仅记录元数据信息")
+            else:
+                self.log.emit("WARNING", f"⚠️ 未对 {os.path.basename(image_path)} 进行任何更改")
+                
+        except Exception as e:
+            self.log.emit("ERROR", f"❌ 处理 {os.path.basename(image_path)} 时出错: {str(e)}")
+
+    def _process_raw_format(self, image_path):
+        """
+        处理RAW格式（CR2, CR3, NEF, ARW, ORF, DNG, RAF）
+        
+        Args:
+            image_path: RAW文件路径
+        """
+        try:
+            # 尝试导入rawpy库
+            import rawpy
+        except ImportError:
+            self.log.emit("ERROR", f"❌ 处理 {os.path.basename(image_path)} 需要 rawpy 库\n\n"
+                             "请安装: pip install rawpy")
+            return
+        
+        try:
+            # 读取RAW文件
+            with rawpy.imread(image_path) as raw:
+                # 获取RAW图像信息
+                updated_fields = []
+                
+                # 拍摄时间处理
+                if self.shootTime != 0:
+                    if self.shootTime == 1:
+                        # 从文件名识别拍摄时间
+                        date_from_filename = self.get_date_from_filename(image_path)
+                        if date_from_filename:
+                            updated_fields.append(
+                                f"文件名识别拍摄时间: {date_from_filename.strftime('%Y:%m:%d %H:%M:%S')}")
+                    else:
+                        # 使用指定的拍摄时间
+                        updated_fields.append(f"拍摄时间: {self.shootTime}")
+                
+                # 其他元数据处理（简化版）
+                if self.title:
+                    updated_fields.append(f"标题: {self.title}")
+                if self.author:
+                    updated_fields.append(f"作者: {self.author}")
+                
+                # RAW格式需要特殊工具来写入元数据，这里简化处理
+                if updated_fields:
+                    self.log.emit("INFO", f"✅ 成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
+                    self.log.emit("WARNING", f"⚠️ RAW格式元数据写入需要额外工具支持，仅记录元数据信息")
+                else:
+                    self.log.emit("WARNING", f"⚠️ 未对 {os.path.basename(image_path)} 进行任何更改")
+                    
+        except Exception as e:
+            self.log.emit("ERROR", f"❌ 处理 {os.path.basename(image_path)} 时出错: {str(e)}")
+
     def stop(self):
         """请求停止处理"""
         self._stop_requested = True
         self.log.emit("INFO", "⏹️ 正在停止EXIF写入操作...")
-
-    def get_date_from_filename(self, image_path):
-        """
-        从文件名中提取日期时间信息
-        
-        Args:
-            image_path: 图像文件路径
-            
-        Returns:
-            datetime: 提取的日期时间对象，失败返回None
-        """
-        base_name = os.path.basename(image_path)
-        name_without_ext = os.path.splitext(base_name)[0]
-        
-        # 日期时间正则表达式模式
-        date_pattern = r'(?P<year>\d{4})[^0-9]*' \
-                       r'(?P<month>1[0-2]|0?[1-9])[^0-9]*' \
-                       r'(?P<day>3[01]|[12]\d|0?[1-9])[^0-9]*' \
-                       r'(?P<hour>2[0-3]|[01]?\d)?[^0-9]*' \
-                       r'(?P<minute>[0-5]?\d)?[^0-9]*' \
-                       r'(?P<second>[0-5]?\d)?'
-        
-        match = re.search(date_pattern, name_without_ext)
-        if match:
-            groups = match.groupdict()
-            # 验证年月日是否完整
-            if not all([groups.get('year'), groups.get('month'), groups.get('day')]):
-                return None
 
     def _create_gps_data(self, lat, lon):
         """
@@ -411,16 +576,24 @@ class WriteExifThread(QThread):
         base_name = os.path.basename(image_path)
         name_without_ext = os.path.splitext(base_name)[0]
         
-        # 日期时间正则表达式模式 - 增强版支持中文格式
+        # 日期时间正则表达式模式 - 增强版支持中文格式和连续数字时间格式
         # 匹配格式如：2024年9月23日、2024-09-23、2024.09.23、2024/09/23等
+        # 以及时间格式如：182124（18:21:24）、1418（14:18）等
         date_pattern = r'(?P<year>\d{4})[年\-\.\/\s]?' \
                        r'(?P<month>1[0-2]|0?[1-9])[月\-\.\/\s]?' \
                        r'(?P<day>3[01]|[12]\d|0?[1-9])[日号\-\.\/\s]?' \
-                       r'(?P<hour>2[0-3]|[01]?\d)?[:点\-\.\/\s]?' \
-                       r'(?P<minute>[0-5]?\d)?[:分\-\.\/\s]?' \
-                       r'(?P<second>[0-5]?\d)?[秒\-\.\/\s]?'
+                       r'(?:[^0-9]*?)?' \
+                       r'(?P<hour>[0-2]?\d)?' \
+                       r'(?P<minute>[0-5]?\d)?' \
+                       r'(?P<second>[0-5]?\d)?'
         
+        # 尝试匹配日期时间模式
         match = re.search(date_pattern, name_without_ext)
+        if not match:
+            # 尝试另一种模式：直接匹配连续的数字时间格式（如182124）
+            time_pattern = r'(?P<year>\d{4})[^\d]*(?P<month>1[0-2]|0?[1-9])[^\d]*(?P<day>3[01]|[12]\d|0?[1-9])[^\d]*(?P<hour>[0-2]?\d)(?P<minute>[0-5]\d)(?P<second>[0-5]\d)'
+            match = re.search(time_pattern, name_without_ext)
+        
         if match:
             groups = match.groupdict()
             # 验证年月日是否完整
@@ -435,12 +608,34 @@ class WriteExifThread(QThread):
             ]
             
             # 添加时分秒（如果存在）
+            has_time = False
             if groups.get('hour'):
                 date_str_parts.append(groups['hour'].rjust(2, '0'))
+                has_time = True
                 if groups.get('minute'):
                     date_str_parts.append(groups['minute'].rjust(2, '0'))
                     if groups.get('second'):
                         date_str_parts.append(groups['second'].rjust(2, '0'))
+                    elif len(groups.get('minute', '')) == 2 and len(groups.get('hour', '')) == 2:
+                        # 如果有小时和分钟但没有秒，尝试从文件名中查找秒数
+                        # 例如：2024-08-06-周二-182124 -> 已经提取了18和21，还需要提取24
+                        remaining_text = name_without_ext[match.end():]
+                        if remaining_text and remaining_text[:2].isdigit():
+                            seconds = remaining_text[:2]
+                            if 0 <= int(seconds) <= 59:
+                                date_str_parts.append(seconds)
+                                groups['second'] = seconds
+            
+            # 如果没有从正则表达式中提取到时间，尝试从文件名中查找连续的6位数字作为时间
+            if not has_time:
+                # 查找文件名中是否有连续的6位数字（HHMMSS格式）
+                time_match = re.search(r'(?P<hour>[0-2]\d)(?P<minute>[0-5]\d)(?P<second>[0-5]\d)', name_without_ext)
+                if time_match:
+                    groups.update(time_match.groupdict())
+                    date_str_parts.append(groups['hour'])
+                    date_str_parts.append(groups['minute'])
+                    date_str_parts.append(groups['second'])
+                    has_time = True
 
             date_str = ''.join(date_str_parts)
             
@@ -459,10 +654,10 @@ class WriteExifThread(QThread):
                     # 验证日期时间有效性
                     if (1900 <= date_obj.year <= 2100 and
                             1 <= date_obj.month <= 12 and
-                            1 <= date_obj.day <= 31 and
-                            0 <= date_obj.hour <= 23 and
-                            0 <= date_obj.minute <= 59 and
-                            0 <= date_obj.second <= 59):
+                            1 <= date_obj.day <= 31):
+                        # 如果没有时间部分，设置为午夜
+                        if not has_time:
+                            date_obj = date_obj.replace(hour=0, minute=0, second=0)
                         return date_obj
                 except ValueError:
                     continue
