@@ -9,7 +9,7 @@
 """
 
 from PyQt6 import QtWidgets, QtCore, QtGui
-from PyQt6.QtWidgets import QFileDialog, QMessageBox
+from PyQt6.QtWidgets import QFileDialog, QMessageBox, QProgressDialog, QVBoxLayout, QPushButton, QTextEdit, QDialog
 import os
 
 from common import get_resource_path, detect_media_type
@@ -103,7 +103,7 @@ class FolderPage(QtWidgets.QWidget):
                 QMessageBox.warning(
                     self, 
                     "路径不存在", 
-                    f"❌ 文件夹路径不存在:\n\n{folder_path}\n\n"
+                    f"文件夹路径不存在:\n\n{folder_path}\n\n"
                     "请确认文件夹位置没有被移动或删除。"
                 )
                 return
@@ -112,7 +112,7 @@ class FolderPage(QtWidgets.QWidget):
                 QMessageBox.warning(
                     self, 
                     "不是文件夹", 
-                    f"❌ 选择的路径不是一个文件夹:\n\n{folder_path}\n\n"
+                    f"选择的路径不是一个文件夹:\n\n{folder_path}\n\n"
                     "请选择一个有效的文件夹。"
                 )
                 return
@@ -125,7 +125,7 @@ class FolderPage(QtWidgets.QWidget):
                 QMessageBox.warning(
                     self, 
                     "无访问权限", 
-                    f"❌ 没有足够的权限访问文件夹:\n\n{folder_path}\n\n"
+                    f"没有足够的权限访问文件夹:\n\n{folder_path}\n\n"
                     "请确保您拥有访问该文件夹的权限。"
                 )
                 return
@@ -133,7 +133,7 @@ class FolderPage(QtWidgets.QWidget):
                 QMessageBox.warning(
                     self, 
                     "访问错误", 
-                    f"❌ 访问文件夹时发生错误:\n\n{folder_path}\n\n"
+                    f"访问文件夹时发生错误:\n\n{folder_path}\n\n"
                     f"错误信息: {str(e)}"
                 )
                 return
@@ -144,7 +144,7 @@ class FolderPage(QtWidgets.QWidget):
                     QMessageBox.information(
                         self, 
                         "路径已存在", 
-                        f"📁 文件夹 '{folder_name}' 已经添加:\n\n{folder_path}\n\n"
+                        f"文件夹 '{folder_name}' 已经添加:\n\n{folder_path}\n\n"
                         "无需重复添加相同的文件夹。"
                     )
                     return
@@ -180,7 +180,7 @@ class FolderPage(QtWidgets.QWidget):
                     # 创建自定义消息框，提供解决方案选项
                     msg_box = QMessageBox(self)
                     msg_box.setWindowTitle("路径冲突")
-                    msg_box.setText(f"⚠️ 该文件夹是 '{conflict_info['parent_name']}' 的子目录，且 '{conflict_info['parent_name']}' 已选择包含子文件夹")
+                    msg_box.setText(f"该文件夹是 '{conflict_info['parent_name']}' 的子目录，且 '{conflict_info['parent_name']}' 已选择包含子文件夹")
                     msg_box.setInformativeText("您可以选择以下操作：")
                     
                     # 添加按钮
@@ -216,7 +216,7 @@ class FolderPage(QtWidgets.QWidget):
                     QMessageBox.warning(
                         self, 
                         "路径冲突",
-                        f"⚠️ '{conflict_info['child_name']}' 是该文件夹的子目录，且 '{conflict_info['child_name']}' 已选择包含子文件夹\n\n"
+                        f"'{conflict_info['child_name']}' 是该文件夹的子目录，且 '{conflict_info['child_name']}' 已选择包含子文件夹\n\n"
                         f"请先取消勾选 '{conflict_info['child_name']}' 的'包含子文件夹'选项，再添加该文件夹。"
                     )
                     return
@@ -232,7 +232,7 @@ class FolderPage(QtWidgets.QWidget):
             QMessageBox.critical(
                 self, 
                 "添加失败", 
-                f"❌ 添加文件夹时发生错误：{str(e)}\n\n"
+                f"添加文件夹时发生错误：{str(e)}\n\n"
                 f"请检查文件夹路径和权限后重试。"
             )
 
@@ -414,7 +414,7 @@ class FolderPage(QtWidgets.QWidget):
                                 # 创建自定义消息框，提供解决方案选项
                                 msg_box = QMessageBox(self)
                                 msg_box.setWindowTitle("操作不允许")
-                                msg_box.setText(f"❌ 操作被阻止！\n\n"
+                                msg_box.setText(f"操作被阻止！\n\n"
                                 "您要勾选的文件夹是其他已勾选包含子文件夹的路径的子目录。")
                                 msg_box.setInformativeText(f"• 父路径: {os.path.basename(conflict_path)}\n"
                                 f"• 当前路径: {os.path.basename(current_path)}")
@@ -445,7 +445,7 @@ class FolderPage(QtWidgets.QWidget):
                                 QMessageBox.warning(
                                     self, 
                                     "操作不允许",
-                                    f"❌ 操作被阻止！\n\n"
+                                    f"操作被阻止！\n\n"
                                     f"您不能勾选此选项，因为该路径包含其他已添加的路径:\n\n"
                                     f"• 子路径: {os.path.basename(conflict_path)}\n"
                                     f"• 当前路径: {os.path.basename(current_path)}\n\n"
@@ -467,7 +467,7 @@ class FolderPage(QtWidgets.QWidget):
                 QMessageBox.critical(
                     self, 
                     "操作失败", 
-                    f"❌ 更新文件夹选项时发生错误：{str(e)}\n\n"
+                    f"更新文件夹选项时发生错误：{str(e)}\n\n"
                     f"请稍后重试。"
                 )
 
@@ -610,7 +610,7 @@ class FolderPage(QtWidgets.QWidget):
             QMessageBox.warning(
                 self, 
                 "操作失败", 
-                f"❌ 移除文件夹时发生错误：{str(e)}"
+                f"移除文件夹时发生错误：{str(e)}"
             )
 
     def _check_media_files(self, folder_path):
@@ -694,7 +694,7 @@ class FolderPage(QtWidgets.QWidget):
             QMessageBox.information(
                 self, 
                 "操作提示", 
-                "⚠️ 未找到有效的文件夹路径。请确保您拖拽的是本地文件夹。"
+                "未找到有效的文件夹路径。请确保您拖拽的是本地文件夹。"
             )
             return
         
@@ -811,19 +811,19 @@ class FolderPage(QtWidgets.QWidget):
             details = []
             
             if added_count > 0:
-                message += f"✅ 成功添加 {added_count} 个文件夹\n"
+                message += f"成功添加 {added_count} 个文件夹\n"
                 for path in results['added']:
                     details.append(f"  ✓ {os.path.basename(path)} ({path})")
                 details.append("")
             
             if skipped_count > 0:
-                message += f"⚠️ 跳过 {skipped_count} 个文件夹\n"
+                message += f"跳过 {skipped_count} 个文件夹\n"
                 for path, reason in results['skipped']:
                     details.append(f"  ⚠️ {os.path.basename(path)} - {reason}")
                 details.append("")
             
             if error_count > 0:
-                message += f"❌ {error_count} 个文件夹添加失败\n"
+                message += f"{error_count} 个文件夹添加失败\n"
                 for path, reason in results['error']:
                     details.append(f"  ✗ {os.path.basename(path)} - {reason}")
             
@@ -912,7 +912,7 @@ class FolderPage(QtWidgets.QWidget):
             QMessageBox.information(
                 self, 
                 "文件夹更新", 
-                f"📁 检测到 {len(invalid_paths)} 个文件夹路径已无效（可能已被移动或删除），\n\n" \
+                f"检测到 {len(invalid_paths)} 个文件夹路径已无效（可能已被移动或删除），\n\n" \
                 "这些路径已从配置中自动移除。"
             )
         

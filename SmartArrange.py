@@ -74,6 +74,7 @@ class SmartArrange(QtWidgets.QWidget):
         self.init_page()  # 初始化页面
         self.set_combo_box_states()  # 设置分类下拉框状态
         self.log_signal.connect(self.handle_log_signal)  # 连接日志信号
+        self.log("DEBUG", "欢迎使用智能整理，可以为您整理目录、重命名文件。")
 
     def init_page(self):
         """初始化页面，连接信号槽和设置初始状态"""
