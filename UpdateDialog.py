@@ -45,7 +45,7 @@ class UpdateDialog(QDialog):
 
 def check_update():
     """检查应用更新，网络连接失败时强制退出程序"""
-    url = 'https://www.cnblogs.com/YangShengzhou/p/18679899ysz'
+    url = 'https://www.cnblogs.com/YangShengzhou/p/18679899'
     try:
         # Set a reasonable timeout for the request
         response = requests.get(url, timeout=5)
@@ -62,7 +62,7 @@ def check_update():
             update_content = content_parts[0]
             lastlyVersion = float(latest_version_str.strip())
             lastlyVersionUrl = update_link.strip()
-            current_version = 1.2
+            current_version = 1.3
             if lastlyVersion > current_version:
                 necessary = lastlyVersion != current_version
                 version_text = f"LeafView v{latest_version_str.strip()}"
