@@ -1,14 +1,3 @@
-"""
-图片去重模块 - 基于图像哈希算法检测和删除重复或相似的图片
-
-该模块提供以下功能：
-1. 支持多种图像格式（包括HEIC/HEIF等特殊格式）
-2. 基于感知哈希算法计算图像相似度
-3. 可视化相似图片分组展示
-4. 批量选择和操作（移动、删除）重复图片
-5. 多线程处理提高性能
-"""
-
 import os
 import shutil
 
@@ -127,7 +116,7 @@ class Contrast(QtWidgets.QWidget):
         self.init_page()
         self.connect_signals()
         self.thumbnail_loaders = []  # 缩略图加载器列表
-        self.max_cache_size = 1000  # 最大缓存缩略图数量，防止内存溢出
+        self.max_cache_size = 200  # 最大缓存缩略图数量，防止内存溢出
         self.current_progress = 0  # 当前进度
 
     def init_page(self):
@@ -189,7 +178,7 @@ class Contrast(QtWidgets.QWidget):
             try:
                 shutil.move(img, os.path.join(dest_folder, os.path.basename(img)))
             except Exception as e:
-                QtWidgets.QMessageBox.warning(self, "❌ 无法移动图片", 
+                QtWidgets.QMessageBox.warning(self, "无法移动图片", 
                                            f"无法移动图片 {os.path.basename(img)}: {e}\n\n"
                                            "可能的原因：\n"
                                            "• 目标文件夹权限不足\n"
@@ -270,7 +259,6 @@ class Contrast(QtWidgets.QWidget):
             return
 
         self._running = True
-        self.parent.verticalFrame_similar.show()
         self.parent.progressBar_Contrast.setValue(0)
         # 支持的图片格式集合
         supported_formats = {'.jpg', '.jpeg', '.png', '.bmp', '.gif', '.webp', '.tif', '.tiff',
@@ -300,7 +288,7 @@ class Contrast(QtWidgets.QWidget):
             return
         
         # 限制处理图片数量，避免内存溢出
-        if len(image_paths) > 1000:
+        if len(image_paths) > 200:
             reply = QtWidgets.QMessageBox.question(self, "图片数量较多", 
                                                   f"检测到 {len(image_paths)} 张图片，您电脑配置较低，可能需要一些时间。还继续吗？\n\n"
                                                   "处理大量图片时：\n"
@@ -312,7 +300,8 @@ class Contrast(QtWidgets.QWidget):
                 self._running = False
                 self.parent.toolButton_startContrast.setEnabled(True)
                 return
-        
+
+        self.parent.verticalFrame_similar.show()        
         self.parent.toolButton_startContrast.setEnabled(False)
         # 修改开始按钮为停止功能
         self.parent.toolButton_startContrast.setText("停止对比")
@@ -617,7 +606,6 @@ class Contrast(QtWidgets.QWidget):
                 return
             except:
                 return
-        # 处理普通图片格式
         pix = QPixmap(path)
         if not pix.isNull():
             pix = pix.scaled(label.width(), label.height(),

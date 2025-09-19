@@ -16,11 +16,9 @@ import os
 import requests
 from datetime import datetime
 from PyQt6.QtCore import pyqtSlot, QDateTime
-from PyQt6.QtWidgets import QWidget, QMessageBox, QTextEdit, QVBoxLayout, QScrollArea, QDialogButtonBox
-from PyQt6.QtWidgets import QMessageBox as QMsg
+from PyQt6.QtWidgets import QWidget, QMessageBox
 from WriteExifThread import WriteExifThread
 from common import get_resource_path
-from config_manager import config_manager
 
 
 class WriteExif(QWidget):
@@ -74,7 +72,7 @@ class WriteExif(QWidget):
         # 初始化时隐藏经纬度文本框
         self.parent.lineEdit_EXIF_longitude.hide()
         self.parent.lineEdit_EXIF_latitude.hide()
-        self.log("DEBUG", "欢迎使用图像属性写入功能，不写入项目留空即可。")
+        self.log("DEBUG", "欢迎使用图像属性写入功能，不写入项留空即可。")
         
     def load_camera_lens_mapping(self):
         """加载相机型号到镜头的映射数据"""
@@ -84,7 +82,6 @@ class WriteExif(QWidget):
             if os.path.exists(data_path):
                 with open(data_path, 'r', encoding='utf-8') as f:
                     self.camera_lens_mapping = json.load(f)
-                    self.log("DEBUG", "相机镜头映射数据加载成功")
             else:
                 self.log("WARNING", "相机镜头映射文件不存在，将使用默认镜头信息")
         except Exception as e:
@@ -149,7 +146,6 @@ class WriteExif(QWidget):
         # 初始化时隐藏经纬度文本框
         self.parent.lineEdit_EXIF_longitude.hide()
         self.parent.lineEdit_EXIF_latitude.hide()
-        self.log("DEBUG", "欢迎使用图像属性写入功能，不写入项目留空即可。")
         
 
 
@@ -161,14 +157,14 @@ class WriteExif(QWidget):
         # 如果没有加载到数据，使用默认数据
         if not camera_data:
             camera_data = {
-                "佳能": ["EOS R5", "EOS R6", "EOS 5D Mark IV", "EOS 90D"],
-                "尼康": ["Z7 II", "Z6 II", "D850", "D750"],
-                "索尼": ["A7R IV", "A7S III", "A7 III", "A6400"],
-                "富士": ["X-T4", "X-T3", "X-Pro3", "X100V"],
-                "徕卡": ["Q2", "M11", "SL2-S", "CL"],
-                "松下": ["S1R", "S1H", "GH5", "G9"],
-                "奥林巴斯": ["OM-1", "EM-1 Mark III", "EM-5 Mark III"],
-                "宾得": ["K-1 II", "K-3 Mark III", "KP"]
+                "Apple": ["iPhone 15 Pro Max", "iPhone 15 Pro", "iPhone 15", "iPhone 14 Pro Max", "iPhone 14 Pro", "iPhone 14", "iPhone 13 Pro Max", "iPhone 13 Pro"],
+                "Samsung": ["Galaxy S24 Ultra", "Galaxy S24+", "Galaxy S24", "Galaxy S23 Ultra", "Galaxy S23+", "Galaxy S23", "Galaxy Z Fold5", "Galaxy Z Flip5"],
+                "Google": ["Pixel 8 Pro", "Pixel 8", "Pixel 7 Pro", "Pixel 7", "Pixel 6 Pro", "Pixel 6", "Pixel 5"],
+                "OnePlus": ["12 Pro", "12", "11 Pro", "11", "10 Pro", "10", "9 Pro", "9"],
+                "Xiaomi": ["14 Ultra", "14 Pro", "14", "13 Ultra", "13 Pro", "13", "12S Ultra", "12S Pro"],
+                "Huawei": ["P60 Pro", "P60", "Mate 60 Pro", "Mate 60", "P50 Pro", "P50", "Mate 50 Pro", "Mate 50"],
+                "OPPO": ["Find X6 Pro", "Find X6", "Find X5 Pro", "Find X5", "Reno10 Pro+", "Reno10 Pro", "Reno10", "Reno9 Pro+"],
+                "Vivo": ["X100 Pro", "X100", "X90 Pro+", "X90 Pro", "X90", "X80 Pro", "X80", "S18 Pro"]
             }
         for brand in sorted(camera_data.keys()):
             self.parent.comboBox_brand.addItem(brand)
@@ -285,15 +281,9 @@ class WriteExif(QWidget):
         """
         try:
             url = "https://restapi.amap.com/v3/geocode/geo"
-            # 使用用户配置的API密钥
-            amap_key = config_manager.get_setting("amap_api_key", "")
+            # 直接使用默认的API密钥
+            amap_key = '0db079da53e08cbb62b52a42f657b994'
             
-            # 如果没有配置API密钥，使用默认密钥
-            if not amap_key:
-                amap_key = 'bc383698582923d55b5137c3439cf4b2'
-                self.log("INFO", "使用默认高德地图API密钥")
-            
-            # 添加城市参数提高准确性
             params = {
                 'address': address, 
                 'key': amap_key, 
@@ -301,13 +291,13 @@ class WriteExif(QWidget):
                 'city': '全国'  # 不限制城市，在全国范围内搜索
             }
             
-            self.log("DEBUG", f"正在请求高德地图API，地址: {address}")
+            self.log("INFO", f"正在请求高德地图API，地址: {address}")
             response = requests.get(url, params=params, timeout=5)
             response.raise_for_status()
             data = response.json()
             
             # 记录API返回的原始数据以便调试
-            self.log("DEBUG", f"高德地图API返回数据: {data}")
+            self.log("INFO", f"高德地图API返回数据: {data}")
             
             if data.get('status') == '1' and int(data.get('count', 0)) > 0:
                 location = data['geocodes'][0]['location'].split(',')
@@ -360,7 +350,10 @@ class WriteExif(QWidget):
         location_info = self.get_location_by_ip()
         if location_info is not None:
             lat, lon = location_info
+            # 在位置文本框中显示经纬度坐标，格式为 "纬度, 经度"
+            self.parent.lineEdit_EXIF_Position.setText(f"{lat}, {lon}")
             self.log("INFO", f"成功获取位置信息: 纬度={lat}, 经度={lon}")
+            self.log("INFO", "坐标已设置到位置输入框，可以直接使用")
         else:
             self.log("ERROR", "获取位置信息失败\n\n"
                          "可能的原因：\n"
@@ -418,15 +411,40 @@ class WriteExif(QWidget):
         if location_type == 0:  # 搜位置
             address = self.parent.lineEdit_EXIF_Position.text()
             if address:
-                if coords := self.get_location(address):
-                    params['position'] = ','.join(coords)
+                # 检查是否已经是经纬度格式（例如："31.2222, 121.4581"）
+                import re
+                coord_pattern = r'^\s*(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)\s*$'
+                coord_match = re.match(coord_pattern, address)
+                
+                if coord_match:
+                    # 已经是经纬度格式，直接使用
+                    lat, lon = coord_match.groups()
+                    try:
+                        lat_float = float(lat)
+                        lon_float = float(lon)
+                        if -90 <= lat_float <= 90 and -180 <= lon_float <= 180:
+                            params['position'] = f"{lat_float},{lon_float}"
+                            self.log("INFO", f"使用已有坐标: 纬度={lat_float}, 经度={lon_float}")
+                        else:
+                            self.log("ERROR", "坐标范围无效\n\n"
+                                     "• 经度应在-180到180之间\n"
+                                     "• 纬度应在-90到90之间")
+                            return False
+                    except ValueError:
+                        self.log("ERROR", "坐标格式无效\n\n"
+                                 "请输入有效的数字格式")
+                        return False
                 else:
-                    self.log("ERROR", f"无法找到地址'{address}'对应的地理坐标\n\n"
-                               "请检查：\n"
-                               "• 地址拼写是否正确\n"
-                               "• 是否包含详细的门牌号或地标\n"
-                               "• 高德地图API密钥是否有效")
-                    return False
+                    # 不是坐标格式，尝试通过地址获取坐标
+                    if coords := self.get_location(address):
+                        params['position'] = ','.join(coords)
+                    else:
+                        self.log("ERROR", f"无法找到地址'{address}'对应的地理坐标\n\n"
+                                   "请检查：\n"
+                                   "• 地址拼写是否正确\n"
+                                   "• 是否包含详细的门牌号或地标\n"
+                                   "• 高德地图API密钥是否有效")
+                        return False
         elif location_type == 1:  # 经纬度
             longitude = self.parent.lineEdit_EXIF_longitude.text()
             latitude = self.parent.lineEdit_EXIF_latitude.text()

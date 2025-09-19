@@ -2527,7 +2527,7 @@ class Ui_MainWindow(object):
         self.scrollArea_pageSimilar.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.scrollArea_pageSimilar.setObjectName("scrollArea_pageSimilar")
         self.scrollAreaWidgetContents_Contrast = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_Contrast.setGeometry(QtCore.QRect(0, 0, 100, 30))
+        self.scrollAreaWidgetContents_Contrast.setGeometry(QtCore.QRect(0, 0, 228, 474))
         self.scrollAreaWidgetContents_Contrast.setObjectName("scrollAreaWidgetContents_Contrast")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents_Contrast)
         self.gridLayout_2.setObjectName("gridLayout_2")
@@ -3666,42 +3666,6 @@ class Ui_MainWindow(object):
         self.comboBox_location.addItem("")
         self.comboBox_location.addItem("")
         self.horizontalLayout_12.addWidget(self.comboBox_location)
-        self.lineEdit_EXIF_longitude = QtWidgets.QLineEdit(parent=self.horizontalFrame_10)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.lineEdit_EXIF_longitude.sizePolicy().hasHeightForWidth())
-        self.lineEdit_EXIF_longitude.setSizePolicy(sizePolicy)
-        self.lineEdit_EXIF_longitude.setStyleSheet("QLineEdit {\n"
-"    border: 1px solid qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(134, 119, 253, 255),\n"
-"        stop:1 rgba(119, 111, 252, 255)\n"
-"    );\n"
-"    background: rgb(245, 249, 254);\n"
-"    padding: 4px 2px;\n"
-"    border-radius: 6px;\n"
-"    color: #333;\n"
-"    selection-background-color: rgba(134, 119, 253, 180);\n"
-"    selection-color: white;\n"
-"    font-size: 12px;\n"
-"}\n"
-"\n"
-"QLineEdit:focus {\n"
-"    border: 2px solid qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(134, 119, 253, 255),\n"
-"        stop:1 rgba(119, 111, 252, 255)\n"
-"    );\n"
-"    outline: none;\n"
-"}\n"
-"\n"
-"QLineEdit:disabled {\n"
-"    background: #eaeaea;\n"
-"    color: #aaa;\n"
-"}")
-        self.lineEdit_EXIF_longitude.setObjectName("lineEdit_EXIF_longitude")
-        self.horizontalLayout_12.addWidget(self.lineEdit_EXIF_longitude)
         self.lineEdit_EXIF_latitude = QtWidgets.QLineEdit(parent=self.horizontalFrame_10)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -3738,6 +3702,42 @@ class Ui_MainWindow(object):
 "}")
         self.lineEdit_EXIF_latitude.setObjectName("lineEdit_EXIF_latitude")
         self.horizontalLayout_12.addWidget(self.lineEdit_EXIF_latitude)
+        self.lineEdit_EXIF_longitude = QtWidgets.QLineEdit(parent=self.horizontalFrame_10)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.lineEdit_EXIF_longitude.sizePolicy().hasHeightForWidth())
+        self.lineEdit_EXIF_longitude.setSizePolicy(sizePolicy)
+        self.lineEdit_EXIF_longitude.setStyleSheet("QLineEdit {\n"
+"    border: 1px solid qradialgradient(\n"
+"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
+"        stop:0.66 rgba(134, 119, 253, 255),\n"
+"        stop:1 rgba(119, 111, 252, 255)\n"
+"    );\n"
+"    background: rgb(245, 249, 254);\n"
+"    padding: 4px 2px;\n"
+"    border-radius: 6px;\n"
+"    color: #333;\n"
+"    selection-background-color: rgba(134, 119, 253, 180);\n"
+"    selection-color: white;\n"
+"    font-size: 12px;\n"
+"}\n"
+"\n"
+"QLineEdit:focus {\n"
+"    border: 2px solid qradialgradient(\n"
+"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
+"        stop:0.66 rgba(134, 119, 253, 255),\n"
+"        stop:1 rgba(119, 111, 252, 255)\n"
+"    );\n"
+"    outline: none;\n"
+"}\n"
+"\n"
+"QLineEdit:disabled {\n"
+"    background: #eaeaea;\n"
+"    color: #aaa;\n"
+"}")
+        self.lineEdit_EXIF_longitude.setObjectName("lineEdit_EXIF_longitude")
+        self.horizontalLayout_12.addWidget(self.lineEdit_EXIF_longitude)
         self.horizontalFrame = QtWidgets.QFrame(parent=self.horizontalFrame_10)
         self.horizontalFrame.setStyleSheet("QFrame {\n"
 "    border: 1px solid qradialgradient(\n"
@@ -4137,7 +4137,7 @@ class Ui_MainWindow(object):
         self.label_41.setText(_translate("MainWindow", "拍摄地点 "))
         self.comboBox_location.setItemText(0, _translate("MainWindow", "搜位置"))
         self.comboBox_location.setItemText(1, _translate("MainWindow", "经纬度"))
+        self.lineEdit_EXIF_latitude.setPlaceholderText(_translate("MainWindow", "纬度"))
         self.lineEdit_EXIF_longitude.setPlaceholderText(_translate("MainWindow", "经度"))
-        self.lineEdit_EXIF_latitude.setPlaceholderText(_translate("MainWindow", "维度"))
         self.lineEdit_EXIF_Position.setPlaceholderText(_translate("MainWindow", "江西科技师范大学"))
         self.toolButton_StartEXIF.setText(_translate("MainWindow", "开始写入"))

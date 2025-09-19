@@ -104,6 +104,21 @@ class SmartArrangeThread(QtCore.QThread):
         self.log_signal = parent.log_signal if parent else None
         self.files_to_rename = []  # 初始化文件重命名列表
 
+    def calculate_total_files(self):
+        """计算所有文件夹中的总文件数"""
+        self.total_files = 0
+        for folder_info in self.folders:
+            folder_path = Path(folder_info['path'])
+            if folder_info.get('include_sub', 0):
+                # 递归计算子文件夹中的文件数
+                for root, _, files in os.walk(folder_path):
+                    self.total_files += len(files)
+            else:
+                # 只计算当前文件夹中的文件数
+                self.total_files += len([f for f in os.listdir(folder_path) if (folder_path / f).is_file()])
+        
+        self.log("DEBUG", f"总文件数: {self.total_files}")
+
     def load_geographic_data(self):
         try:
             with open(get_resource_path('resources/json/City_Reverse_Geocode.json'), 'r', encoding='utf-8') as f:
@@ -118,9 +133,13 @@ class SmartArrangeThread(QtCore.QThread):
             # 加载地理位置数据
             self.load_geographic_data()
 
+            # 计算总文件数用于进度显示
+            self.calculate_total_files()
+            
             # 记录成功和失败的文件数
             success_count = 0
             fail_count = 0
+            self.processed_files = 0
 
             for folder_info in self.folders:
                 if self._stop_flag:
@@ -159,6 +178,8 @@ class SmartArrangeThread(QtCore.QThread):
                         self.log("WARNING", f"删除空文件夹时出错了: {str(e)}")
                 
                 self.log("INFO", f"文件整理完成了，成功处理了 {success_count} 个文件，失败了 {fail_count} 个文件")
+                # 确保进度条显示100%
+                self.progress_signal.emit(100)
             else:
                 self.log("WARNING", "您已经取消了整理文件的操作")
                 
@@ -167,11 +188,7 @@ class SmartArrangeThread(QtCore.QThread):
 
     def process_folder_with_classification(self, folder_info):
         folder_path = Path(folder_info['path'])
-        total_files = sum([len(files) for _, _, files in os.walk(folder_path)]) if folder_info.get('include_sub',
-                                                                                                   0) else len(
-            os.listdir(folder_path))
-        processed_files = 0
-
+        
         if folder_info.get('include_sub', 0):
             for root, _, files in os.walk(folder_path):
                 for file in files:
@@ -181,9 +198,11 @@ class SmartArrangeThread(QtCore.QThread):
                     full_file_path = Path(root) / file
                     # 移除文件类型过滤，处理所有文件
                     self.process_single_file(full_file_path, base_folder=folder_path)
-                    processed_files += 1
-                    percent_complete = int((processed_files / total_files) * 100)
-                    self.progress_signal.emit(percent_complete)
+                    self.processed_files += 1
+                    # 基于全局进度计算，文件处理阶段占总进度的80%
+                    if self.total_files > 0:
+                        percent_complete = int((self.processed_files / self.total_files) * 80)
+                        self.progress_signal.emit(percent_complete)
         else:
             for file in os.listdir(folder_path):
                 if self._stop_flag:
@@ -193,13 +212,17 @@ class SmartArrangeThread(QtCore.QThread):
                 if full_file_path.is_file():
                     # 移除文件类型过滤，处理所有文件
                     self.process_single_file(full_file_path)
-                    processed_files += 1
-                    percent_complete = int((processed_files / total_files) * 100)
-                    self.progress_signal.emit(percent_complete)
+                    self.processed_files += 1
+                    # 基于全局进度计算，文件处理阶段占总进度的80%
+                    if self.total_files > 0:
+                        percent_complete = int((self.processed_files / self.total_files) * 80)
+                        self.progress_signal.emit(percent_complete)
 
     def process_renaming(self):
         # 记录每个目标路径下的文件名计数，用于确保唯一性
         file_count = {}
+        total_rename_files = len(self.files_to_rename)
+        renamed_files = 0
         
         for file_info in self.files_to_rename:
             if self._stop_flag:
@@ -230,10 +253,24 @@ class SmartArrangeThread(QtCore.QThread):
                     shutil.copy2(old_path, unique_path)
                     self.log("INFO", f"复制文件: {old_path} -> {unique_path}")
                 else:
-                    # 移动文件到目标目录（使用shutil.move而不是rename）
-                    import shutil
-                    shutil.move(old_path, unique_path)
-                    self.log("DEBUG", f"移动文件: {old_path} -> {unique_path}")
+                    # 检查是否在同一目录下（仅重命名的情况）
+                    if old_path.parent == unique_path.parent:
+                        # 同目录下直接重命名，避免不必要的移动
+                        old_path.rename(unique_path)
+                        self.log("DEBUG", f"重命名文件: {old_path.name} -> {unique_path.name}")
+                    else:
+                        # 不同目录下需要移动文件
+                        import shutil
+                        shutil.move(old_path, unique_path)
+                        self.log("DEBUG", f"移动文件: {old_path} -> {unique_path}")
+                
+                # 更新重命名进度
+                renamed_files += 1
+                if total_rename_files > 0:
+                    # 重命名阶段占总进度的20%（80%已经在文件处理阶段完成）
+                    rename_progress = int((renamed_files / total_rename_files) * 20)
+                    total_progress = 80 + rename_progress
+                    self.progress_signal.emit(min(total_progress, 99))  # 不超过99%，留1%给完成信号
                 
             except Exception as e:
                 self.log("ERROR", f"处理文件 {old_path} 时出错: {str(e)}")
@@ -265,10 +302,16 @@ class SmartArrangeThread(QtCore.QThread):
                 if file_path != target_path:
                     try:
                         import shutil
-                        self.log("DEBUG", f"准备移动文件: {file_path} -> {target_path}")
+                        self.log("WARNING", f"准备移动文件: {file_path} -> {target_path}")
                         shutil.move(file_path, target_path)
-                        self.log("DEBUG", f"成功移动文件: {file_path} -> {target_path}")
+                        self.log("WARNING", f"成功移动文件: {file_path} -> {target_path}")
                         file_count += 1
+                        
+                        # 更新进度，文件处理阶段占总进度的80%
+                        self.processed_files += 1
+                        if self.total_files > 0:
+                            percent_complete = int((self.processed_files / self.total_files) * 80)
+                            self.progress_signal.emit(percent_complete)
                     except Exception as e:
                         self.log("ERROR", f"移动文件 {file_path} 时出错: {str(e)}")
         
@@ -386,7 +429,7 @@ class SmartArrangeThread(QtCore.QThread):
         modify_time = datetime.datetime.fromtimestamp(file_path_obj.stat().st_mtime)
         
         # 添加调试信息
-        self.log("DEBUG", f"开始处理文件: {file_path}, 文件类型: {suffix}")
+        self.log("WARNING", f"开始处理文件: {file_path}, 文件类型: {suffix}")
         
         try:
             if suffix in ('.jpg', '.jpeg', '.tiff', '.tif'):
@@ -602,41 +645,41 @@ class SmartArrangeThread(QtCore.QThread):
             return "未知省份", "未知城市"
 
     @staticmethod
-    def get_address(lat, lon, max_retries=3, wait_time_on_limit=2):
-        """通过高德地图API获取详细地址，支持缓存机制"""
-        # 首先检查缓存中是否有该经纬度的地址
-        cached_address = config_manager.get_cached_location(lat, lon)
+    def get_address(self, latitude: float, longitude: float) -> str:
+        """通过高德地图API获取地址"""
+        if not (isinstance(latitude, (int, float)) and isinstance(longitude, (int, float))):
+            return "未知位置"
+        
+        # 使用带容差的缓存查找
+        cached_address = self.config_manager.get_cached_location_with_tolerance(latitude, longitude)
         if cached_address:
             return cached_address
         
-        # 获取用户设置的高德地图API密钥
-        user_key = config_manager.get_setting("amap_api_key", "")
-        
-        # 使用用户配置的API密钥
-        keys_to_try = [user_key] if user_key else []
-        
-        for key in keys_to_try:
-            url = f'https://restapi.amap.com/v3/geocode/regeo?key={key}&location={lon},{lat}'
+        try:
+            # 获取用户设置的高德地图API密钥
+            user_key = self.config_manager.get_setting("amap_api_key", "")
             
-            for retry in range(max_retries):
-                try:
-                    response = requests.get(url, timeout=10).json()
-                    if response.get('status') == '1' and response.get('info', '').lower() == 'ok':
-                        address = response['regeocode']['formatted_address']
-                        # 将获取到的地址保存到缓存中
-                        config_manager.cache_location(lat, lon, address)
-                        return address
-                    elif 'cuqps_has_exceeded_the_limit' in response.get('info', '').lower() and retry < max_retries - 1:
-                        time.sleep(wait_time_on_limit)
-                    elif 'invalid' in response.get('info', '').lower() or 'invalid_key' in response.get('info', '').lower():
-                        # 密钥无效，尝试下一个密钥
-                        break
-                except Exception as e:
-                    pass
-                if retry < max_retries - 1:
-                    time.sleep(wait_time_on_limit)
-        
-        return None
+            if not user_key:
+                return "未知位置"
+            
+            # 高德地图API请求
+            url = f"https://restapi.amap.com/v3/geocode/regeo?key={user_key}&location={longitude},{latitude}&extensions=base"
+            response = requests.get(url, timeout=5)
+            data = response.json()
+            
+            if data.get("status") == "1":
+                address = data.get("regeocode", {}).get("formatted_address", "")
+                if address:
+                    # 缓存地址信息
+                    self.config_manager.cache_location(latitude, longitude, address)
+                    return address
+                else:
+                    return "未知位置"
+            else:
+                return "未知位置"
+        except Exception as e:
+            self.log(f"获取地址时出错了: {e}")
+            return "未知位置"
 
     @staticmethod
     def convert_to_degrees(value):
@@ -689,13 +732,29 @@ class SmartArrangeThread(QtCore.QThread):
             # 构建完整的目标路径
             full_target_path = target_path / new_file_name_with_ext
             
-            # 记录需要重命名的文件信息
-            self.files_to_rename.append({
-                'old_path': str(file_path),
-                'new_path': str(full_target_path)
-            })
+            # 检查是否真的需要重命名或移动
+            needs_operation = False
+            operation_type = "重命名"
             
-            self.log("DEBUG", f"处理文件: {file_path.name} -> {full_target_path}")
+            # 检查文件名是否相同
+            if file_path.name != new_file_name_with_ext:
+                needs_operation = True
+                operation_type = "重命名"
+            
+            # 检查路径是否相同（用于分类操作）
+            if file_path.parent != target_path:
+                needs_operation = True
+                operation_type = "移动"
+            
+            # 只有当需要操作时才添加到重命名列表
+            if needs_operation:
+                self.files_to_rename.append({
+                    'old_path': str(file_path),
+                    'new_path': str(full_target_path)
+                })
+                self.log("DEBUG", f"处理文件: {file_path.name} -> {full_target_path} ({operation_type})")
+            else:
+                self.log("DEBUG", f"跳过文件: {file_path.name} (无需操作)")
             
         except Exception as e:
             self.log("ERROR", f"处理文件 {file_path} 时出错: {str(e)}")
@@ -821,3 +880,4 @@ class SmartArrangeThread(QtCore.QThread):
         else:
             return ""
         
+

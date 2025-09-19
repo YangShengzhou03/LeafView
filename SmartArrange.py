@@ -193,13 +193,13 @@ class SmartArrange(QtWidgets.QWidget):
             
             # 根据设置显示不同的操作信息
             if not SmartArrange_structure and not file_name_structure:
-                self.log("INFO", f"将执行{operation_text}操作：将文件夹中的所有文件提取到顶层目录")
+                self.log("WARNING", f"将执行{operation_text}操作：将文件夹中的所有文件提取到顶层目录")
             elif not SmartArrange_structure:
-                self.log("INFO", f"将执行{operation_text}操作：仅重命名文件，不进行分类")
+                self.log("WARNING", f"将执行{operation_text}操作：仅重命名文件，不进行分类")
             elif not file_name_structure:
-                self.log("INFO", f"将执行{operation_text}操作：仅进行分类，不重命名文件")
+                self.log("WARNING", f"将执行{operation_text}操作：仅进行分类，不重命名文件")
             else:
-                self.log("INFO", f"将执行{operation_text}操作：进行分类和重命名")
+                self.log("WARNING", f"将执行{operation_text}操作：进行分类和重命名")
             
             # 收集自定义标签的实际内容
             file_name_parts = []
@@ -248,6 +248,7 @@ class SmartArrange(QtWidgets.QWidget):
                 time_derive=self.parent.comboBox_timeSource.currentText()
             )
             self.SmartArrange_thread.finished.connect(self.on_thread_finished)
+            self.SmartArrange_thread.progress_signal.connect(self.update_progress_bar)
             self.SmartArrange_thread.start()
             self.parent.toolButton_startSmartArrange.setText("停止整理")
 

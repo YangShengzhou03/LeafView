@@ -66,7 +66,7 @@ class WriteExifThread(QThread):
         # 解析位置坐标
         if position and ',' in position:
             try:
-                self.lon, self.lat = map(float, position.split(','))
+                self.lat, self.lon = map(float, position.split(','))
                 # 验证坐标范围有效性
                 if not (-90 <= self.lat <= 90) or not (-180 <= self.lon <= 180):
                     self.lat, self.lon = None, None
@@ -94,7 +94,7 @@ class WriteExifThread(QThread):
                 return
             
             # 显示操作统计
-            self.log.emit("INFO", f"开始处理 {total_files} 张图片")
+            self.log.emit("DEBUG", f"开始处理 {total_files} 张图片")
             
             # 初始化进度
             self.progress_updated.emit(0)
@@ -127,7 +127,7 @@ class WriteExifThread(QThread):
                                 for f in futures:
                                     f.cancel()
                                 time.sleep(0.1)
-                                self.log.emit("INFO", "EXIF写入操作已成功中止")
+                                self.log.emit("DEBUG", "EXIF写入操作已成功中止")
                                 break
                             try:
                                 # 设置任务超时（例如30秒）
@@ -193,7 +193,7 @@ class WriteExifThread(QThread):
         """
         try:
             if self._stop_requested:
-                self.log.emit("INFO", f"处理被取消: {os.path.basename(image_path)}")
+                self.log.emit("WARNING", f"处理被取消: {os.path.basename(image_path)}")
                 return
             
             file_ext = os.path.splitext(image_path)[1].lower()
@@ -236,7 +236,12 @@ class WriteExifThread(QThread):
         Args:
             image_path: 图像文件路径
         """
-        exif_dict = piexif.load(image_path)
+        try:
+            exif_dict = piexif.load(image_path)
+        except Exception:
+            # 如果图片没有EXIF数据，创建空的EXIF字典
+            exif_dict = {"0th": {}, "Exif": {}, "GPS": {}, "1st": {}, "thumbnail": None}
+        
         updated_fields = []
         
         # 标题
@@ -274,6 +279,13 @@ class WriteExifThread(QThread):
             updated_fields.append(f"相机型号: {self.cameraModel}")
         
         # 镜头信息
+        if self.lensBrand:
+            # 写入镜头品牌到EXIF数据
+            if "Exif" not in exif_dict:
+                exif_dict["Exif"] = {}
+            exif_dict["Exif"][piexif.ExifIFD.LensMake] = self.lensBrand.encode('utf-8')
+            updated_fields.append(f"镜头品牌: {self.lensBrand}")
+        
         if self.lensModel:
             # 写入镜头型号到EXIF数据
             if "Exif" not in exif_dict:
@@ -379,8 +391,124 @@ class WriteExifThread(QThread):
                 # 兼容旧版本API
                 image = heif_file.to_pil()
             
-            # 处理元数据
+            # 读取现有的EXIF数据
+            exif_dict = {"0th": {}, "Exif": {}, "GPS": {}, "1st": {}, "thumbnail": None}
+            
+            # 尝试从多个来源读取EXIF数据
+            # 方法1: 从HEIF文件直接读取EXIF
+            if hasattr(heif_file, 'exif') and heif_file.exif:
+                try:
+                    heif_exif = piexif.load(heif_file.exif)
+                    exif_dict.update(heif_exif)
+                except Exception:
+                    pass
+            
+            # 方法2: 从PIL图像读取EXIF
+            if hasattr(image, '_getexif') and image._getexif():
+                try:
+                    pil_exif = image._getexif()
+                    if pil_exif:
+                        # 映射常见的EXIF标签
+                        tag_mapping = {
+                            270: ("0th", piexif.ImageIFD.ImageDescription),  # 图像描述
+                            271: ("0th", piexif.ImageIFD.Make),  # 相机制造商
+                            272: ("0th", piexif.ImageIFD.Model),  # 相机型号
+                            315: ("0th", 315),  # 作者
+                            36867: ("Exif", piexif.ExifIFD.DateTimeOriginal),  # 拍摄时间
+                            37378: ("Exif", piexif.ExifIFD.FNumber),  # 光圈值
+                            37386: ("Exif", piexif.ExifIFD.FocalLength),  # 焦距
+                            42035: ("Exif", piexif.ExifIFD.LensMake),  # 镜头制造商
+                            41988: ("Exif", piexif.ExifIFD.LensModel),  # 镜头型号
+                            42034: ("Exif", piexif.ExifIFD.LensSpecification),  # 镜头规格
+                        }
+                        
+                        for tag_id, (section, piexif_tag) in tag_mapping.items():
+                            if tag_id in pil_exif:
+                                exif_dict[section][piexif_tag] = pil_exif[tag_id]
+                except Exception:
+                    pass
+            
+            # 方法3: 尝试通过PIL的info属性获取EXIF
+            if hasattr(image, 'info') and 'exif' in image.info:
+                try:
+                    info_exif = piexif.load(image.info['exif'])
+                    exif_dict.update(info_exif)
+                except Exception:
+                    pass
+            
+            # 方法4: 尝试直接使用PIL打开文件读取EXIF
+            try:
+                with Image.open(image_path) as img:
+                    if hasattr(img, '_getexif') and img._getexif():
+                        pil_exif = img._getexif()
+                        if pil_exif:
+                            tag_mapping = {
+                                270: ("0th", piexif.ImageIFD.ImageDescription),
+                                271: ("0th", piexif.ImageIFD.Make),
+                                272: ("0th", piexif.ImageIFD.Model),
+                                315: ("0th", 315),
+                                36867: ("Exif", piexif.ExifIFD.DateTimeOriginal),
+                                37378: ("Exif", piexif.ExifIFD.FNumber),
+                                37386: ("Exif", piexif.ExifIFD.FocalLength),
+                                42035: ("Exif", piexif.ExifIFD.LensMake),  # 镜头制造商
+                                41988: ("Exif", piexif.ExifIFD.LensModel),
+                                42034: ("Exif", piexif.ExifIFD.LensSpecification),  # 镜头规格
+                            }
+                            
+                            for tag_id, (section, piexif_tag) in tag_mapping.items():
+                                if tag_id in pil_exif:
+                                    exif_dict[section][piexif_tag] = pil_exif[tag_id]
+            except Exception:
+                pass
+            
             updated_fields = []
+            
+            # 标题
+            if self.title:
+                exif_dict["0th"][piexif.ImageIFD.ImageDescription] = self.title.encode('utf-8')
+                updated_fields.append(f"标题: {self.title}")
+            
+            # 作者
+            if self.author:
+                exif_dict["0th"][315] = self.author.encode('utf-8')
+                updated_fields.append(f"作者: {self.author}")
+            
+            # 主题
+            if self.subject:
+                exif_dict["0th"][piexif.ImageIFD.XPSubject] = self.subject.encode('utf-16le')
+                updated_fields.append(f"主题: {self.subject}")
+            
+            # 评分
+            if self.rating:
+                exif_dict["0th"][piexif.ImageIFD.Rating] = int(self.rating)
+                updated_fields.append(f"评分: {self.rating}星")
+            
+            # 版权
+            if self.copyright:
+                exif_dict["0th"][piexif.ImageIFD.Copyright] = self.copyright.encode('utf-8')
+                updated_fields.append(f"版权: {self.copyright}")
+            
+            # 相机品牌和型号
+            if self.cameraBrand:
+                exif_dict["0th"][piexif.ImageIFD.Make] = self.cameraBrand.encode('utf-8')
+                updated_fields.append(f"相机品牌: {self.cameraBrand}")
+            
+            if self.cameraModel:
+                exif_dict["0th"][piexif.ImageIFD.Model] = self.cameraModel.encode('utf-8')
+                updated_fields.append(f"相机型号: {self.cameraModel}")
+            
+            # 镜头信息
+            if self.lensBrand:
+                if "Exif" not in exif_dict:
+                    exif_dict["Exif"] = {}
+                exif_dict["Exif"][piexif.ExifIFD.LensMake] = self.lensBrand.encode('utf-8')
+                updated_fields.append(f"镜头品牌: {self.lensBrand}")
+            
+            if self.lensModel:
+                if "Exif" not in exif_dict:
+                    exif_dict["Exif"] = {}
+                exif_dict["Exif"][piexif.ExifIFD.LensModel] = self.lensModel.encode('utf-8')
+                updated_fields.append(f"镜头型号: {self.lensModel}")
             
             # 拍摄时间处理
             if self.shootTime != 0:
@@ -388,28 +516,52 @@ class WriteExifThread(QThread):
                     # 从文件名识别拍摄时间
                     date_from_filename = self.get_date_from_filename(image_path)
                     if date_from_filename:
-                        # HEIC格式需要特殊处理，这里简化处理
+                        if "Exif" not in exif_dict:
+                            exif_dict["Exif"] = {}
+                        exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = date_from_filename.strftime(
+                            "%Y:%m:%d %H:%M:%S").encode('utf-8')
                         updated_fields.append(
                             f"文件名识别拍摄时间: {date_from_filename.strftime('%Y:%m:%d %H:%M:%S')}")
                 else:
                     # 使用指定的拍摄时间
+                    if "Exif" not in exif_dict:
+                        exif_dict["Exif"] = {}
+                    exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = self.shootTime.encode('utf-8')
                     updated_fields.append(f"拍摄时间: {self.shootTime}")
             
-            # 其他元数据处理（简化版）
-            if self.title:
-                updated_fields.append(f"标题: {self.title}")
-            if self.author:
-                updated_fields.append(f"作者: {self.author}")
+            # GPS坐标
+            if self.lat is not None and self.lon is not None:
+                exif_dict["GPS"] = self._create_gps_data(self.lat, self.lon)
+                updated_fields.append(
+                    f"GPS坐标: {abs(self.lat):.6f}°{'N' if self.lat >= 0 else 'S'}, {abs(self.lon):.6f}°{'E' if self.lon >= 0 else 'W'}")
             
-            # 保存更新后的图像
-            temp_path = image_path + ".tmp"
-            image.save(temp_path, format="HEIF")
-            os.replace(temp_path, image_path)
-            
+            # 写入EXIF数据
             if updated_fields:
-                self.log.emit("INFO", f"成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
+                try:
+                    # 创建临时文件路径
+                    temp_path = image_path + ".tmp"
+                    
+                    # 准备EXIF数据
+                    exif_bytes = piexif.dump(exif_dict)
+                    
+                    # 保存图像（包含EXIF数据）
+                    image.save(temp_path, format="HEIF", exif=exif_bytes)
+                    
+                    # 替换原文件
+                    os.replace(temp_path, image_path)
+                    
+                    self.log.emit("INFO", f"成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
+                except Exception as e:
+                    self.log.emit("ERROR", f"写入EXIF数据失败: {str(e)}")
+                    if os.path.exists(temp_path):
+                        try:
+                            os.remove(temp_path)
+                        except:
+                            pass
             else:
-                self.log.emit("WARNING", f"未对 {os.path.basename(image_path)} 进行任何更改")
+                self.log.emit("WARNING", f"未对 {os.path.basename(image_path)} 进行任何更改\n\n"
+                                 "可能的原因：\n"
+                                 "• 所有EXIF字段均为空")
                 
         except Exception as e:
             self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 时出错: {str(e)}")
@@ -459,7 +611,7 @@ class WriteExifThread(QThread):
             # 视频格式需要特殊工具来写入元数据，这里简化处理
             if updated_fields:
                 self.log.emit("INFO", f"成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
-                self.log.emit("WARNING", f"视频元数据写入需要额外工具支持，仅记录元数据信息")
+                self.log.emit("WARNING", f"视频元数据写入需要氪金，仅记录元数据信息")
             else:
                 self.log.emit("WARNING", f"未对 {os.path.basename(image_path)} 进行任何更改")
                 
@@ -518,7 +670,6 @@ class WriteExifThread(QThread):
     def stop(self):
         """请求停止处理"""
         self._stop_requested = True
-        self.log.emit("INFO", "正在停止EXIF写入操作...")
 
     def _create_gps_data(self, lat, lon):
         """
