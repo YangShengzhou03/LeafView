@@ -466,19 +466,7 @@ LeafView/
 
 ### 👥 核心贡献者
 
-<div align="center">
-  <table>
-    <tr>
-      <td align="center">
-        <a href="https://github.com/YangShengzhou03">
-          <img src="https://avatars.githubusercontent.com/u/YangShengzhou03" width="100px;" alt="YangShengzhou03"/><br />
-          <sub><b>YangShengzhou03</b></sub>
-        </a><br />
-        <sub>项目创始人 & 核心开发者</sub>
-      </td>
-    </tr>
-  </table>
-</div>
+[![Contributors](https://contrib.rocks/image?repo=YangShengzhou03/LeafView)](https://github.com/YangShengzhou03/LeafView/graphs/contributors)
 
 ### 💖 特别鸣谢
 感谢以下开发者为项目做出的贡献：
