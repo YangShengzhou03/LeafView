@@ -286,7 +286,7 @@ class Ui_MainWindow(object):
         self.widget_headVip.setMinimumSize(QtCore.QSize(100, 36))
         self.widget_headVip.setMaximumSize(QtCore.QSize(100, 36))
         self.widget_headVip.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
-        self.widget_headVip.setStyleSheet(f"image: url(get_resource_path('resources/img/头标/头标-银色标准会员.svg'));\n"
+        self.widget_headVip.setStyleSheet(f"image: url({get_resource_path('resources/img/头标/头标-银色标准会员.svg')});\n"
 "background-color: rgba(0, 0, 0,0);\n"
 "border-radius:0px;")
         self.widget_headVip.setObjectName("widget_headVip")
@@ -570,7 +570,7 @@ class Ui_MainWindow(object):
         self.widget_folder.setSizePolicy(sizePolicy)
         self.widget_folder.setMinimumSize(QtCore.QSize(36, 36))
         self.widget_folder.setMaximumSize(QtCore.QSize(36, 36))
-        self.widget_folder.setStyleSheet(f"image: url(get_resource_path('resources/img/page_0/导入文件夹.svg'));\n"
+        self.widget_folder.setStyleSheet(f"image: url({get_resource_path('resources/img/page_0/导入文件夹.svg')});\n"
 "background-color: rgba(0, 0, 0, 0);\n"
 "border-radius:0px;\n"
 "border: 0px;")
@@ -2790,7 +2790,7 @@ class Ui_MainWindow(object):
         self.pushButton_star_1.setMinimumSize(QtCore.QSize(22, 22))
         self.pushButton_star_1.setMaximumSize(QtCore.QSize(22, 22))
         self.pushButton_star_1.setStyleSheet("QPushButton:hover {\n"
-f"    image: url(get_resource_path('resources/img/page_4/星级_亮.svg'));\n"
+f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
 "}")
         self.pushButton_star_1.setText("")
         icon11 = QtGui.QIcon()
@@ -2803,7 +2803,7 @@ f"    image: url(get_resource_path('resources/img/page_4/星级_亮.svg'));\n"
         self.pushButton_star_2.setMinimumSize(QtCore.QSize(22, 22))
         self.pushButton_star_2.setMaximumSize(QtCore.QSize(22, 22))
         self.pushButton_star_2.setStyleSheet("QPushButton:hover {\n"
-f"    image: url(get_resource_path('resources/img/page_4/星级_亮.svg'));\n"
+f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
 "}")
         self.pushButton_star_2.setText("")
         self.pushButton_star_2.setIcon(icon11)
@@ -2814,7 +2814,7 @@ f"    image: url(get_resource_path('resources/img/page_4/星级_亮.svg'));\n"
         self.pushButton_star_3.setMinimumSize(QtCore.QSize(22, 22))
         self.pushButton_star_3.setMaximumSize(QtCore.QSize(22, 22))
         self.pushButton_star_3.setStyleSheet("QPushButton:hover {\n"
-f"    image: url(get_resource_path('resources/img/page_4/星级_亮.svg'));\n"
+f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
 "}")
         self.pushButton_star_3.setText("")
         self.pushButton_star_3.setIcon(icon11)
@@ -2825,7 +2825,7 @@ f"    image: url(get_resource_path('resources/img/page_4/星级_亮.svg'));\n"
         self.pushButton_star_4.setMinimumSize(QtCore.QSize(22, 22))
         self.pushButton_star_4.setMaximumSize(QtCore.QSize(22, 22))
         self.pushButton_star_4.setStyleSheet("QPushButton:hover {\n"
-f"    image: url(get_resource_path('resources/img/page_4/星级_亮.svg'));\n"
+f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
 "}")
         self.pushButton_star_4.setText("")
         self.pushButton_star_4.setIcon(icon11)
@@ -2836,7 +2836,7 @@ f"    image: url(get_resource_path('resources/img/page_4/星级_亮.svg'));\n"
         self.pushButton_star_5.setMinimumSize(QtCore.QSize(22, 22))
         self.pushButton_star_5.setMaximumSize(QtCore.QSize(22, 22))
         self.pushButton_star_5.setStyleSheet("QPushButton:hover {\n"
-f"    image: url(get_resource_path('resources/img/page_4/星级_亮.svg'));\n"
+f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
 "}")
         self.pushButton_star_5.setText("")
         self.pushButton_star_5.setIcon(icon11)
