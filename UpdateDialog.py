@@ -13,6 +13,8 @@ class UpdateDialog(QDialog):
         self.ui = Ui_UpdateDialog()
         self.ui.setupUi(self)
         self.necessary = necessary
+        self.setWindowTitle("枫叶通知")
+        self.setWindowIcon(QtGui.QIcon(get_resource_path('resources/img/icon.ico')))
         self.setWindowFlags(QtCore.Qt.WindowType.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
         self.setWindowFlag(QtCore.Qt.WindowType.WindowCloseButtonHint, False)
