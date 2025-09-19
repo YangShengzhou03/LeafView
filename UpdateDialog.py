@@ -1,10 +1,11 @@
 import requests
 from PyQt6.QtGui import QDesktopServices
 from PyQt6.QtWidgets import QDialog
-from PyQt6 import QtCore
+from PyQt6 import QtCore, QtGui
 from PyQt6.QtCore import QUrl
 from bs4 import BeautifulSoup
 from UI_UpdateDialog import Ui_UpdateDialog
+from common import get_resource_path
 
 
 class UpdateDialog(QDialog):
@@ -62,15 +63,15 @@ def check_update():
                 dialog = UpdateDialog(lastlyVersionUrl, title_parts[0], update_content, version_text, necessary)
                 dialog.exec()
     except requests.exceptions.RequestException:
-        error_message = "网络连接失败，无法检查更新"
+        error_message = "网络开了小差，枫叶未能如期而至。"
         dialog = UpdateDialog('https://blog.csdn.net/Yang_shengzhou', '网络连接失败',
-                              '枫叶内测版,须连网启动,感谢您的理解\n\n' + error_message + 
-                              '\n\n程序将退出，请检查网络连接后重试。', "", True)
+                              '别担心，这只是一次小小的插曲，您的满意始终是我们的追求。\n\n' + error_message +
+                              '\n\n请检查网络后重新启动，我们期待不久与您相遇。', "", True)
         dialog.ui.pushButton_download.setText("我知道了")
         dialog.exec()
     except Exception as e:
         error_message = f"检查更新时出错了: {str(e)}"
-        dialog = UpdateDialog('https://blog.csdn.net/Yang_shengzhou', '更新检查失败',
-                              '枫叶内测版,感谢您的理解\n' + error_message, "", True)
+        dialog = UpdateDialog('https://blog.csdn.net/Yang_shengzhou', '检查更新失败',
+                              '更新失败，但您的支持始终是我们前行的重要力量。未来可期，敬请放心，我们一直在努力。\n' + error_message, "", True)
         dialog.ui.pushButton_download.setText("我知道了")
         dialog.exec()
