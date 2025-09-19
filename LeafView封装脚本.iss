@@ -40,7 +40,7 @@ UninstallDisplayIcon={app}\_internal\resources\img\icon.ico
 
 [UninstallDelete]
 Type: files; Name: "{app}\*.*"
-Type: files; Name: "{app}\_internal\system_info.ini"
+Type: files; Name: "{app}\_internal\leafview_config.json"
 Type: dirifempty; Name: "{app}\_internal"
 Type: dirifempty; Name: "{app}"
 
