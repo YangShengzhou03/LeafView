@@ -61,7 +61,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def _on_head_vip_clicked(self, event):
         """处理widget_headVip的点击事件"""
         if event.button() == QtCore.Qt.MouseButton.LeftButton:
-            QtWidgets.QMessageBox.information(self, "当前为demo版", "当前为测试演示版本，服务可能随时终止。\n\n如果您需要继续使用，请考虑购买专业版。")
+            QtWidgets.QMessageBox.information(self, "demo版", "当前为测试演示版本，服务可能随时终止。\n\n如果您需要继续使用，请考虑购买专业版。")
         event.accept()
 
     def _init_text_recognition(self):

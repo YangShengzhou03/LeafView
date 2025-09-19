@@ -192,7 +192,7 @@ class ContrastWorker(QThread):
             similar_groups = self._optimized_grouping(image_paths)
             
             if self._is_running:
-                self.log("INFO", f"相似度对比完成，发现 {len(similar_groups)} 组相似图片")
+                self.log("DEBUG", f"相似度对比完成，发现 {len(similar_groups)} 组相似图片")
                 self.result_signal.emit(similar_groups)
                 self.finished_signal.emit()
             else:
@@ -278,4 +278,4 @@ class ContrastWorker(QThread):
     def stop(self):
         """停止相似度对比"""
         self._is_running = False
-        self.log("INFO", "正在停止相似度对比操作...")
+        self.log("WARNING", "正在停止相似度对比操作...")
