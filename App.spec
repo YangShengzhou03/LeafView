@@ -7,7 +7,7 @@ a = Analysis(
     datas=[
         ('resources', 'resources')
     ],
-hiddenimports=[],
+    hiddenimports=['numpy.core._multiarray_tests', 'numpy.core._multiarray_umath'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
