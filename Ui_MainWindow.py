@@ -8,8 +8,6 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from common import get_resource_path
-
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -202,27 +200,27 @@ class Ui_MainWindow(object):
         self.listWidget_base.setObjectName("listWidget_base")
         item = QtWidgets.QListWidgetItem()
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/list/媒体导入.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon.addPixmap(QtGui.QPixmap("resources/img/list/媒体导入.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         item.setIcon(icon)
         self.listWidget_base.addItem(item)
         item = QtWidgets.QListWidgetItem()
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/list/图像识别.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon1.addPixmap(QtGui.QPixmap("resources/img/list/图像识别.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         item.setIcon(icon1)
         self.listWidget_base.addItem(item)
         item = QtWidgets.QListWidgetItem()
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/list/智能整理.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon2.addPixmap(QtGui.QPixmap("resources/img/list/智能整理.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         item.setIcon(icon2)
         self.listWidget_base.addItem(item)
         item = QtWidgets.QListWidgetItem()
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/list/文件去重.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon3.addPixmap(QtGui.QPixmap("resources/img/list/文件去重.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         item.setIcon(icon3)
         self.listWidget_base.addItem(item)
         item = QtWidgets.QListWidgetItem()
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/list/属性写入.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon4.addPixmap(QtGui.QPixmap("resources/img/list/属性写入.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         item.setIcon(icon4)
         self.listWidget_base.addItem(item)
         self.verticalLayout_4.addWidget(self.listWidget_base)
@@ -286,7 +284,7 @@ class Ui_MainWindow(object):
         self.widget_headVip.setMinimumSize(QtCore.QSize(100, 36))
         self.widget_headVip.setMaximumSize(QtCore.QSize(100, 36))
         self.widget_headVip.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
-        self.widget_headVip.setStyleSheet(f"image: url({get_resource_path('resources/img/头标/头标-银色标准会员.svg')});\n"
+        self.widget_headVip.setStyleSheet("image: url(resources/img/头标/头标-银色标准会员.svg);\n"
 "background-color: rgba(0, 0, 0,0);\n"
 "border-radius:0px;")
         self.widget_headVip.setObjectName("widget_headVip")
@@ -310,7 +308,7 @@ class Ui_MainWindow(object):
 "}")
         self.toolButton_serve.setText("")
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/窗口控制/服务.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon5.addPixmap(QtGui.QPixmap("resources/img/窗口控制/服务.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.toolButton_serve.setIcon(icon5)
         self.toolButton_serve.setIconSize(QtCore.QSize(16, 16))
         self.toolButton_serve.setObjectName("toolButton_serve")
@@ -334,7 +332,7 @@ class Ui_MainWindow(object):
 "}")
         self.toolButton_setting.setText("")
         icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/窗口控制/设置.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon6.addPixmap(QtGui.QPixmap("resources/img/窗口控制/设置.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.toolButton_setting.setIcon(icon6)
         self.toolButton_setting.setIconSize(QtCore.QSize(17, 17))
         self.toolButton_setting.setObjectName("toolButton_setting")
@@ -358,7 +356,7 @@ class Ui_MainWindow(object):
 "}")
         self.toolButton_minimum.setText("")
         icon7 = QtGui.QIcon()
-        icon7.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/窗口控制/最小化.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon7.addPixmap(QtGui.QPixmap("resources/img/窗口控制/最小化.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.toolButton_minimum.setIcon(icon7)
         self.toolButton_minimum.setIconSize(QtCore.QSize(14, 14))
         self.toolButton_minimum.setObjectName("toolButton_minimum")
@@ -382,7 +380,7 @@ class Ui_MainWindow(object):
 "}")
         self.toolButton_maximum.setText("")
         icon8 = QtGui.QIcon()
-        icon8.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/窗口控制/最大化.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon8.addPixmap(QtGui.QPixmap("resources/img/窗口控制/最大化.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.toolButton_maximum.setIcon(icon8)
         self.toolButton_maximum.setIconSize(QtCore.QSize(14, 14))
         self.toolButton_maximum.setObjectName("toolButton_maximum")
@@ -406,7 +404,7 @@ class Ui_MainWindow(object):
 "}")
         self.toolButton_close.setText("")
         icon9 = QtGui.QIcon()
-        icon9.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/窗口控制/关闭.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon9.addPixmap(QtGui.QPixmap("resources/img/窗口控制/关闭.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.toolButton_close.setIcon(icon9)
         self.toolButton_close.setIconSize(QtCore.QSize(14, 14))
         self.toolButton_close.setObjectName("toolButton_close")
@@ -570,7 +568,7 @@ class Ui_MainWindow(object):
         self.widget_folder.setSizePolicy(sizePolicy)
         self.widget_folder.setMinimumSize(QtCore.QSize(36, 36))
         self.widget_folder.setMaximumSize(QtCore.QSize(36, 36))
-        self.widget_folder.setStyleSheet(f"image: url({get_resource_path('resources/img/page_0/导入文件夹.svg')});\n"
+        self.widget_folder.setStyleSheet("image: url(resources/img/page_0/导入文件夹.svg);\n"
 "background-color: rgba(0, 0, 0, 0);\n"
 "border-radius:0px;\n"
 "border: 0px;")
@@ -881,6 +879,7 @@ class Ui_MainWindow(object):
         self.comboBox_level_1.addItem("")
         self.comboBox_level_1.addItem("")
         self.comboBox_level_1.addItem("")
+        self.comboBox_level_1.addItem("")
         self.horizontalLayout_38.addWidget(self.comboBox_level_1)
         self.label_17 = QtWidgets.QLabel(parent=self.horizontalFrame_3)
         font = QtGui.QFont()
@@ -1002,6 +1001,7 @@ class Ui_MainWindow(object):
 "    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
 "}")
         self.comboBox_level_2.setObjectName("comboBox_level_2")
+        self.comboBox_level_2.addItem("")
         self.comboBox_level_2.addItem("")
         self.comboBox_level_2.addItem("")
         self.comboBox_level_2.addItem("")
@@ -1135,6 +1135,7 @@ class Ui_MainWindow(object):
         self.comboBox_level_3.addItem("")
         self.comboBox_level_3.addItem("")
         self.comboBox_level_3.addItem("")
+        self.comboBox_level_3.addItem("")
         self.horizontalLayout_38.addWidget(self.comboBox_level_3)
         self.label_19 = QtWidgets.QLabel(parent=self.horizontalFrame_3)
         font = QtGui.QFont()
@@ -1262,6 +1263,7 @@ class Ui_MainWindow(object):
         self.comboBox_level_4.addItem("")
         self.comboBox_level_4.addItem("")
         self.comboBox_level_4.addItem("")
+        self.comboBox_level_4.addItem("")
         self.horizontalLayout_38.addWidget(self.comboBox_level_4)
         self.label_20 = QtWidgets.QLabel(parent=self.horizontalFrame_3)
         font = QtGui.QFont()
@@ -1383,6 +1385,7 @@ class Ui_MainWindow(object):
 "    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
 "}")
         self.comboBox_level_5.setObjectName("comboBox_level_5")
+        self.comboBox_level_5.addItem("")
         self.comboBox_level_5.addItem("")
         self.comboBox_level_5.addItem("")
         self.comboBox_level_5.addItem("")
@@ -1733,6 +1736,36 @@ class Ui_MainWindow(object):
 "}")
         self.pushButton_make_tag.setObjectName("pushButton_make_tag")
         self.horizontalLayout_57.addWidget(self.pushButton_make_tag)
+        self.pushButton_model_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
+        self.pushButton_model_tag.setMaximumSize(QtCore.QSize(74, 28))
+        self.pushButton_model_tag.setStyleSheet("QPushButton {\n"
+"  background-color: #ffffff;\n"
+"  color: #2c3e50;\n"
+"  border: 1px solid #d4d4d4;\n"
+"  text-align: center;\n"
+"  font-size: 14px;\n"
+"  cursor: pointer;\n"
+"  border-radius: 12px;\n"
+"  padding: 4px 8px;\n"
+"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
+"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
+"  text-transform: uppercase;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"  background-color: #f7f7f7;\n"
+"  color: #2c3e50;\n"
+"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"  background-color: #ececec;\n"
+"  color: #34495e;\n"
+"  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
+"  transform: translateY(2px);\n"
+"}")
+        self.pushButton_model_tag.setObjectName("pushButton_model_tag")
+        self.horizontalLayout_57.addWidget(self.pushButton_model_tag)
         self.pushButton_address_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
         self.pushButton_address_tag.setMaximumSize(QtCore.QSize(66, 28))
         self.pushButton_address_tag.setStyleSheet("QPushButton {\n"
@@ -1762,7 +1795,7 @@ class Ui_MainWindow(object):
 "  transform: translateY(2px);\n"
 "}")
         icon10 = QtGui.QIcon()
-        icon10.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/page_2/位置.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon10.addPixmap(QtGui.QPixmap("resources/img/page_2/位置.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.pushButton_address_tag.setIcon(icon10)
         self.pushButton_address_tag.setObjectName("pushButton_address_tag")
         self.horizontalLayout_57.addWidget(self.pushButton_address_tag)
@@ -2529,7 +2562,7 @@ class Ui_MainWindow(object):
         self.scrollArea_pageSimilar.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.scrollArea_pageSimilar.setObjectName("scrollArea_pageSimilar")
         self.scrollAreaWidgetContents_Contrast = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_Contrast.setGeometry(QtCore.QRect(0, 0, 228, 474))
+        self.scrollAreaWidgetContents_Contrast.setGeometry(QtCore.QRect(0, 0, 40, 18))
         self.scrollAreaWidgetContents_Contrast.setObjectName("scrollAreaWidgetContents_Contrast")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents_Contrast)
         self.gridLayout_2.setObjectName("gridLayout_2")
@@ -2790,11 +2823,11 @@ class Ui_MainWindow(object):
         self.pushButton_star_1.setMinimumSize(QtCore.QSize(22, 22))
         self.pushButton_star_1.setMaximumSize(QtCore.QSize(22, 22))
         self.pushButton_star_1.setStyleSheet("QPushButton:hover {\n"
-f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
+"    image: url(resources/img/page_4/星级_亮.svg);\n"
 "}")
         self.pushButton_star_1.setText("")
         icon11 = QtGui.QIcon()
-        icon11.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/page_4/星级_暗.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon11.addPixmap(QtGui.QPixmap("resources/img/page_4/星级_暗.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.pushButton_star_1.setIcon(icon11)
         self.pushButton_star_1.setIconSize(QtCore.QSize(20, 20))
         self.pushButton_star_1.setObjectName("pushButton_star_1")
@@ -2803,7 +2836,7 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
         self.pushButton_star_2.setMinimumSize(QtCore.QSize(22, 22))
         self.pushButton_star_2.setMaximumSize(QtCore.QSize(22, 22))
         self.pushButton_star_2.setStyleSheet("QPushButton:hover {\n"
-f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
+"    image: url(resources/img/page_4/星级_亮.svg);\n"
 "}")
         self.pushButton_star_2.setText("")
         self.pushButton_star_2.setIcon(icon11)
@@ -2814,7 +2847,7 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
         self.pushButton_star_3.setMinimumSize(QtCore.QSize(22, 22))
         self.pushButton_star_3.setMaximumSize(QtCore.QSize(22, 22))
         self.pushButton_star_3.setStyleSheet("QPushButton:hover {\n"
-f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
+"    image: url(resources/img/page_4/星级_亮.svg);\n"
 "}")
         self.pushButton_star_3.setText("")
         self.pushButton_star_3.setIcon(icon11)
@@ -2825,7 +2858,7 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
         self.pushButton_star_4.setMinimumSize(QtCore.QSize(22, 22))
         self.pushButton_star_4.setMaximumSize(QtCore.QSize(22, 22))
         self.pushButton_star_4.setStyleSheet("QPushButton:hover {\n"
-f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
+"    image: url(resources/img/page_4/星级_亮.svg);\n"
 "}")
         self.pushButton_star_4.setText("")
         self.pushButton_star_4.setIcon(icon11)
@@ -2836,7 +2869,7 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
         self.pushButton_star_5.setMinimumSize(QtCore.QSize(22, 22))
         self.pushButton_star_5.setMaximumSize(QtCore.QSize(22, 22))
         self.pushButton_star_5.setStyleSheet("QPushButton:hover {\n"
-f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
+"    image: url(resources/img/page_4/星级_亮.svg);\n"
 "}")
         self.pushButton_star_5.setText("")
         self.pushButton_star_5.setIcon(icon11)
@@ -3817,7 +3850,7 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
         self.pushButton_Position.setStyleSheet("background:rgba(0, 0, 0, 0);")
         self.pushButton_Position.setText("")
         icon12 = QtGui.QIcon()
-        icon12.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/page_4/位置.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon12.addPixmap(QtGui.QPixmap("resources/img/page_4/位置.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.pushButton_Position.setIcon(icon12)
         self.pushButton_Position.setIconSize(QtCore.QSize(20, 20))
         self.pushButton_Position.setObjectName("pushButton_Position")
@@ -4048,48 +4081,54 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
         self.comboBox_level_1.setItemText(1, _translate("MainWindow", "年份"))
         self.comboBox_level_1.setItemText(2, _translate("MainWindow", "月份"))
         self.comboBox_level_1.setItemText(3, _translate("MainWindow", "拍摄设备"))
-        self.comboBox_level_1.setItemText(4, _translate("MainWindow", "拍摄省份"))
-        self.comboBox_level_1.setItemText(5, _translate("MainWindow", "拍摄城市"))
+        self.comboBox_level_1.setItemText(4, _translate("MainWindow", "相机型号"))
+        self.comboBox_level_1.setItemText(5, _translate("MainWindow", "拍摄省份"))
+        self.comboBox_level_1.setItemText(6, _translate("MainWindow", "拍摄城市"))
         self.label_17.setText(_translate("MainWindow", "\\"))
         self.comboBox_level_2.setItemText(0, _translate("MainWindow", "不分类"))
         self.comboBox_level_2.setItemText(1, _translate("MainWindow", "年份"))
         self.comboBox_level_2.setItemText(2, _translate("MainWindow", "月份"))
         self.comboBox_level_2.setItemText(3, _translate("MainWindow", "拍摄设备"))
-        self.comboBox_level_2.setItemText(4, _translate("MainWindow", "拍摄省份"))
-        self.comboBox_level_2.setItemText(5, _translate("MainWindow", "拍摄城市"))
+        self.comboBox_level_2.setItemText(4, _translate("MainWindow", "相机型号"))
+        self.comboBox_level_2.setItemText(5, _translate("MainWindow", "拍摄省份"))
+        self.comboBox_level_2.setItemText(6, _translate("MainWindow", "拍摄城市"))
         self.label_18.setText(_translate("MainWindow", "\\"))
         self.comboBox_level_3.setItemText(0, _translate("MainWindow", "不分类"))
         self.comboBox_level_3.setItemText(1, _translate("MainWindow", "年份"))
         self.comboBox_level_3.setItemText(2, _translate("MainWindow", "月份"))
         self.comboBox_level_3.setItemText(3, _translate("MainWindow", "拍摄设备"))
-        self.comboBox_level_3.setItemText(4, _translate("MainWindow", "拍摄省份"))
-        self.comboBox_level_3.setItemText(5, _translate("MainWindow", "拍摄城市"))
+        self.comboBox_level_3.setItemText(4, _translate("MainWindow", "相机型号"))
+        self.comboBox_level_3.setItemText(5, _translate("MainWindow", "拍摄省份"))
+        self.comboBox_level_3.setItemText(6, _translate("MainWindow", "拍摄城市"))
         self.label_19.setText(_translate("MainWindow", "\\"))
         self.comboBox_level_4.setItemText(0, _translate("MainWindow", "不分类"))
         self.comboBox_level_4.setItemText(1, _translate("MainWindow", "年份"))
         self.comboBox_level_4.setItemText(2, _translate("MainWindow", "月份"))
         self.comboBox_level_4.setItemText(3, _translate("MainWindow", "拍摄设备"))
-        self.comboBox_level_4.setItemText(4, _translate("MainWindow", "拍摄省份"))
-        self.comboBox_level_4.setItemText(5, _translate("MainWindow", "拍摄城市"))
+        self.comboBox_level_4.setItemText(4, _translate("MainWindow", "相机型号"))
+        self.comboBox_level_4.setItemText(5, _translate("MainWindow", "拍摄省份"))
+        self.comboBox_level_4.setItemText(6, _translate("MainWindow", "拍摄城市"))
         self.label_20.setText(_translate("MainWindow", "\\"))
         self.comboBox_level_5.setItemText(0, _translate("MainWindow", "不分类"))
         self.comboBox_level_5.setItemText(1, _translate("MainWindow", "年份"))
         self.comboBox_level_5.setItemText(2, _translate("MainWindow", "月份"))
         self.comboBox_level_5.setItemText(3, _translate("MainWindow", "拍摄设备"))
-        self.comboBox_level_5.setItemText(4, _translate("MainWindow", "拍摄省份"))
-        self.comboBox_level_5.setItemText(5, _translate("MainWindow", "拍摄城市"))
+        self.comboBox_level_5.setItemText(4, _translate("MainWindow", "相机型号"))
+        self.comboBox_level_5.setItemText(5, _translate("MainWindow", "拍摄省份"))
+        self.comboBox_level_5.setItemText(6, _translate("MainWindow", "拍摄城市"))
         self.label_buildName.setText(_translate("MainWindow", "文件名构建："))
         self.pushButton_unique.setText(_translate("MainWindow", "唯一标识"))
         self.label_point.setText(_translate("MainWindow", "."))
         self.pushButton_extensions.setText(_translate("MainWindow", "扩展名"))
         self.label_RenamingTags.setText(_translate("MainWindow", "命名标签："))
-        self.pushButton_original_tag.setText(_translate("MainWindow", "原文件名"))
+        self.pushButton_original_tag.setText(_translate("MainWindow", "原名"))
         self.pushButton_year_tag.setText(_translate("MainWindow", "年份"))
         self.pushButton_month_tag.setText(_translate("MainWindow", "月份"))
         self.pushButton_date_tag.setText(_translate("MainWindow", "日"))
         self.pushButton_day_tag.setText(_translate("MainWindow", "星期"))
         self.pushButton_time_tag.setText(_translate("MainWindow", "时间"))
         self.pushButton_make_tag.setText(_translate("MainWindow", "品牌"))
+        self.pushButton_model_tag.setText(_translate("MainWindow", "型号"))
         self.pushButton_address_tag.setText(_translate("MainWindow", "位置"))
         self.pushButton_customize_tag.setText(_translate("MainWindow", "自定义"))
         self.label_operation_2.setText(_translate("MainWindow", "分隔"))

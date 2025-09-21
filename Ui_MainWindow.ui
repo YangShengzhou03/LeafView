@@ -1550,6 +1550,11 @@ QComboBox:focus {
                         </item>
                         <item>
                          <property name="text">
+                          <string>相机型号</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
                           <string>拍摄省份</string>
                          </property>
                         </item>
@@ -1715,6 +1720,11 @@ QComboBox:focus {
                         <item>
                          <property name="text">
                           <string>拍摄设备</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>相机型号</string>
                          </property>
                         </item>
                         <item>
@@ -1888,6 +1898,11 @@ QComboBox:focus {
                         </item>
                         <item>
                          <property name="text">
+                          <string>相机型号</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
                           <string>拍摄省份</string>
                          </property>
                         </item>
@@ -2057,6 +2072,11 @@ QComboBox:focus {
                         </item>
                         <item>
                          <property name="text">
+                          <string>相机型号</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
                           <string>拍摄省份</string>
                          </property>
                         </item>
@@ -2222,6 +2242,11 @@ QComboBox:focus {
                         <item>
                          <property name="text">
                           <string>拍摄设备</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>相机型号</string>
                          </property>
                         </item>
                         <item>
@@ -2594,7 +2619,7 @@ QPushButton:pressed {
 }</string>
                               </property>
                               <property name="text">
-                               <string>原文件名</string>
+                               <string>原名</string>
                               </property>
                              </widget>
                             </item>
@@ -2847,6 +2872,47 @@ QPushButton:pressed {
                               </property>
                               <property name="text">
                                <string>品牌</string>
+                              </property>
+                             </widget>
+                            </item>
+                            <item>
+                             <widget class="QPushButton" name="pushButton_model_tag">
+                              <property name="maximumSize">
+                               <size>
+                                <width>74</width>
+                                <height>28</height>
+                               </size>
+                              </property>
+                              <property name="styleSheet">
+                               <string notr="true">QPushButton {
+  background-color: #ffffff;
+  color: #2c3e50;
+  border: 1px solid #d4d4d4;
+  text-align: center;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 12px;
+  padding: 4px 8px;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  text-transform: uppercase;
+}
+
+QPushButton:hover {
+  background-color: #f7f7f7;
+  color: #2c3e50;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+QPushButton:pressed {
+  background-color: #ececec;
+  color: #34495e;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  transform: translateY(2px);
+}</string>
+                              </property>
+                              <property name="text">
+                               <string>型号</string>
                               </property>
                              </widget>
                             </item>
@@ -4230,8 +4296,8 @@ QScrollBar::corner {
                         <rect>
                          <x>0</x>
                          <y>0</y>
-                         <width>228</width>
-                         <height>474</height>
+                         <width>40</width>
+                         <height>18</height>
                         </rect>
                        </property>
                        <layout class="QGridLayout" name="gridLayout_2"/>
