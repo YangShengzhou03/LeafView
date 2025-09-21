@@ -449,6 +449,36 @@ class SmartArrangeThread(QtCore.QThread):
                     self.log("DEBUG", f"MOV文件拍摄日期: {date_str}")
                     break
         
+        # 查找相机品牌信息，如果找到则将其值赋给date_taken
+        make_keys = [
+            'Make', 'Camera Make', 'Manufacturer', 'Camera Manufacturer'
+        ]
+        
+        for key in make_keys:
+            if key in video_metadata:
+                make_value = video_metadata[key]
+                if make_value:
+                    # 将相机品牌信息写入exif_data
+                    exif_data['Make'] = make_value
+                    if not date_taken:  # 只有当date_taken为空时才使用Make值
+                        date_taken = make_value
+                    self.log("DEBUG", f"MOV文件相机品牌: {make_value}")
+                break
+        
+        # 查找相机型号信息
+        model_keys = [
+            'Model', 'Camera Model', 'Device Model', 'Product Name'
+        ]
+        
+        for key in model_keys:
+            if key in video_metadata:
+                model_value = video_metadata[key]
+                if model_value:
+                    # 将相机型号信息写入exif_data
+                    exif_data['Model'] = model_value
+                    self.log("DEBUG", f"MOV文件相机型号: {model_value}")
+                break
+        
         gps_found = False
         for key, value in video_metadata.items():
             if 'gps' in key.lower() or 'location' in key.lower():
