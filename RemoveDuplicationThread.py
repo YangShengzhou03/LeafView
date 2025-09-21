@@ -108,8 +108,6 @@ class HashWorker(QtCore.QThread):
         self._is_running = False
 
 
-
-
 class ContrastWorker(QThread):
     progress_signal = pyqtSignal(int)
     result_signal = pyqtSignal(list)

@@ -431,7 +431,6 @@ class SmartArrange(QtWidgets.QWidget):
         log_message = f"[{current_time}] [{level}] {message}"
         self.log_signal.emit(level, log_message)
 
-
     def move_tag_back(self, button):
         self.selected_layout.removeWidget(button)
         

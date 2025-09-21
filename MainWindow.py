@@ -44,8 +44,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.contrast = Contrast(self, self.folder_page)
         self.write_exif = WriteExif(self, self.folder_page)
         self.text_recognition = TextRecognition(self, self.folder_page)
-        
-        pass
 
     def _connect_buttons(self):
         self.toolButton_close.clicked.connect(self.close)
@@ -55,8 +53,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.toolButton_serve.clicked.connect(self.feedback)
         self.toolButton_setting.clicked.connect(author)
         self.widget_headVip.mousePressEvent = self._on_head_vip_clicked
-        
-        pass
 
     def _on_head_vip_clicked(self, event):
         if event.button() == QtCore.Qt.MouseButton.LeftButton:

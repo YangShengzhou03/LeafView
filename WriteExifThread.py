@@ -141,7 +141,6 @@ class WriteExifThread(QThread):
                                 self.log.emit("ERROR", f"处理文件 {os.path.basename(file_path)} 时出错: {str(e)}")
                                 error_count += 1
                             finally:
-                                # 更新进度
                                 progress = int((i / len(futures)) * 100)
                                 self.progress_updated.emit(progress)
                     except Exception as e:
@@ -151,22 +150,14 @@ class WriteExifThread(QThread):
             self.log.emit("ERROR", f"全局错误: {str(e)}")
             error_count += 1
         finally:
-            # 发送完成信号
             self.log.emit("INFO", f"图片信息写入完成了，成功处理了 {success_count} 张，失败了 {error_count} 张，总共 {total_files} 张图片")
             self.finished_conversion.emit()
 
     def _collect_image_paths(self):
-        """
-        收集所有需要处理的图像文件路径
-        
-        Returns:
-            list: 图像文件路径列表
-        """
         image_extensions = ('.jpg', '.jpeg', '.png', '.webp', '.heic', '.heif', '.mov', '.mp4', '.avi', '.mkv', '.cr2', '.cr3', '.nef', '.arw', '.orf', '.dng', '.raf')
         image_paths = []
         for folder_path, include_sub in self.folders_dict.items():
             if include_sub == 1:
-                # 包含子文件夹
                 for root, _, files in os.walk(folder_path):
                     image_paths.extend(
                         os.path.join(root, file)
@@ -174,7 +165,6 @@ class WriteExifThread(QThread):
                         if file.lower().endswith(image_extensions)
                     )
             else:
-                # 不包含子文件夹
                 if os.path.isdir(folder_path):
                     image_paths.extend(
                         os.path.join(folder_path, file)
@@ -184,12 +174,6 @@ class WriteExifThread(QThread):
         return image_paths
 
     def process_image(self, image_path):
-        """
-        处理单个图像文件的EXIF写入
-        
-        Args:
-            image_path: 图像文件路径
-        """
         try:
             if self._stop_requested:
                 self.log.emit("WARNING", f"处理被取消: {os.path.basename(image_path)}")
@@ -197,27 +181,20 @@ class WriteExifThread(QThread):
             
             file_ext = os.path.splitext(image_path)[1].lower()
             
-            # 处理不同格式的文件
             if file_ext in ('.jpg', '.jpeg', '.webp'):
-                # 处理支持EXIF的格式
                 self._process_exif_format(image_path)
             elif file_ext == '.png':
-                # 处理PNG格式图像（不支持EXIF，使用PNG文本信息）
                 self._process_png_format(image_path)
             elif file_ext in ('.heic', '.heif'):
-                # 处理HEIC/HEIF格式
                 self._process_heic_format(image_path)
             elif file_ext in ('.mov', '.mp4', '.avi', '.mkv'):
-                # 处理视频格式
                 self._process_video_format(image_path)
             elif file_ext in ('.cr2', '.cr3', '.nef', '.arw', '.orf', '.dng', '.raf'):
-                # 处理RAW格式
                 self._process_raw_format(image_path)
             else:
                 self.log.emit("WARNING", f"不支持的文件格式: {file_ext}")
 
         except Exception as e:
-            # 错误处理
             result = detect_media_type(image_path)
             if not result["valid"]:
                 self.log.emit("ERROR", f"{os.path.basename(image_path)} 文件已损坏或格式不支持\n\n"
@@ -229,46 +206,33 @@ class WriteExifThread(QThread):
                 self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 时出错: {str(e)}")
 
     def _process_exif_format(self, image_path):
-        """
-        处理支持EXIF的格式（JPG, JPEG, WebP）
-        
-        Args:
-            image_path: 图像文件路径
-        """
         try:
             exif_dict = piexif.load(image_path)
         except Exception:
-            # 如果图片没有EXIF数据，创建空的EXIF字典
             exif_dict = {"0th": {}, "Exif": {}, "GPS": {}, "1st": {}, "thumbnail": None}
         
         updated_fields = []
         
-        # 标题
         if self.title:
             exif_dict["0th"][piexif.ImageIFD.ImageDescription] = self.title.encode('utf-8')
             updated_fields.append(f"标题: {self.title}")
         
-        # 作者
         if self.author:
             exif_dict["0th"][315] = self.author.encode('utf-8')
             updated_fields.append(f"作者: {self.author}")
         
-        # 主题
         if self.subject:
             exif_dict["0th"][piexif.ImageIFD.XPSubject] = self.subject.encode('utf-16le')
             updated_fields.append(f"主题: {self.subject}")
         
-        # 评分
         if self.rating:
             exif_dict["0th"][piexif.ImageIFD.Rating] = int(self.rating)
             updated_fields.append(f"评分: {self.rating}星")
         
-        # 版权
         if self.copyright:
             exif_dict["0th"][piexif.ImageIFD.Copyright] = self.copyright.encode('utf-8')
             updated_fields.append(f"版权: {self.copyright}")
         
-        # 相机品牌和型号
         if self.cameraBrand:
             exif_dict["0th"][piexif.ImageIFD.Make] = self.cameraBrand.encode('utf-8')
             updated_fields.append(f"相机品牌: {self.cameraBrand}")
@@ -277,25 +241,20 @@ class WriteExifThread(QThread):
             exif_dict["0th"][piexif.ImageIFD.Model] = self.cameraModel.encode('utf-8')
             updated_fields.append(f"相机型号: {self.cameraModel}")
         
-        # 镜头信息
         if self.lensBrand:
-            # 写入镜头品牌到EXIF数据
             if "Exif" not in exif_dict:
                 exif_dict["Exif"] = {}
             exif_dict["Exif"][piexif.ExifIFD.LensMake] = self.lensBrand.encode('utf-8')
             updated_fields.append(f"镜头品牌: {self.lensBrand}")
         
         if self.lensModel:
-            # 写入镜头型号到EXIF数据
             if "Exif" not in exif_dict:
                 exif_dict["Exif"] = {}
             exif_dict["Exif"][piexif.ExifIFD.LensModel] = self.lensModel.encode('utf-8')
             updated_fields.append(f"镜头型号: {self.lensModel}")
         
-        # 拍摄时间处理
         if self.shootTime != 0:
             if self.shootTime == 1:
-                # 从文件名识别拍摄时间
                 date_from_filename = self.get_date_from_filename(image_path)
                 if date_from_filename:
                     if "Exif" not in exif_dict:
@@ -305,19 +264,16 @@ class WriteExifThread(QThread):
                     updated_fields.append(
                         f"文件名识别拍摄时间: {date_from_filename.strftime('%Y:%m:%d %H:%M:%S')}")
             else:
-                # 使用指定的拍摄时间
                 if "Exif" not in exif_dict:
                     exif_dict["Exif"] = {}
                 exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = self.shootTime
                 updated_fields.append(f"拍摄时间: {self.shootTime}")
         
-        # GPS坐标
         if self.lat is not None and self.lon is not None:
             exif_dict["GPS"] = self._create_gps_data(self.lat, self.lon)
             updated_fields.append(
                 f"GPS坐标: {abs(self.lat):.6f}°{'N' if self.lat >= 0 else 'S'}, {abs(self.lon):.6f}°{'E' if self.lon >= 0 else 'W'}")
         
-        # 写入EXIF数据
         exif_bytes = piexif.dump(exif_dict)
         piexif.insert(exif_bytes, image_path)
         
@@ -329,15 +285,8 @@ class WriteExifThread(QThread):
                              "• 所有EXIF字段均为空")
 
     def _process_png_format(self, image_path):
-        """
-        处理PNG格式图像（不支持EXIF，使用PNG文本信息）
-        
-        Args:
-            image_path: 图像文件路径
-        """
         if self.shootTime != 0:
             if self.shootTime == 1:
-                # 从文件名识别拍摄时间
                 date_from_filename = self.get_date_from_filename(image_path)
                 if date_from_filename:
                     with Image.open(image_path) as img:
@@ -351,7 +300,6 @@ class WriteExifThread(QThread):
                         os.replace(temp_path, image_path)
                         self.log.emit("INFO", f"成功写入 {os.path.basename(image_path)} 的拍摄时间 {date_from_filename}")
             else:
-                # 使用指定的拍摄时间
                 with Image.open(image_path) as img:
                     png_info = PngImagePlugin.PngInfo()
                     for key in img.text:
@@ -364,14 +312,7 @@ class WriteExifThread(QThread):
                     self.log.emit("INFO", f"成功写入 {os.path.basename(image_path)} 的拍摄时间 {self.shootTime}")
 
     def _process_heic_format(self, image_path):
-        """
-        处理HEIC/HEIF格式图像
-        
-        Args:
-            image_path: 图像文件路径
-        """
         try:
-            # 尝试导入pillow_heif库
             from pillow_heif import open_heif, register_heif_opener
             register_heif_opener()
         except ImportError:
@@ -380,21 +321,15 @@ class WriteExifThread(QThread):
             return
         
         try:
-            # 读取HEIC文件
             heif_file = open_heif(image_path)
             
-            # 转换为PIL图像 - 使用新API
             try:
                 image = heif_file.to_pillow()
             except AttributeError:
-                # 兼容旧版本API
                 image = heif_file.to_pil()
             
-            # 读取现有的EXIF数据
             exif_dict = {"0th": {}, "Exif": {}, "GPS": {}, "1st": {}, "thumbnail": None}
             
-            # 尝试从多个来源读取EXIF数据
-            # 方法1: 从HEIF文件直接读取EXIF
             if hasattr(heif_file, 'exif') and heif_file.exif:
                 try:
                     heif_exif = piexif.load(heif_file.exif)
@@ -402,23 +337,21 @@ class WriteExifThread(QThread):
                 except Exception:
                     pass
             
-            # 方法2: 从PIL图像读取EXIF
             if hasattr(image, '_getexif') and image._getexif():
                 try:
                     pil_exif = image._getexif()
                     if pil_exif:
-                        # 映射常见的EXIF标签
                         tag_mapping = {
-                            270: ("0th", piexif.ImageIFD.ImageDescription),  # 图像描述
-                            271: ("0th", piexif.ImageIFD.Make),  # 相机制造商
-                            272: ("0th", piexif.ImageIFD.Model),  # 相机型号
-                            315: ("0th", 315),  # 作者
-                            36867: ("Exif", piexif.ExifIFD.DateTimeOriginal),  # 拍摄时间
-                            37378: ("Exif", piexif.ExifIFD.FNumber),  # 光圈值
-                            37386: ("Exif", piexif.ExifIFD.FocalLength),  # 焦距
-                            42035: ("Exif", piexif.ExifIFD.LensMake),  # 镜头制造商
-                            41988: ("Exif", piexif.ExifIFD.LensModel),  # 镜头型号
-                            42034: ("Exif", piexif.ExifIFD.LensSpecification),  # 镜头规格
+                            270: ("0th", piexif.ImageIFD.ImageDescription),
+                            271: ("0th", piexif.ImageIFD.Make),
+                            272: ("0th", piexif.ImageIFD.Model),
+                            315: ("0th", 315),
+                            36867: ("Exif", piexif.ExifIFD.DateTimeOriginal),
+                            37378: ("Exif", piexif.ExifIFD.FNumber),
+                            37386: ("Exif", piexif.ExifIFD.FocalLength),
+                            42035: ("Exif", piexif.ExifIFD.LensMake),
+                            41988: ("Exif", piexif.ExifIFD.LensModel),
+                            42034: ("Exif", piexif.ExifIFD.LensSpecification),
                         }
                         
                         for tag_id, (section, piexif_tag) in tag_mapping.items():
@@ -427,7 +360,6 @@ class WriteExifThread(QThread):
                 except Exception:
                     pass
             
-            # 方法3: 尝试通过PIL的info属性获取EXIF
             if hasattr(image, 'info') and 'exif' in image.info:
                 try:
                     info_exif = piexif.load(image.info['exif'])
@@ -435,7 +367,6 @@ class WriteExifThread(QThread):
                 except Exception:
                     pass
             
-            # 方法4: 尝试直接使用PIL打开文件读取EXIF
             try:
                 with Image.open(image_path) as img:
                     if hasattr(img, '_getexif') and img._getexif():
@@ -449,9 +380,9 @@ class WriteExifThread(QThread):
                                 36867: ("Exif", piexif.ExifIFD.DateTimeOriginal),
                                 37378: ("Exif", piexif.ExifIFD.FNumber),
                                 37386: ("Exif", piexif.ExifIFD.FocalLength),
-                                42035: ("Exif", piexif.ExifIFD.LensMake),  # 镜头制造商
+                                42035: ("Exif", piexif.ExifIFD.LensMake),
                                 41988: ("Exif", piexif.ExifIFD.LensModel),
-                                42034: ("Exif", piexif.ExifIFD.LensSpecification),  # 镜头规格
+                                42034: ("Exif", piexif.ExifIFD.LensSpecification),
                             }
                             
                             for tag_id, (section, piexif_tag) in tag_mapping.items():
@@ -462,32 +393,26 @@ class WriteExifThread(QThread):
             
             updated_fields = []
             
-            # 标题
             if self.title:
                 exif_dict["0th"][piexif.ImageIFD.ImageDescription] = self.title.encode('utf-8')
                 updated_fields.append(f"标题: {self.title}")
             
-            # 作者
             if self.author:
                 exif_dict["0th"][315] = self.author.encode('utf-8')
                 updated_fields.append(f"作者: {self.author}")
             
-            # 主题
             if self.subject:
                 exif_dict["0th"][piexif.ImageIFD.XPSubject] = self.subject.encode('utf-16le')
                 updated_fields.append(f"主题: {self.subject}")
             
-            # 评分
             if self.rating:
                 exif_dict["0th"][piexif.ImageIFD.Rating] = int(self.rating)
                 updated_fields.append(f"评分: {self.rating}星")
             
-            # 版权
             if self.copyright:
                 exif_dict["0th"][piexif.ImageIFD.Copyright] = self.copyright.encode('utf-8')
                 updated_fields.append(f"版权: {self.copyright}")
             
-            # 相机品牌和型号
             if self.cameraBrand:
                 exif_dict["0th"][piexif.ImageIFD.Make] = self.cameraBrand.encode('utf-8')
                 updated_fields.append(f"相机品牌: {self.cameraBrand}")
@@ -496,7 +421,6 @@ class WriteExifThread(QThread):
                 exif_dict["0th"][piexif.ImageIFD.Model] = self.cameraModel.encode('utf-8')
                 updated_fields.append(f"相机型号: {self.cameraModel}")
             
-            # 镜头信息
             if self.lensBrand:
                 if "Exif" not in exif_dict:
                     exif_dict["Exif"] = {}
@@ -509,10 +433,8 @@ class WriteExifThread(QThread):
                 exif_dict["Exif"][piexif.ExifIFD.LensModel] = self.lensModel.encode('utf-8')
                 updated_fields.append(f"镜头型号: {self.lensModel}")
             
-            # 拍摄时间处理
             if self.shootTime != 0:
                 if self.shootTime == 1:
-                    # 从文件名识别拍摄时间
                     date_from_filename = self.get_date_from_filename(image_path)
                     if date_from_filename:
                         if "Exif" not in exif_dict:
@@ -522,33 +444,22 @@ class WriteExifThread(QThread):
                         updated_fields.append(
                             f"文件名识别拍摄时间: {date_from_filename.strftime('%Y:%m:%d %H:%M:%S')}")
                 else:
-                    # 使用指定的拍摄时间
                     if "Exif" not in exif_dict:
                         exif_dict["Exif"] = {}
                     exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = self.shootTime.encode('utf-8')
                     updated_fields.append(f"拍摄时间: {self.shootTime}")
             
-            # GPS坐标
             if self.lat is not None and self.lon is not None:
                 exif_dict["GPS"] = self._create_gps_data(self.lat, self.lon)
                 updated_fields.append(
                     f"GPS坐标: {abs(self.lat):.6f}°{'N' if self.lat >= 0 else 'S'}, {abs(self.lon):.6f}°{'E' if self.lon >= 0 else 'W'}")
             
-            # 写入EXIF数据
             if updated_fields:
                 try:
-                    # 创建临时文件路径
                     temp_path = image_path + ".tmp"
-                    
-                    # 准备EXIF数据
                     exif_bytes = piexif.dump(exif_dict)
-                    
-                    # 保存图像（包含EXIF数据）
                     image.save(temp_path, format="HEIF", exif=exif_bytes)
-                    
-                    # 替换原文件
                     os.replace(temp_path, image_path)
-                    
                     self.log.emit("INFO", f"成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
                 except Exception as e:
                     self.log.emit("ERROR", f"写入EXIF数据失败: {str(e)}")
@@ -566,14 +477,7 @@ class WriteExifThread(QThread):
             self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 时出错: {str(e)}")
 
     def _process_video_format(self, image_path):
-        """
-        处理视频格式（MOV, MP4, AVI, MKV）
-        
-        Args:
-            image_path: 视频文件路径
-        """
         try:
-            # 尝试导入moviepy库
             from moviepy.editor import VideoFileClip
         except ImportError:
             self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 需要 moviepy 库\n\n"
@@ -581,7 +485,6 @@ class WriteExifThread(QThread):
             return
         
         try:
-            # 获取视频信息
             with VideoFileClip(image_path) as video:
                 duration = video.duration
                 fps = video.fps
@@ -589,25 +492,20 @@ class WriteExifThread(QThread):
             
             updated_fields = []
             
-            # 拍摄时间处理
             if self.shootTime != 0:
                 if self.shootTime == 1:
-                    # 从文件名识别拍摄时间
                     date_from_filename = self.get_date_from_filename(image_path)
                     if date_from_filename:
                         updated_fields.append(
                             f"文件名识别拍摄时间: {date_from_filename.strftime('%Y:%m:%d %H:%M:%S')}")
                 else:
-                    # 使用指定的拍摄时间
                     updated_fields.append(f"拍摄时间: {self.shootTime}")
             
-            # 其他元数据处理（简化版）
             if self.title:
                 updated_fields.append(f"标题: {self.title}")
             if self.author:
                 updated_fields.append(f"作者: {self.author}")
             
-            # 视频格式需要特殊工具来写入元数据，这里简化处理
             if updated_fields:
                 self.log.emit("INFO", f"成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
                 self.log.emit("WARNING", f"视频元数据写入需要氪金，仅记录元数据信息")
@@ -618,14 +516,7 @@ class WriteExifThread(QThread):
             self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 时出错: {str(e)}")
 
     def _process_raw_format(self, image_path):
-        """
-        处理RAW格式（CR2, CR3, NEF, ARW, ORF, DNG, RAF）
-        
-        Args:
-            image_path: RAW文件路径
-        """
         try:
-            # 尝试导入rawpy库
             import rawpy
         except ImportError:
             self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 需要 rawpy 库\n\n"
@@ -633,30 +524,23 @@ class WriteExifThread(QThread):
             return
         
         try:
-            # 读取RAW文件
             with rawpy.imread(image_path) as raw:
-                # 获取RAW图像信息
                 updated_fields = []
                 
-                # 拍摄时间处理
                 if self.shootTime != 0:
                     if self.shootTime == 1:
-                        # 从文件名识别拍摄时间
                         date_from_filename = self.get_date_from_filename(image_path)
                         if date_from_filename:
                             updated_fields.append(
                                 f"文件名识别拍摄时间: {date_from_filename.strftime('%Y:%m:%d %H:%M:%S')}")
                     else:
-                        # 使用指定的拍摄时间
                         updated_fields.append(f"拍摄时间: {self.shootTime}")
                 
-                # 其他元数据处理（简化版）
                 if self.title:
                     updated_fields.append(f"标题: {self.title}")
                 if self.author:
                     updated_fields.append(f"作者: {self.author}")
                 
-                # RAW格式需要特殊工具来写入元数据，这里简化处理
                 if updated_fields:
                     self.log.emit("INFO", f"成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
                     self.log.emit("WARNING", f"RAW格式元数据写入需要额外工具支持，仅记录元数据信息")
@@ -667,22 +551,10 @@ class WriteExifThread(QThread):
             self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 时出错: {str(e)}")
 
     def stop(self):
-        """请求停止处理"""
         self._stop_requested = True
 
     def _create_gps_data(self, lat, lon):
-        """
-        创建GPS EXIF数据字典
-        
-        Args:
-            lat: 纬度（十进制）
-            lon: 经度（十进制）
-            
-        Returns:
-            dict: GPS EXIF数据字典
-        """
         def decimal_to_dms(decimal):
-            """将十进制度数转换为度分秒格式"""
             degrees = int(abs(decimal))
             minutes_decimal = (abs(decimal) - degrees) * 60
             minutes = int(minutes_decimal)
@@ -691,15 +563,12 @@ class WriteExifThread(QThread):
         
         gps_dict = {}
         
-        # 纬度
         gps_dict[piexif.GPSIFD.GPSLatitude] = decimal_to_dms(abs(lat))
         gps_dict[piexif.GPSIFD.GPSLatitudeRef] = b'N' if lat >= 0 else b'S'
         
-        # 经度
         gps_dict[piexif.GPSIFD.GPSLongitude] = decimal_to_dms(abs(lon))
         gps_dict[piexif.GPSIFD.GPSLongitudeRef] = b'E' if lon >= 0 else b'W'
         
-        # 时间戳
         current_time = datetime.now()
         gps_dict[piexif.GPSIFD.GPSDateStamp] = current_time.strftime("%Y:%m:%d")
         gps_dict[piexif.GPSIFD.GPSTimeStamp] = [
@@ -708,27 +577,14 @@ class WriteExifThread(QThread):
             (current_time.second, 1)
         ]
         
-        # GPS处理方式
         gps_dict[piexif.GPSIFD.GPSProcessingMethod] = b'GPS'
         
         return gps_dict
 
     def get_date_from_filename(self, image_path):
-        """
-        从文件名中提取日期时间信息，支持多种格式，包括中文日期格式
-        
-        Args:
-            image_path: 图像文件路径
-            
-        Returns:
-            datetime: 提取的日期时间对象，失败返回None
-        """
         base_name = os.path.basename(image_path)
         name_without_ext = os.path.splitext(base_name)[0]
         
-        # 日期时间正则表达式模式 - 增强版支持中文格式和连续数字时间格式
-        # 匹配格式如：2024年9月23日、2024-09-23、2024.09.23、2024/09/23等
-        # 以及时间格式如：182124（18:21:24）、1418（14:18）等
         date_pattern = r'(?P<year>\d{4})[年\-\.\/\s]?' \
                        r'(?P<month>1[0-2]|0?[1-9])[月\-\.\/\s]?' \
                        r'(?P<day>3[01]|[12]\d|0?[1-9])[日号\-\.\/\s]?' \
@@ -737,27 +593,22 @@ class WriteExifThread(QThread):
                        r'(?P<minute>[0-5]?\d)?' \
                        r'(?P<second>[0-5]?\d)?'
         
-        # 尝试匹配日期时间模式
         match = re.search(date_pattern, name_without_ext)
         if not match:
-            # 尝试另一种模式：直接匹配连续的数字时间格式（如182124）
             time_pattern = r'(?P<year>\d{4})[^\d]*(?P<month>1[0-2]|0?[1-9])[^\d]*(?P<day>3[01]|[12]\d|0?[1-9])[^\d]*(?P<hour>[0-2]?\d)(?P<minute>[0-5]\d)(?P<second>[0-5]\d)'
             match = re.search(time_pattern, name_without_ext)
         
         if match:
             groups = match.groupdict()
-            # 验证年月日是否完整
             if not all([groups.get('year'), groups.get('month'), groups.get('day')]):
                 return None
 
-            # 构建日期时间字符串
             date_str_parts = [
                 groups['year'],
                 groups['month'].rjust(2, '0'),
                 groups['day'].rjust(2, '0')
             ]
             
-            # 添加时分秒（如果存在）
             has_time = False
             if groups.get('hour'):
                 date_str_parts.append(groups['hour'].rjust(2, '0'))
@@ -767,8 +618,6 @@ class WriteExifThread(QThread):
                     if groups.get('second'):
                         date_str_parts.append(groups['second'].rjust(2, '0'))
                     elif len(groups.get('minute', '')) == 2 and len(groups.get('hour', '')) == 2:
-                        # 如果有小时和分钟但没有秒，尝试从文件名中查找秒数
-                        # 例如：2024-08-06-周二-182124 -> 已经提取了18和21，还需要提取24
                         remaining_text = name_without_ext[match.end():]
                         if remaining_text and remaining_text[:2].isdigit():
                             seconds = remaining_text[:2]
@@ -776,9 +625,7 @@ class WriteExifThread(QThread):
                                 date_str_parts.append(seconds)
                                 groups['second'] = seconds
             
-            # 如果没有从正则表达式中提取到时间，尝试从文件名中查找连续的6位数字作为时间
             if not has_time:
-                # 查找文件名中是否有连续的6位数字（HHMMSS格式）
                 time_match = re.search(r'(?P<hour>[0-2]\d)(?P<minute>[0-5]\d)(?P<second>[0-5]\d)', name_without_ext)
                 if time_match:
                     groups.update(time_match.groupdict())
@@ -789,7 +636,6 @@ class WriteExifThread(QThread):
 
             date_str = ''.join(date_str_parts)
             
-            # 尝试不同的日期格式
             possible_formats = []
             if len(date_str) == 8:
                 possible_formats.append("%Y%m%d")
@@ -801,11 +647,9 @@ class WriteExifThread(QThread):
             for fmt in possible_formats:
                 try:
                     date_obj = datetime.strptime(date_str, fmt)
-                    # 验证日期时间有效性
                     if (1900 <= date_obj.year <= 2100 and
                             1 <= date_obj.month <= 12 and
                             1 <= date_obj.day <= 31):
-                        # 如果没有时间部分，设置为午夜
                         if not has_time:
                             date_obj = date_obj.replace(hour=0, minute=0, second=0)
                         return date_obj
