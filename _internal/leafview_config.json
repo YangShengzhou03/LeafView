@@ -1,10 +1,5 @@
 {
-  "folders": [
-    {
-      "path": "D:\\待分类",
-      "include_sub": true
-    }
-  ],
+  "folders": [],
   "location_cache": {},
   "settings": {
     "exif_title": "",
@@ -12,12 +7,12 @@
     "exif_subject": "",
     "exif_copyright": "",
     "exif_position": "",
-    "exif_latitude": "1",
-    "exif_longitude": "2",
+    "exif_latitude": "",
+    "exif_longitude": "",
     "exif_location_index": 1,
     "exif_camera_brand": "不写入",
     "exif_camera_model": "",
-    "exif_shoot_time_index": 2,
+    "exif_shoot_time_index": 0,
     "exif_shoot_time": "2025:09:21 17:44:02",
     "exif_star_rating": 0
   }
