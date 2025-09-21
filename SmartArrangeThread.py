@@ -603,19 +603,18 @@ class SmartArrangeThread(QtCore.QThread):
                 
         except Exception as e:
             self.log("DEBUG", f"获取 {file_path} 的EXIF数据时出错: {str(e)}")
-            # 出错时使用文件系统时间
             exif_data['DateTime'] = create_time.strftime('%Y-%m-%d %H:%M:%S')
         return exif_data
 
     def parse_exif_datetime(self, tags):
-        """解析EXIF中的日期时间信息"""
+         
         try:
-            # 尝试获取DateTimeOriginal（原始拍摄时间）
+             
             datetime_str = str(tags.get('EXIF DateTimeOriginal', ''))
             if datetime_str and datetime_str != 'None':
                 return datetime.datetime.strptime(datetime_str, '%Y:%m:%d %H:%M:%S')
             
-            # 尝试获取DateTime（修改时间）
+             
             datetime_str = str(tags.get('Image DateTime', ''))
             if datetime_str and datetime_str != 'None':
                 return datetime.datetime.strptime(datetime_str, '%Y:%m:%d %H:%M:%S')
@@ -626,12 +625,12 @@ class SmartArrangeThread(QtCore.QThread):
         return None
 
     def parse_datetime(self, datetime_str):
-        """解析各种格式的日期时间字符串"""
+         
         if not datetime_str:
             return None
             
         try:
-            # 尝试常见格式
+             
             formats = [
                 '%Y:%m:%d %H:%M:%S',
                 '%Y-%m-%d %H:%M:%S', 
@@ -654,35 +653,28 @@ class SmartArrangeThread(QtCore.QThread):
         return None
 
     def parse_gps_coordinates(self, gps_info):
-        """解析GPS信息中的经纬度坐标
-        
-        支持格式：
-        - GPS Coordinates: 23 deg 8' 2.04" N, 113 deg 19' 15.60" E
-        - GPS Latitude: 23 deg 8' 2.04" N
-        - GPS Longitude: 113 deg 19' 15.60" E
-        - GPS Position: 23 deg 8' 2.04" N, 113 deg 19' 15.60" E
-        """
+         
         if not gps_info:
             return None, None
             
         lat = None
         lon = None
         
-        # 首先尝试从GPS Coordinates或GPS Position中提取
+         
         for key in ['GPS Coordinates', 'GPS Position']:
             if key in gps_info:
                 coords_str = gps_info[key]
-                # 解析格式: "23 deg 8' 2.04\" N, 113 deg 19' 15.60\" E"
+                 
                 try:
-                    # 分割纬度和经度部分
+                     
                     parts = coords_str.split(',')
                     if len(parts) == 2:
                         lat_str = parts[0].strip()
                         lon_str = parts[1].strip()
                         
-                        # 解析纬度
+                         
                         lat = self._parse_dms_coordinate(lat_str)
-                        # 解析经度
+                         
                         lon = self._parse_dms_coordinate(lon_str)
                         
                         if lat is not None and lon is not None:
@@ -690,7 +682,7 @@ class SmartArrangeThread(QtCore.QThread):
                 except Exception:
                     continue
         
-        # 如果上面没找到，尝试分别从GPS Latitude和GPS Longitude中提取
+         
         if 'GPS Latitude' in gps_info:
             lat = self._parse_dms_coordinate(gps_info['GPS Latitude'])
         if 'GPS Longitude' in gps_info:
@@ -699,18 +691,12 @@ class SmartArrangeThread(QtCore.QThread):
         return lat, lon
     
     def _parse_dms_coordinate(self, coord_str):
-        """解析度分秒格式的坐标字符串
-        
-        支持格式：
-        - "23 deg 8' 2.04\" N"
-        - "113 deg 19' 15.60\" E"
-        - "23°8'2.04\"N"
-        """
+         
         if not coord_str:
             return None
             
         try:
-            # 提取方向（N/S/E/W）
+             
             direction = None
             if 'N' in coord_str or 'S' in coord_str:
                 if 'N' in coord_str:
@@ -723,13 +709,13 @@ class SmartArrangeThread(QtCore.QThread):
                 else:
                     direction = 'W'
             
-            # 移除方向字符和多余空格
+             
             clean_str = coord_str.replace('N', '').replace('S', '').replace('E', '').replace('W', '').strip()
             
-            # 统一替换度分秒符号
+             
             clean_str = clean_str.replace('deg', '°').replace('°', ' ').replace("'", ' ').replace('"', ' ')
             
-            # 分割数字部分
+             
             parts = clean_str.split()
             degrees = minutes = seconds = 0.0
             
@@ -740,10 +726,10 @@ class SmartArrangeThread(QtCore.QThread):
             if len(parts) >= 3:
                 seconds = float(parts[2])
             
-            # 计算十进制坐标
+             
             decimal = degrees + minutes / 60.0 + seconds / 3600.0
             
-            # 根据方向调整符号
+             
             if direction in ['S', 'W']:
                 decimal = -decimal
                 
@@ -754,12 +740,12 @@ class SmartArrangeThread(QtCore.QThread):
             return None
 
     def get_city_and_province(self, lat, lon):
-        """根据经纬度获取省份和城市信息"""
+         
         if not hasattr(self, 'province_data') or not hasattr(self, 'city_data'):
             return "未知省份", "未知城市"
 
         def is_point_in_polygon(x, y, polygon):
-            """判断点是否在多边形内（使用射线法）"""
+             
             if not isinstance(polygon, (list, tuple)) or len(polygon) < 3:
                 return False
             
@@ -781,7 +767,7 @@ class SmartArrangeThread(QtCore.QThread):
             return inside
 
         def query_location(longitude, latitude, data):
-            """查询位置信息"""
+             
             for i, feature in enumerate(data['features']):
                 name, coordinates = feature['properties']['name'], feature['geometry']['coordinates']
                 polygons = [polygon for multi_polygon in coordinates for polygon in
@@ -793,12 +779,12 @@ class SmartArrangeThread(QtCore.QThread):
 
             return None
 
-        # 检查坐标是否为十进制格式
+         
         if isinstance(lat, (int, float)) and isinstance(lon, (int, float)):
             lat_deg = lat
             lon_deg = lon
         else:
-            # 转换为十进制度数
+             
             lat_deg = self.convert_to_degrees(lat)
             lon_deg = self.convert_to_degrees(lon)
         
@@ -816,23 +802,23 @@ class SmartArrangeThread(QtCore.QThread):
 
     @staticmethod
     def get_address(self, latitude: float, longitude: float) -> str:
-        """通过高德地图API获取地址"""
+         
         if not (isinstance(latitude, (int, float)) and isinstance(longitude, (int, float))):
             return "未知位置"
         
-        # 使用带容差的缓存查找
+         
         cached_address = self.config_manager.get_cached_location_with_tolerance(latitude, longitude)
         if cached_address:
             return cached_address
         
         try:
-            # 获取用户设置的高德地图API密钥
+             
             user_key = "0db079da53e08cbb62b52a42f657b994"
             
             if not user_key:
                 return "未知位置"
             
-            # 高德地图API请求
+             
             url = f"https://restapi.amap.com/v3/geocode/regeo?key={user_key}&location={longitude},{latitude}&extensions=base"
             response = requests.get(url, timeout=5)
             data = response.json()
@@ -840,7 +826,7 @@ class SmartArrangeThread(QtCore.QThread):
             if data.get("status") == "1":
                 address = data.get("regeocode", {}).get("formatted_address", "")
                 if address:
-                    # 缓存地址信息
+                     
                     self.config_manager.cache_location(latitude, longitude, address)
                     return address
                 else:
@@ -853,7 +839,7 @@ class SmartArrangeThread(QtCore.QThread):
 
     @staticmethod
     def convert_to_degrees(value):
-        """将EXIF中的GPS坐标转换为十进制度数"""
+         
         if not value:
             return None
         
@@ -868,55 +854,55 @@ class SmartArrangeThread(QtCore.QThread):
             return None
 
     def build_new_file_name(self, file_path, file_time, original_name):
-        """构建新的文件名"""
+         
         if not self.file_name_structure:
             return original_name
         
-        # 根据选择的标签和顺序构建文件名
+         
         parts = []
         for tag in self.file_name_structure:
             parts.append(self.get_file_name_part(tag, file_path, file_time, original_name))
         
-        # 使用分隔符连接各个部分
+         
         return self.separator.join(parts)
         
     def process_single_file(self, file_path, base_folder=None):
-        """处理单个文件，根据分类结构和文件名结构决定文件的目标位置和名称"""
+         
         try:
-            # 获取文件的EXIF数据
+             
             exif_data = self.get_exif_data(file_path)
             
-            # 获取文件时间信息
+             
             file_time = datetime.datetime.strptime(exif_data['DateTime'], '%Y-%m-%d %H:%M:%S') if exif_data.get('DateTime') else None
             
-            # 构建目标路径
+             
             target_path = self.build_target_path(file_path, exif_data, file_time, base_folder)
             
-            # 构建新的文件名
+             
             original_name = file_path.stem
             new_file_name = self.build_new_file_name(file_path, file_time, original_name)
             
-            # 添加文件扩展名
+             
             new_file_name_with_ext = f"{new_file_name}{file_path.suffix}"
             
-            # 构建完整的目标路径
+             
             full_target_path = target_path / new_file_name_with_ext
             
-            # 检查是否真的需要重命名或移动
+             
             needs_operation = False
             operation_type = "重命名"
             
-            # 检查文件名是否相同
+             
             if file_path.name != new_file_name_with_ext:
                 needs_operation = True
                 operation_type = "重命名"
             
-            # 检查路径是否相同（用于分类操作）
+             
             if file_path.parent != target_path:
                 needs_operation = True
                 operation_type = "移动"
             
-            # 只有当需要操作时才添加到重命名列表
+             
             if needs_operation:
                 self.files_to_rename.append({
                     'old_path': str(file_path),
@@ -930,31 +916,31 @@ class SmartArrangeThread(QtCore.QThread):
             self.log("ERROR", f"处理文件 {file_path} 时出错: {str(e)}")
 
     def build_target_path(self, file_path, exif_data, file_time, base_folder):
-        """构建文件的目标路径"""
+         
         if not self.classification_structure:
-            # 如果没有分类结构，使用原文件夹
+             
             return file_path.parent
         
-        # 从基础文件夹开始构建路径
+         
         if base_folder:
             target_path = Path(base_folder)
         else:
             target_path = file_path.parent
         
-        # 根据分类结构构建子目录
+         
         for level in self.classification_structure:
             folder_name = self.get_folder_name(level, exif_data, file_time, file_path)
             if folder_name:
                 target_path = target_path / folder_name
         
-        # 无论用户设置什么分类结构，始终在最终目录下按文件类型分类
+         
         file_type = get_file_type(file_path)
         target_path = target_path / file_type
         
         return target_path
 
     def get_folder_name(self, level, exif_data, file_time, file_path):
-        """根据分类级别获取文件夹名称"""
+         
         if level == "不分类":
             return None
         elif level == "年份" and file_time:
@@ -968,7 +954,7 @@ class SmartArrangeThread(QtCore.QThread):
             return weekdays[file_time.weekday()]
         elif level == "拍摄设备":
             if exif_data.get('Make'):
-                # 拍摄设备：使用相机品牌作为文件夹名称
+                 
                 return exif_data['Make']
             else:
                 return "未知设备"
@@ -997,23 +983,23 @@ class SmartArrangeThread(QtCore.QThread):
         elif level == "文件类型":
             return get_file_type(file_path)
         else:
-            # 对于未知的分类级别，使用具体的未知描述
+             
             return "未知"
 
     def get_file_name_part(self, tag, file_path, file_time, original_name):
-        """根据标签获取文件名的组成部分"""
+         
         if isinstance(tag, dict) and 'tag' in tag and 'content' in tag:
-            # 处理包含tag和content的字典结构
+             
             tag_name = tag['tag']
             if tag_name == "自定义":
-                return tag['content']  # 返回用户输入的自定义内容
+                return tag['content']  
             else:
-                # 对于其他标签，使用原始逻辑，但保留content信息
-                # 如果content不为None，使用content；否则使用原始标签逻辑
+                 
+                 
                 if tag['content'] is not None:
                     return tag['content']
                 else:
-                    # 对于其他标签，使用原始逻辑
+                     
                     tag = tag_name
         
         if tag == "原文件名":
@@ -1036,16 +1022,16 @@ class SmartArrangeThread(QtCore.QThread):
         elif tag == "位置":
             exif_data = self.get_exif_data(file_path)
             if exif_data.get('GPS GPSLatitude') and exif_data.get('GPS GPSLongitude'):
-                # 使用高德地图API获取详细地址
+                 
                 address = self.get_address(exif_data['GPS GPSLatitude'], exif_data['GPS GPSLongitude'])
                 if address:
                     return address
-                # 如果API调用失败，回退到本地数据
+                 
                 province, city = self.get_city_and_province(exif_data['GPS GPSLatitude'], exif_data['GPS GPSLongitude'])
                 return f"{province}{city}" if city != "未知城市" else province
             return "未知位置"
         elif tag == "自定义":
-            # 这里可以添加自定义标签的处理逻辑
+             
             return "自定义"
         else:
             return ""

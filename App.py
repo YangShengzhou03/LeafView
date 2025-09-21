@@ -25,7 +25,6 @@ def bring_existing_to_front():
 def setup_local_server():
     server = QLocalServer()
     if not server.listen(APP_SERVER_NAME):
-        print(f"启动本地服务器时遇到了问题：{server.errorString()}")
         return None
     return server
 
@@ -36,18 +35,14 @@ def main():
     shared_memory = QtCore.QSharedMemory(SHARED_MEMORY_KEY)
     if shared_memory.attach():
         if bring_existing_to_front():
-            print("发现LeafView已经在运行，已经把它调到前面来了")
-        else:
-            print("发现LeafView已经在运行，但没能把它调到前面")
+            pass
         sys.exit(0)
     
     if not shared_memory.create(1):
-        print(f"创建共享内存时出错了：{shared_memory.errorString()}")
         sys.exit(1)
     
     local_server = setup_local_server()
     if not local_server:
-        print("本地服务器没能启动起来")
         sys.exit(1)
     
     def handle_new_connection():

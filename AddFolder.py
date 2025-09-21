@@ -17,68 +17,40 @@ from config_manager import config_manager
 
 
 class FolderPage(QtWidgets.QWidget):
-    """
-    媒体导入页面控制器
-    
-    管理文件夹的添加、移除和冲突检测，提供拖拽和对话框两种导入方式
-    """
-    
     def __init__(self, parent=None):
-        """初始化媒体导入页面"""
         super().__init__(parent)
-        self.parent = parent  # 主窗口引用
-        self.folder_items = []  # 存储所有文件夹项数据
-        self._batch_adding = False  # 批量添加标志，用于控制消息框显示
+        self.parent = parent
+        self.folder_items = []
+        self._batch_adding = False
         
-        # 初始化页面设置
         self.init_page()
         
-        # 配置拖拽功能
         self._setup_drag_drop()
         
-        # 设置点击功能
         self._setup_click_behavior()
         
-        # 加载已保存的文件夹路径
         self._load_saved_folders()
     
     def _setup_drag_drop(self):
-        """设置拖拽相关配置"""
         self.parent.widget_add_folder.setAcceptDrops(True)
         self.parent.widget_add_folder.dragEnterEvent = self.dragEnterEvent
         self.parent.widget_add_folder.dropEvent = self.dropEvent
     
     def _setup_click_behavior(self):
-        """设置点击行为配置"""
-        # 设置鼠标指针为手型，提示可点击
         self.parent.widget_add_folder.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
-        # 连接整个widget的点击事件
         self.parent.widget_add_folder.mousePressEvent = self._open_folder_dialog_on_click
 
     def init_page(self):
-        """初始化页面连接信号槽"""
-        # 连接按钮信号
-        self.parent.pushButton_add_folder.clicked.connect(self._open_folder_dialog)  # 添加文件夹按钮
+        self.parent.pushButton_add_folder.clicked.connect(self._open_folder_dialog)
 
     def _connect_buttons(self):
-        # 保持原有按钮的连接
         self.parent.pushButton_add_folder.clicked.connect(self._open_folder_dialog)
     
     def _open_folder_dialog_on_click(self, event):
-        """
-        点击widget时打开文件夹选择对话框
-        
-        处理widget_add_folder区域的点击事件，提供额外的交互方式
-        """
         if event.button() == QtCore.Qt.MouseButton.LeftButton:
             self._open_folder_dialog()
 
     def _open_folder_dialog(self):
-        """
-        打开文件夹选择对话框
-        
-        使用系统原生对话框选择文件夹，选择后自动添加到列表
-        """
         folder_path = QFileDialog.getExistingDirectory(self, "选择文件夹")
         if folder_path:
             self._check_and_add_folder(folder_path)
@@ -195,7 +167,6 @@ class FolderPage(QtWidgets.QWidget):
             self._check_media_files(folder_path)
             
         except Exception as e:
-            print(f"添加文件夹时出了点问题：{e}")
             QMessageBox.critical(
                 self, 
                 "添加失败", 
@@ -380,7 +351,6 @@ class FolderPage(QtWidgets.QWidget):
                     config_manager.update_folder_include_sub(current_path, include_sub)
                     break
         except Exception as e:
-            print(f"更新包含子文件夹选项时出了点问题：{e}")
             if not (hasattr(self, '_batch_adding') and self._batch_adding):
                 QMessageBox.critical(
                     self, 
@@ -398,8 +368,6 @@ class FolderPage(QtWidgets.QWidget):
             norm_path2 = os.path.normcase(os.path.normpath(path2))
             
             if os.name == 'nt':
-                if norm_path1.startswith('//') and norm_path2.startswith('//'):
-                    return norm_path1 == norm_path2
                 drive1 = os.path.splitdrive(norm_path1)[0].lower()
                 drive2 = os.path.splitdrive(norm_path2)[0].lower()
                 path_part1 = norm_path1[len(drive1):]
@@ -459,7 +427,7 @@ class FolderPage(QtWidgets.QWidget):
                     try:
                         config_manager.remove_folder(folder_path)
                     except Exception as e:
-                        print(f"移除文件夹配置时出了点问题：{e}")
+                        pass
                     break
             
             for i in reversed(range(self.parent.gridLayout_6.count())):
@@ -480,7 +448,6 @@ class FolderPage(QtWidgets.QWidget):
             
             self.parent._update_empty_state(bool(self.folder_items))
         except Exception as e:
-            print(f"移除文件夹项时出了点问题：{e}")
             QMessageBox.warning(
                 self, 
                 "操作失败", 
@@ -511,14 +478,13 @@ class FolderPage(QtWidgets.QWidget):
                             has_media = True
                             break
                     except Exception as e:
-                        print(f"检查文件 {file} 时出了点问题：{e}")
                         continue
                     
                 file_count += 1
                 if file_count >= max_check_files:
                     break
         except Exception as e:
-            print(f"检查媒体文件时出了点问题：{e}")
+            pass
         
         if has_media:
             self.parent._update_empty_state(True)
@@ -629,7 +595,6 @@ class FolderPage(QtWidgets.QWidget):
                 self._check_media_files(folder_path)
                 
             except Exception as e:
-                print(f"添加文件夹 {folder_path} 时出了点问题：{e}")
                 error_count += 1
                 results['error'].append((folder_path, str(e)))
         

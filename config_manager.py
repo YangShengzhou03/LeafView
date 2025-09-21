@@ -122,17 +122,13 @@ class ConfigManager:
         return None
     
     def get_cached_location_with_tolerance(self, latitude: float, longitude: float, tolerance: float = 0.01) -> Optional[str]:
-        """带容差的缓存查找，tolerance单位是度，默认0.08度约等于8公里"""
-        # 首先尝试精确匹配
         exact_match = self.get_cached_location(latitude, longitude)
         if exact_match:
             return exact_match
         
-        # 如果没有精确匹配，则查找容差范围内的缓存
         for cache_key, cached_data in self.config["location_cache"].items():
             try:
                 cached_lat, cached_lon = map(float, cache_key.split(','))
-                # 计算两点之间的直线距离（简化计算，适用于小范围）
                 distance = ((latitude - cached_lat) ** 2 + (longitude - cached_lon) ** 2) ** 0.5
                 if distance <= tolerance:
                     return cached_data["address"]

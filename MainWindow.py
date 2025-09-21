@@ -59,7 +59,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         pass
 
     def _on_head_vip_clicked(self, event):
-        """处理widget_headVip的点击事件"""
         if event.button() == QtCore.Qt.MouseButton.LeftButton:
             QtWidgets.QMessageBox.information(self, "demo版", "当前为测试演示版本，服务可能随时终止。\n\n如果您需要继续使用，请考虑购买专业版。")
         event.accept()
@@ -145,7 +144,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             if any(keyword in message for keyword in ["完成", "成功", "开始", "停止", "中断"]):
                 self._show_user_notification("提示", message, "info")
         
-        print(log_message)
 
     def _show_user_notification(self, title, message, level):
         try:
