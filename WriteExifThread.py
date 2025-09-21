@@ -53,7 +53,6 @@ class WriteExifThread(QThread):
         self.subject = subject
         self.rating = rating
         self.copyright = copyright
-        self.position = position
         self.shootTime = shootTime
         self.cameraBrand = cameraBrand
         self.cameraModel = cameraModel

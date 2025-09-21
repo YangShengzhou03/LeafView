@@ -288,7 +288,7 @@ class WriteExif(QWidget):
                 'address': address, 
                 'key': amap_key, 
                 'output': 'JSON',
-                'city': '全国'  # 不限制城市，在全国范围内搜索
+                'city': '全国'  # 不限制城市，在整个城市范围内搜索
             }
             
             self.log("INFO", f"正在请求高德地图API，地址: {address}")
@@ -343,6 +343,50 @@ class WriteExif(QWidget):
         except Exception as e:
             self.log("ERROR", f"获取位置信息失败: {str(e)}\n\n"
                          "请检查网络连接或稍后重试")
+            return None
+
+    def parse_dms_coordinates(self, lat_str, lon_str):
+        """
+        解析度分秒格式的坐标
+        
+        Args:
+            lat_str: 纬度字符串，格式如 "30;6; 51.50999999999474"
+            lon_str: 经度字符串，格式如 "120;23;53.3499999999766317"
+            
+        Returns:
+            tuple: (纬度, 经度)的十进制格式，失败返回None
+        """
+        try:
+            # 解析纬度
+            lat_parts = lat_str.strip().replace(' ', '').split(';')
+            if len(lat_parts) != 3:
+                return None
+                
+            lat_deg = float(lat_parts[0])
+            lat_min = float(lat_parts[1])
+            lat_sec = float(lat_parts[2])
+            
+            # 解析经度
+            lon_parts = lon_str.strip().replace(' ', '').split(';')
+            if len(lon_parts) != 3:
+                return None
+                
+            lon_deg = float(lon_parts[0])
+            lon_min = float(lon_parts[1])
+            lon_sec = float(lon_parts[2])
+            
+            # 转换为十进制格式
+            lat_decimal = lat_deg + lat_min / 60 + lat_sec / 3600
+            lon_decimal = lon_deg + lon_min / 60 + lon_sec / 3600
+            
+            # 验证坐标范围
+            if -90 <= lat_decimal <= 90 and -180 <= lon_decimal <= 180:
+                return lat_decimal, lon_decimal
+            else:
+                return None
+                
+        except Exception as e:
+            self.log("ERROR", f"解析度分秒坐标失败: {str(e)}")
             return None
 
     def update_position_by_ip(self):
@@ -417,7 +461,7 @@ class WriteExif(QWidget):
                 coord_match = re.match(coord_pattern, address)
                 
                 if coord_match:
-                    # 已经是经纬度格式，直接使用
+                    # 已经是十进制经纬度格式，直接使用
                     lat, lon = coord_match.groups()
                     try:
                         lat_float = float(lat)
@@ -435,22 +479,45 @@ class WriteExif(QWidget):
                                  "请输入有效的数字格式")
                         return False
                 else:
-                    # 不是坐标格式，尝试通过地址获取坐标
-                    if coords := self.get_location(address):
-                        params['position'] = ','.join(coords)
+                    # 检查是否是度分秒格式（例如："纬度30;6;51.50999999999474 经度120;23;53.3499999999766317"）
+                    dms_pattern = r'纬度\s*([0-9;.\s]+)\s*经度\s*([0-9;.\s]+)'
+                    dms_match = re.match(dms_pattern, address)
+                    
+                    if not dms_match:
+                        # 尝试另一种可能的格式
+                        dms_pattern = r'([0-9;.\s]+)\s*,\s*([0-9;.\s]+)'
+                        dms_match = re.match(dms_pattern, address)
+                    
+                    if dms_match:
+                        # 是度分秒格式，尝试解析
+                        lat_str, lon_str = dms_match.groups()
+                        coords = self.parse_dms_coordinates(lat_str, lon_str)
+                        if coords:
+                            lat_decimal, lon_decimal = coords
+                            params['position'] = f"{lat_decimal},{lon_decimal}"
+                            self.log("INFO", f"成功解析度分秒坐标: 纬度={lat_decimal}, 经度={lon_decimal}")
+                        else:
+                            self.log("ERROR", "度分秒坐标格式无效\n\n"
+                                     "请确保格式为：纬度30;6;51.50999999999474 经度120;23;53.3499999999766317")
+                            return False
                     else:
-                        self.log("ERROR", f"无法找到地址'{address}'对应的地理坐标\n\n"
-                                   "请检查：\n"
-                                   "• 地址拼写是否正确\n"
-                                   "• 是否包含详细的门牌号或地标\n"
-                                   "• 高德地图API密钥是否有效")
-                        return False
+                        # 不是坐标格式，尝试通过地址获取坐标
+                        if coords := self.get_location(address):
+                            params['position'] = ','.join(coords)
+                        else:
+                            self.log("ERROR", f"无法找到地址'{address}'对应的地理坐标\n\n"
+                                       "请检查：\n"
+                                       "• 地址拼写是否正确\n"
+                                       "• 是否包含详细的门牌号或地标\n"
+                                       "• 高德地图API密钥是否有效")
+                            return False
         elif location_type == 1:  # 经纬度
             longitude = self.parent.lineEdit_EXIF_longitude.text()
             latitude = self.parent.lineEdit_EXIF_latitude.text()
             if longitude and latitude:
                 # 验证经纬度格式
                 try:
+                    # 首先尝试直接解析为十进制格式
                     lon = float(longitude)
                     lat = float(latitude)
                     if -180 <= lon <= 180 and -90 <= lat <= 90:
@@ -462,11 +529,25 @@ class WriteExif(QWidget):
                                  "请检查输入的数值是否正确")
                         return False
                 except ValueError:
-                    self.log("ERROR", "经纬度格式无效\n\n"
-                             "请输入有效的数字格式，例如：\n"
-                             "• 经度: 116.397128\n"
-                             "• 纬度: 39.916527")
-                    return False
+                    # 如果直接解析失败，尝试解析为度分秒格式
+                    coords = self.parse_dms_coordinates(latitude, longitude)
+                    if coords:
+                        lat_decimal, lon_decimal = coords
+                        if -180 <= lon_decimal <= 180 and -90 <= lat_decimal <= 90:
+                            params['position'] = f"{lat_decimal},{lon_decimal}"
+                            self.log("INFO", f"成功解析度分秒坐标: 纬度={lat_decimal}, 经度={lon_decimal}")
+                        else:
+                            self.log("ERROR", "经纬度范围无效\n\n"
+                                     "• 经度应在-180到180之间\n"
+                                     "• 纬度应在-90到90之间\n\n"
+                                     "请检查输入的数值是否正确")
+                            return False
+                    else:
+                        self.log("ERROR", "经纬度格式无效\n\n"
+                                 "请输入有效的数字格式，例如：\n"
+                                 "• 十进制格式: 经度116.397128, 纬度39.916527\n"
+                                 "• 度分秒格式: 经度120;23;53.34, 纬度30;6;51.51")
+                        return False
             else:
                 self.log("ERROR", "请输入经纬度信息\n\n"
                              "请在对应的文本框中输入经度和纬度值")
