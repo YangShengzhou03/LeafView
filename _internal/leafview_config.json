@@ -1,5 +1,10 @@
 {
-  "folders": [],
+  "folders": [
+    {
+      "path": "D:\\待分类",
+      "include_sub": true
+    }
+  ],
   "location_cache": {},
   "settings": {
     "exif_title": "",
