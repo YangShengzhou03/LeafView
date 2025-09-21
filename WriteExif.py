@@ -19,6 +19,7 @@ from PyQt6.QtCore import pyqtSlot, QDateTime
 from PyQt6.QtWidgets import QWidget, QMessageBox
 from WriteExifThread import WriteExifThread
 from common import get_resource_path
+from config_manager import config_manager
 
 
 class WriteExif(QWidget):
@@ -72,6 +73,9 @@ class WriteExif(QWidget):
         # 初始化时隐藏经纬度文本框
         self.parent.lineEdit_EXIF_longitude.hide()
         self.parent.lineEdit_EXIF_latitude.hide()
+        self.load_exif_settings()
+        # 保存初始配置
+        self.save_exif_settings()
         self.log("DEBUG", "欢迎使用图像属性写入功能，不写入项留空即可。")
         
     def load_camera_lens_mapping(self):
@@ -210,6 +214,25 @@ class WriteExif(QWidget):
         self.parent.comboBox_shootTime.currentIndexChanged.connect(self.on_combobox_time_changed)
         # 添加位置下拉框的信号连接
         self.parent.comboBox_location.currentIndexChanged.connect(self.on_combobox_location_changed)
+        
+        # 添加文本框内容变化信号连接，用于自动保存配置
+        self.parent.lineEdit_EXIF_Title.textChanged.connect(self.save_exif_settings)
+        self.parent.lineEdit_EXIF_Author.textChanged.connect(self.save_exif_settings)
+        self.parent.lineEdit_EXIF_Theme.textChanged.connect(self.save_exif_settings)
+        self.parent.lineEdit_EXIF_Copyright.textChanged.connect(self.save_exif_settings)
+        self.parent.lineEdit_EXIF_Position.textChanged.connect(self.save_exif_settings)
+        self.parent.lineEdit_EXIF_latitude.textChanged.connect(self.save_exif_settings)
+        self.parent.lineEdit_EXIF_longitude.textChanged.connect(self.save_exif_settings)
+        
+        # 添加下拉框选择变化信号连接，用于自动保存配置
+        self.parent.comboBox_brand.currentIndexChanged.connect(self.save_exif_settings)
+        self.parent.comboBox_model.currentIndexChanged.connect(self.save_exif_settings)
+        self.parent.comboBox_shootTime.currentIndexChanged.connect(self.save_exif_settings)
+        self.parent.comboBox_location.currentIndexChanged.connect(self.save_exif_settings)
+        
+        # 添加星级评分按钮点击信号连接，用于自动保存配置
+        for i in range(1, 6):
+            getattr(self.parent, f'pushButton_star_{i}').clicked.connect(self.save_exif_settings)
 
     def on_combobox_location_changed(self, index):
         """位置下拉框选择变化处理"""
@@ -553,6 +576,9 @@ class WriteExif(QWidget):
                              "请在对应的文本框中输入经度和纬度值")
                 return False
         
+        # 保存当前设置
+        self.save_exif_settings()
+        
         # 显示操作摘要
         operation_summary = f"操作类型: EXIF信息写入"
         if params.get('title'):
@@ -636,3 +662,96 @@ class WriteExif(QWidget):
                 "所有选定的图片文件已成功更新EXIF信息。\n\n"
                 "您可以在原文件夹中查看更新后的文件。"
             )
+
+    def load_exif_settings(self):
+        """加载保存的EXIF设置"""
+        try:
+            # 加载文本框内容
+            if title := config_manager.get_setting("exif_title"):
+                self.parent.lineEdit_EXIF_Title.setText(title)
+            
+            if author := config_manager.get_setting("exif_author"):
+                self.parent.lineEdit_EXIF_Author.setText(author)
+                
+            if subject := config_manager.get_setting("exif_subject"):
+                self.parent.lineEdit_EXIF_Theme.setText(subject)
+                
+            if copyright := config_manager.get_setting("exif_copyright"):
+                self.parent.lineEdit_EXIF_Copyright.setText(copyright)
+            
+            # 加载位置信息
+            if position := config_manager.get_setting("exif_position"):
+                self.parent.lineEdit_EXIF_Position.setText(position)
+                
+            if latitude := config_manager.get_setting("exif_latitude"):
+                self.parent.lineEdit_EXIF_latitude.setText(latitude)
+                
+            if longitude := config_manager.get_setting("exif_longitude"):
+                self.parent.lineEdit_EXIF_longitude.setText(longitude)
+            
+            # 加载下拉框选择
+            if location_index := config_manager.get_setting("exif_location_index"):
+                self.parent.comboBox_location.setCurrentIndex(int(location_index))
+                # 触发位置下拉框变化事件以正确显示/隐藏相关控件
+                self.on_combobox_location_changed(int(location_index))
+            
+            # 加载相机品牌和型号
+            if camera_brand := config_manager.get_setting("exif_camera_brand"):
+                index = self.parent.comboBox_brand.findText(camera_brand)
+                if index >= 0:
+                    self.parent.comboBox_brand.setCurrentIndex(index)
+                    # 触发品牌变化事件以更新型号下拉框
+                    self._on_brand_changed(index)
+            
+            if camera_model := config_manager.get_setting("exif_camera_model"):
+                index = self.parent.comboBox_model.findText(camera_model)
+                if index >= 0:
+                    self.parent.comboBox_model.setCurrentIndex(index)
+            
+            # 加载拍摄时间设置
+            if shoot_time_index := config_manager.get_setting("exif_shoot_time_index"):
+                self.parent.comboBox_shootTime.setCurrentIndex(int(shoot_time_index))
+                # 触发时间下拉框变化事件
+                self.on_combobox_time_changed(int(shoot_time_index))
+            
+            if shoot_time := config_manager.get_setting("exif_shoot_time"):
+                datetime_obj = QDateTime.fromString(shoot_time, "yyyy:MM:dd HH:mm:ss")
+                if datetime_obj.isValid():
+                    self.parent.dateTimeEdit_shootTime.setDateTime(datetime_obj)
+            
+            # 加载星级评分
+            if star_rating := config_manager.get_setting("exif_star_rating"):
+                self.set_selected_star(int(star_rating))
+        except Exception as e:
+            self.log("WARNING", f"加载EXIF设置时出错: {str(e)}")
+
+    def save_exif_settings(self):
+        """保存当前的EXIF设置"""
+        try:
+            # 保存文本框内容
+            config_manager.update_setting("exif_title", self.parent.lineEdit_EXIF_Title.text())
+            config_manager.update_setting("exif_author", self.parent.lineEdit_EXIF_Author.text())
+            config_manager.update_setting("exif_subject", self.parent.lineEdit_EXIF_Theme.text())
+            config_manager.update_setting("exif_copyright", self.parent.lineEdit_EXIF_Copyright.text())
+            
+            # 保存位置信息
+            config_manager.update_setting("exif_position", self.parent.lineEdit_EXIF_Position.text())
+            config_manager.update_setting("exif_latitude", self.parent.lineEdit_EXIF_latitude.text())
+            config_manager.update_setting("exif_longitude", self.parent.lineEdit_EXIF_longitude.text())
+            
+            # 保存下拉框选择
+            config_manager.update_setting("exif_location_index", self.parent.comboBox_location.currentIndex())
+            
+            # 保存相机品牌和型号
+            config_manager.update_setting("exif_camera_brand", self.parent.comboBox_brand.currentText())
+            config_manager.update_setting("exif_camera_model", self.parent.comboBox_model.currentText())
+            
+            # 保存拍摄时间设置
+            config_manager.update_setting("exif_shoot_time_index", self.parent.comboBox_shootTime.currentIndex())
+            config_manager.update_setting("exif_shoot_time", 
+                                        self.parent.dateTimeEdit_shootTime.dateTime().toString("yyyy:MM:dd HH:mm:ss"))
+            
+            # 保存星级评分
+            config_manager.update_setting("exif_star_rating", self.selected_star)
+        except Exception as e:
+            self.log("WARNING", f"保存EXIF设置时出错: {str(e)}")

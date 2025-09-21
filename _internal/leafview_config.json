@@ -6,5 +6,19 @@
     }
   ],
   "location_cache": {},
-  "settings": {}
+  "settings": {
+    "exif_title": "",
+    "exif_author": "",
+    "exif_subject": "",
+    "exif_copyright": "",
+    "exif_position": "",
+    "exif_latitude": "1",
+    "exif_longitude": "2",
+    "exif_location_index": 1,
+    "exif_camera_brand": "不写入",
+    "exif_camera_model": "",
+    "exif_shoot_time_index": 2,
+    "exif_shoot_time": "2025:09:21 17:44:02",
+    "exif_star_rating": 0
+  }
 }
