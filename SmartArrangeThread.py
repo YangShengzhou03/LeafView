@@ -1,4 +1,5 @@
-import datetime
+from datetime import datetime
+from typing import Optional, Dict, List, Tuple, Any, Union
 import io
 import json
 import os
@@ -9,7 +10,7 @@ import exifread
 import pillow_heif
 import requests
 from PIL import Image
-from PyQt6 import QtCore
+from PyQt6.QtCore import QThread, pyqtSignal
 
 from common import get_resource_path
 
