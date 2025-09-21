@@ -1,5 +1,4 @@
-from datetime import datetime
-from typing import Optional, Dict, List, Tuple, Any, Union
+import datetime
 import io
 import json
 import os
@@ -10,7 +9,7 @@ import exifread
 import pillow_heif
 import requests
 from PIL import Image
-from PyQt6.QtCore import QThread, pyqtSignal
+from PyQt6 import QtCore
 
 from common import get_resource_path
 
@@ -815,6 +814,7 @@ class SmartArrangeThread(QtCore.QThread):
         else:
             return "未知省份", "未知城市"
 
+    @staticmethod
     def get_address(self, latitude: float, longitude: float) -> str:
         """通过高德地图API获取地址"""
         if not (isinstance(latitude, (int, float)) and isinstance(longitude, (int, float))):
@@ -851,7 +851,8 @@ class SmartArrangeThread(QtCore.QThread):
             self.log(f"获取地址时出错了: {e}")
             return "未知位置"
 
-    def convert_to_degrees(value) -> Optional[float]:
+    @staticmethod
+    def convert_to_degrees(value):
         """将EXIF中的GPS坐标转换为十进制度数"""
         if not value:
             return None
