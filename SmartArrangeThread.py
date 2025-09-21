@@ -2,7 +2,7 @@ import datetime
 import io
 import json
 import os
-import time
+import subprocess
 from pathlib import Path
 
 import exifread
@@ -12,7 +12,6 @@ from PIL import Image
 from PyQt6 import QtCore
 
 from common import get_resource_path
-from config_manager import config_manager
 
 # 扩展支持的文件类型
 IMAGE_EXTENSIONS = (
@@ -515,6 +514,77 @@ class SmartArrangeThread(QtCore.QThread):
                         date_taken = self.parse_datetime(creation_time)
                     else:
                         date_taken = None
+            elif suffix == '.mov':
+                def get_video_metadata(file_path, timeout=30):
+                    try:
+                        file_path_normalized = str(file_path).replace('\\', '/')
+                        cmd = f"{get_resource_path('resources/exiftool/exiftool.exe')} -fast \"{file_path_normalized}\""
+
+                        result = subprocess.run(
+                            cmd,
+                            capture_output=True,
+                            text=True,
+                            timeout=timeout,
+                            shell=True
+                        )
+
+                        metadata = {}
+                        for line in result.stdout.split('\n'):
+                            if ':' in line:
+                                key, value = line.split(':', 1)
+                                metadata[key.strip()] = value.strip()
+
+                        return metadata
+
+                    except Exception as e:
+                        print(f"读取文件时出错: {str(e)}")
+                        return None
+
+                def extract_key_info(metadata):
+                    """提取关键信息：拍摄日期和GPS（如果存在）"""
+                    key_info = {
+                        '拍摄日期': None,
+                        'GPS信息': None
+                    }
+
+                    # 查找拍摄日期相关信息
+                    date_keys = [
+                        'Create Date', 'Creation Date', 'DateTimeOriginal',
+                        'Media Create Date', 'Date/Time Original', 'Date/Time Created'
+                    ]
+                    for key in date_keys:
+                        if key in metadata:
+                            key_info['拍摄日期'] = metadata[key]
+                            break
+
+                    # 查找GPS相关信息
+                    gps_info = {}
+                    for key, value in metadata.items():
+                        if 'gps' in key.lower() or 'location' in key.lower():
+                            gps_info[key] = value
+
+                    if gps_info:
+                        key_info['GPS信息'] = gps_info
+
+                    return key_info
+                
+                # 获取视频元数据并提取关键信息
+                video_metadata = get_video_metadata(file_path)
+                if video_metadata:
+                    key_info = extract_key_info(video_metadata)
+                    if key_info['拍摄日期']:
+                        # 尝试解析拍摄日期
+                        date_taken = self.parse_datetime(key_info['拍摄日期'])
+                        self.log("DEBUG", f"MOV文件拍摄日期: {key_info['拍摄日期']}")
+                    if key_info['GPS信息']:
+                        # 解析GPS坐标
+                        print(f"GPS信息: {key_info['GPS信息']}")
+                        lat, lon = self.parse_gps_coordinates(key_info['GPS信息'])
+                        if lat is not None and lon is not None:
+                            exif_data.update({'GPS GPSLatitude': lat, 'GPS GPSLongitude': lon})
+                            self.log("DEBUG", f"解析GPS坐标成功: 纬度={lat}, 经度={lon}")
+                        else:
+                            self.log("DEBUG", "无法解析GPS坐标")
             else:
                 date_taken = None
                 self.log("DEBUG", f"不支持的文件类型或无EXIF数据: {suffix}")
@@ -583,6 +653,106 @@ class SmartArrangeThread(QtCore.QThread):
             
         return None
 
+    def parse_gps_coordinates(self, gps_info):
+        """解析GPS信息中的经纬度坐标
+        
+        支持格式：
+        - GPS Coordinates: 23 deg 8' 2.04" N, 113 deg 19' 15.60" E
+        - GPS Latitude: 23 deg 8' 2.04" N
+        - GPS Longitude: 113 deg 19' 15.60" E
+        - GPS Position: 23 deg 8' 2.04" N, 113 deg 19' 15.60" E
+        """
+        if not gps_info:
+            return None, None
+            
+        lat = None
+        lon = None
+        
+        # 首先尝试从GPS Coordinates或GPS Position中提取
+        for key in ['GPS Coordinates', 'GPS Position']:
+            if key in gps_info:
+                coords_str = gps_info[key]
+                # 解析格式: "23 deg 8' 2.04\" N, 113 deg 19' 15.60\" E"
+                try:
+                    # 分割纬度和经度部分
+                    parts = coords_str.split(',')
+                    if len(parts) == 2:
+                        lat_str = parts[0].strip()
+                        lon_str = parts[1].strip()
+                        
+                        # 解析纬度
+                        lat = self._parse_dms_coordinate(lat_str)
+                        # 解析经度
+                        lon = self._parse_dms_coordinate(lon_str)
+                        
+                        if lat is not None and lon is not None:
+                            return lat, lon
+                except Exception:
+                    continue
+        
+        # 如果上面没找到，尝试分别从GPS Latitude和GPS Longitude中提取
+        if 'GPS Latitude' in gps_info:
+            lat = self._parse_dms_coordinate(gps_info['GPS Latitude'])
+        if 'GPS Longitude' in gps_info:
+            lon = self._parse_dms_coordinate(gps_info['GPS Longitude'])
+        
+        return lat, lon
+    
+    def _parse_dms_coordinate(self, coord_str):
+        """解析度分秒格式的坐标字符串
+        
+        支持格式：
+        - "23 deg 8' 2.04\" N"
+        - "113 deg 19' 15.60\" E"
+        - "23°8'2.04\"N"
+        """
+        if not coord_str:
+            return None
+            
+        try:
+            # 提取方向（N/S/E/W）
+            direction = None
+            if 'N' in coord_str or 'S' in coord_str:
+                if 'N' in coord_str:
+                    direction = 'N'
+                else:
+                    direction = 'S'
+            elif 'E' in coord_str or 'W' in coord_str:
+                if 'E' in coord_str:
+                    direction = 'E'
+                else:
+                    direction = 'W'
+            
+            # 移除方向字符和多余空格
+            clean_str = coord_str.replace('N', '').replace('S', '').replace('E', '').replace('W', '').strip()
+            
+            # 统一替换度分秒符号
+            clean_str = clean_str.replace('deg', '°').replace('°', ' ').replace("'", ' ').replace('"', ' ')
+            
+            # 分割数字部分
+            parts = clean_str.split()
+            degrees = minutes = seconds = 0.0
+            
+            if len(parts) >= 1:
+                degrees = float(parts[0])
+            if len(parts) >= 2:
+                minutes = float(parts[1])
+            if len(parts) >= 3:
+                seconds = float(parts[2])
+            
+            # 计算十进制坐标
+            decimal = degrees + minutes / 60.0 + seconds / 3600.0
+            
+            # 根据方向调整符号
+            if direction in ['S', 'W']:
+                decimal = -decimal
+                
+            return decimal
+            
+        except Exception as e:
+            self.log("DEBUG", f"解析GPS坐标失败: {coord_str}, 错误: {str(e)}")
+            return None
+
     def get_city_and_province(self, lat, lon):
         """根据经纬度获取省份和城市信息"""
         if not hasattr(self, 'province_data') or not hasattr(self, 'city_data'):
@@ -644,7 +814,6 @@ class SmartArrangeThread(QtCore.QThread):
         else:
             return "未知省份", "未知城市"
 
-    @staticmethod
     def get_address(self, latitude: float, longitude: float) -> str:
         """通过高德地图API获取地址"""
         if not (isinstance(latitude, (int, float)) and isinstance(longitude, (int, float))):
@@ -657,7 +826,7 @@ class SmartArrangeThread(QtCore.QThread):
         
         try:
             # 获取用户设置的高德地图API密钥
-            user_key = self.config_manager.get_setting("amap_api_key", "")
+            user_key = "0db079da53e08cbb62b52a42f657b994"
             
             if not user_key:
                 return "未知位置"
@@ -681,8 +850,7 @@ class SmartArrangeThread(QtCore.QThread):
             self.log(f"获取地址时出错了: {e}")
             return "未知位置"
 
-    @staticmethod
-    def convert_to_degrees(value):
+    def convert_to_degrees(value) -> Optional[float]:
         """将EXIF中的GPS坐标转换为十进制度数"""
         if not value:
             return None
