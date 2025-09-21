@@ -859,6 +859,9 @@ class SmartArrangeThread(QtCore.QThread):
         elif tag == "品牌":
             brand = exif_data.get('Make', '未知品牌')
             return str(brand) if brand is not None else '未知品牌'
+        elif tag == "型号":
+            model = exif_data.get('Model', '未知型号')
+            return str(model) if model is not None else '未知型号'
         elif tag == "位置":
             if exif_data.get('GPS GPSLatitude') and exif_data.get('GPS GPSLongitude'):
                 address = self.get_address(exif_data['GPS GPSLatitude'], exif_data['GPS GPSLongitude'])
@@ -910,7 +913,7 @@ class SmartArrangeThread(QtCore.QThread):
                 return exif_data['Make']
             else:
                 return "未知设备"
-        elif level == "设备型号":
+        elif level in ["设备型号", "相机型号"]:
             if exif_data.get('Model'):
                 return exif_data['Model']
             else:

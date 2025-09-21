@@ -28,13 +28,14 @@ class SmartArrange(QtWidgets.QWidget):
         self.destination_root = None
         
         self.tag_buttons = {
-            '原文件名': self.parent.pushButton_original_tag,
+            '原名': self.parent.pushButton_original_tag,
             '年份': self.parent.pushButton_year_tag,
             '月份': self.parent.pushButton_month_tag,
             '日': self.parent.pushButton_date_tag,
             '星期': self.parent.pushButton_day_tag,
             '时间': self.parent.pushButton_time_tag,
             '品牌': self.parent.pushButton_make_tag,
+            '型号': self.parent.pushButton_model_tag,
             '位置': self.parent.pushButton_address_tag,
             '自定义': self.parent.pushButton_customize_tag
         }
@@ -306,6 +307,7 @@ class SmartArrange(QtWidgets.QWidget):
             "年份": str(now.year),
             "月份": str(now.month),
             "拍摄设备": "小米",
+            "相机型号": "EOS 5D Mark IV",
             "拍摄省份": "江西",
             "拍摄城市": "南昌"
         }.get(text, text)
@@ -394,13 +396,14 @@ class SmartArrange(QtWidgets.QWidget):
                 example_parts.append(display_content)
             else:
                 parts = {
-                    "原文件名": "DSC_1234",
+                    "原名": "IMG_1234",
                     "年份": f"{now.year}",
                     "月份": f"{now.month:02d}",
                     "日": f"{now.day:02d}",
                     "星期": f"{self._get_weekday(now)}",
                     "时间": f"{now.strftime('%H%M%S')}",
                     "品牌": "佳能",
+                    "型号": "EOS 5D Mark IV",
                     "位置": "浙大",
                     "自定义": "自定义内容"
                 }
