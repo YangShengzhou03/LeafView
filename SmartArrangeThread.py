@@ -499,10 +499,7 @@ class SmartArrangeThread(QtCore.QThread):
             if lat is not None and lon is not None:
                 self.log("DEBUG", f"解析GPS坐标成功: 纬度={lat}, 经度={lon}")
             else:
-                self.log("DEBUG", "无法解析GPS坐标")
-
-        print(date_taken)
-        
+                self.log("DEBUG", "无法解析GPS坐标")        
         return date_taken
 
     def _determine_best_datetime(self, date_taken, create_time, modify_time):
@@ -569,7 +566,6 @@ class SmartArrangeThread(QtCore.QThread):
             return metadata
 
         except Exception as e:
-            print(f"读取文件时出错: {str(e)}")
             return None
 
     def parse_exif_datetime(self, tags):
@@ -762,7 +758,6 @@ class SmartArrangeThread(QtCore.QThread):
             else:
                 return "未知位置"
         except Exception as e:
-            print(f"获取地址时出错了: {e}")
             return "未知位置"
 
     @staticmethod
