@@ -7,18 +7,18 @@
   ],
   "location_cache": {},
   "settings": {
-    "exif_title": "",
-    "exif_author": "",
-    "exif_subject": "",
-    "exif_copyright": "",
+    "exif_title": "标题",
+    "exif_author": "作者",
+    "exif_subject": "主题",
+    "exif_copyright": "版权",
     "exif_position": "",
     "exif_latitude": "32",
     "exif_longitude": "12",
     "exif_location_index": 1,
-    "exif_camera_brand": "Apple",
-    "exif_camera_model": "iPhone 12",
+    "exif_camera_brand": "Huawei",
+    "exif_camera_model": "Mate X6",
     "exif_shoot_time_index": 2,
-    "exif_shoot_time": "2008:08:20 20:30:35",
-    "exif_star_rating": 0
+    "exif_shoot_time": "2025:09:22 23:39:31",
+    "exif_star_rating": 4
   }
 }

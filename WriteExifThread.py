@@ -62,7 +62,7 @@ class WriteExifThread(QThread):
                 self.finished_conversion.emit()
                 return
             
-            self.log.emit("DEBUG", f"开始处理 {total_files} 张图片")
+            self.log.emit("INFO", f"开始处理 {total_files} 张图片")
             
             self.progress_updated.emit(0)
             
@@ -217,30 +217,21 @@ class WriteExifThread(QThread):
         
         if self.shootTime != 0:
             if self.shootTime == 1:
-                date_from_filename = self.get_date_from_filename(original_file_path)
+                date_from_filename = self.get_date_from_filename(image_path)
                 if date_from_filename:
-                    local_time = date_from_filename
-                    utc_time = local_time - timedelta(hours=8)
-                    actual_write_time = utc_time.strftime("%Y:%m:%d %H:%M:%S")
-                    timezone_suffix = "+00:00"
-                    cmd_parts.append(f'-CreateDate={actual_write_time}{timezone_suffix}')
-                    cmd_parts.append(f'-CreationDate={actual_write_time}{timezone_suffix}')
-                    cmd_parts.append(f'-MediaCreateDate={actual_write_time}{timezone_suffix}')
-                    cmd_parts.append(f'-DateTimeOriginal={actual_write_time}{timezone_suffix}')
-                    updated_fields.append(f"文件名识别拍摄时间: {date_from_filename.strftime('%Y:%m:%d %H:%M:%S')} (已调整为UTC时间)")
+                    if "Exif" not in exif_dict:
+                        exif_dict["Exif"] = {}
+                    exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = date_from_filename.strftime(
+                        "%Y:%m:%d %H:%M:%S").encode('utf-8')
+                    updated_fields.append(
+                        f"文件名识别拍摄时间: {date_from_filename.strftime('%Y:%m:%d %H:%M:%S')}")
             else:
                 try:
                     datetime.strptime(self.shootTime, "%Y:%m:%d %H:%M:%S")
-                    local_time = datetime.strptime(self.shootTime, "%Y:%m:%d %H:%M:%S")
-                    utc_time = local_time - timedelta(hours=8)
-                    actual_write_time = utc_time.strftime("%Y:%m:%d %H:%M:%S")
-                    timezone_suffix = "+00:00"
-                    
-                    cmd_parts.append(f'-CreateDate={actual_write_time}{timezone_suffix}')
-                    cmd_parts.append(f'-CreationDate={actual_write_time}{timezone_suffix}')
-                    cmd_parts.append(f'-MediaCreateDate={actual_write_time}{timezone_suffix}')
-                    cmd_parts.append(f'-DateTimeOriginal={actual_write_time}{timezone_suffix}')
-                    updated_fields.append(f"拍摄时间: {self.shootTime} (已调整为UTC时间)")
+                    if "Exif" not in exif_dict:
+                        exif_dict["Exif"] = {}
+                    exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = self.shootTime.encode('utf-8')
+                    updated_fields.append(f"拍摄时间: {self.shootTime}")
                 except ValueError:
                     self.log.emit("ERROR", f"拍摄时间格式无效: {self.shootTime}，请使用 YYYY:MM:DD HH:MM:SS 格式")
         
@@ -253,7 +244,7 @@ class WriteExifThread(QThread):
         piexif.insert(exif_bytes, image_path)
         
         if updated_fields:
-            self.log.emit("INFO", f"成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
+            self.log.emit("DEBUG", f"写入成功 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
         else:
             self.log.emit("WARNING", f"未对 {os.path.basename(image_path)} 进行任何更改\n\n"
                              "可能的原因：\n"
@@ -552,6 +543,10 @@ class WriteExifThread(QThread):
             if result.returncode != 0:
                 self.log.emit("ERROR", f"写入EXIF数据失败: {result.stderr}")
                 return False
+            
+            # 添加成功日志
+            if updated_fields:
+                self.log.emit("INFO", f"成功更新 {os.path.basename(original_file_path)}: {'; '.join(updated_fields)}")
             
             verify_cmd = [exiftool_path, '-CreateDate', '-CreationDate', '-MediaCreateDate', '-DateTimeOriginal', file_path_normalized]
             subprocess.run(verify_cmd, capture_output=True, text=True, shell=False)
