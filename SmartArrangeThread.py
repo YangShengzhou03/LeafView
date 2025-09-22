@@ -505,10 +505,6 @@ class SmartArrangeThread(QtCore.QThread):
         if gps_found and ('GPS GPSLatitude' not in exif_data or 'GPS GPSLongitude' not in exif_data):
             lat = exif_data.get('GPS GPSLatitude')
             lon = exif_data.get('GPS GPSLongitude')
-            if lat is not None and lon is not None:
-                self.log("DEBUG", f"解析GPS坐标: 纬度={lat}, 经度={lon}")
-            else:
-                self.log("DEBUG", "无法解析GPS坐标")        
         return date_taken
 
     def _process_mov_exif(self, file_path, exif_data):
@@ -553,7 +549,6 @@ class SmartArrangeThread(QtCore.QThread):
                     exif_data['Make'] = make_value
                     if not date_taken:
                         date_taken = make_value
-                    self.log("DEBUG", f"MOV文件相机品牌: {make_value}")
                 break
         
         model_keys = [
@@ -611,16 +606,36 @@ class SmartArrangeThread(QtCore.QThread):
         gps_lon = tags.get('GPS GPSLongitude')
         
         if gps_lat and gps_lon:
+            # 检查GPS数据是否已经是浮点数格式
             if isinstance(gps_lat, (int, float)) and isinstance(gps_lon, (int, float)):
+                # 如果是浮点数格式，直接使用
                 lat = gps_lat
                 lon = gps_lon
-            else:
+            elif hasattr(gps_lat, 'values') and hasattr(gps_lon, 'values'):
+                # 如果是EXIF格式的度分秒数据，使用convert_to_degrees方法转换
                 lat = self.convert_to_degrees(gps_lat)
                 lon = self.convert_to_degrees(gps_lon)
+            else:
+                # 其他情况，尝试转换为浮点数
+                try:
+                    lat = float(gps_lat)
+                    lon = float(gps_lon)
+                except (ValueError, TypeError):
+                    lat = None
+                    lon = None
             
-            if lat and lon:
-                lat = -lat if lat_ref and lat_ref.lower() == 's' else lat
-                lon = -lon if lon_ref and lon_ref.lower() == 'w' else lon
+            if lat is not None and lon is not None:
+                # 应用方向参考
+                if lat_ref and lat_ref.lower() == 's':
+                    lat = -abs(lat)
+                elif lat_ref and lat_ref.lower() == 'n':
+                    lat = abs(lat)
+                    
+                if lon_ref and lon_ref.lower() == 'w':
+                    lon = -abs(lon)
+                elif lon_ref and lon_ref.lower() == 'e':
+                    lon = abs(lon)
+                
                 exif_data.update({'GPS GPSLatitude': lat, 'GPS GPSLongitude': lon})
         
         make = str(tags.get('Image Make', '')).strip()
@@ -809,7 +824,6 @@ class SmartArrangeThread(QtCore.QThread):
             return decimal
             
         except Exception as e:
-            self.log("DEBUG", f"解析GPS坐标失败: {coord_str}, 错误: {str(e)}")
             return None
 
     def get_city_and_province(self, lat, lon):
@@ -898,14 +912,32 @@ class SmartArrangeThread(QtCore.QThread):
         if not value:
             return None
         
+        # 如果已经是浮点数或整数，直接返回
+        if isinstance(value, (int, float)):
+            return float(value)
+        
+        # 如果是字符串，尝试解析为浮点数
+        if isinstance(value, str):
+            try:
+                return float(value)
+            except ValueError:
+                pass
+        
+        # 如果是EXIF格式的度分秒数据（包含values属性）
         try:
-            d = float(value.values[0].num) / float(value.values[0].den)
-            m = float(value.values[1].num) / float(value.values[1].den)
-            s = float(value.values[2].num) / float(value.values[2].den)
-            result = d + (m / 60.0) + (s / 3600.0)
-
-            return result
-        except Exception as e:
+            if hasattr(value, 'values') and len(value.values) >= 3:
+                d = float(value.values[0].num) / float(value.values[0].den)
+                m = float(value.values[1].num) / float(value.values[1].den)
+                s = float(value.values[2].num) / float(value.values[2].den)
+                result = d + (m / 60.0) + (s / 3600.0)
+                return result
+        except Exception:
+            pass
+        
+        # 其他情况，尝试直接转换为浮点数
+        try:
+            return float(value)
+        except Exception:
             return None
 
     def build_new_file_name(self, file_path, file_time, original_name, exif_data=None):
