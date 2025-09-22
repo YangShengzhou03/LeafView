@@ -465,6 +465,9 @@ class SmartArrangeThread(QtCore.QThread):
             if key in video_metadata:
                 make_value = video_metadata[key]
                 if make_value:
+                    # Remove quotes from camera brand name
+                    if isinstance(make_value, str):
+                        make_value = make_value.strip().strip('"\'')
                     exif_data['Make'] = make_value
                 break
         
@@ -476,6 +479,9 @@ class SmartArrangeThread(QtCore.QThread):
             if key in video_metadata:
                 model_value = video_metadata[key]
                 if model_value:
+                    # Remove quotes from camera model name
+                    if isinstance(model_value, str):
+                        model_value = model_value.strip().strip('"\'')
                     exif_data['Model'] = model_value
                 break
         
@@ -541,6 +547,9 @@ class SmartArrangeThread(QtCore.QThread):
             if key in video_metadata:
                 make_value = video_metadata[key]
                 if make_value:
+                    # Remove quotes from camera brand name
+                    if isinstance(make_value, str):
+                        make_value = make_value.strip().strip('"\'')
                     exif_data['Make'] = make_value
                     if not date_taken:
                         date_taken = make_value
@@ -616,6 +625,12 @@ class SmartArrangeThread(QtCore.QThread):
         
         make = str(tags.get('Image Make', '')).strip()
         model = str(tags.get('Image Model', '')).strip()
+        
+        # Remove quotes from camera brand and model names
+        if isinstance(make, str):
+            make = make.strip().strip('"\'')
+        if isinstance(model, str):
+            model = model.strip().strip('"\'')
         
         exif_data.update({
             'Make': make or None,
@@ -973,9 +988,13 @@ class SmartArrangeThread(QtCore.QThread):
             return file_time.strftime('%H%M%S')
         elif tag == "品牌":
             brand = exif_data.get('Make', '未知品牌')
+            if isinstance(brand, str):
+                brand = brand.strip().strip('"\'')
             return str(brand) if brand is not None else '未知品牌'
         elif tag == "型号":
             model = exif_data.get('Model', '未知型号')
+            if isinstance(model, str):
+                model = model.strip().strip('"\'')
             return str(model) if model is not None else '未知型号'
         elif tag == "位置":
             if exif_data.get('GPS GPSLatitude') and exif_data.get('GPS GPSLongitude'):
@@ -1025,12 +1044,18 @@ class SmartArrangeThread(QtCore.QThread):
         
         elif level in ["拍摄设备"]:
             if exif_data.get('Make'):
-                return exif_data['Make']
+                make = exif_data['Make']
+                if isinstance(make, str):
+                    make = make.strip().strip('"\'')
+                return make
             else:
                 return "未知设备"
         elif level == "相机型号":
             if exif_data.get('Model'):
-                return exif_data['Model']
+                model = exif_data['Model']
+                if isinstance(model, str):
+                    model = model.strip().strip('"\'')
+                return model
             else:
                 return "未知设备"
         
@@ -1056,5 +1081,3 @@ class SmartArrangeThread(QtCore.QThread):
         
         else:
             return "未知"
-        
-
