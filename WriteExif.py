@@ -141,16 +141,9 @@ class WriteExif(QWidget):
                 # 如果没有找到对应的镜头信息，清空镜头选择
                 self.log("DEBUG", f"未找到 {brand} {model} 对应的镜头信息")
         
-        # 初始化镜头品牌和型号下拉框
-        # self.init_lens_brand_model()
-        
         self.update_button_state()
         self.parent.dateTimeEdit_shootTime.setDateTime(QDateTime.currentDateTime())
         self.parent.dateTimeEdit_shootTime.hide()
-        # 初始化时隐藏经纬度文本框
-        self.parent.lineEdit_EXIF_longitude.hide()
-        self.parent.lineEdit_EXIF_latitude.hide()
-        
 
 
     def init_camera_brand_model(self):

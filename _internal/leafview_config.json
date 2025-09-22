@@ -1,7 +1,7 @@
 {
   "folders": [
     {
-      "path": "D:\\待分类",
+      "path": "D:\\iPad照片\\自拍",
       "include_sub": true
     }
   ],
@@ -15,10 +15,10 @@
     "exif_latitude": "32",
     "exif_longitude": "12",
     "exif_location_index": 1,
-    "exif_camera_brand": "Canon",
-    "exif_camera_model": "EOS 1200D",
+    "exif_camera_brand": "Apple",
+    "exif_camera_model": "iPhone 12",
     "exif_shoot_time_index": 2,
-    "exif_shoot_time": "2025:09:22 08:37:43",
+    "exif_shoot_time": "2025:09:22 20:51:35",
     "exif_star_rating": 0
   }
 }

@@ -13,40 +13,13 @@ from common import detect_media_type, get_resource_path
 
 
 class WriteExifThread(QThread):
-    """
-    EXIF写入工作线程类
     
-    负责在后台线程中执行图像EXIF元数据的批量写入操作，支持：
-    - 多线程并行处理
-    - 地理位置信息写入
-    - 相机品牌型号信息写入
-    - 拍摄时间自动识别
-    """
-    
-    # 信号定义
-    progress_updated = pyqtSignal(int)  # 进度更新信号
-    finished_conversion = pyqtSignal()  # 完成转换信号
-    log = pyqtSignal(str, str)  # 日志信号
+    progress_updated = pyqtSignal(int)
+    finished_conversion = pyqtSignal()
+    log = pyqtSignal(str, str)
 
     def __init__(self, folders_dict, title='', author='', subject='', rating='', copyright='',
                  position='', shootTime='', cameraBrand=None, cameraModel=None, lensBrand=None, lensModel=None):
-        """
-        初始化EXIF写入线程
-        
-        Args:
-            folders_dict: 文件夹字典，包含路径和是否包含子文件夹标志
-            title: 图像标题
-            author: 作者信息
-            subject: 主题信息
-            rating: 星级评分
-            copyright: 版权信息
-            position: 地理位置坐标
-            shootTime: 拍摄时间
-            cameraBrand: 相机品牌
-            cameraModel: 相机型号
-            lensBrand: 镜头品牌
-            lensModel: 镜头型号
-        """
         super().__init__()
         self.folders_dict = {item['path']: item['include_sub'] for item in folders_dict}
         self.title = title
@@ -59,30 +32,24 @@ class WriteExifThread(QThread):
         self.cameraModel = cameraModel
         self.lensBrand = lensBrand
         self.lensModel = lensModel
-        self._stop_requested = False  # 停止请求标志
-        self.lat = None  # 纬度
-        self.lon = None  # 经度
+        self._stop_requested = False
+        self.lat = None
+        self.lon = None
 
-        # 解析位置坐标
         if position and ',' in position:
             try:
                 self.lat, self.lon = map(float, position.split(','))
-                # 验证坐标范围有效性
                 if not (-90 <= self.lat <= 90) or not (-180 <= self.lon <= 180):
                     self.lat, self.lon = None, None
             except ValueError:
                 pass
 
-
-
     def run(self):
-        """线程主执行方法"""
         total_files = 0
         success_count = 0
         error_count = 0
         
         try:
-            # 收集所有图像路径
             image_paths = self._collect_image_paths()
             total_files = len(image_paths)
             if not image_paths:
@@ -93,23 +60,18 @@ class WriteExifThread(QThread):
                 self.finished_conversion.emit()
                 return
             
-            # 显示操作统计
             self.log.emit("DEBUG", f"开始处理 {total_files} 张图片")
             
-            # 初始化进度
             self.progress_updated.emit(0)
             
-            # 使用线程池并行处理
             with ThreadPoolExecutor(max_workers=min(4, os.cpu_count() or 1)) as executor:
                 futures = {}
-                # 为每个图像创建任务，添加文件大小检查
                 for path in image_paths:
                     if self._stop_requested:
                         break
                     try:
-                        # 检查文件大小，跳过过大的文件
                         file_size = os.path.getsize(path)
-                        if file_size > 500 * 1024 * 1024:  # 超过500MB的文件
+                        if file_size > 500 * 1024 * 1024:
                             self.log.emit("ERROR", f"文件 {os.path.basename(path)} 太大了(超过500MB)，暂不支持处理")
                             error_count += 1
                             continue
@@ -118,19 +80,16 @@ class WriteExifThread(QThread):
                         self.log.emit("ERROR", f"添加文件 {os.path.basename(path)} 到任务队列失败: {str(e)}")
                         error_count += 1
                 
-                # 处理完成的任务
                 if futures:
                     try:
                         for i, future in enumerate(as_completed(futures), 1):
                             if self._stop_requested:
-                                # 取消所有未完成的任务
                                 for f in futures:
                                     f.cancel()
                                 time.sleep(0.1)
                                 self.log.emit("DEBUG", "EXIF写入操作已成功中止")
                                 break
                             try:
-                                # 设置任务超时（例如30秒）
                                 future.result(timeout=30)
                                 success_count += 1
                             except TimeoutError:
@@ -481,13 +440,12 @@ class WriteExifThread(QThread):
         file_ext = os.path.splitext(image_path)[1].lower()
         
         if file_ext in ('.mov', '.mp4', '.avi', '.mkv'):
-            # 使用exiftool处理视频文件
             self._process_video_with_exiftool(image_path)
         else:
             self.log.emit("WARNING", f"不支持的视频格式: {file_ext}")
     
     def _process_video_with_exiftool(self, image_path):
-        """使用exiftool处理视频文件的EXIF数据"""
+        
         if not os.path.exists(image_path):
             self.log.emit("ERROR", f"文件不存在: {image_path}")
             return
@@ -495,11 +453,11 @@ class WriteExifThread(QThread):
         file_path_normalized = image_path.replace('\\', '/')
         exiftool_path = get_resource_path('resources/exiftool/exiftool.exe')
         
-        # 构建exiftool命令
+        
         cmd_parts = [exiftool_path, "-overwrite_original"]
         updated_fields = []
         
-        # 添加要修改的标签
+        
         if self.cameraBrand:
             cmd_parts.append(f'-Make="{self.cameraBrand}"')
             updated_fields.append(f"相机品牌: {self.cameraBrand}")
@@ -509,16 +467,16 @@ class WriteExifThread(QThread):
             updated_fields.append(f"相机型号: {self.cameraModel}")
         
         if self.lat is not None and self.lon is not None:
-            # 将十进制坐标转换为度分秒格式
+            
             lat_dms = self.decimal_to_dms(self.lat)
             lon_dms = self.decimal_to_dms(self.lon)
             
-            # 使用度分秒格式设置GPS标签（用引号括起来）
+            
             cmd_parts.append(f'-GPSLatitude="{lat_dms}"')
             cmd_parts.append(f'-GPSLongitude="{lon_dms}"')
             cmd_parts.append('-GPSLatitudeRef=N' if self.lat >= 0 else '-GPSLatitudeRef=S')
             cmd_parts.append('-GPSLongitudeRef=E' if self.lon >= 0 else '-GPSLongitudeRef=W')
-            # 添加GPSCoordinates标签（MOV文件可能需要这个）
+            
             cmd_parts.append(f'-GPSCoordinates="{self.lat}, {self.lon}"')
             updated_fields.append(f"GPS坐标: {abs(self.lat):.6f}°{'N' if self.lat >= 0 else 'S'}, {abs(self.lon):.6f}°{'E' if self.lon >= 0 else 'W'}")
         
@@ -532,7 +490,7 @@ class WriteExifThread(QThread):
                     cmd_parts.append(f'-TrackCreateDate="{shoot_time_str}"')
                     updated_fields.append(f"文件名识别拍摄时间: {shoot_time_str}")
             else:
-                # 验证时间格式
+                
                 try:
                     datetime.strptime(self.shootTime, "%Y:%m:%d %H:%M:%S")
                     cmd_parts.append(f'-CreateDate="{self.shootTime}"')
@@ -559,14 +517,14 @@ class WriteExifThread(QThread):
             cmd_parts.append(f'-Copyright="{self.copyright}"')
             updated_fields.append(f"版权: {self.copyright}")
         
-        # 添加文件路径
+        
         cmd_parts.append(f'"{file_path_normalized}"')
         
-        # 构建完整命令
+        
         cmd = ' '.join(cmd_parts)
         
         try:
-            # 执行命令
+            
             result = subprocess.run(
                 cmd,
                 capture_output=True,
@@ -627,22 +585,15 @@ class WriteExifThread(QThread):
         self._stop_requested = True
 
     def decimal_to_dms(self, decimal):
-        """
-        将十进制坐标转换为度分秒格式
-        例如: 31.2222 -> "31 deg 13' 19.92\""
-        """
         try:
-            # 处理正负号
             is_negative = decimal < 0
             decimal = abs(decimal)
             
-            # 计算度、分、秒
             degrees = int(decimal)
             minutes_decimal = (decimal - degrees) * 60
             minutes = int(minutes_decimal)
             seconds = (minutes_decimal - minutes) * 60
             
-            # 格式化输出
             dms_str = f"{degrees} deg {minutes}' {seconds:.2f}\""
             
             return dms_str
@@ -651,15 +602,9 @@ class WriteExifThread(QThread):
             return str(decimal)
 
     def convert_dms_to_decimal(self, dms_str):
-        """
-        将度分秒格式的GPS坐标转换为十进制格式
-        例如: "23 deg 8' 2.04\" N" -> 23.1339
-        """
         try:
-            # 解析度分秒格式
             import re
             
-            # 匹配度分秒格式
             pattern = r'(\d+) deg (\d+)\'( (\d+(?:\.\d+)?)\")? ([NSWE])'
             match = re.search(pattern, dms_str)
             
@@ -669,16 +614,13 @@ class WriteExifThread(QThread):
                 seconds = float(match.group(4)) if match.group(4) else 0.0
                 direction = match.group(5)
                 
-                # 计算十进制坐标
                 decimal = degrees + minutes/60 + seconds/3600
                 
-                # 处理方向（南纬和西经为负数）
                 if direction in ['S', 'W']:
                     decimal = -decimal
                     
                 return decimal
             else:
-                # 尝试直接解析十进制格式
                 try:
                     return float(dms_str)
                 except ValueError:
