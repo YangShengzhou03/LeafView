@@ -69,10 +69,6 @@ class WriteExif(QWidget):
         
         self.update_button_state()
         self.parent.dateTimeEdit_shootTime.setDateTime(QDateTime.currentDateTime())
-        self.parent.dateTimeEdit_shootTime.hide()
-        # 初始化时隐藏经纬度文本框
-        self.parent.lineEdit_EXIF_longitude.hide()
-        self.parent.lineEdit_EXIF_latitude.hide()
         self.load_exif_settings()
         # 保存初始配置
         self.save_exif_settings()
