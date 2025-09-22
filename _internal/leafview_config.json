@@ -12,13 +12,13 @@
     "exif_subject": "",
     "exif_copyright": "",
     "exif_position": "",
-    "exif_latitude": "",
-    "exif_longitude": "",
+    "exif_latitude": "32",
+    "exif_longitude": "12",
     "exif_location_index": 1,
-    "exif_camera_brand": "不写入",
-    "exif_camera_model": "",
-    "exif_shoot_time_index": 0,
-    "exif_shoot_time": "2025:09:21 17:44:02",
+    "exif_camera_brand": "Canon",
+    "exif_camera_model": "EOS 1200D",
+    "exif_shoot_time_index": 2,
+    "exif_shoot_time": "2025:09:22 08:37:43",
     "exif_star_rating": 0
   }
 }

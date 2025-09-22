@@ -496,7 +496,7 @@ class WriteExifThread(QThread):
         exiftool_path = get_resource_path('resources/exiftool/exiftool.exe')
         
         # 构建exiftool命令
-        cmd_parts = [exiftool_path]
+        cmd_parts = [exiftool_path, "-overwrite_original"]
         updated_fields = []
         
         # 添加要修改的标签
