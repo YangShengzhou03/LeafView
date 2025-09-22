@@ -1,6 +1,7 @@
 import os
 import re
 import time
+import subprocess
 from concurrent.futures import as_completed, ThreadPoolExecutor
 from datetime import datetime
 
@@ -8,7 +9,7 @@ import piexif
 from PIL import Image, PngImagePlugin
 from PyQt6.QtCore import QThread, pyqtSignal
 
-from common import detect_media_type
+from common import detect_media_type, get_resource_path
 
 
 class WriteExifThread(QThread):
@@ -477,43 +478,115 @@ class WriteExifThread(QThread):
             self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 时出错: {str(e)}")
 
     def _process_video_format(self, image_path):
-        try:
-            from moviepy.editor import VideoFileClip
-        except ImportError:
-            self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 需要 moviepy 库\n\n"
-                             "请安装: pip install moviepy")
+        file_ext = os.path.splitext(image_path)[1].lower()
+        
+        if file_ext in ('.mov', '.mp4', '.avi', '.mkv'):
+            # 使用exiftool处理视频文件
+            self._process_video_with_exiftool(image_path)
+        else:
+            self.log.emit("WARNING", f"不支持的视频格式: {file_ext}")
+    
+    def _process_video_with_exiftool(self, image_path):
+        """使用exiftool处理视频文件的EXIF数据"""
+        if not os.path.exists(image_path):
+            self.log.emit("ERROR", f"文件不存在: {image_path}")
             return
         
-        try:
-            with VideoFileClip(image_path) as video:
-                duration = video.duration
-                fps = video.fps
-                size = video.size
+        file_path_normalized = image_path.replace('\\', '/')
+        exiftool_path = get_resource_path('resources/exiftool/exiftool.exe')
+        
+        # 构建exiftool命令
+        cmd_parts = [exiftool_path]
+        updated_fields = []
+        
+        # 添加要修改的标签
+        if self.cameraBrand:
+            cmd_parts.append(f'-Make="{self.cameraBrand}"')
+            updated_fields.append(f"相机品牌: {self.cameraBrand}")
+        
+        if self.cameraModel:
+            cmd_parts.append(f'-Model="{self.cameraModel}"')
+            updated_fields.append(f"相机型号: {self.cameraModel}")
+        
+        if self.lat is not None and self.lon is not None:
+            # 将十进制坐标转换为度分秒格式
+            lat_dms = self.decimal_to_dms(self.lat)
+            lon_dms = self.decimal_to_dms(self.lon)
             
-            updated_fields = []
-            
-            if self.shootTime != 0:
-                if self.shootTime == 1:
-                    date_from_filename = self.get_date_from_filename(image_path)
-                    if date_from_filename:
-                        updated_fields.append(
-                            f"文件名识别拍摄时间: {date_from_filename.strftime('%Y:%m:%d %H:%M:%S')}")
-                else:
-                    updated_fields.append(f"拍摄时间: {self.shootTime}")
-            
-            if self.title:
-                updated_fields.append(f"标题: {self.title}")
-            if self.author:
-                updated_fields.append(f"作者: {self.author}")
-            
-            if updated_fields:
-                self.log.emit("INFO", f"成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
-                self.log.emit("WARNING", f"视频元数据写入需要氪金，仅记录元数据信息")
+            # 使用度分秒格式设置GPS标签（用引号括起来）
+            cmd_parts.append(f'-GPSLatitude="{lat_dms}"')
+            cmd_parts.append(f'-GPSLongitude="{lon_dms}"')
+            cmd_parts.append('-GPSLatitudeRef=N' if self.lat >= 0 else '-GPSLatitudeRef=S')
+            cmd_parts.append('-GPSLongitudeRef=E' if self.lon >= 0 else '-GPSLongitudeRef=W')
+            # 添加GPSCoordinates标签（MOV文件可能需要这个）
+            cmd_parts.append(f'-GPSCoordinates="{self.lat}, {self.lon}"')
+            updated_fields.append(f"GPS坐标: {abs(self.lat):.6f}°{'N' if self.lat >= 0 else 'S'}, {abs(self.lon):.6f}°{'E' if self.lon >= 0 else 'W'}")
+        
+        if self.shootTime != 0:
+            if self.shootTime == 1:
+                date_from_filename = self.get_date_from_filename(image_path)
+                if date_from_filename:
+                    shoot_time_str = date_from_filename.strftime("%Y:%m:%d %H:%M:%S")
+                    cmd_parts.append(f'-CreateDate="{shoot_time_str}"')
+                    cmd_parts.append(f'-MediaCreateDate="{shoot_time_str}"')
+                    cmd_parts.append(f'-TrackCreateDate="{shoot_time_str}"')
+                    updated_fields.append(f"文件名识别拍摄时间: {shoot_time_str}")
             else:
-                self.log.emit("WARNING", f"未对 {os.path.basename(image_path)} 进行任何更改")
+                # 验证时间格式
+                try:
+                    datetime.strptime(self.shootTime, "%Y:%m:%d %H:%M:%S")
+                    cmd_parts.append(f'-CreateDate="{self.shootTime}"')
+                    cmd_parts.append(f'-MediaCreateDate="{self.shootTime}"')
+                    cmd_parts.append(f'-TrackCreateDate="{self.shootTime}"')
+                    updated_fields.append(f"拍摄时间: {self.shootTime}")
+                except ValueError:
+                    self.log.emit("ERROR", f"拍摄时间格式无效: {self.shootTime}，请使用 YYYY:MM:DD HH:MM:SS 格式")
+        
+        if self.title:
+            cmd_parts.append(f'-Comment="{self.title}"')
+            cmd_parts.append(f'-Description="{self.title}"')
+            updated_fields.append(f"标题: {self.title}")
+        
+        if self.author:
+            cmd_parts.append(f'-Artist="{self.author}"')
+            updated_fields.append(f"作者: {self.author}")
+        
+        if self.subject:
+            cmd_parts.append(f'-Subject="{self.subject}"')
+            updated_fields.append(f"主题: {self.subject}")
+        
+        if self.copyright:
+            cmd_parts.append(f'-Copyright="{self.copyright}"')
+            updated_fields.append(f"版权: {self.copyright}")
+        
+        # 添加文件路径
+        cmd_parts.append(f'"{file_path_normalized}"')
+        
+        # 构建完整命令
+        cmd = ' '.join(cmd_parts)
+        
+        try:
+            # 执行命令
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=30,
+                shell=True
+            )
+            
+            if result.returncode == 0:
+                if updated_fields:
+                    self.log.emit("INFO", f"成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
+                else:
+                    self.log.emit("WARNING", f"未对 {os.path.basename(image_path)} 进行任何更改")
+            else:
+                self.log.emit("ERROR", f"EXIF数据修改失败: {result.stderr}")
                 
+        except subprocess.TimeoutExpired:
+            self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 超时")
         except Exception as e:
-            self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 时出错: {str(e)}")
+            self.log.emit("ERROR", f"修改EXIF数据时出错: {str(e)}")
 
     def _process_raw_format(self, image_path):
         try:
@@ -552,6 +625,68 @@ class WriteExifThread(QThread):
 
     def stop(self):
         self._stop_requested = True
+
+    def decimal_to_dms(self, decimal):
+        """
+        将十进制坐标转换为度分秒格式
+        例如: 31.2222 -> "31 deg 13' 19.92\""
+        """
+        try:
+            # 处理正负号
+            is_negative = decimal < 0
+            decimal = abs(decimal)
+            
+            # 计算度、分、秒
+            degrees = int(decimal)
+            minutes_decimal = (decimal - degrees) * 60
+            minutes = int(minutes_decimal)
+            seconds = (minutes_decimal - minutes) * 60
+            
+            # 格式化输出
+            dms_str = f"{degrees} deg {minutes}' {seconds:.2f}\""
+            
+            return dms_str
+        except Exception as e:
+            self.log.emit("ERROR", f"坐标转换错误: {str(e)}")
+            return str(decimal)
+
+    def convert_dms_to_decimal(self, dms_str):
+        """
+        将度分秒格式的GPS坐标转换为十进制格式
+        例如: "23 deg 8' 2.04\" N" -> 23.1339
+        """
+        try:
+            # 解析度分秒格式
+            import re
+            
+            # 匹配度分秒格式
+            pattern = r'(\d+) deg (\d+)\'( (\d+(?:\.\d+)?)\")? ([NSWE])'
+            match = re.search(pattern, dms_str)
+            
+            if match:
+                degrees = float(match.group(1))
+                minutes = float(match.group(2))
+                seconds = float(match.group(4)) if match.group(4) else 0.0
+                direction = match.group(5)
+                
+                # 计算十进制坐标
+                decimal = degrees + minutes/60 + seconds/3600
+                
+                # 处理方向（南纬和西经为负数）
+                if direction in ['S', 'W']:
+                    decimal = -decimal
+                    
+                return decimal
+            else:
+                # 尝试直接解析十进制格式
+                try:
+                    return float(dms_str)
+                except ValueError:
+                    return None
+                    
+        except Exception as e:
+            self.log.emit("ERROR", f"GPS坐标转换错误: {str(e)}")
+            return None
 
     def _create_gps_data(self, lat, lon):
         def decimal_to_dms(decimal):
