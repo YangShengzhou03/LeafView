@@ -240,33 +240,89 @@ def write_mp4_shoot_time(file_path, shoot_time, max_retries=3, adjust_for_window
     return False
 
 
+def get_video_shoot_time(file_path, timeout=30):
+    """
+    读取视频的拍摄时间
+    
+    Args:
+        file_path: 视频文件路径
+        timeout: 读取超时时间
+        
+    Returns:
+        str: 拍摄时间（格式为YYYY:MM:DD HH:MM:SS），如果读取失败则返回None
+    """
+    try:
+        file_path_normalized = file_path.replace('\\', '/')
+        # 读取时间相关标签
+        cmd = f"{get_resource_path('resources/exiftool/exiftool.exe')} -fast -CreateDate -CreationDate -MediaCreateDate -DateTimeOriginal \"{file_path_normalized}\""
+        
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            shell=True
+        )
+
+        if result.returncode != 0:
+            print(f"读取元数据失败: {result.stderr}")
+            return None
+
+        # 解析输出，提取时间信息
+        metadata = {}
+        for line in result.stdout.split('\n'):
+            if ':' in line:
+                key, value = line.split(':', 1)
+                metadata[key.strip()] = value.strip()
+
+        # 按优先级检查时间标签
+        time_tags = [
+            'Date/Time Original',  # DateTimeOriginal
+            'Media Create Date',   # MediaCreateDate
+            'Creation Date',       # CreationDate
+            'Create Date'          # CreateDate
+        ]
+        
+        for tag in time_tags:
+            if tag in metadata:
+                time_str = metadata[tag]
+                # 清理时间字符串，移除时区信息
+                if '+' in time_str:
+                    time_str = time_str.split('+')[0].strip()
+                elif '-' in time_str and time_str.count('-') > 2:  # 排除日期中的分隔符
+                    time_str = time_str.split('-')[0].strip()
+                
+                # 验证时间格式
+                try:
+                    datetime.strptime(time_str, "%Y:%m:%d %H:%M:%S")
+                    return time_str
+                except ValueError:
+                    continue
+        
+        print("未找到有效的拍摄时间信息")
+        return None
+
+    except Exception as e:
+        print(f"读取文件拍摄时间出错: {str(e)}")
+        return None
+
+
 def main():
     # --------------------------
-    # 请在这里修改你的MP4路径和目标时间
+    # 请在这里修改你的MP4路径
     # --------------------------
     target_mp4_path = r"D:/待分类/test.mp4"  # 你的MP4文件路径
-    target_shoot_time = "2005:11:09 22:10:10"  # 目标拍摄时间（格式固定）
 
-    # 读取原始时间（可选，仅用于对比）
-    print("=== 读取原始拍摄时间 ===")
-    original_metadata = get_video_metadata(target_mp4_path)
-    if original_metadata:
-        for key, value in original_metadata.items():
-            print(f"{key}: {value}")
+    # 读取拍摄时间
+    print("=== 读取视频拍摄时间 ===")
+    shoot_time = get_video_shoot_time(target_mp4_path)
+    
+    if shoot_time:
+        print(f"拍摄时间: {shoot_time}")
     else:
-        print("未读取到原始时间数据")
-
-    # 执行写入（默认启用Windows时区调整）
-    print("\n=== 开始写入新拍摄时间 ===")
-    print("注意：已启用Windows时区调整，确保Windows属性显示正确时间")
-    success = write_mp4_shoot_time(target_mp4_path, target_shoot_time)
-
-    # 最终结果提示
+        print("未读取到拍摄时间数据")
+    
     print("\n=== 操作完成 ===")
-    print(f"成功状态：{'是' if success else '否'}")
-    print(f"目标文件：{target_mp4_path}")
-    print(f"目标时间（本地时间）：{target_shoot_time}")
-    print("现在检查Windows属性，应该显示正确的时间了！")
 
 
 if __name__ == "__main__":

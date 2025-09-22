@@ -230,7 +230,6 @@ class SmartArrangeThread(QtCore.QThread):
                 else:
                     if old_path.parent == unique_path.parent:
                         old_path.rename(unique_path)
-                        self.log("DEBUG", f"重命名文件: {old_path.name} -> {unique_path.name}")
                     else:
                         import shutil
                         shutil.move(old_path, unique_path)
@@ -387,7 +386,7 @@ class SmartArrangeThread(QtCore.QThread):
                 date_taken = self._process_heic_exif(file_path_obj, exif_data)
             elif suffix == '.png':
                 date_taken = self._process_png_exif(file_path_obj)
-            elif suffix == '.mov':
+            elif suffix in ('.mov', '.mp4'):
                 date_taken = self._process_mov_exif(file_path_obj, exif_data)
             else:
                 self.log("DEBUG", f"不支持的文件类型或无EXIF数据: {suffix}")
@@ -436,18 +435,29 @@ class SmartArrangeThread(QtCore.QThread):
             
         date_taken = None
         
-        date_keys = [
-            'Create Date', 'Creation Date', 'DateTimeOriginal',
-            'Media Create Date', 'Date/Time Original', 'Date/Time Created'
+        # 按优先级检查时间标签
+        time_tags = [
+            'Date/Time Original',  # DateTimeOriginal
+            'Media Create Date',   # MediaCreateDate
+            'Creation Date',       # CreationDate
+            'Create Date'          # CreateDate
         ]
         
-        for key in date_keys:
-            if key in video_metadata:
-                date_str = video_metadata[key]
-                date_taken = self.parse_datetime(date_str)
-                if date_taken:
-                    self.log("DEBUG", f"MOV文件拍摄日期: {date_str}")
+        for tag in time_tags:
+            if tag in video_metadata:
+                time_str = video_metadata[tag]
+                # 清理时间字符串，移除时区信息
+                if '+' in time_str:
+                    time_str = time_str.split('+')[0].strip()
+                elif '-' in time_str and time_str.count('-') > 2:  # 排除日期中的分隔符
+                    time_str = time_str.split('-')[0].strip()
+                
+                # 验证时间格式
+                try:
+                    date_taken = datetime.datetime.strptime(time_str, "%Y:%m:%d %H:%M:%S")
                     break
+                except ValueError:
+                    continue
         
         make_keys = [
             'Make', 'Camera Make', 'Manufacturer', 'Camera Manufacturer'
@@ -458,9 +468,7 @@ class SmartArrangeThread(QtCore.QThread):
                 make_value = video_metadata[key]
                 if make_value:
                     exif_data['Make'] = make_value
-                    if not date_taken:
-                        date_taken = make_value
-                    self.log("DEBUG", f"MOV文件相机品牌: {make_value}")
+                    self.log("DEBUG", f"视频文件相机品牌: {make_value}")
                 break
         
         model_keys = [
@@ -472,7 +480,7 @@ class SmartArrangeThread(QtCore.QThread):
                 model_value = video_metadata[key]
                 if model_value:
                     exif_data['Model'] = model_value
-                    self.log("DEBUG", f"MOV文件相机型号: {model_value}")
+                    self.log("DEBUG", f"视频文件相机型号: {model_value}")
                 break
         
         gps_found = False
@@ -548,7 +556,8 @@ class SmartArrangeThread(QtCore.QThread):
     def _get_video_metadata(self, file_path, timeout=30):
         try:
             file_path_normalized = str(file_path).replace('\\', '/')
-            cmd = f"{get_resource_path('resources/exiftool/exiftool.exe')} -fast \"{file_path_normalized}\""
+            # 读取时间相关标签
+            cmd = f"{get_resource_path('resources/exiftool/exiftool.exe')} -fast -CreateDate -CreationDate -MediaCreateDate -DateTimeOriginal \"{file_path_normalized}\""
 
             result = subprocess.run(
                 cmd,
