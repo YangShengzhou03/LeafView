@@ -2,8 +2,10 @@ import os
 import re
 import time
 import subprocess
+import shutil
+import tempfile
 from concurrent.futures import as_completed, ThreadPoolExecutor
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import piexif
 from PIL import Image, PngImagePlugin
@@ -215,19 +217,32 @@ class WriteExifThread(QThread):
         
         if self.shootTime != 0:
             if self.shootTime == 1:
-                date_from_filename = self.get_date_from_filename(image_path)
+                date_from_filename = self.get_date_from_filename(original_file_path)
                 if date_from_filename:
-                    if "Exif" not in exif_dict:
-                        exif_dict["Exif"] = {}
-                    exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = date_from_filename.strftime(
-                        "%Y:%m:%d %H:%M:%S")
-                    updated_fields.append(
-                        f"文件名识别拍摄时间: {date_from_filename.strftime('%Y:%m:%d %H:%M:%S')}")
+                    local_time = date_from_filename
+                    utc_time = local_time - timedelta(hours=8)
+                    actual_write_time = utc_time.strftime("%Y:%m:%d %H:%M:%S")
+                    timezone_suffix = "+00:00"
+                    cmd_parts.append(f'-CreateDate={actual_write_time}{timezone_suffix}')
+                    cmd_parts.append(f'-CreationDate={actual_write_time}{timezone_suffix}')
+                    cmd_parts.append(f'-MediaCreateDate={actual_write_time}{timezone_suffix}')
+                    cmd_parts.append(f'-DateTimeOriginal={actual_write_time}{timezone_suffix}')
+                    updated_fields.append(f"文件名识别拍摄时间: {date_from_filename.strftime('%Y:%m:%d %H:%M:%S')} (已调整为UTC时间)")
             else:
-                if "Exif" not in exif_dict:
-                    exif_dict["Exif"] = {}
-                exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = self.shootTime
-                updated_fields.append(f"拍摄时间: {self.shootTime}")
+                try:
+                    datetime.strptime(self.shootTime, "%Y:%m:%d %H:%M:%S")
+                    local_time = datetime.strptime(self.shootTime, "%Y:%m:%d %H:%M:%S")
+                    utc_time = local_time - timedelta(hours=8)
+                    actual_write_time = utc_time.strftime("%Y:%m:%d %H:%M:%S")
+                    timezone_suffix = "+00:00"
+                    
+                    cmd_parts.append(f'-CreateDate={actual_write_time}{timezone_suffix}')
+                    cmd_parts.append(f'-CreationDate={actual_write_time}{timezone_suffix}')
+                    cmd_parts.append(f'-MediaCreateDate={actual_write_time}{timezone_suffix}')
+                    cmd_parts.append(f'-DateTimeOriginal={actual_write_time}{timezone_suffix}')
+                    updated_fields.append(f"拍摄时间: {self.shootTime} (已调整为UTC时间)")
+                except ValueError:
+                    self.log.emit("ERROR", f"拍摄时间格式无效: {self.shootTime}，请使用 YYYY:MM:DD HH:MM:SS 格式")
         
         if self.lat is not None and self.lon is not None:
             exif_dict["GPS"] = self._create_gps_data(self.lat, self.lon)
@@ -449,14 +464,21 @@ class WriteExifThread(QThread):
         if not os.path.exists(image_path):
             self.log.emit("ERROR", f"文件不存在: {image_path}")
             return
+        temp_file_path = None
+        original_file_path = image_path
+        temp_dir = None
+        has_non_ascii = any(ord(char) > 127 for char in image_path)
+        
+        if has_non_ascii:
+            temp_dir = tempfile.mkdtemp(prefix="exiftool_temp_")
+            temp_file_path = os.path.join(temp_dir, os.path.basename(image_path))
+            shutil.copy2(image_path, temp_file_path)
+            image_path = temp_file_path
         
         file_path_normalized = image_path.replace('\\', '/')
         exiftool_path = get_resource_path('resources/exiftool/exiftool.exe')
-        
-        
         cmd_parts = [exiftool_path, "-overwrite_original"]
         updated_fields = []
-        
         
         if self.cameraBrand:
             cmd_parts.append(f'-Make="{self.cameraBrand}"')
@@ -467,11 +489,8 @@ class WriteExifThread(QThread):
             updated_fields.append(f"相机型号: {self.cameraModel}")
         
         if self.lat is not None and self.lon is not None:
-            
             lat_dms = self.decimal_to_dms(self.lat)
             lon_dms = self.decimal_to_dms(self.lon)
-            
-            
             cmd_parts.append(f'-GPSLatitude="{lat_dms}"')
             cmd_parts.append(f'-GPSLongitude="{lon_dms}"')
             cmd_parts.append('-GPSLatitudeRef=N' if self.lat >= 0 else '-GPSLatitudeRef=S')
@@ -482,21 +501,29 @@ class WriteExifThread(QThread):
         
         if self.shootTime != 0:
             if self.shootTime == 1:
-                date_from_filename = self.get_date_from_filename(image_path)
+                date_from_filename = self.get_date_from_filename(original_file_path)
                 if date_from_filename:
-                    shoot_time_str = date_from_filename.strftime("%Y:%m:%d %H:%M:%S")
-                    cmd_parts.append(f'-CreateDate="{shoot_time_str}"')
-                    cmd_parts.append(f'-MediaCreateDate="{shoot_time_str}"')
-                    cmd_parts.append(f'-TrackCreateDate="{shoot_time_str}"')
-                    updated_fields.append(f"文件名识别拍摄时间: {shoot_time_str}")
+                    local_time = date_from_filename
+                    utc_time = local_time - timedelta(hours=8)
+                    actual_write_time = utc_time.strftime("%Y:%m:%d %H:%M:%S")
+                    timezone_suffix = "+00:00"
+                    cmd_parts.append(f'-CreateDate={actual_write_time}{timezone_suffix}')
+                    cmd_parts.append(f'-CreationDate={actual_write_time}{timezone_suffix}')
+                    cmd_parts.append(f'-MediaCreateDate={actual_write_time}{timezone_suffix}')
+                    cmd_parts.append(f'-DateTimeOriginal={actual_write_time}{timezone_suffix}')
+                    updated_fields.append(f"文件名识别拍摄时间: {date_from_filename.strftime('%Y:%m:%d %H:%M:%S')} (已调整为UTC时间)")
             else:
-                
                 try:
                     datetime.strptime(self.shootTime, "%Y:%m:%d %H:%M:%S")
-                    cmd_parts.append(f'-CreateDate="{self.shootTime}"')
-                    cmd_parts.append(f'-MediaCreateDate="{self.shootTime}"')
-                    cmd_parts.append(f'-TrackCreateDate="{self.shootTime}"')
-                    updated_fields.append(f"拍摄时间: {self.shootTime}")
+                    local_time = datetime.strptime(self.shootTime, "%Y:%m:%d %H:%M:%S")
+                    utc_time = local_time - timedelta(hours=8)
+                    actual_write_time = utc_time.strftime("%Y:%m:%d %H:%M:%S")
+                    timezone_suffix = "+00:00"
+                    cmd_parts.append(f'-CreateDate={actual_write_time}{timezone_suffix}')
+                    cmd_parts.append(f'-CreationDate={actual_write_time}{timezone_suffix}')
+                    cmd_parts.append(f'-MediaCreateDate={actual_write_time}{timezone_suffix}')
+                    cmd_parts.append(f'-DateTimeOriginal={actual_write_time}{timezone_suffix}')
+                    updated_fields.append(f"拍摄时间: {self.shootTime} (已调整为UTC时间)")
                 except ValueError:
                     self.log.emit("ERROR", f"拍摄时间格式无效: {self.shootTime}，请使用 YYYY:MM:DD HH:MM:SS 格式")
         
@@ -517,34 +544,43 @@ class WriteExifThread(QThread):
             cmd_parts.append(f'-Copyright="{self.copyright}"')
             updated_fields.append(f"版权: {self.copyright}")
         
-        
-        cmd_parts.append(f'"{file_path_normalized}"')
-        
-        
-        cmd = ' '.join(cmd_parts)
-        
         try:
+            cmd_parts.append(file_path_normalized)
             
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=30,
-                shell=True
-            )
+            result = subprocess.run(cmd_parts, capture_output=True, text=True, shell=False)
             
-            if result.returncode == 0:
-                if updated_fields:
-                    self.log.emit("INFO", f"成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
-                else:
-                    self.log.emit("WARNING", f"未对 {os.path.basename(image_path)} 进行任何更改")
-            else:
-                self.log.emit("ERROR", f"EXIF数据修改失败: {result.stderr}")
-                
-        except subprocess.TimeoutExpired:
-            self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 超时")
+            if result.returncode != 0:
+                self.log.emit("ERROR", f"写入EXIF数据失败: {result.stderr}")
+                return False
+            
+            verify_cmd = [exiftool_path, '-CreateDate', '-CreationDate', '-MediaCreateDate', '-DateTimeOriginal', file_path_normalized]
+            subprocess.run(verify_cmd, capture_output=True, text=True, shell=False)
+            
+            return True
+            
         except Exception as e:
-            self.log.emit("ERROR", f"修改EXIF数据时出错: {str(e)}")
+            self.log.emit("ERROR", f"执行exiftool命令时出错: {str(e)}")
+            return False
+        finally:
+            if temp_file_path and os.path.exists(temp_file_path) and original_file_path != image_path:
+                try:
+                    shutil.copy2(temp_file_path, original_file_path)
+                except Exception as e:
+                    self.log.emit("ERROR", f"复制文件回原始路径失败: {str(e)}")
+            
+            # 清理临时文件
+            if temp_file_path and os.path.exists(temp_file_path):
+                try:
+                    os.remove(temp_file_path)
+                except Exception as e:
+                    self.log.emit("WARNING", f"无法删除临时文件: {str(e)}")
+            
+            # 清理临时目录
+            if temp_dir and os.path.exists(temp_dir):
+                try:
+                    shutil.rmtree(temp_dir)
+                except Exception as e:
+                    self.log.emit("WARNING", f"无法删除临时目录: {str(e)}")
 
     def _process_raw_format(self, image_path):
         try:
