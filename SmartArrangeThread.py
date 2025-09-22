@@ -389,6 +389,8 @@ class SmartArrangeThread(QtCore.QThread):
                 date_taken = self._process_png_exif(file_path_obj)
             elif suffix == '.mov':
                 date_taken = self._process_mov_exif(file_path_obj, exif_data)
+            elif suffix == '.mp4':
+                date_taken = self._process_mp4_exif(file_path_obj, exif_data)
             else:
                 self.log("DEBUG", f"不支持的文件类型或无EXIF数据: {suffix}")
 
@@ -429,6 +431,80 @@ class SmartArrangeThread(QtCore.QThread):
                 return self.parse_datetime(creation_time)
         return None
 
+    def _process_mp4_exif(self, file_path, exif_data):
+        video_metadata = self._get_video_metadata(file_path)
+        if not video_metadata:
+            return None
+            
+        date_taken = None
+        date_keys = [
+            'Create Date', 'Creation Date', 'Media Create Date', 'Date/Time Original',
+            'Track Create Date', 'Creation Date (Windows)', 'Modify Date'
+        ]
+        
+        for key in date_keys:
+            if key in video_metadata:
+                date_str = video_metadata[key]
+                if '+' in date_str or '-' in date_str[-5:]:
+                    date_taken = self.parse_datetime(date_str)
+                else:
+                    try:
+                        dt = datetime.datetime.strptime(date_str, '%Y:%m:%d %H:%M:%S')
+                        utc_dt = dt.replace(tzinfo=datetime.timezone.utc)
+                        date_taken = utc_dt.astimezone().replace(tzinfo=None)
+                    except ValueError:
+                        date_taken = self.parse_datetime(date_str)
+                if date_taken:
+                    break
+        
+        make_keys = [
+            'Make', 'Camera Make', 'Manufacturer', 'Camera Manufacturer'
+        ]
+        
+        for key in make_keys:
+            if key in video_metadata:
+                make_value = video_metadata[key]
+                if make_value:
+                    exif_data['Make'] = make_value
+                break
+        
+        model_keys = [
+            'Model', 'Camera Model', 'Device Model', 'Product Name'
+        ]
+        
+        for key in model_keys:
+            if key in video_metadata:
+                model_value = video_metadata[key]
+                if model_value:
+                    exif_data['Model'] = model_value
+                break
+        
+        gps_found = False
+        for key, value in video_metadata.items():
+            if 'gps' in key.lower() or 'location' in key.lower():
+                gps_found = True
+                if 'Coordinates' in key or 'Position' in key:
+                    lat, lon = self._parse_combined_coordinates(value)
+                    if lat is not None and lon is not None:
+                        exif_data.update({'GPS GPSLatitude': lat, 'GPS GPSLongitude': lon})
+                elif 'Latitude' in key:
+                    lat = self._parse_dms_coordinate(value)
+                    if lat is not None:
+                        exif_data['GPS GPSLatitude'] = lat
+                elif 'Longitude' in key:
+                    lon = self._parse_dms_coordinate(value)
+                    if lon is not None:
+                        exif_data['GPS GPSLongitude'] = lon
+        
+        if gps_found and ('GPS GPSLatitude' not in exif_data or 'GPS GPSLongitude' not in exif_data):
+            lat = exif_data.get('GPS GPSLatitude')
+            lon = exif_data.get('GPS GPSLongitude')
+            if lat is not None and lon is not None:
+                self.log("DEBUG", f"解析GPS坐标: 纬度={lat}, 经度={lon}")
+            else:
+                self.log("DEBUG", "无法解析GPS坐标")        
+        return date_taken
+
     def _process_mov_exif(self, file_path, exif_data):
         video_metadata = self._get_video_metadata(file_path)
         if not video_metadata:
@@ -444,9 +520,17 @@ class SmartArrangeThread(QtCore.QThread):
         for key in date_keys:
             if key in video_metadata:
                 date_str = video_metadata[key]
-                date_taken = self.parse_datetime(date_str)
+                if '+' in date_str or '-' in date_str[-5:]:
+                    date_taken = self.parse_datetime(date_str)
+                else:
+                    try:
+                        dt = datetime.datetime.strptime(date_str, '%Y:%m:%d %H:%M:%S')
+                        utc_dt = dt.replace(tzinfo=datetime.timezone.utc)
+                        date_taken = utc_dt.astimezone().replace(tzinfo=None)
+                    except ValueError:
+                        date_taken = self.parse_datetime(date_str)
+                
                 if date_taken:
-                    self.log("DEBUG", f"MOV文件拍摄日期: {date_str}")
                     break
         
         make_keys = [
@@ -472,7 +556,6 @@ class SmartArrangeThread(QtCore.QThread):
                 model_value = video_metadata[key]
                 if model_value:
                     exif_data['Model'] = model_value
-                    self.log("DEBUG", f"MOV文件相机型号: {model_value}")
                 break
         
         gps_found = False
@@ -483,7 +566,6 @@ class SmartArrangeThread(QtCore.QThread):
                     lat, lon = self._parse_combined_coordinates(value)
                     if lat is not None and lon is not None:
                         exif_data.update({'GPS GPSLatitude': lat, 'GPS GPSLongitude': lon})
-                        self.log("DEBUG", f"解析GPS坐标成功: 纬度={lat}, 经度={lon}")
                 elif 'Latitude' in key:
                     lat = self._parse_dms_coordinate(value)
                     if lat is not None:
@@ -497,9 +579,7 @@ class SmartArrangeThread(QtCore.QThread):
             lat = exif_data.get('GPS GPSLatitude')
             lon = exif_data.get('GPS GPSLongitude')
             if lat is not None and lon is not None:
-                self.log("DEBUG", f"解析GPS坐标成功: 纬度={lat}, 经度={lon}")
-            else:
-                self.log("DEBUG", "无法解析GPS坐标")        
+                self.log("DEBUG", f"GPS坐标: 纬度={lat}, 经度={lon}")
         return date_taken
 
     def _determine_best_datetime(self, date_taken, create_time, modify_time):
@@ -533,8 +613,6 @@ class SmartArrangeThread(QtCore.QThread):
                 lat = -lat if lat_ref and lat_ref.lower() == 's' else lat
                 lon = -lon if lon_ref and lon_ref.lower() == 'w' else lon
                 exif_data.update({'GPS GPSLatitude': lat, 'GPS GPSLongitude': lon})
-        else:
-            self.log("DEBUG", "GPS坐标数据不存在")
         
         make = str(tags.get('Image Make', '')).strip()
         model = str(tags.get('Image Model', '')).strip()
@@ -572,10 +650,28 @@ class SmartArrangeThread(QtCore.QThread):
         try:
             datetime_str = str(tags.get('EXIF DateTimeOriginal', ''))
             if datetime_str and datetime_str != 'None':
+                if '+' in datetime_str or '-' in datetime_str[-5:]:
+                    try:
+                        dt = datetime.datetime.strptime(datetime_str, '%Y:%m:%d %H:%M:%S%z')
+                        if dt.tzinfo is not None:
+                            dt = dt.astimezone()
+                            return dt.replace(tzinfo=None)
+                    except ValueError:
+                        pass
+                
                 return datetime.datetime.strptime(datetime_str, '%Y:%m:%d %H:%M:%S')
             
             datetime_str = str(tags.get('Image DateTime', ''))
             if datetime_str and datetime_str != 'None':
+                if '+' in datetime_str or '-' in datetime_str[-5:]:
+                    try:
+                        dt = datetime.datetime.strptime(datetime_str, '%Y:%m:%d %H:%M:%S%z')
+                        if dt.tzinfo is not None:
+                            dt = dt.astimezone()
+                            return dt.replace(tzinfo=None)
+                    except ValueError:
+                        pass
+                
                 return datetime.datetime.strptime(datetime_str, '%Y:%m:%d %H:%M:%S')
                 
         except (ValueError, TypeError):
@@ -588,7 +684,13 @@ class SmartArrangeThread(QtCore.QThread):
             return None
             
         try:
-            formats = [
+            formats_with_timezone = [
+                '%Y:%m:%d %H:%M:%S%z',
+                '%Y-%m-%d %H:%M:%S%z',
+                '%Y/%m/%d %H:%M:%S%z',
+            ]
+            
+            formats_without_timezone = [
                 '%Y:%m:%d %H:%M:%S',
                 '%Y-%m-%d %H:%M:%S', 
                 '%Y/%m/%d %H:%M:%S',
@@ -598,13 +700,29 @@ class SmartArrangeThread(QtCore.QThread):
                 '%Y%m%d'
             ]
             
-            for fmt in formats:
+            for fmt in formats_with_timezone:
                 try:
-                    return datetime.datetime.strptime(datetime_str, fmt)
+                    dt = datetime.datetime.strptime(datetime_str, fmt)
+                    if dt.tzinfo is not None:
+                        dt = dt.astimezone()
+                        return dt.replace(tzinfo=None)
+                    return dt
                 except ValueError:
                     continue
+            
+            for fmt in formats_without_timezone:
+                try:
+                    dt = datetime.datetime.strptime(datetime_str, fmt)
+                    if 'mov' in fmt.lower() or fmt in ['%Y:%m:%d %H:%M:%S', '%Y-%m-%d %H:%M:%S', '%Y/%m/%d %H:%M:%S']:
+                        import time
+                        utc_dt = dt.replace(tzinfo=datetime.timezone.utc)
+                        local_dt = utc_dt.astimezone()
+                        return local_dt.replace(tzinfo=None)
                     
-        except (ValueError, TypeError):
+                    return dt
+                except ValueError:
+                    continue
+        except (ValueError, TypeError) as e:
             pass
             
         return None
