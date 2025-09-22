@@ -1,14 +1,3 @@
-"""
-LeafView 智能整理模块
-
-负责媒体文件的智能分类和重命名功能，包括：
-1. 多级分类结构设置（年份、月份、设备等）
-2. 文件名标签组合和自定义
-3. 文件操作（移动/复制）管理
-4. 实时预览和示例显示
-5. 后台整理线程管理
-"""
-
 from datetime import datetime
 from PyQt6 import QtWidgets
 from PyQt6.QtCore import pyqtSignal
