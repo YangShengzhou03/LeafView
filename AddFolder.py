@@ -1,13 +1,3 @@
-"""
-媒体导入功能模块 - FolderPage类
-
-负责处理:
-1. 文件夹的拖拽和选择导入
-2. 路径冲突检测和验证
-3. 文件夹项UI的创建和管理
-4. 子文件夹包含选项处理
-"""
-
 from PyQt6 import QtWidgets, QtCore, QtGui
 from PyQt6.QtWidgets import QFileDialog, QMessageBox, QProgressDialog, QVBoxLayout, QPushButton, QTextEdit, QDialog
 import os
