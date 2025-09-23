@@ -570,7 +570,7 @@ class Ui_MainWindow(object):
         self.widget_folder.setSizePolicy(sizePolicy)
         self.widget_folder.setMinimumSize(QtCore.QSize(36, 36))
         self.widget_folder.setMaximumSize(QtCore.QSize(36, 36))
-        self.widget_folder.setStyleSheet(f"image: url({get_resource_path('resources / img / page_0 / 导入文件夹.svg')});\n"
+        self.widget_folder.setStyleSheet(f"image: url({get_resource_path('resources/img/page_0/导入文件夹.svg')});\n"
 "background-color: rgba(0, 0, 0, 0);\n"
 "border-radius:0px;\n"
 "border: 0px;")
