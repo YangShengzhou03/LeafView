@@ -29,7 +29,7 @@ LicenseFile=D:\Code\python\LeafView\license.txt
 ; 以管理员身份运行
 PrivilegesRequired=admin
 OutputDir=C:\Users\YangShengzhou\Desktop
-OutputBaseFilename=枫叶相册安装程序
+OutputBaseFilename=LeafView Setup
 SetupIconFile=D:\code\Python\LeafView\resources\img\setup.ico
 Compression=lzma2/max
 SolidCompression=yes
