@@ -901,6 +901,12 @@ class SmartArrangeThread(QtCore.QThread):
             return "未知位置"
         
         try:
+            from config_manager import config_manager
+            
+            if not config_manager.can_call_gaode_api():
+                self.log("WARNING", "今日高德API调用次数已达上限（500次/日），请明天再试或使用缓存的位置信息。")
+                return "未知位置"
+            
             user_key = "0db079da53e08cbb62b52a42f657b994"
             
             if not user_key:
@@ -917,6 +923,7 @@ class SmartArrangeThread(QtCore.QThread):
             if data.get("status") == "1":
                 address = data.get("regeocode", {}).get("formatted_address", "")
                 if address:
+                    config_manager.record_gaode_api_call()
                     return address
                 else:
                     return "未知位置"

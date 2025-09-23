@@ -5,6 +5,13 @@
       "include_sub": true
     }
   ],
+  "api_limits": {
+    "gaode": {
+      "daily_calls": 0,
+      "last_reset_date": "",
+      "max_daily_calls": 500
+    }
+  },
   "settings": {
     "exif_title": "标题",
     "exif_author": "作者",

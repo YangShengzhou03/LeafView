@@ -19,6 +19,13 @@ class ConfigManager:
     def _load_config(self) -> Dict[str, Any]:
         default_config = {
             "folders": [],
+            "api_limits": {
+                "gaode": {
+                    "daily_calls": 0,
+                    "last_reset_date": "",
+                    "max_daily_calls": 500
+                }
+            },
             "settings": {}
         }
         
@@ -29,6 +36,15 @@ class ConfigManager:
                     for key in default_config:
                         if key not in config:
                             config[key] = default_config[key]
+                        elif key == "api_limits":
+                            # 确保api_limits结构完整
+                            for api_name, api_defaults in default_config["api_limits"].items():
+                                if api_name not in config["api_limits"]:
+                                    config["api_limits"][api_name] = api_defaults
+                                else:
+                                    for field, default_value in api_defaults.items():
+                                        if field not in config["api_limits"][api_name]:
+                                            config["api_limits"][api_name][field] = default_value
                     return config
         except (json.JSONDecodeError, IOError) as e:
             logger.warning(f"加载配置文件时出错了: {e}")
@@ -180,6 +196,47 @@ class ConfigManager:
     
     def get_setting(self, key: str, default: Any = None) -> Any:
         return self.config["settings"].get(key, default)
+    
+    def can_call_gaode_api(self) -> bool:
+        """检查是否可以调用高德API（每日限制500次）"""
+        import datetime
+        
+        # 获取当前日期
+        current_date = datetime.datetime.now().strftime("%Y-%m-%d")
+        
+        # 检查是否需要重置计数器
+        gaode_config = self.config["api_limits"]["gaode"]
+        if gaode_config["last_reset_date"] != current_date:
+            # 重置计数器
+            gaode_config["daily_calls"] = 0
+            gaode_config["last_reset_date"] = current_date
+            self.save_config()
+        
+        # 检查是否超过限制
+        return gaode_config["daily_calls"] < gaode_config["max_daily_calls"]
+    
+    def record_gaode_api_call(self) -> bool:
+        """记录一次高德API调用"""
+        import datetime
+        
+        # 获取当前日期
+        current_date = datetime.datetime.now().strftime("%Y-%m-%d")
+        
+        # 检查是否需要重置计数器
+        gaode_config = self.config["api_limits"]["gaode"]
+        if gaode_config["last_reset_date"] != current_date:
+            # 重置计数器
+            gaode_config["daily_calls"] = 0
+            gaode_config["last_reset_date"] = current_date
+        
+        # 增加调用计数
+        gaode_config["daily_calls"] += 1
+        
+        return self.save_config()
+    
+    def get_gaode_api_stats(self) -> Dict[str, Any]:
+        """获取高德API调用统计信息"""
+        return self.config["api_limits"]["gaode"].copy()
 
 
 config_manager = ConfigManager()
