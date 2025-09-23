@@ -1,9 +1,6 @@
 {
   "folders": [
-    {
-      "path": "D:\\待分类",
-      "include_sub": true
-    }
+  
   ],
   "api_limits": {
     "gaode": {
@@ -13,19 +10,19 @@
     }
   },
   "settings": {
-    "exif_title": "标题",
-    "exif_author": "作者",
-    "exif_subject": "主题",
-    "exif_copyright": "版权",
-    "exif_position": "29.8782, 121.5494",
-    "exif_latitude": "29.8782",
-    "exif_longitude": "121.5494",
+    "exif_title": "",
+    "exif_author": "",
+    "exif_subject": "",
+    "exif_copyright": "",
+    "exif_position": "",
+    "exif_latitude": "",
+    "exif_longitude": "",
     "exif_location_index": 0,
-    "exif_camera_brand": "Google",
-    "exif_camera_model": "Pixel 8 Pro",
+    "exif_camera_brand": "",
+    "exif_camera_model": "",
     "exif_shoot_time_index": 0,
-    "exif_shoot_time": "2025:09:23 20:05:01",
-    "exif_star_rating": 4,
+    "exif_shoot_time": "",
+    "exif_star_rating": 0,
     "exif_settings": {
       "title": "",
       "author": "",
