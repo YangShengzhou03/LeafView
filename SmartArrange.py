@@ -108,10 +108,10 @@ class SmartArrange(QtWidgets.QWidget):
 
             reply = QMessageBox.question(
                 self,
-                "确认整理操作",
-                "重要提醒：整理文件的操作一旦开始就没办法撤销了！\n\n"
-                "• 如果是移动操作：文件会被搬到新位置，原来的地方就没有了\n"
-                "• 如果是复制操作：文件会在新位置创建一份，原来的文件还在\n\n"
+                "即将开始整理，确定吗？",
+                "重要提醒：整理文件的操作一旦开始就没办法恢复了！\n\n"
+                "• 移动操作：文件会被搬到新位置，原来的地方就没有了\n"
+                "• 复制操作：文件会在新位置创建一份，原目录文件原封不动\n\n"
                 "答应我，一定要先备份好重要文件再开始！\n\n"
                 "确定要开始整理吗？",
                 QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
