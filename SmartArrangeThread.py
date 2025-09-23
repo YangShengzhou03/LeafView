@@ -180,7 +180,11 @@ class SmartArrangeThread(QtCore.QThread):
                         self.log("WARNING", "您已经取消了当前文件夹的处理")
                         return
                     full_file_path = Path(root) / file
-                    self.process_single_file(full_file_path, base_folder=folder_path)
+                    # 如果有目标根路径（复制操作），则不传递base_folder参数
+                    if self.destination_root:
+                        self.process_single_file(full_file_path)
+                    else:
+                        self.process_single_file(full_file_path, base_folder=folder_path)
                     self.processed_files += 1
                     if self.total_files > 0:
                         percent_complete = int((self.processed_files / self.total_files) * 80)
@@ -192,7 +196,11 @@ class SmartArrangeThread(QtCore.QThread):
                     return
                 full_file_path = folder_path / file
                 if full_file_path.is_file():
-                    self.process_single_file(full_file_path)
+                    # 如果有目标根路径（复制操作），则不传递base_folder参数
+                    if self.destination_root:
+                        self.process_single_file(full_file_path)
+                    else:
+                        self.process_single_file(full_file_path)
                     self.processed_files += 1
                     if self.total_files > 0:
                         percent_complete = int((self.processed_files / self.total_files) * 80)
@@ -264,13 +272,27 @@ class SmartArrangeThread(QtCore.QThread):
                     break
                 
                 file_path = Path(root) / file
-                target_path = folder_path / file_path.name
+                
+                # 如果有目标根路径（复制操作），则使用它作为目标路径
+                if self.destination_root:
+                    target_path = Path(self.destination_root) / file_path.name
+                else:
+                    target_path = folder_path / file_path.name
+                
                 if file_path != target_path:
                     try:
                         import shutil
-                        self.log("WARNING", f"准备移动文件: {file_path} -> {target_path}")
-                        shutil.move(file_path, target_path)
-                        self.log("WARNING", f"成功移动文件: {file_path} -> {target_path}")
+                        if self.destination_root:
+                            # 复制操作
+                            self.log("WARNING", f"准备复制文件: {file_path} -> {target_path}")
+                            shutil.copy2(file_path, target_path)
+                            self.log("WARNING", f"成功复制文件: {file_path} -> {target_path}")
+                        else:
+                            # 移动操作
+                            self.log("WARNING", f"准备移动文件: {file_path} -> {target_path}")
+                            shutil.move(file_path, target_path)
+                            self.log("WARNING", f"成功移动文件: {file_path} -> {target_path}")
+                        
                         file_count += 1
                         
                         self.processed_files += 1
@@ -278,9 +300,10 @@ class SmartArrangeThread(QtCore.QThread):
                             percent_complete = int((self.processed_files / self.total_files) * 80)
                             self.progress_signal.emit(percent_complete)
                     except Exception as e:
-                        self.log("ERROR", f"移动文件 {file_path} 时出错: {str(e)}")
+                        self.log("ERROR", f"处理文件 {file_path} 时出错: {str(e)}")
         
-        self.log("INFO", f"处理完成，共移动 {file_count} 个文件")
+        operation_type = "复制" if self.destination_root else "移动"
+        self.log("INFO", f"处理完成，共{operation_type} {file_count} 个文件")
 
     def delete_empty_folders(self):
         deleted_count = 0
@@ -1052,6 +1075,9 @@ class SmartArrangeThread(QtCore.QThread):
         
         if base_folder:
             target_path = Path(base_folder)
+        elif self.destination_root:
+            # 如果有目标根路径（复制操作），则使用它作为目标路径
+            target_path = Path(self.destination_root)
         else:
             target_path = file_path.parent
         
