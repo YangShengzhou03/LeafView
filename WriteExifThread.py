@@ -284,8 +284,7 @@ class WriteExifThread(QThread):
             from pillow_heif import open_heif, register_heif_opener
             register_heif_opener()
         except ImportError:
-            self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 需要 pillow-heif 库\n\n"
-                             "请安装: pip install pillow-heif")
+            self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 需要 pillow-heif")
             return
         
         try:
