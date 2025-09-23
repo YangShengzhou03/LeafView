@@ -35,10 +35,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             QtCore.Qt.AlignmentFlag.AlignTop
         )
         
-        self.empty_widgets = {}
-        
-        self.empty_widgets['gridLayout_6'] = self._create_empty_widget(self.gridLayout_6)
-        
+        self.empty_widgets = {'gridLayout_6': self._create_empty_widget(self.gridLayout_6)}
+
         self.folder_page = FolderPage(self)
         self.classification = SmartArrange(self, self.folder_page)
         self.contrast = Contrast(self, self.folder_page)
@@ -56,7 +54,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def _on_head_vip_clicked(self, event):
         if event.button() == QtCore.Qt.MouseButton.LeftButton:
-            QtWidgets.QMessageBox.information(self, "demo版", "当前为测试演示版本，服务可能随时终止。\n\n如果您需要继续使用，请考虑购买专业版。")
+            QtWidgets.QMessageBox.information(self, "demo版", "当前为演示版本，服务可能随时终止。\n\n如果您需要继续使用，请考虑购买专业版。")
         event.accept()
 
     def _init_text_recognition(self):

@@ -159,5 +159,4 @@ def author():
     close_button.clicked.connect(dialog.reject)
     close_button.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
     close_button.setStyleSheet(load_stylesheet("close_button.setStyleSheet.css"))
-
     dialog.exec()

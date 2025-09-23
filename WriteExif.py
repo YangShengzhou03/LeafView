@@ -14,12 +14,12 @@ class WriteExif(QWidget):
         super().__init__(parent)
         self.parent = parent
         self.folder_page = folder_page
-        self.selected_star = 0  # 当前选中的星级评分
-        self.worker = None  # EXIF写入工作线程
-        self.star_buttons = []  # 星级按钮列表
-        self.is_running = False  # 是否正在运行
-        self.camera_lens_mapping = {}  # 相机型号到镜头的映射
-        self.error_messages = []  # 存储错误信息，便于用户查看详情
+        self.selected_star = 0
+        self.worker = None
+        self.star_buttons = []
+        self.is_running = False
+        self.camera_lens_mapping = {}
+        self.error_messages = []
         self.init_ui()
         self.setup_connections()
 
@@ -74,7 +74,7 @@ class WriteExif(QWidget):
         if brand in self.camera_data:
             models = self.camera_data[brand]
             if models:
-                return models[0]  # 返回该品牌的第一个型号
+                return models[0]
         return None
 
     def _on_model_changed(self, index):
@@ -89,11 +89,8 @@ class WriteExif(QWidget):
 
 
     def init_camera_brand_model(self):
-        """初始化相机品牌和型号下拉框"""
-        # 尝试从JSON文件加载相机品牌和型号数据
         camera_data = self._load_camera_data()
-        
-        # 如果没有加载到数据，使用默认数据
+
         if not camera_data:
             camera_data = {
                 "Apple": ["iPhone 15 Pro Max", "iPhone 15 Pro", "iPhone 15", "iPhone 14 Pro Max", "iPhone 14 Pro", "iPhone 14", "iPhone 13 Pro Max", "iPhone 13 Pro"],
@@ -107,17 +104,11 @@ class WriteExif(QWidget):
             }
         for brand in sorted(camera_data.keys()):
             self.parent.comboBox_brand.addItem(brand)
-        
-        # 存储相机数据
         self.camera_data = camera_data
-        
-        # 连接品牌选择变化信号
         self.parent.comboBox_brand.currentIndexChanged.connect(self._on_brand_changed)
-        # 连接型号选择变化信号
         self.parent.comboBox_model.currentIndexChanged.connect(self._on_model_changed)
         
     def _load_camera_data(self):
-        """从JSON文件加载相机品牌和型号数据"""
         try:
             data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                     'resources', 'json', 'camera_brand_model.json')
@@ -129,11 +120,7 @@ class WriteExif(QWidget):
         return None
         
     def _on_brand_changed(self, index):
-        """当相机品牌选择变化时，更新型号下拉框"""
-        # 清空型号下拉框
         self.parent.comboBox_model.clear()
-        
-        # 如果选择了具体品牌，添加对应的型号
         if index > 0:
             brand = self.parent.comboBox_brand.currentText()
             if brand in self.camera_data:
@@ -143,14 +130,10 @@ class WriteExif(QWidget):
 
 
     def setup_connections(self):
-        """设置信号和槽的连接"""
         self.parent.toolButton_StartEXIF.clicked.connect(self.toggle_exif_writing)
         self.parent.pushButton_Position.clicked.connect(self.update_position_by_ip)
         self.parent.comboBox_shootTime.currentIndexChanged.connect(self.on_combobox_time_changed)
-        # 添加位置下拉框的信号连接
         self.parent.comboBox_location.currentIndexChanged.connect(self.on_combobox_location_changed)
-        
-        # 添加文本框内容变化信号连接，用于自动保存配置
         self.parent.lineEdit_EXIF_Title.textChanged.connect(self.save_exif_settings)
         self.parent.lineEdit_EXIF_Author.textChanged.connect(self.save_exif_settings)
         self.parent.lineEdit_EXIF_Theme.textChanged.connect(self.save_exif_settings)
@@ -158,46 +141,36 @@ class WriteExif(QWidget):
         self.parent.lineEdit_EXIF_Position.textChanged.connect(self.save_exif_settings)
         self.parent.lineEdit_EXIF_latitude.textChanged.connect(self.save_exif_settings)
         self.parent.lineEdit_EXIF_longitude.textChanged.connect(self.save_exif_settings)
-        
-        # 添加下拉框选择变化信号连接，用于自动保存配置
         self.parent.comboBox_brand.currentIndexChanged.connect(self.save_exif_settings)
         self.parent.comboBox_model.currentIndexChanged.connect(self.save_exif_settings)
         self.parent.comboBox_shootTime.currentIndexChanged.connect(self.save_exif_settings)
         self.parent.comboBox_location.currentIndexChanged.connect(self.save_exif_settings)
-        
-        # 添加星级评分按钮点击信号连接，用于自动保存配置
         for i in range(1, 6):
             getattr(self.parent, f'pushButton_star_{i}').clicked.connect(self.save_exif_settings)
 
     def on_combobox_location_changed(self, index):
-        """位置下拉框选择变化处理"""
-        if index == 1:  # 选择"经纬度"
-            # 显示经纬度文本框，隐藏位置输入框
+        if index == 1:
             self.parent.lineEdit_EXIF_longitude.show()
             self.parent.lineEdit_EXIF_latitude.show()
-            self.parent.horizontalFrame.hide()  # 隐藏位置输入框和按钮
-        else:  # 选择"搜位置"或其他
-            # 隐藏经纬度文本框，显示位置输入框
+            self.parent.horizontalFrame.hide()
+        else:
             self.parent.lineEdit_EXIF_longitude.hide()
             self.parent.lineEdit_EXIF_latitude.hide()
-            self.parent.horizontalFrame.show()  # 显示位置输入框和按钮
+            self.parent.horizontalFrame.show()
 
     def on_combobox_time_changed(self, index):
-        """拍摄时间下拉框选择变化处理"""
         if index == 2:
             self.parent.dateTimeEdit_shootTime.show()
         else:
             self.parent.dateTimeEdit_shootTime.hide()
 
     def update_button_state(self):
-        """更新开始/停止按钮状态"""
         if self.is_running:
             self.parent.toolButton_StartEXIF.setText("停止")
         else:
             self.parent.toolButton_StartEXIF.setText("开始")
 
     def toggle_exif_writing(self):
-        """切换EXIF写入状态"""
         if self.is_running:
             self.stop_exif_writing()
             self.is_running = False
@@ -208,7 +181,6 @@ class WriteExif(QWidget):
         self.update_button_state()
 
     def connect_worker_signals(self):
-        """连接工作线程的信号"""
         if self.worker:
             self.worker.progress_updated.connect(self.update_progress)
             self.worker.log.connect(self.log)
@@ -216,30 +188,18 @@ class WriteExif(QWidget):
 
     @pyqtSlot(int)
     def highlight_stars(self, count):
-        """高亮显示指定数量的星级"""
         for i, btn in enumerate(self.star_buttons, 1):
             icon = "星级_亮.svg" if i <= count else "星级_暗.svg"
             btn.setStyleSheet(f"QPushButton {{ image: url({get_resource_path(f'resources/img/page_4/{icon}')}); border: none; padding: 0; }}")
 
     @pyqtSlot(int)
     def set_selected_star(self, star):
-        """设置选中的星级"""
         self.selected_star = star
         self.highlight_stars(star)
 
     def get_location(self, address):
-        """
-        通过高德地图API获取地址的地理坐标
-        
-        Args:
-            address: 地址字符串
-            
-        Returns:
-            tuple: (纬度, 经度)坐标，失败返回None
-        """
         try:
             url = "https://restapi.amap.com/v3/geocode/geo"
-            # 直接使用默认的API密钥
             amap_key = '0db079da53e08cbb62b52a42f657b994'
             
             params = {
@@ -329,7 +289,6 @@ class WriteExif(QWidget):
             return None
 
     def update_position_by_ip(self):
-        """通过IP地址更新位置信息"""
         location_info = self.get_location_by_ip()
         if location_info is not None:
             lat, lon = location_info
@@ -432,7 +391,7 @@ class WriteExif(QWidget):
                                        "• 是否包含详细的门牌号或地标\n"
                                        "• 高德地图API密钥是否有效")
                             return False
-        elif location_type == 1:  # 经纬度
+        elif location_type == 1:
             longitude = self.parent.lineEdit_EXIF_longitude.text()
             latitude = self.parent.lineEdit_EXIF_latitude.text()
             if longitude and latitude:

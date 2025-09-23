@@ -1057,7 +1057,7 @@ class SmartArrangeThread(QtCore.QThread):
             return str(model) if model is not None else '未知型号'
         elif tag == "位置":
             if exif_data.get('GPS GPSLatitude') and exif_data.get('GPS GPSLongitude'):
-                address = self.get_address(exif_data['GPS GPSLatitude'], exif_data['GPS GPSLongitude'])
+                address = self.get_address(float(exif_data['GPS GPSLatitude']), float(exif_data['GPS GPSLongitude']))
                 if address and address != "未知位置":
                     return address
                 
@@ -1076,7 +1076,6 @@ class SmartArrangeThread(QtCore.QThread):
         if base_folder:
             target_path = Path(base_folder)
         elif self.destination_root:
-            # 如果有目标根路径（复制操作），则使用它作为目标路径
             target_path = Path(self.destination_root)
         else:
             target_path = file_path.parent

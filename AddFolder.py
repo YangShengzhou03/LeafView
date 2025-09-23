@@ -12,13 +12,9 @@ class FolderPage(QtWidgets.QWidget):
         self.parent = parent
         self.folder_items = []
         self._batch_adding = False
-        
         self.init_page()
-        
         self._setup_drag_drop()
-        
         self._setup_click_behavior()
-        
         self._load_saved_folders()
     
     def _setup_drag_drop(self):
@@ -122,7 +118,8 @@ class FolderPage(QtWidgets.QWidget):
                 if conflict_info['type'] == 1:
                     msg_box = QMessageBox(self)
                     msg_box.setWindowTitle("路径冲突")
-                    msg_box.setText(f"该文件夹是 '{conflict_info['parent_name']}' 的子目录，且 '{conflict_info['parent_name']}' 已选择包含子文件夹")
+                    msg_box.setText(f"该文件夹是 '{conflict_info['parent_name']}' 的子目录，且 '{conflict_info['parent_name']}'"
+                                    f" 包含子文件夹")
                     msg_box.setInformativeText("您可以选择以下操作：")
                     
                     continue_btn = msg_box.addButton("继续添加", QMessageBox.ButtonRole.ActionRole)
@@ -508,9 +505,7 @@ class FolderPage(QtWidgets.QWidget):
         added_count = 0
         skipped_count = 0
         error_count = 0
-        
         self._batch_adding = True
-        
         progress_dialog = QProgressDialog(self)
         progress_dialog.setWindowTitle("正在添加文件夹")
         progress_dialog.setLabelText(f"准备处理 {total} 个文件夹...")
@@ -678,8 +673,7 @@ class FolderPage(QtWidgets.QWidget):
             QMessageBox.information(
                 self, 
                 "文件夹更新", 
-                f"检测到 {len(invalid_paths)} 个文件夹路径已无效（可能已被移动或删除），\n\n" \
+                f"检测到 {len(invalid_paths)} 个文件夹路径无效（可能已被移动或删除），\n\n"
                 "这些路径已从配置中自动移除。"
             )
-        
         self.parent._update_empty_state(bool(self.folder_items))

@@ -63,10 +63,10 @@ def check_update():
                 dialog = UpdateDialog(lastlyVersionUrl, title_parts[0], update_content, version_text, necessary)
                 dialog.exec()
     except requests.exceptions.RequestException:
-        error_message = "网络开了小差，枫叶未能如期而至。"
+        error_message = "网络开了点小差"
         dialog = UpdateDialog('https://blog.csdn.net/Yang_shengzhou', '网络连接失败',
                               '别担心，这只是一次小小的插曲，您的满意始终是我们的追求。\n\n' + error_message +
-                              '\n\n请检查网络后重新启动，我们期待不久与您相遇。', "", True)
+                              '\n\n请检查网络后重新启动，我们期待不久的将来与您重逢。', "", True)
         dialog.ui.pushButton_download.setText("我知道了")
         dialog.exec()
     except Exception as e:
