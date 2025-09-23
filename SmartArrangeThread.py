@@ -927,19 +927,16 @@ class SmartArrangeThread(QtCore.QThread):
     def convert_to_degrees(value):
         if not value:
             return None
-        
-        # 如果已经是浮点数或整数，直接返回
+
         if isinstance(value, (int, float)):
             return float(value)
-        
-        # 如果是字符串，尝试解析为浮点数
+
         if isinstance(value, str):
             try:
                 return float(value)
             except ValueError:
                 pass
-        
-        # 如果是EXIF格式的度分秒数据（包含values属性）
+
         try:
             if hasattr(value, 'values') and len(value.values) >= 3:
                 d = float(value.values[0].num) / float(value.values[0].den)
@@ -949,8 +946,7 @@ class SmartArrangeThread(QtCore.QThread):
                 return result
         except Exception:
             pass
-        
-        # 其他情况，尝试直接转换为浮点数
+
         try:
             return float(value)
         except Exception:
@@ -974,8 +970,7 @@ class SmartArrangeThread(QtCore.QThread):
             exif_data = self.get_exif_data(file_path)
             
             file_time = datetime.datetime.strptime(exif_data['DateTime'], '%Y-%m-%d %H:%M:%S') if exif_data.get('DateTime') else None
-            
-            # 如果有目标根路径（复制操作），则使用它作为base_folder
+
             if self.destination_root:
                 base_folder = self.destination_root
             
