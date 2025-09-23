@@ -244,7 +244,7 @@ class SmartArrangeThread(QtCore.QThread):
                     else:
                         import shutil
                         shutil.move(old_path, unique_path)
-                        self.log("DEBUG", f"移动文件: {old_path} -> {unique_path}")
+                        self.log("INFO", f"移动文件: {old_path} -> {unique_path}")
                 
                 renamed_files += 1
                 if total_rename_files > 0:
@@ -266,8 +266,6 @@ class SmartArrangeThread(QtCore.QThread):
                 self.log("WARNING", "文件提取操作被用户中断")
                 break
             
-            self.log("DEBUG", f"处理子文件夹: {root}, 文件数: {len(files)}")
-            
             for file in files:
                 if self._stop_flag:
                     self.log("WARNING", "您已经取消了文件提取操作")
@@ -286,10 +284,10 @@ class SmartArrangeThread(QtCore.QThread):
                         import shutil
                         if self.destination_root:
                             shutil.copy2(file_path, target_path)
-                            self.log("DEBUG", f"成功复制文件: {file_path} -> {target_path}")
+                            self.log("INFO", f"复制文件: {file_path} -> {target_path}")
                         else:
                             shutil.move(file_path, target_path)
-                            self.log("DEBUG", f"成功移动文件: {file_path} -> {target_path}")
+                            self.log("INFO", f"移动文件: {file_path} -> {target_path}")
                         
                         file_count += 1
                         
@@ -329,7 +327,7 @@ class SmartArrangeThread(QtCore.QThread):
                 except Exception as e:
                     self.log("ERROR", f"删除文件夹 {folder} 时出错: {str(e)}")
         
-        self.log("INFO", f"删除空文件夹完成，共删除 {deleted_count} 个空文件夹")
+        self.log("WARNING", f"已为您删除了 {deleted_count} 个空文件夹")
     
     def stop(self):
         self._stop_flag = True

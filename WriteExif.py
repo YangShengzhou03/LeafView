@@ -293,8 +293,7 @@ class WriteExif(QWidget):
         if location_info is not None:
             lat, lon = location_info
             self.parent.lineEdit_EXIF_Position.setText(f"{lat}, {lon}")
-            self.log("INFO", f"成功获取位置信息: 纬度={lat}, 经度={lon}")
-            self.log("INFO", "坐标已设置到位置输入框，可以直接使用")
+            self.log("WARNING", f"当前纬度={lat}, 经度={lon}，位置已加载，可直接开始。")
         else:
             self.log("ERROR", "获取位置信息失败\n\n"
                          "可能的原因：\n"
@@ -352,7 +351,6 @@ class WriteExif(QWidget):
                         lon_float = float(lon)
                         if -90 <= lat_float <= 90 and -180 <= lon_float <= 180:
                             params['position'] = f"{lat_float},{lon_float}"
-                            self.log("INFO", f"使用已有坐标: 纬度={lat_float}, 经度={lon_float}")
                         else:
                             self.log("ERROR", "坐标范围无效\n\n"
                                      "• 经度应在-180到180之间\n"
@@ -442,7 +440,7 @@ class WriteExif(QWidget):
         if params.get('rating') != '0':
             operation_summary += f", 评分: {params['rating']}星"
         
-        self.log("INFO", f"EXIF写入操作摘要: {operation_summary}")
+        self.log("INFO", f"摘要: {operation_summary}")
         
         self.error_messages = []
         
@@ -479,7 +477,6 @@ class WriteExif(QWidget):
             print(f"日志更新错误: {e}")
 
     def on_finished(self):
-        self.log("INFO", "EXIF信息写入任务已完成！")
         self.is_running = False
         self.update_button_state()
         

@@ -62,7 +62,7 @@ class WriteExifThread(QThread):
                 self.finished_conversion.emit()
                 return
             
-            self.log.emit("INFO", f"开始处理 {total_files} 张图片")
+            self.log.emit("WARNING", f"开始处理 {total_files} 张图片")
             
             self.progress_updated.emit(0)
             
@@ -112,7 +112,9 @@ class WriteExifThread(QThread):
             self.log.emit("ERROR", f"全局错误: {str(e)}")
             error_count += 1
         finally:
-            self.log.emit("INFO", f"图片信息写入完成了，成功处理了 {success_count} 张，失败了 {error_count} 张，总共 {total_files} 张图片")
+            self.log("DEBUG", "=" * 40)
+            self.log.emit("INFO", f"属性写入完成了，成功写入了 {success_count} 张，失败了 {error_count} 张，共 {total_files}。")
+            self.log("DEBUG", "=" * 3 + "LeafAuto © 2025 Yangshengzhou.All Rights Reserved" + "=" * 3)
             self.finished_conversion.emit()
 
     def _collect_image_paths(self):
@@ -244,7 +246,7 @@ class WriteExifThread(QThread):
         piexif.insert(exif_bytes, image_path)
         
         if updated_fields:
-            self.log.emit("DEBUG", f"写入成功 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
+            self.log.emit("INFO", f"写入成功 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
         else:
             self.log.emit("WARNING", f"未对 {os.path.basename(image_path)} 进行任何更改\n\n"
                              "可能的原因：\n"
@@ -426,7 +428,7 @@ class WriteExifThread(QThread):
                     exif_bytes = piexif.dump(exif_dict)
                     image.save(temp_path, format="HEIF", exif=exif_bytes)
                     os.replace(temp_path, image_path)
-                    self.log.emit("INFO", f"成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
+                    self.log.emit("INFO", f"写入成功 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
                 except Exception as e:
                     self.log.emit("ERROR", f"写入EXIF数据失败: {str(e)}")
                     if os.path.exists(temp_path):
@@ -543,10 +545,9 @@ class WriteExifThread(QThread):
             if result.returncode != 0:
                 self.log.emit("ERROR", f"写入EXIF数据失败: {result.stderr}")
                 return False
-            
-            # 添加成功日志
+
             if updated_fields:
-                self.log.emit("INFO", f"成功更新 {os.path.basename(original_file_path)}: {'; '.join(updated_fields)}")
+                self.log.emit("INFO", f"写入成功 {os.path.basename(original_file_path)}: {'; '.join(updated_fields)}")
             
             verify_cmd = [exiftool_path, '-CreateDate', '-CreationDate', '-MediaCreateDate', '-DateTimeOriginal', file_path_normalized]
             subprocess.run(verify_cmd, capture_output=True, text=True, shell=False)
