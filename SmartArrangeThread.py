@@ -896,9 +896,7 @@ class SmartArrangeThread(QtCore.QThread):
             )
         else:
             return "未知省份", "未知城市"
-
-    @staticmethod
-    def get_address(latitude: float, longitude: float) -> str:
+    def get_address(self, latitude: float, longitude: float) -> str:
         if not (isinstance(latitude, (int, float)) and isinstance(longitude, (int, float))):
             return "未知位置"
         
@@ -911,6 +909,10 @@ class SmartArrangeThread(QtCore.QThread):
             url = f"https://restapi.amap.com/v3/geocode/regeo?key={user_key}&location={longitude},{latitude}&extensions=base"
             response = requests.get(url, timeout=5)
             data = response.json()
+
+            if data.get("infocode") == "10044":
+                self.log("WARNING", "抱歉，当月150万次高德调用次数已被其他用户白嫖完，免费软件，我实在无力承担这笔高昂的费用。")
+                return "未知位置"
             
             if data.get("status") == "1":
                 address = data.get("regeocode", {}).get("formatted_address", "")
@@ -1042,8 +1044,18 @@ class SmartArrangeThread(QtCore.QThread):
             return str(model) if model is not None else '未知型号'
         elif tag == "位置":
             if exif_data.get('GPS GPSLatitude') and exif_data.get('GPS GPSLongitude'):
-                address = self.get_address(float(exif_data['GPS GPSLatitude']), float(exif_data['GPS GPSLongitude']))
+                lat = float(exif_data['GPS GPSLatitude'])
+                lon = float(exif_data['GPS GPSLongitude'])
+                
+                # 尝试从缓存获取（使用config_manager的带容差缓存功能，5公里≈0.045度）
+                from config_manager import config_manager
+                cached_address = config_manager.get_cached_location_with_tolerance(lat, lon, 0.045)
+                if cached_address and cached_address != "未知位置":
+                    return cached_address
+                
+                address = self.get_address(lat, lon)
                 if address and address != "未知位置":
+                    config_manager.cache_location(lat, lon, address)
                     return address
                 
                 province, city = self.get_city_and_province(exif_data['GPS GPSLatitude'], exif_data['GPS GPSLongitude'])

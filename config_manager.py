@@ -9,14 +9,16 @@ logger = logging.getLogger(__name__)
 
 class ConfigManager:
     
-    def __init__(self, config_file: str = "_internal/leafview_config.json"):
+    def __init__(self, config_file: str = "_internal/leafview_config.json", 
+                 cache_file: str = "_internal/cache_location.json"):
         self.config_file = Path(config_file)
+        self.cache_file = Path(cache_file)
         self.config = self._load_config()
+        self.location_cache = self._load_location_cache()
     
     def _load_config(self) -> Dict[str, Any]:
         default_config = {
             "folders": [],
-            "location_cache": {},
             "settings": {}
         }
         
@@ -33,6 +35,18 @@ class ConfigManager:
         
         return default_config
     
+    def _load_location_cache(self) -> Dict[str, Any]:
+        default_cache = {}
+        
+        try:
+            if self.cache_file.exists():
+                with open(self.cache_file, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+        except (json.JSONDecodeError, IOError) as e:
+            logger.warning(f"加载位置缓存文件时出错了: {e}")
+        
+        return default_cache
+    
     def save_config(self) -> bool:
         try:
             self.config_file.parent.mkdir(parents=True, exist_ok=True)
@@ -42,6 +56,17 @@ class ConfigManager:
             return True
         except IOError as e:
             logger.error(f"保存配置文件时出错了: {e}")
+            return False
+    
+    def save_location_cache(self) -> bool:
+        try:
+            self.cache_file.parent.mkdir(parents=True, exist_ok=True)
+            
+            with open(self.cache_file, 'w', encoding='utf-8') as f:
+                json.dump(self.location_cache, f, ensure_ascii=False, indent=2)
+            return True
+        except IOError as e:
+            logger.error(f"保存位置缓存文件时出错了: {e}")
             return False
     
     def add_folder(self, folder_path: str, include_sub: bool = True) -> bool:
@@ -100,21 +125,21 @@ class ConfigManager:
     
     def cache_location(self, latitude: float, longitude: float, address: str) -> bool:
         cache_key = f"{latitude:.6f},{longitude:.6f}"
-        self.config["location_cache"][cache_key] = {
+        self.location_cache[cache_key] = {
             "address": address,
-            "timestamp": int(os.path.getctime(self.config_file)) if self.config_file.exists() else 0
+            "timestamp": int(os.path.getctime(self.cache_file)) if self.cache_file.exists() else 0
         }
         
-        if len(self.config["location_cache"]) > 10000:
-            cache_items = list(self.config["location_cache"].items())
+        if len(self.location_cache) > 50000:
+            cache_items = list(self.location_cache.items())
             cache_items.sort(key=lambda x: x[1].get("timestamp", 0), reverse=True)
-            self.config["location_cache"] = dict(cache_items[:5000])
+            self.location_cache = dict(cache_items[:25000])
         
-        return self.save_config()
+        return self.save_location_cache()
     
     def get_cached_location(self, latitude: float, longitude: float) -> Optional[str]:
         cache_key = f"{latitude:.6f},{longitude:.6f}"
-        cached_data = self.config["location_cache"].get(cache_key)
+        cached_data = self.location_cache.get(cache_key)
         
         if cached_data:
             return cached_data["address"]
@@ -126,7 +151,7 @@ class ConfigManager:
         if exact_match:
             return exact_match
         
-        for cache_key, cached_data in self.config["location_cache"].items():
+        for cache_key, cached_data in self.location_cache.items():
             try:
                 cached_lat, cached_lon = map(float, cache_key.split(','))
                 distance = ((latitude - cached_lat) ** 2 + (longitude - cached_lon) ** 2) ** 0.5
@@ -138,16 +163,16 @@ class ConfigManager:
         return None
     
     def clear_location_cache(self) -> bool:
-        self.config["location_cache"] = {}
-        return self.save_config()
+        self.location_cache = {}
+        return self.save_location_cache()
     
     def clear_folders(self) -> bool:
         self.config["folders"] = []
         return self.save_config()
     
     def clear_locations(self) -> bool:
-        self.config["location_cache"] = {}
-        return self.save_config()
+        self.location_cache = {}
+        return self.save_location_cache()
     
     def update_setting(self, key: str, value: Any) -> bool:
         self.config["settings"][key] = value
