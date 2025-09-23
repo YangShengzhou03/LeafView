@@ -66,7 +66,7 @@ def main():
     window.move(300, 100)
     window.show()
     
-    window.log("WARNING", "文件整理、重命名和属性写入等操作一旦执行无法恢复，操作前一定要记得备份好原始数据。")
+    window.log("WARNING", "文件整理、重命名和属性写入等操作一旦执行无法恢复，操作前请务必备份好原数据。")
     
     exit_code = app.exec()
     

@@ -49,7 +49,7 @@ class SmartArrange(QtWidgets.QWidget):
         self.init_page()
         self.set_combo_box_states()
         self.log_signal.connect(self.handle_log_signal)
-        self.log("DEBUG", "欢迎使用智能整理，可以为您整理目录、重命名文件。请注意，操作一旦执行将无法恢复。")
+        self.log("INFO", "欢迎使用智能整理，可以为您整理目录、重命名媒体。请注意，操作一旦执行将无法恢复。")
 
     def init_page(self):
         self.connect_signals()
@@ -112,7 +112,7 @@ class SmartArrange(QtWidgets.QWidget):
                 "重要提醒：整理文件的操作一旦开始就没办法撤销了！\n\n"
                 "• 如果是移动操作：文件会被搬到新位置，原来的地方就没有了\n"
                 "• 如果是复制操作：文件会在新位置创建一份，原来的文件还在\n\n"
-                "一定要先备份好重要文件再开始！\n\n"
+                "答应我，一定要先备份好重要文件再开始！\n\n"
                 "确定要开始整理吗？",
                 QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
                 QMessageBox.StandardButton.No
@@ -140,13 +140,13 @@ class SmartArrange(QtWidgets.QWidget):
             operation_text = "移动" if operation_type == 0 else "复制"
             
             if not SmartArrange_structure and not file_name_structure:
-                self.log("WARNING", f"将执行{operation_text}操作：将文件夹中的所有文件提取到顶层目录")
+                self.log("WARNING", f"执行{operation_text}操作：将文件夹中的所有文件提取到顶层目录")
             elif not SmartArrange_structure:
-                self.log("WARNING", f"将执行{operation_text}操作：仅重命名文件，不进行分类")
+                self.log("WARNING", f"执行{operation_text}操作：仅重命名文件，不进行分类")
             elif not file_name_structure:
-                self.log("WARNING", f"将执行{operation_text}操作：仅进行分类，不重命名文件")
+                self.log("WARNING", f"执行{operation_text}操作：仅进行分类，不重命名文件")
             else:
-                self.log("WARNING", f"将执行{operation_text}操作：进行分类和重命名")
+                self.log("WARNING", f"执行{operation_text}操作：进行分类和重命名")
             
             file_name_parts = []
             for i in range(self.selected_layout.count()):
@@ -178,7 +178,7 @@ class SmartArrange(QtWidgets.QWidget):
             if self.destination_root:
                 operation_summary += f", 目标路径: {self.destination_root}"
             
-            self.log("INFO", f"整理操作摘要: {operation_summary}")
+            self.log("INFO", f"摘要: {operation_summary}")
             
             self.SmartArrange_thread = SmartArrangeThread(
                 parent=self,
@@ -197,7 +197,6 @@ class SmartArrange(QtWidgets.QWidget):
     def on_thread_finished(self):
         self.parent.toolButton_startSmartArrange.setText("开始整理")
         self.SmartArrange_thread = None
-        self.log("DEBUG", "智能整理已完成！")
         self.update_progress_bar(100)
         
         QMessageBox.information(self, "操作完成", "文件整理操作已完成！\n\n您可以在目标位置查看整理后的文件。")

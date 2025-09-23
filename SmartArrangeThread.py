@@ -161,8 +161,10 @@ class SmartArrangeThread(QtCore.QThread):
                         self.delete_empty_folders()
                     except Exception as e:
                         self.log("WARNING", f"删除空文件夹时出错了: {str(e)}")
-                
-                self.log("INFO", f"文件整理完成了，成功处理了 {success_count} 个文件，失败了 {fail_count} 个文件")
+
+                self.log("DEBUG", "="*40)
+                self.log("DEBUG", f"文件整理完成了，成功处理了 {success_count} 个文件，失败了 {fail_count} 个文件")
+                self.log("DEBUG", "="*3+"LeafAuto © 2025 Yangshengzhou.All Rights Reserved"+"="*3)
                 self.progress_signal.emit(100)
             else:
                 self.log("WARNING", "您已经取消了整理文件的操作")
@@ -283,15 +285,11 @@ class SmartArrangeThread(QtCore.QThread):
                     try:
                         import shutil
                         if self.destination_root:
-                            # 复制操作
-                            self.log("WARNING", f"准备复制文件: {file_path} -> {target_path}")
                             shutil.copy2(file_path, target_path)
-                            self.log("WARNING", f"成功复制文件: {file_path} -> {target_path}")
+                            self.log("DEBUG", f"成功复制文件: {file_path} -> {target_path}")
                         else:
-                            # 移动操作
-                            self.log("WARNING", f"准备移动文件: {file_path} -> {target_path}")
                             shutil.move(file_path, target_path)
-                            self.log("WARNING", f"成功移动文件: {file_path} -> {target_path}")
+                            self.log("DEBUG", f"成功移动文件: {file_path} -> {target_path}")
                         
                         file_count += 1
                         
@@ -355,7 +353,6 @@ class SmartArrangeThread(QtCore.QThread):
                 if folder_path != folder_path.resolve().anchor:
                     try:
                         folder_path.rmdir()
-                        self.log("DEBUG", f"删除空文件夹: {folder_path}")
                         deleted_count += 1
                     except Exception as e:
                         self.log("WARNING", f"无法删除文件夹 {folder_path}: {str(e)}")
@@ -398,8 +395,6 @@ class SmartArrangeThread(QtCore.QThread):
         suffix = file_path_obj.suffix.lower()
         create_time = datetime.datetime.fromtimestamp(file_path_obj.stat().st_ctime)
         modify_time = datetime.datetime.fromtimestamp(file_path_obj.stat().st_mtime)
-        
-        self.log("WARNING", f"开始处理文件: {file_path}, 文件类型: {suffix}")
         
         date_taken = None
         
@@ -1011,9 +1006,6 @@ class SmartArrangeThread(QtCore.QThread):
                     'old_path': str(file_path),
                     'new_path': str(full_target_path)
                 })
-                self.log("DEBUG", f"处理文件: {file_path.name} -> {full_target_path} ({operation_type})")
-            else:
-                self.log("DEBUG", f"跳过文件: {file_path.name} (无需操作)")
             
         except Exception as e:
             self.log("ERROR", f"处理文件 {file_path} 时出错: {str(e)}")
