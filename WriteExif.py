@@ -439,7 +439,13 @@ class WriteExif(QWidget):
         timestamp = datetime.now().strftime("%H:%M:%S")
         formatted_message = f"[{timestamp}] {level}: {message}"
         
-        self.parent.textEdit_log.append(formatted_message)
+        # Use parent's log method if available, otherwise use textEdit_WriteEXIF_Log
+        if hasattr(self.parent, 'log'):
+            self.parent.log(level, message)
+        elif hasattr(self.parent, 'textEdit_WriteEXIF_Log'):
+            self.parent.textEdit_WriteEXIF_Log.append(formatted_message)
+        else:
+            print(formatted_message)
         
         if level in ["ERROR", "WARNING"]:
             self.error_messages.append(formatted_message)
@@ -467,7 +473,7 @@ class WriteExif(QWidget):
 
     def load_exif_settings(self):
         try:
-            settings = config_manager.get("exif_settings", {})
+            settings = config_manager.get_setting("exif_settings", {})
             if settings:
                 self.parent.lineEdit_EXIF_Title.setText(settings.get("title", ""))
                 self.parent.lineEdit_EXIF_Author.setText(settings.get("author", ""))
@@ -510,7 +516,6 @@ class WriteExif(QWidget):
                 "camera_brand": self.parent.comboBox_brand.currentText() if self.parent.comboBox_brand.currentIndex() > 0 else "",
                 "camera_model": self.parent.comboBox_model.currentText() if self.parent.comboBox_model.currentIndex() > 0 else "",
             }
-            config_manager.set("exif_settings", settings)
-            config_manager.save_config()
+            config_manager.update_setting("exif_settings", settings)
         except Exception as e:
             self.log("WARNING", f"保存EXIF设置失败: {str(e)}")
