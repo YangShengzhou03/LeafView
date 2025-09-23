@@ -959,6 +959,10 @@ class SmartArrangeThread(QtCore.QThread):
             
             file_time = datetime.datetime.strptime(exif_data['DateTime'], '%Y-%m-%d %H:%M:%S') if exif_data.get('DateTime') else None
             
+            # 如果有目标根路径（复制操作），则使用它作为base_folder
+            if self.destination_root:
+                base_folder = self.destination_root
+            
             target_path = self.build_target_path(file_path, exif_data, file_time, base_folder)
             
             original_name = file_path.stem
