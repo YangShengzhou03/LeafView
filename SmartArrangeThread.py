@@ -182,7 +182,6 @@ class SmartArrangeThread(QtCore.QThread):
                         self.log("WARNING", "您已经取消了当前文件夹的处理")
                         return
                     full_file_path = Path(root) / file
-                    # 如果有目标根路径（复制操作），则不传递base_folder参数
                     if self.destination_root:
                         self.process_single_file(full_file_path)
                     else:
@@ -273,7 +272,6 @@ class SmartArrangeThread(QtCore.QThread):
                 
                 file_path = Path(root) / file
                 
-                # 如果有目标根路径（复制操作），则使用它作为目标路径
                 if self.destination_root:
                     target_path = Path(self.destination_root) / file_path.name
                 else:
