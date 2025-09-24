@@ -651,7 +651,7 @@ class WriteExifThread(QThread):
             else:
                 commands.append(f'-{key}={value}')
         
-        cmd = [exiftool_path] + commands + [image_path]
+        cmd = [exiftool_path, "-overwrite_original"] + commands + [image_path]
         
         try:
             result = subprocess.run(cmd, capture_output=True, text=False, timeout=30)
