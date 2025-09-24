@@ -904,7 +904,7 @@ class SmartArrangeThread(QtCore.QThread):
             from config_manager import config_manager
             
             if not config_manager.can_call_gaode_api():
-                self.log("WARNING", "高德API调用次数已达上限，请升级会员等级。")
+                self.log("WARNING", "高德 API 调用次数已达上限。")
                 return "未知位置"
             
             user_key = "0db079da53e08cbb62b52a42f657b994"
@@ -917,7 +917,7 @@ class SmartArrangeThread(QtCore.QThread):
             data = response.json()
 
             if data.get("infocode") == "10044":
-                self.log("WARNING", "抱歉，当月150万次高德调用次数已被其他用户白嫖完，免费软件，我实在无力承担这笔高昂的费用。")
+                self.log("WARNING", "抱歉，本月高德 API 调用额度已被其他用户耗尽。这是我在 2025 年大三时写的练习程序，无力承担高昂费用，感谢理解。")
                 return "未知位置"
             
             if data.get("status") == "1":
