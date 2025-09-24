@@ -1,10 +1,5 @@
 {
-  "folders": [
-    {
-      "path": "D:\\待分类",
-      "include_sub": true
-    }
-  ],
+  "folders": [],
   "api_limits": {
     "gaode": {
       "daily_calls": 0,
@@ -17,14 +12,14 @@
     "exif_author": "",
     "exif_subject": "",
     "exif_copyright": "",
-    "exif_position": "29.8782, 121.5494",
+    "exif_position": "",
     "exif_latitude": "",
     "exif_longitude": "",
     "exif_location_index": 0,
     "exif_camera_brand": "不写入",
     "exif_camera_model": "",
     "exif_shoot_time_index": 0,
-    "exif_shoot_time": "2000:01:01 00:00:00",
+    "exif_shoot_time": "2025:09:24 23:32:28",
     "exif_star_rating": 3,
     "exif_settings": {
       "title": "",

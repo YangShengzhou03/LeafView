@@ -42,6 +42,7 @@ class WriteExif(QWidget):
         self.load_camera_lens_mapping()
         
         self.update_button_state()
+        self.parent.dateTimeEdit_shootTime.setDateTime(QDateTime.currentDateTime())
         self.parent.dateTimeEdit_shootTime.hide()
         self.parent.lineEdit_EXIF_longitude.hide()
         self.parent.lineEdit_EXIF_latitude.hide()
@@ -536,11 +537,6 @@ class WriteExif(QWidget):
             if shoot_time_index := config_manager.get_setting("exif_shoot_time_index"):
                 self.parent.comboBox_shootTime.setCurrentIndex(int(shoot_time_index))
                 self.on_combobox_time_changed(int(shoot_time_index))
-            
-            if shoot_time := config_manager.get_setting("exif_shoot_time"):
-                datetime_obj = QDateTime.fromString(shoot_time, "yyyy:MM:dd HH:mm:ss")
-                if datetime_obj.isValid():
-                    self.parent.dateTimeEdit_shootTime.setDateTime(datetime_obj)
             
             if star_rating := config_manager.get_setting("exif_star_rating"):
                 self.set_selected_star(int(star_rating))
