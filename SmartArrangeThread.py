@@ -407,6 +407,8 @@ class SmartArrangeThread(QtCore.QThread):
                 date_taken = self._process_mov_exif(file_path_obj, exif_data)
             elif suffix == '.mp4':
                 date_taken = self._process_mp4_exif(file_path_obj, exif_data)
+            elif suffix in ('.arw', '.cr2', '.dng', '.nef', '.orf', '.raf', '.sr2', '.tif', '.tiff'):
+                date_taken = self._process_raw_exif(file_path_obj, exif_data)
             else:
                 self.log("DEBUG", f"不支持的文件类型或无EXIF数据: {suffix}")
 
@@ -425,6 +427,114 @@ class SmartArrangeThread(QtCore.QThread):
         date_taken = self.parse_exif_datetime(tags)
         self._extract_gps_and_camera_info(tags, exif_data)
         return date_taken
+
+    def _process_raw_exif(self, file_path, exif_data):
+        """处理RAW格式文件（ARW、CR2、CR3、NEF等）的EXIF信息读取"""
+        
+        # 检查文件是否存在
+        if not os.path.exists(file_path):
+            self.log("DEBUG", f"文件不存在: {file_path}")
+            return None
+        
+        # 构建exiftool路径
+        exiftool_path = os.path.join(os.path.dirname(__file__), "resources", "exiftool", "exiftool.exe")
+        
+        if not os.path.exists(exiftool_path):
+            self.log("DEBUG", "exiftool工具不存在，无法读取RAW格式文件EXIF信息")
+            return None
+        
+        try:
+            # 使用exiftool读取EXIF信息
+            cmd = [exiftool_path, file_path]
+            result = subprocess.run(cmd, capture_output=True, text=False, timeout=30)
+            
+            if result.returncode != 0:
+                error_msg = result.stderr.decode('utf-8', errors='ignore') if result.stderr else "未知错误"
+                self.log("DEBUG", f"读取 {file_path} 的EXIF数据失败: {error_msg}")
+                return None
+            
+            exif_data_str = result.stdout.decode('utf-8', errors='ignore')
+            
+            # 解析拍摄时间
+            date_taken = self._parse_raw_datetime(exif_data_str)
+            
+            # 提取相机和GPS信息
+            self._extract_raw_metadata(exif_data_str, exif_data)
+            
+            return date_taken
+                
+        except subprocess.TimeoutExpired:
+            self.log("DEBUG", f"读取 {file_path} 的EXIF数据超时")
+            return None
+        except Exception as e:
+            self.log("DEBUG", f"读取 {file_path} 的EXIF数据时出错: {str(e)}")
+            return None
+    
+    def _parse_raw_datetime(self, exif_data_str):
+        """从RAW格式的EXIF数据中解析拍摄时间"""
+        date_patterns = [
+            'Date/Time Original',
+            'Create Date', 
+            'Modify Date',
+            'DateTimeOriginal',
+            'Creation Date'
+        ]
+        
+        for line in exif_data_str.split('\n'):
+            for pattern in date_patterns:
+                if pattern in line:
+                    try:
+                        date_str = line.split(':', 1)[1].strip()
+                        date_taken = self.parse_datetime(date_str)
+                        if date_taken:
+                            return date_taken
+                    except (ValueError, IndexError):
+                        continue
+        return None
+    
+    def _extract_raw_metadata(self, exif_data_str, exif_data):
+        """从RAW格式的EXIF数据中提取相机和GPS信息"""
+        # 提取相机信息
+        for line in exif_data_str.split('\n'):
+            if 'Make' in line and ':' in line:
+                try:
+                    make_value = line.split(':', 1)[1].strip()
+                    exif_data['Make'] = make_value
+                except (ValueError, IndexError):
+                    pass
+            elif 'Model' in line and ':' in line:
+                try:
+                    model_value = line.split(':', 1)[1].strip()
+                    exif_data['Model'] = model_value
+                except (ValueError, IndexError):
+                    pass
+            elif 'Lens Model' in line and ':' in line:
+                try:
+                    lens_model = line.split(':', 1)[1].strip()
+                    exif_data['LensModel'] = lens_model
+                except (ValueError, IndexError):
+                    pass
+        
+        # 提取GPS信息
+        gps_lat = None
+        gps_lon = None
+        for line in exif_data_str.split('\n'):
+            if 'GPS Latitude' in line and ':' in line:
+                try:
+                    lat_str = line.split(':', 1)[1].strip()
+                    gps_lat = self._parse_dms_coordinate(lat_str)
+                except (ValueError, IndexError):
+                    pass
+            elif 'GPS Longitude' in line and ':' in line:
+                try:
+                    lon_str = line.split(':', 1)[1].strip()
+                    gps_lon = self._parse_dms_coordinate(lon_str)
+                except (ValueError, IndexError):
+                    pass
+        
+        if gps_lat is not None and gps_lon is not None:
+            exif_data['GPS GPSLatitude'] = gps_lat
+            exif_data['GPS GPSLongitude'] = gps_lon
 
     def _process_heic_exif(self, file_path, exif_data):
         heif_file = pillow_heif.read_heif(file_path)

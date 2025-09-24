@@ -1,6 +1,9 @@
 {
   "folders": [
-  
+    {
+      "path": "D:\\待分类\\新建文件夹",
+      "include_sub": true
+    }
   ],
   "api_limits": {
     "gaode": {
@@ -10,19 +13,19 @@
     }
   },
   "settings": {
-    "exif_title": "",
-    "exif_author": "",
-    "exif_subject": "",
-    "exif_copyright": "",
-    "exif_position": "",
+    "exif_title": "9",
+    "exif_author": "7",
+    "exif_subject": "88",
+    "exif_copyright": "99",
+    "exif_position": "29.8782, 121.5494",
     "exif_latitude": "",
     "exif_longitude": "",
     "exif_location_index": 0,
-    "exif_camera_brand": "",
-    "exif_camera_model": "",
+    "exif_camera_brand": "Alpa",
+    "exif_camera_model": "12 FPS",
     "exif_shoot_time_index": 0,
-    "exif_shoot_time": "",
-    "exif_star_rating": 0,
+    "exif_shoot_time": "2025:09:24 22:11:08",
+    "exif_star_rating": 3,
     "exif_settings": {
       "title": "",
       "author": "",

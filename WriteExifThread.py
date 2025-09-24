@@ -563,14 +563,12 @@ class WriteExifThread(QThread):
                 except Exception as e:
                     self.log.emit("ERROR", f"复制文件回原始路径失败: {str(e)}")
             
-            # 清理临时文件
             if temp_file_path and os.path.exists(temp_file_path):
                 try:
                     os.remove(temp_file_path)
                 except Exception as e:
                     self.log.emit("WARNING", f"无法删除临时文件: {str(e)}")
             
-            # 清理临时目录
             if temp_dir and os.path.exists(temp_dir):
                 try:
                     shutil.rmtree(temp_dir)
@@ -578,37 +576,97 @@ class WriteExifThread(QThread):
                     self.log.emit("WARNING", f"无法删除临时目录: {str(e)}")
 
     def _process_raw_format(self, image_path):
-        try:
-            import rawpy
-        except ImportError:
-            self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 需要 rawpy 库\n\n"
-                             "请安装: pip install rawpy")
+        if not os.path.exists(image_path):
+            self.log.emit("ERROR", f"文件不存在: {os.path.basename(image_path)}")
             return
         
+        exiftool_path = os.path.join(os.path.dirname(__file__), "resources", "exiftool", "exiftool.exe")
+        
+        if not os.path.exists(exiftool_path):
+            self.log.emit("ERROR", "exiftool工具不存在，无法处理RAW格式文件")
+            return
+        
+        exif_data = {}
+        updated_fields = []
+        
+        if self.shootTime != 0:
+            if self.shootTime == 1:
+                date_from_filename = self.get_date_from_filename(image_path)
+                if date_from_filename:
+                    exif_data['DateTimeOriginal'] = date_from_filename.strftime('%Y:%m:%d %H:%M:%S')
+                    exif_data['CreateDate'] = date_from_filename.strftime('%Y:%m:%d %H:%M:%S')
+                    exif_data['ModifyDate'] = date_from_filename.strftime('%Y:%m:%d %H:%M:%S')
+                    updated_fields.append(f"拍摄时间: {date_from_filename.strftime('%Y:%m:%d %H:%M:%S')}")
+            else:
+                try:
+                    datetime.strptime(self.shootTime, "%Y:%m:%d %H:%M:%S")
+                    exif_data['DateTimeOriginal'] = self.shootTime
+                    exif_data['CreateDate'] = self.shootTime
+                    exif_data['ModifyDate'] = self.shootTime
+                    updated_fields.append(f"拍摄时间: {self.shootTime}")
+                except ValueError:
+                    self.log.emit("ERROR", f"拍摄时间格式无效: {self.shootTime}")
+        
+        if self.title:
+            exif_data['ImageDescription'] = self.title
+            updated_fields.append(f"标题: {self.title}")
+        
+        if self.author:
+            exif_data['Artist'] = self.author
+            updated_fields.append(f"作者: {self.author}")
+        
+        if self.copyright:
+            exif_data['Copyright'] = self.copyright
+            updated_fields.append(f"版权: {self.copyright}")
+        
+        if self.cameraBrand:
+            exif_data['Make'] = self.cameraBrand
+            updated_fields.append(f"相机品牌: {self.cameraBrand}")
+        
+        if self.cameraModel:
+            exif_data['Model'] = self.cameraModel
+            updated_fields.append(f"相机型号: {self.cameraModel}")
+        
+        if self.lensBrand:
+            exif_data['LensMake'] = self.lensBrand
+            updated_fields.append(f"镜头品牌: {self.lensBrand}")
+        
+        if self.lensModel:
+            exif_data['LensModel'] = self.lensModel
+            updated_fields.append(f"镜头型号: {self.lensModel}")
+        
+        if self.lat is not None and self.lon is not None:
+            exif_data['GPSLatitude'] = self.lat
+            exif_data['GPSLongitude'] = self.lon
+            updated_fields.append(f"GPS坐标: {self.lat:.6f}, {self.lon:.6f}")
+        
+        if not exif_data:
+            self.log.emit("WARNING", f"未对 {os.path.basename(image_path)} 进行任何更改")
+            return
+        
+        commands = []
+        for key, value in exif_data.items():
+            if isinstance(value, str):
+                commands.append(f'-{key}="{value}"')
+            else:
+                commands.append(f'-{key}={value}')
+        
+        cmd = [exiftool_path] + commands + [image_path]
+        
         try:
-            with rawpy.imread(image_path) as raw:
-                updated_fields = []
-                
-                if self.shootTime != 0:
-                    if self.shootTime == 1:
-                        date_from_filename = self.get_date_from_filename(image_path)
-                        if date_from_filename:
-                            updated_fields.append(
-                                f"文件名识别拍摄时间: {date_from_filename.strftime('%Y:%m:%d %H:%M:%S')}")
-                    else:
-                        updated_fields.append(f"拍摄时间: {self.shootTime}")
-                
-                if self.title:
-                    updated_fields.append(f"标题: {self.title}")
-                if self.author:
-                    updated_fields.append(f"作者: {self.author}")
-                
+            result = subprocess.run(cmd, capture_output=True, text=False, timeout=30)
+            
+            if result.returncode == 0:
                 if updated_fields:
-                    self.log.emit("INFO", f"成功更新 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
-                    self.log.emit("WARNING", f"RAW格式元数据写入需要额外工具支持，仅记录元数据信息")
+                    self.log.emit("INFO", f"成功写入 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
                 else:
                     self.log.emit("WARNING", f"未对 {os.path.basename(image_path)} 进行任何更改")
-                    
+            else:
+                error_msg = result.stderr.decode('utf-8', errors='ignore') if result.stderr else "未知错误"
+                self.log.emit("ERROR", f"写入 {os.path.basename(image_path)} 失败: {error_msg}")
+                
+        except subprocess.TimeoutExpired:
+            self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 超时")
         except Exception as e:
             self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 时出错: {str(e)}")
 

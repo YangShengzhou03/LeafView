@@ -42,7 +42,6 @@ class WriteExif(QWidget):
         self.load_camera_lens_mapping()
         
         self.update_button_state()
-        self.parent.dateTimeEdit_shootTime.setDateTime(QDateTime.currentDateTime())
         self.parent.dateTimeEdit_shootTime.hide()
         self.parent.lineEdit_EXIF_longitude.hide()
         self.parent.lineEdit_EXIF_latitude.hide()
