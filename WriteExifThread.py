@@ -112,9 +112,9 @@ class WriteExifThread(QThread):
             self.log.emit("ERROR", f"全局错误: {str(e)}")
             error_count += 1
         finally:
-            self.log("DEBUG", "=" * 40)
+            self.log.emit("DEBUG", "=" * 40)
             self.log.emit("INFO", f"属性写入完成了，成功写入了 {success_count} 张，失败了 {error_count} 张，共 {total_files}。")
-            self.log("DEBUG", "=" * 3 + "LeafView © 2025 Yangshengzhou.All Rights Reserved" + "=" * 3)
+            self.log.emit("DEBUG", "=" * 3 + "LeafView © 2025 Yangshengzhou.All Rights Reserved" + "=" * 3)
             self.finished_conversion.emit()
 
     def _collect_image_paths(self):
