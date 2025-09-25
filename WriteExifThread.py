@@ -519,23 +519,6 @@ class WriteExifThread(QThread):
                 except ValueError:
                     self.log.emit("ERROR", f"拍摄时间格式无效: {self.shootTime}，请使用 YYYY:MM:DD HH:MM:SS 格式")
         
-        if self.title:
-            cmd_parts.append(f'-Comment="{self.title}"')
-            cmd_parts.append(f'-Description="{self.title}"')
-            updated_fields.append(f"标题: {self.title}")
-        
-        if self.author:
-            cmd_parts.append(f'-Artist="{self.author}"')
-            updated_fields.append(f"作者: {self.author}")
-        
-        if self.subject:
-            cmd_parts.append(f'-Subject="{self.subject}"')
-            updated_fields.append(f"主题: {self.subject}")
-        
-        if self.copyright:
-            cmd_parts.append(f'-Copyright="{self.copyright}"')
-            updated_fields.append(f"版权: {self.copyright}")
-        
         try:
             cmd_parts.append(file_path_normalized)
             
