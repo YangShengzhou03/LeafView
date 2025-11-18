@@ -104,56 +104,35 @@ class SmartArrangeThread(QtCore.QThread):
         self.files_to_rename = []
 
     def calculate_total_files(self):
+        """计算总文件数，增强错误处理"""
         try:
             self.total_files = 0
             for folder_info in self.folders:
                 try:
                     folder_path = Path(folder_info['path'])
                     
-                    # 检查文件夹是否存在
-                    if not folder_path.exists():
-                        logger.warning(f"文件夹不存在: {folder_path}")
-                        self.log("WARNING", f"文件夹不存在: {folder_path}")
-                        continue
-                        
-                    # 检查是否有访问权限
-                    if not folder_path.is_dir():
-                        logger.warning(f"路径不是文件夹: {folder_path}")
-                        self.log("WARNING", f"路径不是文件夹: {folder_path}")
+                    # 增强的路径验证
+                    if not self._validate_folder_path(folder_path):
                         continue
                         
                     if folder_info.get('include_sub', 0):
-                        try:
-                            for root, _, files in os.walk(folder_path):
-                                try:
-                                    self.total_files += len(files)
-                                except Exception as e:
-                                    logger.error(f"遍历子文件夹时出错 {root}: {str(e)}")
-                                    self.log("ERROR", f"遍历子文件夹时出错 {root}: {str(e)}")
-                        except Exception as e:
-                            logger.error(f"遍历文件夹失败 {folder_path}: {str(e)}")
-                            self.log("ERROR", f"遍历文件夹失败 {folder_path}: {str(e)}")
+                        self._count_files_recursive(folder_path)
                     else:
-                        try:
-                            files = os.listdir(folder_path)
-                            self.total_files += len([f for f in files if (folder_path / f).is_file()])
-                        except PermissionError as e:
-                            logger.error(f"没有权限访问文件夹 {folder_path}: {str(e)}")
-                            self.log("ERROR", f"没有权限访问文件夹 {folder_path}")
-                        except Exception as e:
-                            logger.error(f"列出文件夹内容失败 {folder_path}: {str(e)}")
-                            self.log("ERROR", f"列出文件夹内容失败 {folder_path}: {str(e)}")
+                        self._count_files_direct(folder_path)
                             
+                except (OSError, IOError) as e:
+                    logger.error(f"访问文件夹失败 {folder_info.get('path', 'unknown')}: {str(e)}")
+                    self.log("ERROR", f"无法访问文件夹: {str(e)}")
                 except Exception as e:
                     logger.error(f"处理文件夹信息时出错: {str(e)}")
-                    self.log("ERROR", f"处理文件夹信息时出错: {str(e)}")
+                    self.log("ERROR", f"处理文件夹时出错: {str(e)}")
                     
             logger.info(f"总文件数: {self.total_files}")
             self.log("DEBUG", f"总文件数: {self.total_files}")
             
         except Exception as e:
             logger.error(f"计算总文件数时出错: {str(e)}")
-            self.log("ERROR", f"计算总文件数时出错: {str(e)}")
+            self.log("ERROR", f"计算文件数量失败: {str(e)}")
             self.total_files = 0
 
     def load_geographic_data(self):
@@ -178,27 +157,33 @@ class SmartArrangeThread(QtCore.QThread):
                 if self._stop_flag:
                     self.log("WARNING", "您已经取消了整理文件的操作")
                     break
-                if self.destination_root:
-                    destination_path = Path(self.destination_root).resolve()
-                    folder_path = Path(folder_info['path']).resolve()
-                    if len(destination_path.parts) > len(folder_path.parts) and destination_path.parts[:len(folder_path.parts)] == folder_path.parts:
-                        self.log("ERROR", "目标文件夹不能是要整理的文件夹的子文件夹，这样会导致重复处理！")
-                        break
+                    
+                # 增强的目标文件夹验证
+                if not self._validate_destination_folder(folder_info):
+                    continue
+                    
                 try:
                     if not self.classification_structure and not self.file_name_structure:
                         self.organize_without_classification(folder_info['path'])
                     else:
                         self.process_folder_with_classification(folder_info)
+                    success_count += 1
+                except (OSError, IOError) as e:
+                    self.log("ERROR", f"文件操作失败 {folder_info['path']}: {str(e)}")
+                    fail_count += 1
                 except Exception as e:
-                    self.log("ERROR", f"处理文件夹 {folder_info['path']} 时出错了: {str(e)}")
+                    self.log("ERROR", f"处理文件夹失败 {folder_info['path']}: {str(e)}")
                     fail_count += 1
             
             if not self._stop_flag:
                 try:
                     self.process_renaming()
                     success_count = len(self.files_to_rename) - fail_count
+                except (OSError, IOError) as e:
+                    self.log("ERROR", f"重命名文件失败: {str(e)}")
+                    fail_count += 1
                 except Exception as e:
-                    self.log("ERROR", f"给文件重命名时出错了: {str(e)}")
+                    self.log("ERROR", f"重命名过程出错: {str(e)}")
                     fail_count += 1
                 
                 if not self.destination_root:
@@ -373,8 +358,87 @@ class SmartArrangeThread(QtCore.QThread):
         self.log("WARNING", f"已为您删除了 {deleted_count} 个空文件夹")
     
     def stop(self):
+        """停止线程操作"""
         self._stop_flag = True
         self.log("INFO", "正在停止智能整理操作...")
+
+    def _validate_folder_path(self, folder_path):
+        """验证文件夹路径的有效性"""
+        try:
+            if not folder_path.exists():
+                logger.warning(f"文件夹不存在: {folder_path}")
+                self.log("WARNING", f"文件夹不存在: {folder_path}")
+                return False
+                
+            if not folder_path.is_dir():
+                logger.warning(f"路径不是文件夹: {folder_path}")
+                self.log("WARNING", f"路径不是文件夹: {folder_path}")
+                return False
+                
+            # 检查读取权限
+            folder_path.iterdir()
+            return True
+            
+        except PermissionError:
+            logger.error(f"没有权限访问文件夹: {folder_path}")
+            self.log("ERROR", f"没有权限访问文件夹: {folder_path}")
+            return False
+        except Exception as e:
+            logger.error(f"验证文件夹路径失败 {folder_path}: {str(e)}")
+            self.log("ERROR", f"文件夹验证失败: {str(e)}")
+            return False
+
+    def _validate_destination_folder(self, folder_info):
+        """验证目标文件夹配置"""
+        if not self.destination_root:
+            return True
+            
+        try:
+            destination_path = Path(self.destination_root).resolve()
+            folder_path = Path(folder_info['path']).resolve()
+            
+            # 检查目标文件夹是否是源文件夹的子文件夹
+            if len(destination_path.parts) > len(folder_path.parts) and destination_path.parts[:len(folder_path.parts)] == folder_path.parts:
+                self.log("ERROR", "目标文件夹不能是要整理的文件夹的子文件夹，这样会导致重复处理！")
+                return False
+                
+            # 检查目标文件夹是否存在，不存在则创建
+            if not destination_path.exists():
+                destination_path.mkdir(parents=True, exist_ok=True)
+                self.log("INFO", f"创建目标文件夹: {destination_path}")
+                
+            return True
+            
+        except Exception as e:
+            self.log("ERROR", f"目标文件夹验证失败: {str(e)}")
+            return False
+
+    def _count_files_recursive(self, folder_path):
+        """递归统计文件数量"""
+        try:
+            for root, _, files in os.walk(folder_path):
+                if self._stop_flag:
+                    break
+                try:
+                    self.total_files += len(files)
+                except Exception as e:
+                    logger.error(f"统计文件数量失败 {root}: {str(e)}")
+                    self.log("WARNING", f"部分文件统计失败: {str(e)}")
+        except Exception as e:
+            logger.error(f"递归遍历文件夹失败 {folder_path}: {str(e)}")
+            self.log("ERROR", f"文件夹遍历失败: {str(e)}")
+
+    def _count_files_direct(self, folder_path):
+        """直接统计文件夹内文件数量"""
+        try:
+            files = os.listdir(folder_path)
+            self.total_files += len([f for f in files if (folder_path / f).is_file()])
+        except PermissionError:
+            logger.error(f"没有权限访问文件夹: {folder_path}")
+            self.log("ERROR", f"没有权限访问文件夹: {folder_path}")
+        except Exception as e:
+            logger.error(f"列出文件夹内容失败 {folder_path}: {str(e)}")
+            self.log("ERROR", f"读取文件夹失败: {str(e)}")
 
     def _recursive_delete_empty_folders(self, folder_path, source_folders):
         deleted_count = 0

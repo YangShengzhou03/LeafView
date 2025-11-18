@@ -107,6 +107,171 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             else:
                 widget.show()
     
+    def _create_quick_toolbar(self):
+        """创建快速操作工具栏 - 新增功能"""
+        # 在左侧导航区域添加快速工具栏
+        quick_toolbar = QtWidgets.QFrame(parent=self.frame_left)
+        quick_toolbar.setObjectName("quick_toolbar")
+        quick_toolbar.setStyleSheet("""
+            QFrame#quick_toolbar {
+                background-color: rgba(255, 255, 255, 0.8);
+                border-radius: 8px;
+                margin: 8px 4px;
+                padding: 4px;
+            }
+            
+            QPushButton {
+                background-color: #6c5ce7;
+                color: white;
+                border: none;
+                padding: 6px 12px;
+                border-radius: 4px;
+                font-size: 12px;
+                margin: 2px;
+                min-width: 80px;
+            }
+            
+            QPushButton:hover {
+                background-color: #5a4bc7;
+            }
+            
+            QPushButton:pressed {
+                background-color: #4a3ba7;
+            }
+        """)
+        
+        toolbar_layout = QtWidgets.QVBoxLayout(quick_toolbar)
+        toolbar_layout.setContentsMargins(6, 6, 6, 6)
+        toolbar_layout.setSpacing(4)
+        
+        # 添加快速操作按钮
+        self.btn_quick_add = QtWidgets.QPushButton("📁 添加文件夹")
+        self.btn_quick_add.clicked.connect(lambda: self._show_page(0))
+        toolbar_layout.addWidget(self.btn_quick_add)
+        
+        self.btn_quick_batch = QtWidgets.QPushButton("📂 批量添加")
+        self.btn_quick_batch.clicked.connect(lambda: self._show_page(0))
+        toolbar_layout.addWidget(self.btn_quick_batch)
+        
+        toolbar_layout.addSpacing(8)
+        
+        self.btn_quick_smart = QtWidgets.QPushButton("🤖 智能整理")
+        self.btn_quick_smart.clicked.connect(lambda: self._show_page(1))
+        toolbar_layout.addWidget(self.btn_quick_smart)
+        
+        self.btn_quick_remove_dup = QtWidgets.QPushButton("🗑️ 去重")
+        self.btn_quick_remove_dup.clicked.connect(lambda: self._show_page(2))
+        toolbar_layout.addWidget(self.btn_quick_remove_dup)
+        
+        toolbar_layout.addSpacing(8)
+        
+        self.btn_quick_exif = QtWidgets.QPushButton("📝 编辑信息")
+        self.btn_quick_exif.clicked.connect(lambda: self._show_page(3))
+        toolbar_layout.addWidget(self.btn_quick_exif)
+        
+        # 添加到左侧布局（在logo下方，导航菜单上方）
+        self.layout_left_panel.insertWidget(1, quick_toolbar)
+    
+    def _setup_keyboard_shortcuts(self):
+        """设置全局快捷键 - 新增功能"""
+        # 创建快捷键
+        self.shortcut_add_folder = QtGui.QShortcut(QtGui.QKeySequence("Ctrl+A"), self)
+        self.shortcut_add_folder.activated.connect(lambda: self._show_page(0))
+        
+        self.shortcut_batch_add = QtGui.QShortcut(QtGui.QKeySequence("Ctrl+Shift+A"), self)
+        self.shortcut_batch_add.activated.connect(lambda: self._show_page(0))
+        
+        self.shortcut_smart_arrange = QtGui.QShortcut(QtGui.QKeySequence("Ctrl+S"), self)
+        self.shortcut_smart_arrange.activated.connect(lambda: self._show_page(1))
+        
+        self.shortcut_remove_dup = QtGui.QShortcut(QtGui.QKeySequence("Ctrl+D"), self)
+        self.shortcut_remove_dup.activated.connect(lambda: self._show_page(2))
+        
+        self.shortcut_exif = QtGui.QShortcut(QtGui.QKeySequence("Ctrl+E"), self)
+        self.shortcut_exif.activated.connect(lambda: self._show_page(3))
+        
+        self.shortcut_refresh = QtGui.QShortcut(QtGui.QKeySequence("F5"), self)
+        self.shortcut_refresh.activated.connect(self._refresh_current_page)
+        
+        self.shortcut_help = QtGui.QShortcut(QtGui.QKeySequence("F1"), self)
+        self.shortcut_help.activated.connect(self._show_help)
+        
+        # 新增更多快捷键
+        self.shortcut_next_page = QtGui.QShortcut(QtGui.QKeySequence("Ctrl+Tab"), self)
+        self.shortcut_next_page.activated.connect(self._next_page)
+        
+        self.shortcut_prev_page = QtGui.QShortcut(QtGui.QKeySequence("Ctrl+Shift+Tab"), self)
+        self.shortcut_prev_page.activated.connect(self._prev_page)
+        
+        self.shortcut_quit = QtGui.QShortcut(QtGui.QKeySequence("Ctrl+Q"), self)
+        self.shortcut_quit.activated.connect(self.close)
+        
+        self.shortcut_minimize = QtGui.QShortcut(QtGui.QKeySequence("Ctrl+M"), self)
+        self.shortcut_minimize.activated.connect(self.showMinimized)
+
+    def _next_page(self):
+        """切换到下一页"""
+        current_index = self.stackedWidget.currentIndex()
+        next_index = (current_index + 1) % self.stackedWidget.count()
+        self._show_page(next_index)
+        
+    def _prev_page(self):
+        """切换到上一页"""
+        current_index = self.stackedWidget.currentIndex()
+        prev_index = (current_index - 1) % self.stackedWidget.count()
+        self._show_page(prev_index)
+    
+    def _show_page(self, page_index):
+        """显示指定页面 - 新增功能"""
+        if hasattr(self, 'stackedWidget'):
+            self.stackedWidget.setCurrentIndex(page_index)
+            # 更新导航菜单选中状态
+            self.listWidget_mainMenu.setCurrentRow(page_index)
+    
+    def _refresh_current_page(self):
+        """刷新当前页面 - 新增功能"""
+        current_index = 0
+        if hasattr(self, 'stackedWidget'):
+            current_index = self.stackedWidget.currentIndex()
+        
+        # 根据不同页面执行相应刷新操作
+        if current_index == 0 and hasattr(self, 'folder_page'):
+            # 刷新文件夹页面
+            if hasattr(self.folder_page, '_refresh_all_folders'):
+                self.folder_page._refresh_all_folders()
+        elif current_index == 1 and hasattr(self, 'smart_arrange_page'):
+            # 刷新智能整理页面
+            pass
+        elif current_index == 2 and hasattr(self, 'remove_dup_page'):
+            # 刷新去重页面
+            pass
+    
+    def _show_help(self):
+        """显示帮助信息 - 新增功能"""
+        help_text = """
+        <h3>枫叶相册 - 快捷键帮助</h3>
+        <p><b>页面切换：</b></p>
+        <ul>
+        <li>Ctrl+A - 添加文件夹页面</li>
+        <li>Ctrl+S - 智能整理页面</li>
+        <li>Ctrl+D - 去重页面</li>
+        <li>Ctrl+E - 编辑信息页面</li>
+        </ul>
+        <p><b>通用操作：</b></p>
+        <ul>
+        <li>F5 - 刷新当前页面</li>
+        <li>F1 - 显示帮助</li>
+        <li>拖拽文件夹 - 快速添加</li>
+        </ul>
+        <p><b>窗口控制：</b></p>
+        <ul>
+        <li>双击标题栏 - 最大化/还原</li>
+        <li>拖拽标题栏 - 移动窗口</li>
+        </ul>
+        """
+        
+        QtWidgets.QMessageBox.information(self, "快捷键帮助", help_text)
+
     def _toggle_maximize(self):
         if self.isMaximized():
             self.showNormal()
