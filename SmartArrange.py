@@ -40,8 +40,8 @@ class SmartArrange(QtWidgets.QWidget):
             "~": "~"
         }
         
-        self.available_layout = self.parent.horizontalLayout_57
-        self.selected_layout = self.parent.horizontalLayout_53
+        self.available_layout = self.parent.layout_rename_tags
+        self.selected_layout = self.parent.layout_rename_selected
         
         self.SmartArrange_thread = None
         self.SmartArrange_settings = []

@@ -18,10 +18,10 @@ class WriteExifThread(QThread):
     
     progress_updated = pyqtSignal(int)
     finished_conversion = pyqtSignal()
-    log = pyqtSignal(str, str)
+    log_signal = pyqtSignal(str, str)
 
     def __init__(self, folders_dict, title='', author='', subject='', rating='', copyright='',
-                 position='', shootTime='', cameraBrand=None, cameraModel=None, lensBrand=None, lensModel=None):
+                 position='', shoot_time='', camera_brand=None, camera_model=None, lens_brand=None, lens_model=None):
         super().__init__()
         self.folders_dict = {item['path']: item['include_sub'] for item in folders_dict}
         self.title = title
@@ -29,11 +29,11 @@ class WriteExifThread(QThread):
         self.subject = subject
         self.rating = rating
         self.copyright = copyright
-        self.shootTime = shootTime
-        self.cameraBrand = cameraBrand
-        self.cameraModel = cameraModel
-        self.lensBrand = lensBrand
-        self.lensModel = lensModel
+        self.shoot_time = shoot_time
+        self.camera_brand = camera_brand
+        self.camera_model = camera_model
+        self.lens_brand = lens_brand
+        self.lens_model = lens_model
         self._stop_requested = False
         self.lat = None
         self.lon = None
@@ -55,14 +55,14 @@ class WriteExifThread(QThread):
             image_paths = self._collect_image_paths()
             total_files = len(image_paths)
             if not image_paths:
-                self.log.emit("WARNING", "没有找到任何可以处理的图像文件\n\n"
+                self.log_signal.emit("WARNING", "没有找到任何可以处理的图像文件\n\n"
                                "请检查：\n"
                                "• 您选择的文件夹路径是否正确\n"
                                "• 文件夹里是否有.jpg、.jpeg、.png、.webp等格式的图片")
                 self.finished_conversion.emit()
                 return
             
-            self.log.emit("WARNING", f"开始处理 {total_files} 张图片")
+            self.log_signal.emit("WARNING", f"开始处理 {total_files} 张图片")
             
             self.progress_updated.emit(0)
             
@@ -74,12 +74,12 @@ class WriteExifThread(QThread):
                     try:
                         file_size = os.path.getsize(path)
                         if file_size > 500 * 1024 * 1024:
-                            self.log.emit("ERROR", f"文件 {os.path.basename(path)} 太大了(超过500MB)，暂不支持处理")
+                            self.log_signal.emit("ERROR", f"文件 {os.path.basename(path)} 太大了(超过500MB)，暂不支持处理")
                             error_count += 1
                             continue
                         futures[executor.submit(self.process_image, path)] = path
                     except Exception as e:
-                        self.log.emit("ERROR", f"添加文件 {os.path.basename(path)} 到任务队列失败: {str(e)}")
+                        self.log_signal.emit("ERROR", f"添加文件 {os.path.basename(path)} 到任务队列失败: {str(e)}")
                         error_count += 1
                 
                 if futures:
@@ -96,25 +96,25 @@ class WriteExifThread(QThread):
                                 success_count += 1
                             except TimeoutError:
                                 file_path = futures[future]
-                                self.log.emit("ERROR", f"处理文件 {os.path.basename(file_path)} 时间太长，已超时")
+                                self.log_signal.emit("ERROR", f"处理文件 {os.path.basename(file_path)} 时间太长，已超时")
                                 error_count += 1
                             except Exception as e:
                                 file_path = futures[future]
-                                self.log.emit("ERROR", f"处理文件 {os.path.basename(file_path)} 时出错: {str(e)}")
+                                self.log_signal.emit("ERROR", f"处理文件 {os.path.basename(file_path)} 时出错: {str(e)}")
                                 error_count += 1
                             finally:
                                 progress = int((i / len(futures)) * 100)
                                 self.progress_updated.emit(progress)
                     except Exception as e:
-                        self.log.emit("ERROR", f"任务调度过程中发生错误: {str(e)}")
+                        self.log_signal.emit("ERROR", f"任务调度过程中发生错误: {str(e)}")
                         error_count += 1
         except Exception as e:
-            self.log.emit("ERROR", f"全局错误: {str(e)}")
+            self.log_signal.emit("ERROR", f"全局错误: {str(e)}")
             error_count += 1
         finally:
-            self.log.emit("DEBUG", "=" * 40)
-            self.log.emit("INFO", f"属性写入完成了，成功写入了 {success_count} 张，失败了 {error_count} 张，共 {total_files}。")
-            self.log.emit("DEBUG", "=" * 3 + "LeafView © 2025 Yangshengzhou.All Rights Reserved" + "=" * 3)
+            self.log_signal.emit("DEBUG", "=" * 40)
+            self.log_signal.emit("INFO", f"属性写入完成了，成功写入了 {success_count} 张，失败了 {error_count} 张，共 {total_files}。")
+            self.log_signal.emit("DEBUG", "=" * 3 + "LeafView © 2025 Yangshengzhou.All Rights Reserved" + "=" * 3)
             self.finished_conversion.emit()
 
     def _collect_image_paths(self):
@@ -161,13 +161,13 @@ class WriteExifThread(QThread):
         except Exception as e:
             result = detect_media_type(image_path)
             if not result["valid"]:
-                self.log.emit("ERROR", f"{os.path.basename(image_path)} 文件已损坏或格式不支持\n\n"
+                self.log_signal.emit("ERROR", f"{os.path.basename(image_path)} 文件已损坏或格式不支持\n\n"
                                  "请检查文件完整性")
             elif not result["extension_match"]:
-                self.log.emit("ERROR", f"{os.path.basename(image_path)} 扩展名不匹配，实际格式为 {result['extension']}\n\n"
+                self.log_signal.emit("ERROR", f"{os.path.basename(image_path)} 扩展名不匹配，实际格式为 {result['extension']}\n\n"
                                  "请检查文件格式")
             else:
-                self.log.emit("ERROR", f"处理 {os.path.basename(image_path)} 时出错: {str(e)}")
+                self.log_signal.emit("ERROR", f"处理 {os.path.basename(image_path)} 时出错: {str(e)}")
 
     def _process_exif_format(self, image_path):
         try:
@@ -197,28 +197,28 @@ class WriteExifThread(QThread):
             exif_dict["0th"][piexif.ImageIFD.Copyright] = self.copyright.encode('utf-8')
             updated_fields.append(f"版权: {self.copyright}")
         
-        if self.cameraBrand:
-            exif_dict["0th"][piexif.ImageIFD.Make] = self.cameraBrand.encode('utf-8')
-            updated_fields.append(f"相机品牌: {self.cameraBrand}")
-        
-        if self.cameraModel:
-            exif_dict["0th"][piexif.ImageIFD.Model] = self.cameraModel.encode('utf-8')
-            updated_fields.append(f"相机型号: {self.cameraModel}")
-        
-        if self.lensBrand:
+        if self.camera_brand:
+            exif_dict["0th"][piexif.ImageIFD.Make] = self.camera_brand.encode('utf-8')
+            updated_fields.append(f"相机品牌: {self.camera_brand}")
+
+        if self.camera_model:
+            exif_dict["0th"][piexif.ImageIFD.Model] = self.camera_model.encode('utf-8')
+            updated_fields.append(f"相机型号: {self.camera_model}")
+
+        if self.lens_brand:
             if "Exif" not in exif_dict:
                 exif_dict["Exif"] = {}
-            exif_dict["Exif"][piexif.ExifIFD.LensMake] = self.lensBrand.encode('utf-8')
-            updated_fields.append(f"镜头品牌: {self.lensBrand}")
-        
-        if self.lensModel:
+            exif_dict["Exif"][piexif.ExifIFD.LensMake] = self.lens_brand.encode('utf-8')
+            updated_fields.append(f"镜头品牌: {self.lens_brand}")
+
+        if self.lens_model:
             if "Exif" not in exif_dict:
                 exif_dict["Exif"] = {}
-            exif_dict["Exif"][piexif.ExifIFD.LensModel] = self.lensModel.encode('utf-8')
-            updated_fields.append(f"镜头型号: {self.lensModel}")
-        
-        if self.shootTime != 0:
-            if self.shootTime == 1:
+            exif_dict["Exif"][piexif.ExifIFD.LensModel] = self.lens_model.encode('utf-8')
+            updated_fields.append(f"镜头型号: {self.lens_model}")
+
+        if self.shoot_time != 0:
+            if self.shoot_time == 1:
                 date_from_filename = self.get_date_from_filename(image_path)
                 if date_from_filename:
                     if "Exif" not in exif_dict:
@@ -227,15 +227,24 @@ class WriteExifThread(QThread):
                         "%Y:%m:%d %H:%M:%S").encode('utf-8')
                     updated_fields.append(
                         f"文件名识别拍摄时间: {date_from_filename.strftime('%Y:%m:%d %H:%M:%S')}")
+                else:
+                    self.log_signal.emit("WARNING", f"无法从文件名提取时间: {os.path.basename(image_path)}")
+            elif self.shoot_time == 2:
+                if "Exif" not in exif_dict:
+                    exif_dict["Exif"] = {}
+                exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = datetime.now().strftime("%Y:%m:%d %H:%M:%S").encode('utf-8')
+                updated_fields.append(f"拍摄时间: {datetime.now().strftime('%Y:%m:%d %H:%M:%S')}")
+            elif self.shoot_time == 3:
+                pass
             else:
                 try:
-                    datetime.strptime(self.shootTime, "%Y:%m:%d %H:%M:%S")
+                    datetime.strptime(self.shoot_time, "%Y:%m:%d %H:%M:%S")
                     if "Exif" not in exif_dict:
                         exif_dict["Exif"] = {}
-                    exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = self.shootTime.encode('utf-8')
-                    updated_fields.append(f"拍摄时间: {self.shootTime}")
+                    exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = self.shoot_time.encode('utf-8')
+                    updated_fields.append(f"拍摄时间: {self.shoot_time}")
                 except ValueError:
-                    self.log.emit("ERROR", f"拍摄时间格式无效: {self.shootTime}，请使用 YYYY:MM:DD HH:MM:SS 格式")
+                    self.log_signal.emit("ERROR", f"拍摄时间格式无效: {self.shoot_time}，请使用 YYYY:MM:DD HH:MM:SS 格式")
         
         if self.lat is not None and self.lon is not None:
             exif_dict["GPS"] = self._create_gps_data(self.lat, self.lon)
@@ -246,9 +255,9 @@ class WriteExifThread(QThread):
         piexif.insert(exif_bytes, image_path)
         
         if updated_fields:
-            self.log.emit("INFO", f"写入成功 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
+            self.log_signal.emit("INFO", f"写入成功 {os.path.basename(image_path)}: {'; '.join(updated_fields)}")
         else:
-            self.log.emit("WARNING", f"未对 {os.path.basename(image_path)} 进行任何更改\n\n"
+            self.log_signal.emit("WARNING", f"未对 {os.path.basename(image_path)} 进行任何更改\n\n"
                              "可能的原因：\n"
                              "• 所有EXIF字段均为空")
 
