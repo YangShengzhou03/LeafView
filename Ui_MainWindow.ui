@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>949</width>
+    <width>987</width>
     <height>572</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>LeafView - 媒体文件管理工具</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -341,7 +341,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
                 </item>
                 <item>
                  <property name="text">
-                  <string>识字整理</string>
+                  <string>OCR文字识别</string>
                  </property>
                  <property name="icon">
                   <iconset>
@@ -350,7 +350,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
                 </item>
                 <item>
                  <property name="text">
-                  <string>智能整理</string>
+                  <string>智能分类整理</string>
                  </property>
                  <property name="icon">
                   <iconset>
@@ -359,7 +359,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
                 </item>
                 <item>
                  <property name="text">
-                  <string>文件去重</string>
+                  <string>重复文件清理</string>
                  </property>
                  <property name="icon">
                   <iconset>
@@ -368,7 +368,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
                 </item>
                 <item>
                  <property name="text">
-                  <string>属性写入</string>
+                  <string>元数据写入</string>
                  </property>
                  <property name="icon">
                   <iconset>
@@ -497,7 +497,7 @@ border-bottom-left-radius:0px;
               </spacer>
              </item>
              <item>
-              <widget class="QWidget" name="widget_headVip" native="true">
+              <widget class="QWidget" name="widget_vipBadge" native="true">
                <property name="enabled">
                 <bool>true</bool>
                </property>
@@ -530,7 +530,7 @@ border-radius:0px;</string>
               </widget>
              </item>
              <item>
-              <widget class="QToolButton" name="toolButton_serve">
+              <widget class="QToolButton" name="toolButton_service">
                <property name="minimumSize">
                 <size>
                  <width>36</width>
@@ -834,7 +834,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
                <property name="currentIndex">
                 <number>0</number>
                </property>
-               <widget class="QWidget" name="page_0">
+               <widget class="QWidget" name="page_mediaImport">
                 <property name="styleSheet">
                  <string notr="true">background: rgb(245, 249, 254);</string>
                 </property>
@@ -874,7 +874,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
                    <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_14">
                      <property name="spacing">
-                      <number>8</number>
+                      <number>9</number>
                      </property>
                      <property name="leftMargin">
                       <number>12</number>
@@ -902,19 +902,19 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
                       </spacer>
                      </item>
                      <item>
-                      <widget class="QLabel" name="label_2">
+                      <widget class="QLabel" name="label_sourceFolder">
                        <property name="font">
                         <font>
                          <pointsize>14</pointsize>
                         </font>
                        </property>
                        <property name="text">
-                        <string>源文件夹</string>
+                        <string>源文件夹路径</string>
                        </property>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit">
+                      <widget class="QLineEdit" name="lineEdit_sourcePath">
                        <property name="minimumSize">
                         <size>
                          <width>548</width>
@@ -951,10 +951,13 @@ QLineEdit:disabled {
     color: #aaa;
 }</string>
                        </property>
+                       <property name="placeholderText">
+                        <string>单击右侧按钮选择要处理的文件夹</string>
+                       </property>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QToolButton" name="toolButton">
+                      <widget class="QToolButton" name="toolButton_browseSource">
                        <property name="styleSheet">
                         <string notr="true">QToolButton {
     color: white;
@@ -987,6 +990,29 @@ QToolButton:pressed {
                        </property>
                        <property name="text">
                         <string>选择文件夹</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_2">
+                     <property name="leftMargin">
+                      <number>9</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>9</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>9</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>9</number>
+                     </property>
+                     <item>
+                      <widget class="QCheckBox" name="checkBox">
+                       <property name="text">
+                        <string>包含子文件夹</string>
                        </property>
                       </widget>
                      </item>
@@ -995,34 +1021,34 @@ QToolButton:pressed {
                    <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_16">
                      <property name="spacing">
-                      <number>8</number>
+                      <number>9</number>
                      </property>
                      <property name="leftMargin">
                       <number>12</number>
                      </property>
                      <property name="topMargin">
-                      <number>0</number>
+                      <number>9</number>
                      </property>
                      <property name="rightMargin">
                       <number>12</number>
                      </property>
                      <property name="bottomMargin">
-                      <number>0</number>
+                      <number>9</number>
                      </property>
                      <item>
-                      <widget class="QLabel" name="label_3">
+                      <widget class="QLabel" name="label_targetFolder">
                        <property name="font">
                         <font>
                          <pointsize>14</pointsize>
                         </font>
                        </property>
                        <property name="text">
-                        <string>目标文件夹</string>
+                        <string>目标文件夹路径</string>
                        </property>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_2">
+                      <widget class="QLineEdit" name="lineEdit_targetPath">
                        <property name="minimumSize">
                         <size>
                          <width>548</width>
@@ -1059,10 +1085,13 @@ QLineEdit:disabled {
     color: #aaa;
 }</string>
                        </property>
+                       <property name="placeholderText">
+                        <string>单击右侧按钮选择目标的文件夹</string>
+                       </property>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QToolButton" name="toolButton_2">
+                      <widget class="QToolButton" name="toolButton_browseTarget">
                        <property name="styleSheet">
                         <string notr="true">QToolButton {
     color: white;
@@ -1101,7 +1130,7 @@ QToolButton:pressed {
                     </layout>
                    </item>
                    <item>
-                    <widget class="QLabel" name="label_4">
+                    <widget class="QLabel" name="label_statusInfo">
                      <property name="font">
                       <font>
                        <pointsize>14</pointsize>
@@ -1114,7 +1143,7 @@ QToolButton:pressed {
 }</string>
                      </property>
                      <property name="text">
-                      <string/>
+                      <string>准备就绪</string>
                      </property>
                     </widget>
                    </item>
@@ -1135,7 +1164,7 @@ QToolButton:pressed {
                  </item>
                 </layout>
                </widget>
-               <widget class="QWidget" name="page_1">
+               <widget class="QWidget" name="page_ocrRecognition">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -1288,7 +1317,7 @@ border-radius: 0px;</string>
                           </widget>
                          </item>
                          <item>
-                          <widget class="QFrame" name="frame_Rename_2">
+                          <widget class="QFrame" name="frame_biaodashi">
                            <property name="minimumSize">
                             <size>
                              <width>88</width>
@@ -1445,7 +1474,7 @@ border-radius: 0px;</string>
                        <number>6</number>
                       </property>
                       <item>
-                       <widget class="QProgressBar" name="progressBar_classification_2">
+                       <widget class="QProgressBar" name="progressBar_biaodashi">
                         <property name="minimumSize">
                          <size>
                           <width>0</width>
@@ -1533,7 +1562,7 @@ QToolButton:pressed {
 }</string>
                         </property>
                         <property name="text">
-                         <string>开始整理</string>
+                         <string>开始识别</string>
                         </property>
                         <property name="iconSize">
                          <size>
@@ -1572,7 +1601,7 @@ border-bottom-left-radius:0px;</string>
                        <number>9</number>
                       </property>
                       <item>
-                       <widget class="QTextEdit" name="textEdit_SmartArrange_Log_2">
+                       <widget class="QTextEdit" name="textEdit_ocrLog">
                         <property name="minimumSize">
                          <size>
                           <width>0</width>
@@ -1682,7 +1711,7 @@ QTextEdit:focus {
                  </item>
                 </layout>
                </widget>
-               <widget class="QWidget" name="page_2">
+               <widget class="QWidget" name="page_smartArrange">
                 <property name="styleSheet">
                  <string notr="true">border: none;</string>
                 </property>
@@ -1774,7 +1803,7 @@ border-radius: 0px;</string>
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLabel" name="label_25">
+                       <widget class="QLabel" name="label_pathSeparator">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -1792,7 +1821,7 @@ border-radius: 0px;</string>
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="comboBox_level_1">
+                       <widget class="QComboBox" name="comboBox_classificationLevel">
                         <property name="minimumSize">
                          <size>
                           <width>82</width>
@@ -1966,7 +1995,7 @@ QComboBox:focus {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="comboBox_level_2">
+                       <widget class="QComboBox" name="comboBox_classificationLevel2">
                         <property name="minimumSize">
                          <size>
                           <width>82</width>
@@ -2140,7 +2169,7 @@ QComboBox:focus {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="comboBox_level_3">
+                       <widget class="QComboBox" name="comboBox_classificationLevel3">
                         <property name="minimumSize">
                          <size>
                           <width>82</width>
@@ -2314,7 +2343,7 @@ QComboBox:focus {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="comboBox_level_4">
+                       <widget class="QComboBox" name="comboBox_classificationLevel4">
                         <property name="minimumSize">
                          <size>
                           <width>82</width>
@@ -3965,7 +3994,7 @@ border-radius: 0px;</string>
                        <number>6</number>
                       </property>
                       <item>
-                       <widget class="QProgressBar" name="progressBar_classification">
+                       <widget class="QProgressBar" name="progressBar_smartArrange">
                         <property name="minimumSize">
                          <size>
                           <width>0</width>
@@ -4009,7 +4038,7 @@ QProgressBar::chunk {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QToolButton" name="toolButton_startSmartArrange">
+                       <widget class="QToolButton" name="toolButton_startClassification">
                         <property name="minimumSize">
                          <size>
                           <width>88</width>
@@ -4202,7 +4231,7 @@ QTextEdit:focus {
                  </item>
                 </layout>
                </widget>
-               <widget class="QWidget" name="page_3">
+               <widget class="QWidget" name="page_duplicateRemoval">
                 <layout class="QHBoxLayout" name="horizontalLayout_66" stretch="1">
                  <property name="spacing">
                   <number>0</number>
@@ -4268,7 +4297,7 @@ border-bottom-left-radius:0px;</string>
                        <item>
                         <layout class="QHBoxLayout" name="horizontalLayout_19" stretch="0">
                          <item>
-                          <widget class="QLabel" name="label_43">
+                          <widget class="QLabel" name="label_duplicateDescription">
                            <property name="font">
                             <font>
                              <pointsize>12</pointsize>
@@ -4316,7 +4345,7 @@ border-bottom-left-radius:0px;</string>
                         <number>6</number>
                        </property>
                        <item>
-                        <widget class="QProgressBar" name="progressBar_EXIF_2">
+                        <widget class="QProgressBar" name="progressBar_duplicateRemoval">
                          <property name="minimumSize">
                           <size>
                            <width>0</width>
@@ -4360,7 +4389,7 @@ QProgressBar::chunk {
                         </widget>
                        </item>
                        <item>
-                        <widget class="QToolButton" name="toolButton_StartEXIF_2">
+                        <widget class="QToolButton" name="toolButton_startDuplicateRemoval">
                          <property name="minimumSize">
                           <size>
                            <width>88</width>
@@ -4404,7 +4433,7 @@ QToolButton:pressed {
 }</string>
                          </property>
                          <property name="text">
-                          <string>开始写入</string>
+                          <string>开始清理</string>
                          </property>
                          <property name="iconSize">
                           <size>
@@ -4443,7 +4472,7 @@ border-bottom-left-radius:0px;</string>
                         <number>9</number>
                        </property>
                        <item>
-                        <widget class="QTextEdit" name="textEdit_WriteEXIF_Log_2">
+                        <widget class="QTextEdit" name="textEdit_qinglilog">
                          <property name="minimumSize">
                           <size>
                            <width>0</width>
@@ -4554,7 +4583,7 @@ QTextEdit:focus {
                  </item>
                 </layout>
                </widget>
-               <widget class="QWidget" name="page_4">
+               <widget class="QWidget" name="page_metadataWrite">
                 <property name="styleSheet">
                  <string notr="true">background:rgb(255, 255, 255);</string>
                 </property>
@@ -4605,7 +4634,7 @@ border-bottom-left-radius:0px;</string>
                        <number>6</number>
                       </property>
                       <item>
-                       <widget class="QLabel" name="label_35">
+                       <widget class="QLabel" name="label_metadataTitle">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -4623,7 +4652,7 @@ border-bottom-left-radius:0px;</string>
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLineEdit" name="lineEdit_EXIF_Title">
+                       <widget class="QLineEdit" name="lineEdit_metadataTitle">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                           <horstretch>0</horstretch>
@@ -4676,7 +4705,7 @@ QLineEdit:disabled {
                        <number>6</number>
                       </property>
                       <item>
-                       <widget class="QLabel" name="label_star">
+                       <widget class="QLabel" name="label_metadataRating">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -5890,7 +5919,7 @@ border-bottom-left-radius:0px;</string>
                      <number>6</number>
                     </property>
                     <item>
-                     <widget class="QProgressBar" name="progressBar_EXIF">
+                     <widget class="QProgressBar" name="progressBar_metadataWrite">
                       <property name="minimumSize">
                        <size>
                         <width>0</width>
@@ -5934,7 +5963,7 @@ QProgressBar::chunk {
                      </widget>
                     </item>
                     <item>
-                     <widget class="QToolButton" name="toolButton_StartEXIF">
+                     <widget class="QToolButton" name="toolButton_startMetadataWrite">
                       <property name="minimumSize">
                        <size>
                         <width>88</width>
