@@ -3,6 +3,7 @@ import io
 import json
 import os
 import subprocess
+import logging
 from pathlib import Path
 
 import exifread
@@ -12,6 +13,9 @@ from PyQt6 import QtCore
 
 from ReverseGeocoding import get_address_from_coordinates
 from common import get_resource_path
+
+# 配置日志记录
+logger = logging.getLogger(__name__)
 
 IMAGE_EXTENSIONS = (
     '.jpg', '.jpeg', '.png', '.heic', '.tiff', '.tif', '.bmp', '.webp', '.gif', '.svg', 
@@ -100,16 +104,57 @@ class SmartArrangeThread(QtCore.QThread):
         self.files_to_rename = []
 
     def calculate_total_files(self):
-        self.total_files = 0
-        for folder_info in self.folders:
-            folder_path = Path(folder_info['path'])
-            if folder_info.get('include_sub', 0):
-                for root, _, files in os.walk(folder_path):
-                    self.total_files += len(files)
-            else:
-                self.total_files += len([f for f in os.listdir(folder_path) if (folder_path / f).is_file()])
-        
-        self.log("DEBUG", f"总文件数: {self.total_files}")
+        try:
+            self.total_files = 0
+            for folder_info in self.folders:
+                try:
+                    folder_path = Path(folder_info['path'])
+                    
+                    # 检查文件夹是否存在
+                    if not folder_path.exists():
+                        logger.warning(f"文件夹不存在: {folder_path}")
+                        self.log("WARNING", f"文件夹不存在: {folder_path}")
+                        continue
+                        
+                    # 检查是否有访问权限
+                    if not folder_path.is_dir():
+                        logger.warning(f"路径不是文件夹: {folder_path}")
+                        self.log("WARNING", f"路径不是文件夹: {folder_path}")
+                        continue
+                        
+                    if folder_info.get('include_sub', 0):
+                        try:
+                            for root, _, files in os.walk(folder_path):
+                                try:
+                                    self.total_files += len(files)
+                                except Exception as e:
+                                    logger.error(f"遍历子文件夹时出错 {root}: {str(e)}")
+                                    self.log("ERROR", f"遍历子文件夹时出错 {root}: {str(e)}")
+                        except Exception as e:
+                            logger.error(f"遍历文件夹失败 {folder_path}: {str(e)}")
+                            self.log("ERROR", f"遍历文件夹失败 {folder_path}: {str(e)}")
+                    else:
+                        try:
+                            files = os.listdir(folder_path)
+                            self.total_files += len([f for f in files if (folder_path / f).is_file()])
+                        except PermissionError as e:
+                            logger.error(f"没有权限访问文件夹 {folder_path}: {str(e)}")
+                            self.log("ERROR", f"没有权限访问文件夹 {folder_path}")
+                        except Exception as e:
+                            logger.error(f"列出文件夹内容失败 {folder_path}: {str(e)}")
+                            self.log("ERROR", f"列出文件夹内容失败 {folder_path}: {str(e)}")
+                            
+                except Exception as e:
+                    logger.error(f"处理文件夹信息时出错: {str(e)}")
+                    self.log("ERROR", f"处理文件夹信息时出错: {str(e)}")
+                    
+            logger.info(f"总文件数: {self.total_files}")
+            self.log("DEBUG", f"总文件数: {self.total_files}")
+            
+        except Exception as e:
+            logger.error(f"计算总文件数时出错: {str(e)}")
+            self.log("ERROR", f"计算总文件数时出错: {str(e)}")
+            self.total_files = 0
 
     def load_geographic_data(self):
         try:
