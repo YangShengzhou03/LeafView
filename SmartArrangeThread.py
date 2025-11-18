@@ -7,10 +7,10 @@ from pathlib import Path
 
 import exifread
 import pillow_heif
-import requests
 from PIL import Image
 from PyQt6 import QtCore
 
+from ReverseGeocoding import get_address_from_coordinates
 from common import get_resource_path
 
 IMAGE_EXTENSIONS = (
@@ -1004,41 +1004,6 @@ class SmartArrangeThread(QtCore.QThread):
             )
         else:
             return "未知省份", "未知城市"
-    def get_address(self, latitude: float, longitude: float) -> str:
-        if not (isinstance(latitude, (int, float)) and isinstance(longitude, (int, float))):
-            return "未知位置"
-        
-        try:
-            from config_manager import config_manager
-            
-            if not config_manager.can_call_gaode_api():
-                self.log("WARNING", "高德 API 调用次数已达上限。")
-                return "未知位置"
-            
-            user_key = "0db079da53e08cbb62b52a42f657b994"
-            
-            if not user_key:
-                return "未知位置"
-            
-            url = f"https://restapi.amap.com/v3/geocode/regeo?key={user_key}&location={longitude},{latitude}&extensions=base"
-            response = requests.get(url, timeout=5)
-            data = response.json()
-
-            if data.get("infocode") == "10044":
-                self.log("WARNING", "抱歉，本月高德 API 调用额度已被其他用户耗尽。这是我在 2025 年大三时写的练习程序，无力承担高昂费用，感谢理解。")
-                return "未知位置"
-            
-            if data.get("status") == "1":
-                address = data.get("regeocode", {}).get("formatted_address", "")
-                if address:
-                    config_manager.record_gaode_api_call()
-                    return address
-                else:
-                    return "未知位置"
-            else:
-                return "未知位置"
-        except Exception as e:
-            return "未知位置"
 
     @staticmethod
     def convert_to_degrees(value):
@@ -1168,7 +1133,7 @@ class SmartArrangeThread(QtCore.QThread):
                 if cached_address and cached_address != "未知位置":
                     return cached_address
                 
-                address = self.get_address(lat, lon)
+                address = get_address_from_coordinates(lat, lon)
                 if address and address != "未知位置":
                     config_manager.cache_location(lat, lon, address)
                     return address
