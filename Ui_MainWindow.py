@@ -476,25 +476,21 @@ class Ui_MainWindow(object):
         self.layout_media_import_content.setSpacing(9)
         self.layout_media_import_content.setObjectName("layout_media_import_content")
         self.layout_source_folder_controls = QtWidgets.QHBoxLayout()
-        self.layout_source_folder_controls.setContentsMargins(12, 0, 12, 0)
+        self.layout_source_folder_controls.setContentsMargins(9, 9, 9, 9)
         self.layout_source_folder_controls.setSpacing(9)
         self.layout_source_folder_controls.setObjectName("layout_source_folder_controls")
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
         self.layout_source_folder_controls.addItem(spacerItem1)
-        self.label_sourceFolder = QtWidgets.QLabel(parent=self.page_mediaImport)
+        self.label_import_source_folder = QtWidgets.QLabel(parent=self.page_mediaImport)
         font = QtGui.QFont()
         font.setPointSize(14)
-        self.label_sourceFolder.setFont(font)
-        self.label_sourceFolder.setObjectName("label_sourceFolder")
-        self.layout_source_folder_controls.addWidget(self.label_sourceFolder)
-        self.lineEdit_sourcePath = QtWidgets.QLineEdit(parent=self.page_mediaImport)
-        self.lineEdit_sourcePath.setMinimumSize(QtCore.QSize(548, 0))
-        self.lineEdit_sourcePath.setStyleSheet("QLineEdit {\n"
-"    border: 1px solid qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(134, 119, 253, 255),\n"
-"        stop:1 rgba(119, 111, 252, 255)\n"
-"    );\n"
+        self.label_import_source_folder.setFont(font)
+        self.label_import_source_folder.setObjectName("label_import_source_folder")
+        self.layout_source_folder_controls.addWidget(self.label_import_source_folder)
+        self.line_edit_import_source_path = QtWidgets.QLineEdit(parent=self.page_mediaImport)
+        self.line_edit_import_source_path.setMinimumSize(QtCore.QSize(548, 0))
+        self.line_edit_import_source_path.setStyleSheet("QLineEdit {\n"
+"    border: 1px solid rgb(134, 119, 253);\n"
 "    background: rgb(245, 249, 254);\n"
 "    padding: 8px 6px;\n"
 "    border-radius: 6px;\n"
@@ -505,11 +501,7 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "QLineEdit:focus {\n"
-"    border: 2px solid qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(134, 119, 253, 255),\n"
-"        stop:1 rgba(119, 111, 252, 255)\n"
-"    );\n"
+"    border: 2px solid rgb(134, 119, 253);\n"
 "    outline: none;\n"
 "}\n"
 "\n"
@@ -517,65 +509,50 @@ class Ui_MainWindow(object):
 "    background: #eaeaea;\n"
 "    color: #aaa;\n"
 "}")
-        self.lineEdit_sourcePath.setObjectName("lineEdit_sourcePath")
-        self.layout_source_folder_controls.addWidget(self.lineEdit_sourcePath)
-        self.toolButton_browseSource = QtWidgets.QToolButton(parent=self.page_mediaImport)
-        self.toolButton_browseSource.setStyleSheet("QToolButton {\n"
+        self.line_edit_import_source_path.setObjectName("line_edit_import_source_path")
+        self.layout_source_folder_controls.addWidget(self.line_edit_import_source_path)
+        self.btn_import_browse_source = QtWidgets.QToolButton(parent=self.page_mediaImport)
+        self.btn_import_browse_source.setStyleSheet("QToolButton {\n"
 "    color: white;\n"
 "    border: none;\n"
 "    padding: 6px 6px;\n"
 "    border-radius: 6px;\n"
-"    background-color: qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(134, 119, 253, 255),\n"
-"        stop:1 rgba(119, 111, 252, 255)\n"
-"    );\n"
+"    background-color: rgb(134, 119, 253);\n"
 "    font-size: 12px;\n"
 "}\n"
 "\n"
 "QToolButton:hover {\n"
-"    background-color: qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(154, 139, 255, 255),\n"
-"        stop:1 rgba(139, 131, 254, 255)\n"
-"    );\n"
+"    background-color: rgb(154, 139, 255);\n"
 "}\n"
 "\n"
 "QToolButton:pressed {\n"
-"    background-color: qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(94, 79, 253, 255),\n"
-"        stop:1 rgba(79, 71, 252, 255)\n"
-"    );\n"
+"    background-color: rgb(94, 79, 253);\n"
 "}")
-        self.toolButton_browseSource.setObjectName("toolButton_browseSource")
-        self.layout_source_folder_controls.addWidget(self.toolButton_browseSource)
+        self.btn_import_browse_source.setObjectName("btn_import_browse_source")
+        self.layout_source_folder_controls.addWidget(self.btn_import_browse_source)
         self.layout_media_import_content.addLayout(self.layout_source_folder_controls)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setContentsMargins(9, 9, 9, 9)
+        self.horizontalLayout_2.setSpacing(9)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.checkbox_include_subfolders = QtWidgets.QCheckBox(parent=self.page_mediaImport)
         self.checkbox_include_subfolders.setObjectName("checkbox_include_subfolders")
         self.horizontalLayout_2.addWidget(self.checkbox_include_subfolders)
         self.layout_media_import_content.addLayout(self.horizontalLayout_2)
         self.layout_target_folder = QtWidgets.QHBoxLayout()
-        self.layout_target_folder.setContentsMargins(12, 9, 12, 9)
+        self.layout_target_folder.setContentsMargins(9, 9, 9, 9)
         self.layout_target_folder.setSpacing(9)
         self.layout_target_folder.setObjectName("layout_target_folder")
-        self.label_targetFolder = QtWidgets.QLabel(parent=self.page_mediaImport)
+        self.label_import_target_folder = QtWidgets.QLabel(parent=self.page_mediaImport)
         font = QtGui.QFont()
         font.setPointSize(14)
-        self.label_targetFolder.setFont(font)
-        self.label_targetFolder.setObjectName("label_targetFolder")
-        self.layout_target_folder.addWidget(self.label_targetFolder)
-        self.lineEdit_targetPath = QtWidgets.QLineEdit(parent=self.page_mediaImport)
-        self.lineEdit_targetPath.setMinimumSize(QtCore.QSize(548, 0))
-        self.lineEdit_targetPath.setStyleSheet("QLineEdit {\n"
-"    border: 1px solid qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(134, 119, 253, 255),\n"
-"        stop:1 rgba(119, 111, 252, 255)\n"
-"    );\n"
+        self.label_import_target_folder.setFont(font)
+        self.label_import_target_folder.setObjectName("label_import_target_folder")
+        self.layout_target_folder.addWidget(self.label_import_target_folder)
+        self.line_edit_import_target_path = QtWidgets.QLineEdit(parent=self.page_mediaImport)
+        self.line_edit_import_target_path.setMinimumSize(QtCore.QSize(548, 0))
+        self.line_edit_import_target_path.setStyleSheet("QLineEdit {\n"
+"    border: 1px solid rgb(134, 119, 253);\n"
 "    background: rgb(245, 249, 254);\n"
 "    padding: 8px 6px;\n"
 "    border-radius: 6px;\n"
@@ -586,11 +563,7 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "QLineEdit:focus {\n"
-"    border: 2px solid qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(134, 119, 253, 255),\n"
-"        stop:1 rgba(119, 111, 252, 255)\n"
-"    );\n"
+"    border: 2px solid rgb(134, 119, 253);\n"
 "    outline: none;\n"
 "}\n"
 "\n"
@@ -598,39 +571,27 @@ class Ui_MainWindow(object):
 "    background: #eaeaea;\n"
 "    color: #aaa;\n"
 "}")
-        self.lineEdit_targetPath.setObjectName("lineEdit_targetPath")
-        self.layout_target_folder.addWidget(self.lineEdit_targetPath)
-        self.toolButton_browseTarget = QtWidgets.QToolButton(parent=self.page_mediaImport)
-        self.toolButton_browseTarget.setStyleSheet("QToolButton {\n"
+        self.line_edit_import_target_path.setObjectName("line_edit_import_target_path")
+        self.layout_target_folder.addWidget(self.line_edit_import_target_path)
+        self.btn_import_browse_target = QtWidgets.QToolButton(parent=self.page_mediaImport)
+        self.btn_import_browse_target.setStyleSheet("QToolButton {\n"
 "    color: white;\n"
 "    border: none;\n"
 "    padding: 6px 6px;\n"
 "    border-radius: 6px;\n"
-"    background-color: qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(134, 119, 253, 255),\n"
-"        stop:1 rgba(119, 111, 252, 255)\n"
-"    );\n"
+"    background-color: rgb(134, 119, 253);\n"
 "    font-size: 12px;\n"
 "}\n"
 "\n"
 "QToolButton:hover {\n"
-"    background-color: qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(154, 139, 255, 255),\n"
-"        stop:1 rgba(139, 131, 254, 255)\n"
-"    );\n"
+"    background-color: rgb(154, 139, 255);\n"
 "}\n"
 "\n"
 "QToolButton:pressed {\n"
-"    background-color: qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(94, 79, 253, 255),\n"
-"        stop:1 rgba(79, 71, 252, 255)\n"
-"    );\n"
+"    background-color: rgb(94, 79, 253);\n"
 "}")
-        self.toolButton_browseTarget.setObjectName("toolButton_browseTarget")
-        self.layout_target_folder.addWidget(self.toolButton_browseTarget)
+        self.btn_import_browse_target.setObjectName("btn_import_browse_target")
+        self.layout_target_folder.addWidget(self.btn_import_browse_target)
         self.layout_media_import_content.addLayout(self.layout_target_folder)
         self.label_statusInfo = QtWidgets.QLabel(parent=self.page_mediaImport)
         font = QtGui.QFont()
@@ -675,8 +636,8 @@ class Ui_MainWindow(object):
         self.layout_rename_expression.setSpacing(0)
         self.layout_rename_expression.setObjectName("layout_rename_expression")
         self.horizontalLayout_47 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_47.setContentsMargins(9, 6, 9, 6)
-        self.horizontalLayout_47.setSpacing(4)
+        self.horizontalLayout_47.setContentsMargins(9, 9, 9, 9)
+        self.horizontalLayout_47.setSpacing(9)
         self.horizontalLayout_47.setObjectName("horizontalLayout_47")
         self.label_rename_expression = QtWidgets.QLabel(parent=self.frame_rename_expression)
         self.label_rename_expression.setMinimumSize(QtCore.QSize(0, 40))
@@ -696,8 +657,8 @@ class Ui_MainWindow(object):
 "border-radius: 0px;")
         self.frame_expression_tags.setObjectName("frame_expression_tags")
         self.layout_expression_tags = QtWidgets.QHBoxLayout(self.frame_expression_tags)
-        self.layout_expression_tags.setContentsMargins(9, 0, 0, 0)
-        self.layout_expression_tags.setSpacing(0)
+        self.layout_expression_tags.setContentsMargins(9, 9, 9, 9)
+        self.layout_expression_tags.setSpacing(9)
         self.layout_expression_tags.setObjectName("layout_expression_tags")
         self.label_expression_build_name = QtWidgets.QLabel(parent=self.frame_expression_tags)
         font = QtGui.QFont()
@@ -729,22 +690,7 @@ class Ui_MainWindow(object):
         self.layout_expression_input.setSpacing(9)
         self.layout_expression_input.setObjectName("layout_expression_input")
         self.layout_expression_tags.addWidget(self.frame_expression_input_container)
-        self.frame_rename_tags_container = QtWidgets.QFrame(parent=self.frame_expression_tags)
-        self.frame_rename_tags_container.setMinimumSize(QtCore.QSize(0, 40))
-        self.frame_rename_tags_container.setMaximumSize(QtCore.QSize(16777215, 16777215))
-        self.frame_rename_tags_container.setSizeIncrement(QtCore.QSize(0, 32))
-        self.frame_rename_tags_container.setStyleSheet("QFrame{\n"
-"background:rgba(0, 0, 0, 0);\n"
-"border: 0px;\n"
-"}")
-        self.frame_rename_tags_container.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frame_rename_tags_container.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frame_rename_tags_container.setObjectName("frame_rename_tags_container")
-        self.layout_rename_tags = QtWidgets.QHBoxLayout(self.frame_rename_tags_container)
-        self.layout_rename_tags.setContentsMargins(6, 6, 0, 6)
-        self.layout_rename_tags.setSpacing(6)
-        self.layout_rename_tags.setObjectName("layout_rename_tags")
-        self.layout_expression_tags.addWidget(self.frame_rename_tags_container)
+        self.layout_expression_tags.setStretch(1, 1)
         self.layout_rename_expression.addWidget(self.frame_expression_tags)
         self.line_expression_separator_horizontal = QtWidgets.QFrame(parent=self.frame_rename_expression)
         self.line_expression_separator_horizontal.setMinimumSize(QtCore.QSize(0, 1))
@@ -761,8 +707,8 @@ class Ui_MainWindow(object):
 "border-radius: 0px;")
         self.frame_right_sidebar.setObjectName("frame_right_sidebar")
         self.horizontalLayout_40 = QtWidgets.QHBoxLayout(self.frame_right_sidebar)
-        self.horizontalLayout_40.setContentsMargins(9, 6, 9, 6)
-        self.horizontalLayout_40.setSpacing(6)
+        self.horizontalLayout_40.setContentsMargins(9, 9, 9, 9)
+        self.horizontalLayout_40.setSpacing(9)
         self.horizontalLayout_40.setObjectName("horizontalLayout_40")
         self.progress_bar_expression = QtWidgets.QProgressBar(parent=self.frame_right_sidebar)
         self.progress_bar_expression.setMinimumSize(QtCore.QSize(0, 0))
@@ -954,7 +900,7 @@ class Ui_MainWindow(object):
         self.frame_classification_panel.setObjectName("frame_classification_panel")
         self.layout_smart_arrange_controls = QtWidgets.QHBoxLayout(self.frame_classification_panel)
         self.layout_smart_arrange_controls.setContentsMargins(9, 9, 9, 9)
-        self.layout_smart_arrange_controls.setSpacing(6)
+        self.layout_smart_arrange_controls.setSpacing(9)
         self.layout_smart_arrange_controls.setObjectName("layout_smart_arrange_controls")
         self.label_folder_organize = QtWidgets.QLabel(parent=self.frame_classification_panel)
         font = QtGui.QFont()
@@ -1626,8 +1572,8 @@ class Ui_MainWindow(object):
         self.layout_rename_panel.setSpacing(0)
         self.layout_rename_panel.setObjectName("layout_rename_panel")
         self.layout_rename_controls = QtWidgets.QHBoxLayout()
-        self.layout_rename_controls.setContentsMargins(9, 6, 9, 6)
-        self.layout_rename_controls.setSpacing(4)
+        self.layout_rename_controls.setContentsMargins(9, 9, 9, 9)
+        self.layout_rename_controls.setSpacing(9)
         self.layout_rename_controls.setObjectName("layout_rename_controls")
         self.label_build_name = QtWidgets.QLabel(parent=self.frame_rename)
         font = QtGui.QFont()
@@ -1726,8 +1672,8 @@ class Ui_MainWindow(object):
 "border-radius: 0px;")
         self.frame_rename_tags_panel.setObjectName("frame_rename_tags_panel")
         self.layout_rename_tags_container = QtWidgets.QHBoxLayout(self.frame_rename_tags_panel)
-        self.layout_rename_tags_container.setContentsMargins(9, 0, 0, 0)
-        self.layout_rename_tags_container.setSpacing(0)
+        self.layout_rename_tags_container.setContentsMargins(9, 9, 9, 9)
+        self.layout_rename_tags_container.setSpacing(9)
         self.layout_rename_tags_container.setObjectName("layout_rename_tags_container")
         self.label_rename_tags = QtWidgets.QLabel(parent=self.frame_rename_tags_panel)
         self.label_rename_tags.setMinimumSize(QtCore.QSize(0, 40))
@@ -1740,22 +1686,22 @@ class Ui_MainWindow(object):
 "}")
         self.label_rename_tags.setObjectName("label_rename_tags")
         self.layout_rename_tags_container.addWidget(self.label_rename_tags)
-        self.frame_rename_tags_container1 = QtWidgets.QFrame(parent=self.frame_rename_tags_panel)
-        self.frame_rename_tags_container1.setMinimumSize(QtCore.QSize(0, 40))
-        self.frame_rename_tags_container1.setMaximumSize(QtCore.QSize(16777215, 16777215))
-        self.frame_rename_tags_container1.setSizeIncrement(QtCore.QSize(0, 32))
-        self.frame_rename_tags_container1.setStyleSheet("QFrame{\n"
+        self.frame_rename_tags_container = QtWidgets.QFrame(parent=self.frame_rename_tags_panel)
+        self.frame_rename_tags_container.setMinimumSize(QtCore.QSize(0, 40))
+        self.frame_rename_tags_container.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        self.frame_rename_tags_container.setSizeIncrement(QtCore.QSize(0, 32))
+        self.frame_rename_tags_container.setStyleSheet("QFrame{\n"
 "background:rgba(0, 0, 0, 0);\n"
 "border: 0px;\n"
 "}")
-        self.frame_rename_tags_container1.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frame_rename_tags_container1.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frame_rename_tags_container1.setObjectName("frame_rename_tags_container1")
-        self.layout_rename_tags1 = QtWidgets.QHBoxLayout(self.frame_rename_tags_container1)
-        self.layout_rename_tags1.setContentsMargins(6, 6, 0, 6)
-        self.layout_rename_tags1.setSpacing(6)
-        self.layout_rename_tags1.setObjectName("layout_rename_tags1")
-        self.btn_tag_original = QtWidgets.QPushButton(parent=self.frame_rename_tags_container1)
+        self.frame_rename_tags_container.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.frame_rename_tags_container.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.frame_rename_tags_container.setObjectName("frame_rename_tags_container")
+        self.layout_rename_tags = QtWidgets.QHBoxLayout(self.frame_rename_tags_container)
+        self.layout_rename_tags.setContentsMargins(6, 6, 0, 6)
+        self.layout_rename_tags.setSpacing(6)
+        self.layout_rename_tags.setObjectName("layout_rename_tags")
+        self.btn_tag_original = QtWidgets.QPushButton(parent=self.frame_rename_tags_container)
         self.btn_tag_original.setMaximumSize(QtCore.QSize(80, 28))
         self.btn_tag_original.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
@@ -1777,8 +1723,8 @@ class Ui_MainWindow(object):
 "  color: #34495e;\n"
 "}")
         self.btn_tag_original.setObjectName("btn_tag_original")
-        self.layout_rename_tags1.addWidget(self.btn_tag_original)
-        self.btn_tag_year = QtWidgets.QPushButton(parent=self.frame_rename_tags_container1)
+        self.layout_rename_tags.addWidget(self.btn_tag_original)
+        self.btn_tag_year = QtWidgets.QPushButton(parent=self.frame_rename_tags_container)
         self.btn_tag_year.setMaximumSize(QtCore.QSize(46, 28))
         self.btn_tag_year.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
@@ -1807,8 +1753,8 @@ class Ui_MainWindow(object):
 "  transform: translateY(2px);\n"
 "}")
         self.btn_tag_year.setObjectName("btn_tag_year")
-        self.layout_rename_tags1.addWidget(self.btn_tag_year)
-        self.btn_tag_month = QtWidgets.QPushButton(parent=self.frame_rename_tags_container1)
+        self.layout_rename_tags.addWidget(self.btn_tag_year)
+        self.btn_tag_month = QtWidgets.QPushButton(parent=self.frame_rename_tags_container)
         self.btn_tag_month.setMaximumSize(QtCore.QSize(46, 28))
         self.btn_tag_month.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
@@ -1837,8 +1783,8 @@ class Ui_MainWindow(object):
 "  transform: translateY(2px);\n"
 "}")
         self.btn_tag_month.setObjectName("btn_tag_month")
-        self.layout_rename_tags1.addWidget(self.btn_tag_month)
-        self.btn_tag_date = QtWidgets.QPushButton(parent=self.frame_rename_tags_container1)
+        self.layout_rename_tags.addWidget(self.btn_tag_month)
+        self.btn_tag_date = QtWidgets.QPushButton(parent=self.frame_rename_tags_container)
         self.btn_tag_date.setMaximumSize(QtCore.QSize(32, 28))
         self.btn_tag_date.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
@@ -1867,8 +1813,8 @@ class Ui_MainWindow(object):
 "  transform: translateY(2px);\n"
 "}")
         self.btn_tag_date.setObjectName("btn_tag_date")
-        self.layout_rename_tags1.addWidget(self.btn_tag_date)
-        self.btn_tag_day = QtWidgets.QPushButton(parent=self.frame_rename_tags_container1)
+        self.layout_rename_tags.addWidget(self.btn_tag_date)
+        self.btn_tag_day = QtWidgets.QPushButton(parent=self.frame_rename_tags_container)
         self.btn_tag_day.setMaximumSize(QtCore.QSize(46, 28))
         self.btn_tag_day.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
@@ -1897,8 +1843,8 @@ class Ui_MainWindow(object):
 "  transform: translateY(2px);\n"
 "}")
         self.btn_tag_day.setObjectName("btn_tag_day")
-        self.layout_rename_tags1.addWidget(self.btn_tag_day)
-        self.btn_tag_time = QtWidgets.QPushButton(parent=self.frame_rename_tags_container1)
+        self.layout_rename_tags.addWidget(self.btn_tag_day)
+        self.btn_tag_time = QtWidgets.QPushButton(parent=self.frame_rename_tags_container)
         self.btn_tag_time.setMaximumSize(QtCore.QSize(46, 28))
         self.btn_tag_time.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
@@ -1928,8 +1874,8 @@ class Ui_MainWindow(object):
 "}")
         self.btn_tag_time.setIconSize(QtCore.QSize(16, 16))
         self.btn_tag_time.setObjectName("btn_tag_time")
-        self.layout_rename_tags1.addWidget(self.btn_tag_time)
-        self.btn_tag_brand = QtWidgets.QPushButton(parent=self.frame_rename_tags_container1)
+        self.layout_rename_tags.addWidget(self.btn_tag_time)
+        self.btn_tag_brand = QtWidgets.QPushButton(parent=self.frame_rename_tags_container)
         self.btn_tag_brand.setMaximumSize(QtCore.QSize(74, 28))
         self.btn_tag_brand.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
@@ -1958,8 +1904,8 @@ class Ui_MainWindow(object):
 "  transform: translateY(2px);\n"
 "}")
         self.btn_tag_brand.setObjectName("btn_tag_brand")
-        self.layout_rename_tags1.addWidget(self.btn_tag_brand)
-        self.btn_tag_model = QtWidgets.QPushButton(parent=self.frame_rename_tags_container1)
+        self.layout_rename_tags.addWidget(self.btn_tag_brand)
+        self.btn_tag_model = QtWidgets.QPushButton(parent=self.frame_rename_tags_container)
         self.btn_tag_model.setMaximumSize(QtCore.QSize(74, 28))
         self.btn_tag_model.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
@@ -1988,8 +1934,8 @@ class Ui_MainWindow(object):
 "  transform: translateY(2px);\n"
 "}")
         self.btn_tag_model.setObjectName("btn_tag_model")
-        self.layout_rename_tags1.addWidget(self.btn_tag_model)
-        self.btn_tag_location = QtWidgets.QPushButton(parent=self.frame_rename_tags_container1)
+        self.layout_rename_tags.addWidget(self.btn_tag_model)
+        self.btn_tag_location = QtWidgets.QPushButton(parent=self.frame_rename_tags_container)
         self.btn_tag_location.setMaximumSize(QtCore.QSize(66, 28))
         self.btn_tag_location.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
@@ -2021,8 +1967,8 @@ class Ui_MainWindow(object):
         icon10.addPixmap(QtGui.QPixmap("resources/img/page_2/位置.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.btn_tag_location.setIcon(icon10)
         self.btn_tag_location.setObjectName("btn_tag_location")
-        self.layout_rename_tags1.addWidget(self.btn_tag_location)
-        self.btn_tag_customize = QtWidgets.QPushButton(parent=self.frame_rename_tags_container1)
+        self.layout_rename_tags.addWidget(self.btn_tag_location)
+        self.btn_tag_customize = QtWidgets.QPushButton(parent=self.frame_rename_tags_container)
         self.btn_tag_customize.setMaximumSize(QtCore.QSize(80, 28))
         self.btn_tag_customize.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
@@ -2051,8 +1997,8 @@ class Ui_MainWindow(object):
 "  transform: translateY(2px);\n"
 "}")
         self.btn_tag_customize.setObjectName("btn_tag_customize")
-        self.layout_rename_tags1.addWidget(self.btn_tag_customize)
-        self.layout_rename_tags_container.addWidget(self.frame_rename_tags_container1)
+        self.layout_rename_tags.addWidget(self.btn_tag_customize)
+        self.layout_rename_tags_container.addWidget(self.frame_rename_tags_container)
         self.layout_separator_controls = QtWidgets.QHBoxLayout()
         self.layout_separator_controls.setContentsMargins(-1, -1, 9, -1)
         self.layout_separator_controls.setSpacing(4)
@@ -2123,8 +2069,8 @@ class Ui_MainWindow(object):
         self.layout_rename_tags_container.addLayout(self.layout_separator_controls)
         self.layout_rename_panel.addWidget(self.frame_rename_tags_panel)
         self.layout_file_controls = QtWidgets.QHBoxLayout()
-        self.layout_file_controls.setContentsMargins(9, 6, 9, 6)
-        self.layout_file_controls.setSpacing(12)
+        self.layout_file_controls.setContentsMargins(9, 9, 9, 9)
+        self.layout_file_controls.setSpacing(9)
         self.layout_file_controls.setObjectName("layout_file_controls")
         self.layout_time_controls = QtWidgets.QHBoxLayout()
         self.layout_time_controls.setSpacing(8)
@@ -2254,8 +2200,8 @@ class Ui_MainWindow(object):
         self.line_arrange.setObjectName("line_arrange")
         self.layout_rename_panel.addWidget(self.line_arrange)
         self.layout_preview_controls = QtWidgets.QHBoxLayout()
-        self.layout_preview_controls.setContentsMargins(9, 6, 9, 6)
-        self.layout_preview_controls.setSpacing(6)
+        self.layout_preview_controls.setContentsMargins(9, 9, 9, 9)
+        self.layout_preview_controls.setSpacing(9)
         self.layout_preview_controls.setObjectName("layout_preview_controls")
         self.frame_rename_batch = QtWidgets.QFrame(parent=self.frame_rename)
         self.frame_rename_batch.setStyleSheet("QFrame{\n"
@@ -2332,8 +2278,8 @@ class Ui_MainWindow(object):
 "border-radius: 0px;")
         self.frame_rename_preview.setObjectName("frame_rename_preview")
         self.layout_rename_progress = QtWidgets.QHBoxLayout(self.frame_rename_preview)
-        self.layout_rename_progress.setContentsMargins(9, 6, 9, 6)
-        self.layout_rename_progress.setSpacing(6)
+        self.layout_rename_progress.setContentsMargins(9, 9, 9, 9)
+        self.layout_rename_progress.setSpacing(9)
         self.layout_rename_progress.setObjectName("layout_rename_progress")
         self.progressBar_smartArrange = QtWidgets.QProgressBar(parent=self.frame_rename_preview)
         self.progressBar_smartArrange.setMinimumSize(QtCore.QSize(0, 0))
@@ -2527,8 +2473,8 @@ class Ui_MainWindow(object):
 "border-bottom-left-radius:0px;")
         self.horizontalFrame_12.setObjectName("horizontalFrame_12")
         self.layout_duplicate_top_controls = QtWidgets.QHBoxLayout(self.horizontalFrame_12)
-        self.layout_duplicate_top_controls.setContentsMargins(9, 6, 9, 6)
-        self.layout_duplicate_top_controls.setSpacing(12)
+        self.layout_duplicate_top_controls.setContentsMargins(9, 9, 9, 9)
+        self.layout_duplicate_top_controls.setSpacing(9)
         self.layout_duplicate_top_controls.setObjectName("layout_duplicate_top_controls")
         self.layout_duplicate_controls_left = QtWidgets.QHBoxLayout()
         self.layout_duplicate_controls_left.setObjectName("layout_duplicate_controls_left")
@@ -2552,7 +2498,7 @@ class Ui_MainWindow(object):
 "border-bottom-left-radius:0px;")
         self.verticalFrame_16.setObjectName("verticalFrame_16")
         self.horizontalLayout_76 = QtWidgets.QHBoxLayout(self.verticalFrame_16)
-        self.horizontalLayout_76.setContentsMargins(9, 6, 9, 6)
+        self.horizontalLayout_76.setContentsMargins(9, 9, 9, 9)
         self.horizontalLayout_76.setSpacing(9)
         self.horizontalLayout_76.setObjectName("horizontalLayout_76")
         self.progressBar_duplicateRemoval = QtWidgets.QProgressBar(parent=self.verticalFrame_16)
@@ -2628,8 +2574,8 @@ class Ui_MainWindow(object):
 "border-bottom-left-radius:0px;")
         self.frame_logOutput.setObjectName("frame_logOutput")
         self.layout_duplicate_log = QtWidgets.QHBoxLayout(self.frame_logOutput)
-        self.layout_duplicate_log.setContentsMargins(9, 6, 9, 9)
-        self.layout_duplicate_log.setSpacing(0)
+        self.layout_duplicate_log.setContentsMargins(9, 9, 9, 9)
+        self.layout_duplicate_log.setSpacing(9)
         self.layout_duplicate_log.setObjectName("layout_duplicate_log")
         self.text_edit_duplicate_log = QtWidgets.QTextEdit(parent=self.frame_logOutput)
         self.text_edit_duplicate_log.setMinimumSize(QtCore.QSize(0, 0))
@@ -2741,8 +2687,8 @@ class Ui_MainWindow(object):
 "border-bottom-left-radius:0px;")
         self.horizontalFrame_9.setObjectName("horizontalFrame_9")
         self.layout_metadata_controls = QtWidgets.QHBoxLayout(self.horizontalFrame_9)
-        self.layout_metadata_controls.setContentsMargins(9, 6, 9, 6)
-        self.layout_metadata_controls.setSpacing(12)
+        self.layout_metadata_controls.setContentsMargins(9, 9, 9, 9)
+        self.layout_metadata_controls.setSpacing(9)
         self.layout_metadata_controls.setObjectName("layout_metadata_controls")
         self.layout_metadata_title = QtWidgets.QHBoxLayout()
         self.layout_metadata_title.setSpacing(6)
@@ -2764,11 +2710,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.line_edit_metadata_title.sizePolicy().hasHeightForWidth())
         self.line_edit_metadata_title.setSizePolicy(sizePolicy)
         self.line_edit_metadata_title.setStyleSheet("QLineEdit {\n"
-"    border: 1px solid qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(134, 119, 253, 255),\n"
-"        stop:1 rgba(119, 111, 252, 255)\n"
-"    );\n"
+"    border: 1px solid rgb(134, 119, 253);\n"
 "    background: rgb(245, 249, 254);\n"
 "    padding: 8px 6px;\n"
 "    border-radius: 6px;\n"
@@ -2779,11 +2721,7 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "QLineEdit:focus {\n"
-"    border: 2px solid qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(134, 119, 253, 255),\n"
-"        stop:1 rgba(119, 111, 252, 255)\n"
-"    );\n"
+"    border: 2px solid rgb(134, 119, 253);\n"
 "    outline: none;\n"
 "}\n"
 "\n"
@@ -3242,8 +3180,8 @@ class Ui_MainWindow(object):
 "border-bottom-left-radius:0px;")
         self.horizontalFrame_8.setObjectName("horizontalFrame_8")
         self.layout_metadata_author_controls = QtWidgets.QHBoxLayout(self.horizontalFrame_8)
-        self.layout_metadata_author_controls.setContentsMargins(9, 6, 9, 6)
-        self.layout_metadata_author_controls.setSpacing(12)
+        self.layout_metadata_author_controls.setContentsMargins(9, 9, 9, 9)
+        self.layout_metadata_author_controls.setSpacing(9)
         self.layout_metadata_author_controls.setObjectName("layout_metadata_author_controls")
         self.layout_metadata_author = QtWidgets.QHBoxLayout()
         self.layout_metadata_author.setObjectName("layout_metadata_author")
@@ -3302,8 +3240,8 @@ class Ui_MainWindow(object):
 "}")
         self.label_metadata_theme.setObjectName("label_metadata_theme")
         self.layout_metadata_theme.addWidget(self.label_metadata_theme)
-        self.lineEdit_EXIF_Theme = QtWidgets.QLineEdit(parent=self.horizontalFrame_8)
-        self.lineEdit_EXIF_Theme.setStyleSheet("QLineEdit {\n"
+        self.line_edit_metadata_theme = QtWidgets.QLineEdit(parent=self.horizontalFrame_8)
+        self.line_edit_metadata_theme.setStyleSheet("QLineEdit {\n"
 "    border: 1px solid qradialgradient(\n"
 "        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
 "        stop:0.66 rgba(134, 119, 253, 255),\n"
@@ -3331,25 +3269,25 @@ class Ui_MainWindow(object):
 "    background: #eaeaea;\n"
 "    color: #aaa;\n"
 "}")
-        self.lineEdit_EXIF_Theme.setObjectName("lineEdit_EXIF_Theme")
-        self.layout_metadata_theme.addWidget(self.lineEdit_EXIF_Theme)
+        self.line_edit_metadata_theme.setObjectName("line_edit_metadata_theme")
+        self.layout_metadata_theme.addWidget(self.line_edit_metadata_theme)
         self.layout_metadata_theme.setStretch(1, 1)
         self.layout_metadata_author_controls.addLayout(self.layout_metadata_theme)
         self.horizontalLayout_11 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_11.setObjectName("horizontalLayout_11")
-        self.label_40 = QtWidgets.QLabel(parent=self.horizontalFrame_8)
+        self.label_metadata_copyright = QtWidgets.QLabel(parent=self.horizontalFrame_8)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_40.setFont(font)
-        self.label_40.setStyleSheet("QLabel {\n"
+        self.label_metadata_copyright.setFont(font)
+        self.label_metadata_copyright.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_40.setObjectName("label_40")
-        self.horizontalLayout_11.addWidget(self.label_40)
-        self.lineEdit_EXIF_Copyright = QtWidgets.QLineEdit(parent=self.horizontalFrame_8)
-        self.lineEdit_EXIF_Copyright.setMinimumSize(QtCore.QSize(0, 0))
-        self.lineEdit_EXIF_Copyright.setStyleSheet("QLineEdit {\n"
+        self.label_metadata_copyright.setObjectName("label_metadata_copyright")
+        self.horizontalLayout_11.addWidget(self.label_metadata_copyright)
+        self.line_edit_metadata_copyright = QtWidgets.QLineEdit(parent=self.horizontalFrame_8)
+        self.line_edit_metadata_copyright.setMinimumSize(QtCore.QSize(0, 0))
+        self.line_edit_metadata_copyright.setStyleSheet("QLineEdit {\n"
 "    border: 1px solid qradialgradient(\n"
 "        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
 "        stop:0.66 rgba(134, 119, 253, 255),\n"
@@ -3377,8 +3315,8 @@ class Ui_MainWindow(object):
 "    background: #eaeaea;\n"
 "    color: #aaa;\n"
 "}")
-        self.lineEdit_EXIF_Copyright.setObjectName("lineEdit_EXIF_Copyright")
-        self.horizontalLayout_11.addWidget(self.lineEdit_EXIF_Copyright)
+        self.line_edit_metadata_copyright.setObjectName("line_edit_metadata_copyright")
+        self.horizontalLayout_11.addWidget(self.line_edit_metadata_copyright)
         self.horizontalLayout_11.setStretch(1, 1)
         self.layout_metadata_author_controls.addLayout(self.horizontalLayout_11)
         self.verticalLayout_47.addWidget(self.horizontalFrame_8)
@@ -3390,8 +3328,8 @@ class Ui_MainWindow(object):
 "border-bottom-left-radius:0px;")
         self.frame_exif_controls.setObjectName("frame_exif_controls")
         self.layout_exif_controls = QtWidgets.QHBoxLayout(self.frame_exif_controls)
-        self.layout_exif_controls.setContentsMargins(9, 6, 9, 6)
-        self.layout_exif_controls.setSpacing(12)
+        self.layout_exif_controls.setContentsMargins(9, 9, 9, 9)
+        self.layout_exif_controls.setSpacing(9)
         self.layout_exif_controls.setObjectName("layout_exif_controls")
         self.layout_shoot_time_controls = QtWidgets.QHBoxLayout()
         self.layout_shoot_time_controls.setContentsMargins(6, 6, 6, 6)
@@ -3574,16 +3512,16 @@ class Ui_MainWindow(object):
         self.layout_location_controls.setContentsMargins(6, 6, 6, 6)
         self.layout_location_controls.setSpacing(6)
         self.layout_location_controls.setObjectName("layout_location_controls")
-        self.label_41 = QtWidgets.QLabel(parent=self.frame_exif_controls)
+        self.label_metadata_location = QtWidgets.QLabel(parent=self.frame_exif_controls)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_41.setFont(font)
-        self.label_41.setStyleSheet("QLabel {\n"
+        self.label_metadata_location.setFont(font)
+        self.label_metadata_location.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_41.setObjectName("label_41")
-        self.layout_location_controls.addWidget(self.label_41)
+        self.label_metadata_location.setObjectName("label_metadata_location")
+        self.layout_location_controls.addWidget(self.label_metadata_location)
         self.lineEdit_EXIF_latitude = QtWidgets.QLineEdit(parent=self.frame_exif_controls)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -3666,7 +3604,7 @@ class Ui_MainWindow(object):
 "border-bottom-left-radius:0px;")
         self.frame_exif_actions.setObjectName("frame_exif_actions")
         self.layout_exif_actions = QtWidgets.QHBoxLayout(self.frame_exif_actions)
-        self.layout_exif_actions.setContentsMargins(9, 6, 9, 6)
+        self.layout_exif_actions.setContentsMargins(9, 9, 9, 9)
         self.layout_exif_actions.setSpacing(9)
         self.layout_exif_actions.setObjectName("layout_exif_actions")
         self.progressBar_metadataWrite = QtWidgets.QProgressBar(parent=self.frame_exif_actions)
@@ -3706,28 +3644,16 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    padding: 6px 6px;\n"
 "    border-radius: 6px;\n"
-"    background-color: qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(134, 119, 253, 255),\n"
-"        stop:1 rgba(119, 111, 252, 255)\n"
-"    );\n"
+"    background-color: rgb(134, 119, 253);\n"
 "    font-size: 12px;\n"
 "}\n"
 "\n"
 "QToolButton:hover {\n"
-"    background-color: qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(154, 139, 255, 255),\n"
-"        stop:1 rgba(139, 131, 254, 255)\n"
-"    );\n"
+"    background-color: rgb(154, 139, 255);\n"
 "}\n"
 "\n"
 "QToolButton:pressed {\n"
-"    background-color: qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(94, 79, 253, 255),\n"
-"        stop:1 rgba(79, 71, 252, 255)\n"
-"    );\n"
+"    background-color: rgb(94, 79, 253);\n"
 "}")
         self.toolButton_startMetadataWrite.setIconSize(QtCore.QSize(24, 24))
         self.toolButton_startMetadataWrite.setObjectName("toolButton_startMetadataWrite")
@@ -3741,8 +3667,8 @@ class Ui_MainWindow(object):
 "border-bottom-left-radius:0px;")
         self.horizontalFrame_log.setObjectName("horizontalFrame_log")
         self.horizontalLayout_71 = QtWidgets.QHBoxLayout(self.horizontalFrame_log)
-        self.horizontalLayout_71.setContentsMargins(9, 6, 9, 9)
-        self.horizontalLayout_71.setSpacing(0)
+        self.horizontalLayout_71.setContentsMargins(9, 9, 9, 9)
+        self.horizontalLayout_71.setSpacing(9)
         self.horizontalLayout_71.setObjectName("horizontalLayout_71")
         self.textEdit_WriteEXIF_Log = QtWidgets.QTextEdit(parent=self.horizontalFrame_log)
         self.textEdit_WriteEXIF_Log.setMinimumSize(QtCore.QSize(0, 0))
@@ -3751,14 +3677,7 @@ class Ui_MainWindow(object):
         font.setPointSize(-1)
         self.textEdit_WriteEXIF_Log.setFont(font)
         self.textEdit_WriteEXIF_Log.setStyleSheet("QTextEdit {\n"
-"    border: 1.5px solid qradialgradient(\n"
-"        cx:0.5, cy:0.5,\n"
-"        radius: 1.2,\n"
-"        fx:0.45, fy:0.55,\n"
-"        stop:0 rgba(144, 129, 255, 255),\n"
-"        stop:0.7 rgba(129, 121, 255, 220),\n"
-"        stop:1 rgba(108, 97, 224, 200)\n"
-"    );\n"
+"    border: 1.5px solid rgb(134, 119, 253);\n"
 "    background: rgb(245, 249, 254);\n"
 "    padding: 8px;\n"
 "    border-radius: 6px;\n"
@@ -3767,9 +3686,6 @@ class Ui_MainWindow(object):
 "    color: #333;\n"
 "    selection-background-color: rgba(134, 119, 253, 0.5);\n"
 "    selection-color: #fff;\n"
-"    box-shadow:\n"
-"        inset 0 1px 3px rgba(0, 0, 0, 0.05),\n"
-"        0 2px 8px rgba(134, 119, 253, 0.1);\n"
 "}\n"
 "\n"
 "QTextEdit QScrollBar:vertical {\n"
@@ -3783,7 +3699,6 @@ class Ui_MainWindow(object):
 "    border-radius: 5px;\n"
 "    min-height: 30px;\n"
 "    margin: 2px;\n"
-"    transition: background 0.2s;\n"
 "}\n"
 "\n"
 "QTextEdit QScrollBar::handle:vertical:hover {\n"
@@ -3824,14 +3739,7 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "QTextEdit:focus {\n"
-"    border: 1.5px solid qradialgradient(\n"
-"        cx:0.5, cy:0.5,\n"
-"        radius: 1.3,\n"
-"        fx:0.4, fy:0.6,\n"
-"        stop:0 rgba(154, 139, 255, 255),\n"
-"        stop:1 rgba(139, 131, 255, 240)\n"
-"    );\n"
-"    box-shadow: 0 0 0 2px rgba(134, 119, 253, 0.15);\n"
+"    border: 1.5px solid rgb(154, 139, 255);\n"
 "}")
         self.textEdit_WriteEXIF_Log.setReadOnly(True)
         self.textEdit_WriteEXIF_Log.setObjectName("textEdit_WriteEXIF_Log")
@@ -3847,7 +3755,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.listWidget_mainMenu.setCurrentRow(0)
+        self.listWidget_mainMenu.setCurrentRow(-1)
         self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -3860,7 +3768,7 @@ class Ui_MainWindow(object):
         item = self.listWidget_mainMenu.item(0)
         item.setText(_translate("MainWindow", "媒体导入"))
         item = self.listWidget_mainMenu.item(1)
-        item.setText(_translate("MainWindow", "OCR文字识别"))
+        item.setText(_translate("MainWindow", "文字识别整理"))
         item = self.listWidget_mainMenu.item(2)
         item.setText(_translate("MainWindow", "智能分类整理"))
         item = self.listWidget_mainMenu.item(3)
@@ -3868,16 +3776,16 @@ class Ui_MainWindow(object):
         item = self.listWidget_mainMenu.item(4)
         item.setText(_translate("MainWindow", "元数据写入"))
         self.listWidget_mainMenu.setSortingEnabled(__sortingEnabled)
-        self.label_sourceFolder.setText(_translate("MainWindow", "源文件夹路径"))
-        self.lineEdit_sourcePath.setPlaceholderText(_translate("MainWindow", "单击右侧按钮选择要处理的文件夹"))
-        self.toolButton_browseSource.setText(_translate("MainWindow", "选择文件夹"))
+        self.label_import_source_folder.setText(_translate("MainWindow", "源文件夹路径"))
+        self.line_edit_import_source_path.setPlaceholderText(_translate("MainWindow", "单击右侧按钮选择要处理的文件夹"))
+        self.btn_import_browse_source.setText(_translate("MainWindow", "选择文件夹"))
         self.checkbox_include_subfolders.setText(_translate("MainWindow", "包含子文件夹"))
-        self.label_targetFolder.setText(_translate("MainWindow", "目标文件夹路径"))
-        self.lineEdit_targetPath.setPlaceholderText(_translate("MainWindow", "单击右侧按钮选择目标的文件夹"))
-        self.toolButton_browseTarget.setText(_translate("MainWindow", "选择文件夹"))
+        self.label_import_target_folder.setText(_translate("MainWindow", "目标文件夹路径"))
+        self.line_edit_import_target_path.setPlaceholderText(_translate("MainWindow", "单击右侧按钮选择目标的文件夹"))
+        self.btn_import_browse_target.setText(_translate("MainWindow", "选择文件夹"))
         self.label_statusInfo.setText(_translate("MainWindow", "准备就绪"))
         self.label_rename_expression.setText(_translate("MainWindow", "根据图像上的文字进行识别整理"))
-        self.label_expression_build_name.setText(_translate("MainWindow", "文字正则表达式："))
+        self.label_expression_build_name.setText(_translate("MainWindow", "文字正则表达式"))
         self.btn_expression_start.setText(_translate("MainWindow", "开始识别"))
         self.label_folder_organize.setText(_translate("MainWindow", "文件夹整理："))
         self.label_folder_path.setText(_translate("MainWindow", "目录"))
@@ -3968,15 +3876,15 @@ class Ui_MainWindow(object):
         self.label_metadata_author.setText(_translate("MainWindow", "作者"))
         self.line_edit_metadata_author.setPlaceholderText(_translate("MainWindow", "YangShengzhou"))
         self.label_metadata_theme.setText(_translate("MainWindow", "主题"))
-        self.lineEdit_EXIF_Theme.setPlaceholderText(_translate("MainWindow", "图像主题"))
-        self.label_40.setText(_translate("MainWindow", "版权"))
-        self.lineEdit_EXIF_Copyright.setPlaceholderText(_translate("MainWindow", "©2025 LeafView. "))
+        self.line_edit_metadata_theme.setPlaceholderText(_translate("MainWindow", "图像主题"))
+        self.label_metadata_copyright.setText(_translate("MainWindow", "版权"))
+        self.line_edit_metadata_copyright.setPlaceholderText(_translate("MainWindow", "©2025 LeafView. "))
         self.label_shoot_time.setText(_translate("MainWindow", "拍摄时间"))
         self.combo_metadata_shoot_time.setItemText(0, _translate("MainWindow", "不写入"))
         self.combo_metadata_shoot_time.setItemText(1, _translate("MainWindow", "从文件名"))
         self.combo_metadata_shoot_time.setItemText(2, _translate("MainWindow", "指定时间"))
         self.date_time_metadata_shoot_time.setDisplayFormat(_translate("MainWindow", "yyyy/MM/dd HH:mm:ss"))
-        self.label_41.setText(_translate("MainWindow", "拍摄地点 "))
+        self.label_metadata_location.setText(_translate("MainWindow", "拍摄地点 "))
         self.lineEdit_EXIF_latitude.setPlaceholderText(_translate("MainWindow", "纬度"))
         self.lineEdit_EXIF_longitude.setPlaceholderText(_translate("MainWindow", "经度"))
         self.toolButton_startMetadataWrite.setText(_translate("MainWindow", "开始写入"))

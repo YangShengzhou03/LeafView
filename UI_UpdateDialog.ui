@@ -49,7 +49,7 @@ border-radius:25px;
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="4">
+     <layout class="QHBoxLayout" name="layout_update_main" stretch="4">
       <property name="spacing">
        <number>12</number>
       </property>
@@ -107,7 +107,7 @@ color: rgb(255, 255, 255);
 
 </string>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="5">
+          <layout class="QHBoxLayout" name="layout_update_header" stretch="5">
            <property name="spacing">
             <number>18</number>
            </property>
@@ -124,7 +124,7 @@ color: rgb(255, 255, 255);
             <number>18</number>
            </property>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <layout class="QHBoxLayout" name="layout_update_content">
              <item>
               <layout class="QVBoxLayout" name="verticalLayout_5" stretch="1,3,1">
                <property name="spacing">
@@ -170,7 +170,7 @@ color: rgb(255, 255, 255);
                 </widget>
                </item>
                <item>
-                <layout class="QHBoxLayout" name="horizontalLayout">
+                <layout class="QHBoxLayout" name="layout_update_buttons">
                  <property name="spacing">
                   <number>12</number>
                  </property>
