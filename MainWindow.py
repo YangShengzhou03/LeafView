@@ -19,6 +19,16 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self._init_window()
         check_update()
         self._setup_drag_handlers()
+        
+        # Performance optimization: Initialize components lazily
+        self._lazy_init_components = {}
+        self._component_initializers = {
+            'folder_page': lambda: FolderPage(self),
+            'classification': lambda: SmartArrange(self, self.folder_page),
+            'contrast': lambda: Contrast(self, self.folder_page),
+            'write_exif': lambda: WriteExif(self, self.folder_page),
+            'text_recognition': lambda: TextRecognition(self, self.folder_page)
+        }
 
     def _init_window(self):
         self.setWindowTitle("枫叶相册")
@@ -41,11 +51,35 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Create component mappings for SmartArrange
         self._create_smart_arrange_component_mappings()
 
-        self.folder_page = FolderPage(self)
-        self.classification = SmartArrange(self, self.folder_page)
-        self.contrast = Contrast(self, self.folder_page)
-        self.write_exif = WriteExif(self, self.folder_page)
-        self.text_recognition = TextRecognition(self, self.folder_page)
+        # Performance optimization: Defer component initialization
+        # Components will be initialized on first use
+    
+    def _get_lazy_component(self, component_name):
+        """Get a component, initializing it lazily if needed"""
+        if component_name not in self._lazy_init_components:
+            if component_name in self._component_initializers:
+                self._lazy_init_components[component_name] = self._component_initializers[component_name]()
+        return self._lazy_init_components.get(component_name)
+    
+    @property
+    def folder_page(self):
+        return self._get_lazy_component('folder_page')
+    
+    @property
+    def classification(self):
+        return self._get_lazy_component('classification')
+    
+    @property
+    def contrast(self):
+        return self._get_lazy_component('contrast')
+    
+    @property
+    def write_exif(self):
+        return self._get_lazy_component('write_exif')
+    
+    @property
+    def text_recognition(self):
+        return self._get_lazy_component('text_recognition')
 
     def _connect_buttons(self):
         self.btn_close.clicked.connect(self.close)
@@ -92,7 +126,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         event.accept()
     
     def _create_folder_management_components(self):
-        """Create missing folder management UI components"""
+        """Create missing folder management UI components with lazy initialization"""
         # Create scroll area for folder management (should be in media import page)
         self.scrollArea_folds = QtWidgets.QScrollArea(self.page_mediaImport)
         self.scrollArea_folds.setWidgetResizable(True)
@@ -118,6 +152,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
         # Add the scroll area to the media import page layout
         self.layout_media_import_content.addWidget(self.scrollArea_folds)
+        
+        # Performance optimization: Hide initially to reduce initial rendering load
+        self.scrollArea_folds.hide()
         
     def _create_smart_arrange_component_mappings(self):
         """Create mappings for SmartArrange components with different naming conventions"""

@@ -593,6 +593,10 @@ class Ui_MainWindow(object):
         self.btn_import_browse_target.setObjectName("btn_import_browse_target")
         self.layout_target_folder.addWidget(self.btn_import_browse_target)
         self.layout_media_import_content.addLayout(self.layout_target_folder)
+        self.verticalLayout = QtWidgets.QVBoxLayout()
+        self.verticalLayout.setContentsMargins(9, 9, 9, 9)
+        self.verticalLayout.setSpacing(9)
+        self.verticalLayout.setObjectName("verticalLayout")
         self.label_statusInfo = QtWidgets.QLabel(parent=self.page_mediaImport)
         font = QtGui.QFont()
         font.setPointSize(14)
@@ -602,7 +606,8 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "}")
         self.label_statusInfo.setObjectName("label_statusInfo")
-        self.layout_media_import_content.addWidget(self.label_statusInfo)
+        self.verticalLayout.addWidget(self.label_statusInfo)
+        self.layout_media_import_content.addLayout(self.verticalLayout)
         spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
         self.layout_media_import_content.addItem(spacerItem2)
         self.layout_media_import_main.addLayout(self.layout_media_import_content)
@@ -3757,6 +3762,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.listWidget_mainMenu.setCurrentRow(-1)
         self.stackedWidget.setCurrentIndex(0)
+        self.listWidget_mainMenu.currentRowChanged['int'].connect(self.stackedWidget.setCurrentIndex) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
