@@ -328,7 +328,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
                  </size>
                 </property>
                 <property name="currentRow">
-                 <number>-1</number>
+                 <number>0</number>
                 </property>
                 <item>
                  <property name="text">
@@ -1058,6 +1058,13 @@ QToolButton:pressed {
                       </widget>
                      </item>
                     </layout>
+                   </item>
+                   <item>
+                    <widget class="Line" name="line">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                    </widget>
                    </item>
                    <item>
                     <layout class="QVBoxLayout" name="verticalLayout">

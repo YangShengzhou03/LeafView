@@ -31,7 +31,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
         self._connect_buttons()
         
-        self.scrollArea_navigation.setAlignment(
+        self.scrollArea_mainMenu.setAlignment(
             QtCore.Qt.AlignmentFlag.AlignLeading | 
             QtCore.Qt.AlignmentFlag.AlignLeft | 
             QtCore.Qt.AlignmentFlag.AlignTop
@@ -40,21 +40,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
     def _connect_buttons(self):
-        self.btn_close.clicked.connect(self.close)
-        self.btn_maximize.clicked.connect(self._toggle_maximize)
-        self.btn_minimize.clicked.connect(self.showMinimized)
+        self.btn_headerClose.clicked.connect(self.close)
+        self.btn_headerMaximize.clicked.connect(self._toggle_maximize)
+        self.btn_headerMinimize.clicked.connect(self.showMinimized)
         
-        self.btn_service.clicked.connect(self.feedback)
-        self.btn_settings.clicked.connect(author)
+        self.btn_headerGitHub.clicked.connect(self.feedback)
+        self.btn_headerSettings.clicked.connect(author)
 
     def _setup_drag_handlers(self):
-        self.frame_logo.mousePressEvent = self._on_mouse_press
-        self.frame_logo.mouseMoveEvent = self._on_mouse_move
-        self.frame_logo.mouseReleaseEvent = self._on_mouse_release
-        
-        self.frame_head.mousePressEvent = self._on_mouse_press
-        self.frame_head.mouseMoveEvent = self._on_mouse_move
-        self.frame_head.mouseReleaseEvent = self._on_mouse_release
+        self.frame_headerBar.mousePressEvent = self._on_mouse_press
+        self.frame_headerBar.mouseMoveEvent = self._on_mouse_move
+        self.frame_headerBar.mouseReleaseEvent = self._on_mouse_release
         
         self._is_dragging = False
         self._drag_start_pos = QtCore.QPoint()
@@ -110,7 +106,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def _create_quick_toolbar(self):
         """创建快速操作工具栏 - 新增功能"""
         # 在左侧导航区域添加快速工具栏
-        quick_toolbar = QtWidgets.QFrame(parent=self.frame_left)
+        quick_toolbar = QtWidgets.QFrame(parent=self.frame_navigationPanel)
         quick_toolbar.setObjectName("quick_toolbar")
         quick_toolbar.setStyleSheet("""
             QFrame#quick_toolbar {
@@ -170,7 +166,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         toolbar_layout.addWidget(self.btn_quick_exif)
         
         # 添加到左侧布局（在logo下方，导航菜单上方）
-        self.layout_left_panel.insertWidget(1, quick_toolbar)
+        self.layout_navigationPanel.insertWidget(1, quick_toolbar)
     
     def _setup_keyboard_shortcuts(self):
         """设置全局快捷键 - 新增功能"""
@@ -211,28 +207,28 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def _next_page(self):
         """切换到下一页"""
-        current_index = self.stackedWidget.currentIndex()
-        next_index = (current_index + 1) % self.stackedWidget.count()
+        current_index = self.stackedWidget_mainContent.currentIndex()
+        next_index = (current_index + 1) % self.stackedWidget_mainContent.count()
         self._show_page(next_index)
         
     def _prev_page(self):
         """切换到上一页"""
-        current_index = self.stackedWidget.currentIndex()
-        prev_index = (current_index - 1) % self.stackedWidget.count()
+        current_index = self.stackedWidget_mainContent.currentIndex()
+        prev_index = (current_index - 1) % self.stackedWidget_mainContent.count()
         self._show_page(prev_index)
     
     def _show_page(self, page_index):
         """显示指定页面 - 新增功能"""
-        if hasattr(self, 'stackedWidget'):
-            self.stackedWidget.setCurrentIndex(page_index)
+        if hasattr(self, 'stackedWidget_mainContent'):
+            self.stackedWidget_mainContent.setCurrentIndex(page_index)
             # 更新导航菜单选中状态
-            self.listWidget_mainMenu.setCurrentRow(page_index)
+            self.listWidget_navigationMenu.setCurrentRow(page_index)
     
     def _refresh_current_page(self):
         """刷新当前页面 - 新增功能"""
         current_index = 0
-        if hasattr(self, 'stackedWidget'):
-            current_index = self.stackedWidget.currentIndex()
+        if hasattr(self, 'stackedWidget_mainContent'):
+            current_index = self.stackedWidget_mainContent.currentIndex()
         
         # 根据不同页面执行相应刷新操作
         if current_index == 0 and hasattr(self, 'folder_page'):

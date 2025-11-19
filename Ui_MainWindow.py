@@ -578,6 +578,11 @@ class Ui_MainWindow(object):
         self.btn_importBrowseTarget.setObjectName("btn_importBrowseTarget")
         self.layout_importTargetControls.addWidget(self.btn_importBrowseTarget)
         self.layout_mediaImportContent.addLayout(self.layout_importTargetControls)
+        self.line = QtWidgets.QFrame(parent=self.page_mediaImport)
+        self.line.setFrameShape(QtWidgets.QFrame.Shape.HLine)
+        self.line.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
+        self.line.setObjectName("line")
+        self.layout_mediaImportContent.addWidget(self.line)
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setContentsMargins(9, 9, 9, 9)
         self.verticalLayout.setSpacing(9)
@@ -3752,7 +3757,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralWidget_main)
 
         self.retranslateUi(MainWindow)
-        self.listWidget_navigationMenu.setCurrentRow(-1)
+        self.listWidget_navigationMenu.setCurrentRow(0)
         self.stackedWidget_mainContent.setCurrentIndex(0)
         self.listWidget_navigationMenu.currentRowChanged['int'].connect(self.stackedWidget_mainContent.setCurrentIndex) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
