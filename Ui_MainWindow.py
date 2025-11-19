@@ -8,65 +8,63 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from common import get_resource_path
-
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(949, 572)
-        self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
-        self.centralwidget.setObjectName("centralwidget")
-        self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
-        self.gridLayout.setContentsMargins(0, 0, 0, 0)
-        self.gridLayout.setSpacing(0)
-        self.gridLayout.setObjectName("gridLayout")
-        self.frame_main = QtWidgets.QFrame(parent=self.centralwidget)
-        self.frame_main.setStyleSheet("QFrame{\n"
+        MainWindow.resize(936, 530)
+        self.centralWidget_main = QtWidgets.QWidget(parent=MainWindow)
+        self.centralWidget_main.setObjectName("centralWidget_main")
+        self.layout_mainWindow = QtWidgets.QVBoxLayout(self.centralWidget_main)
+        self.layout_mainWindow.setContentsMargins(0, 0, 0, 0)
+        self.layout_mainWindow.setSpacing(0)
+        self.layout_mainWindow.setObjectName("layout_mainWindow")
+        self.frame_mainContainer = QtWidgets.QFrame(parent=self.centralWidget_main)
+        self.frame_mainContainer.setStyleSheet("QFrame{\n"
 "background-color: rgb(255, 255, 255);\n"
 "border:none;\n"
 "border-radius:12px;\n"
 "}")
-        self.frame_main.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frame_main.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frame_main.setObjectName("frame_main")
-        self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.frame_main)
-        self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_4.setSpacing(0)
-        self.horizontalLayout_4.setObjectName("horizontalLayout_4")
-        self.Frame_left = QtWidgets.QFrame(parent=self.frame_main)
-        self.Frame_left.setMinimumSize(QtCore.QSize(162, 0))
-        self.Frame_left.setMaximumSize(QtCore.QSize(162, 16777215))
-        self.Frame_left.setStyleSheet("background:rgba(0, 0, 0, 0);")
-        self.Frame_left.setObjectName("Frame_left")
-        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.Frame_left)
-        self.verticalLayout_3.setContentsMargins(6, 9, 0, 0)
-        self.verticalLayout_3.setSpacing(0)
-        self.verticalLayout_3.setObjectName("verticalLayout_3")
-        self.frame_logo = QtWidgets.QFrame(parent=self.Frame_left)
-        self.frame_logo.setStyleSheet("border: none;")
-        self.frame_logo.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frame_logo.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frame_logo.setObjectName("frame_logo")
-        self.horizontalLayout_8 = QtWidgets.QHBoxLayout(self.frame_logo)
-        self.horizontalLayout_8.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_8.setSpacing(0)
-        self.horizontalLayout_8.setObjectName("horizontalLayout_8")
-        self.pushButton_logo = QtWidgets.QPushButton(parent=self.frame_logo)
+        self.frame_mainContainer.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.frame_mainContainer.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.frame_mainContainer.setObjectName("frame_mainContainer")
+        self.layout_mainContainer = QtWidgets.QHBoxLayout(self.frame_mainContainer)
+        self.layout_mainContainer.setContentsMargins(0, 0, 0, 0)
+        self.layout_mainContainer.setSpacing(0)
+        self.layout_mainContainer.setObjectName("layout_mainContainer")
+        self.frame_navigationPanel = QtWidgets.QFrame(parent=self.frame_mainContainer)
+        self.frame_navigationPanel.setMinimumSize(QtCore.QSize(162, 0))
+        self.frame_navigationPanel.setMaximumSize(QtCore.QSize(162, 16777215))
+        self.frame_navigationPanel.setStyleSheet("background:rgba(0, 0, 0, 0);")
+        self.frame_navigationPanel.setObjectName("frame_navigationPanel")
+        self.layout_navigationPanel = QtWidgets.QVBoxLayout(self.frame_navigationPanel)
+        self.layout_navigationPanel.setContentsMargins(6, 9, 0, 0)
+        self.layout_navigationPanel.setSpacing(0)
+        self.layout_navigationPanel.setObjectName("layout_navigationPanel")
+        self.frame_appTitle = QtWidgets.QFrame(parent=self.frame_navigationPanel)
+        self.frame_appTitle.setStyleSheet("border: none;")
+        self.frame_appTitle.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.frame_appTitle.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.frame_appTitle.setObjectName("frame_appTitle")
+        self.layout_appTitle = QtWidgets.QHBoxLayout(self.frame_appTitle)
+        self.layout_appTitle.setContentsMargins(0, 0, 0, 0)
+        self.layout_appTitle.setSpacing(0)
+        self.layout_appTitle.setObjectName("layout_appTitle")
+        self.btn_appTitle = QtWidgets.QPushButton(parent=self.frame_appTitle)
         font = QtGui.QFont()
         font.setPointSize(20)
-        self.pushButton_logo.setFont(font)
-        self.pushButton_logo.setStyleSheet("QPushButton {\n"
+        self.btn_appTitle.setFont(font)
+        self.btn_appTitle.setStyleSheet("QPushButton {\n"
 "    color: rgba(134, 119, 253, 255);\n"
 "    padding: 4px;\n"
 "    border: none;\n"
 "    qproperty-alignment: AlignCenter;\n"
 "}")
-        self.pushButton_logo.setObjectName("pushButton_logo")
-        self.horizontalLayout_8.addWidget(self.pushButton_logo)
-        self.verticalLayout_3.addWidget(self.frame_logo)
-        self.scrollArea_nav = QtWidgets.QScrollArea(parent=self.Frame_left)
-        self.scrollArea_nav.setStyleSheet("QScrollBar:vertical{\n"
+        self.btn_appTitle.setObjectName("btn_appTitle")
+        self.layout_appTitle.addWidget(self.btn_appTitle)
+        self.layout_navigationPanel.addWidget(self.frame_appTitle)
+        self.scrollArea_mainMenu = QtWidgets.QScrollArea(parent=self.frame_navigationPanel)
+        self.scrollArea_mainMenu.setStyleSheet("QScrollBar:vertical{\n"
 "    width:8px;\n"
 "    background:rgba(0,0,0,0%);\n"
 "\n"
@@ -102,29 +100,29 @@ class Ui_MainWindow(object):
 "    background:rgba(0,0,0,0%);\n"
 "    border-radius:4px;\n"
 "}")
-        self.scrollArea_nav.setWidgetResizable(True)
-        self.scrollArea_nav.setObjectName("scrollArea_nav")
-        self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 156, 520))
-        self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
-        self.verticalLayout_4.setContentsMargins(0, 12, 0, 0)
-        self.verticalLayout_4.setSpacing(12)
-        self.verticalLayout_4.setObjectName("verticalLayout_4")
-        self.listWidget_base = QtWidgets.QListWidget(parent=self.scrollAreaWidgetContents)
+        self.scrollArea_mainMenu.setWidgetResizable(True)
+        self.scrollArea_mainMenu.setObjectName("scrollArea_mainMenu")
+        self.scrollAreaWidgetContents_mainMenu = QtWidgets.QWidget()
+        self.scrollAreaWidgetContents_mainMenu.setGeometry(QtCore.QRect(0, 0, 156, 478))
+        self.scrollAreaWidgetContents_mainMenu.setObjectName("scrollAreaWidgetContents_mainMenu")
+        self.layout_mainMenuContent = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents_mainMenu)
+        self.layout_mainMenuContent.setContentsMargins(0, 12, 0, 0)
+        self.layout_mainMenuContent.setSpacing(12)
+        self.layout_mainMenuContent.setObjectName("layout_mainMenuContent")
+        self.listWidget_navigationMenu = QtWidgets.QListWidget(parent=self.scrollAreaWidgetContents_mainMenu)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.listWidget_base.sizePolicy().hasHeightForWidth())
-        self.listWidget_base.setSizePolicy(sizePolicy)
-        self.listWidget_base.setMinimumSize(QtCore.QSize(0, 0))
-        self.listWidget_base.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        sizePolicy.setHeightForWidth(self.listWidget_navigationMenu.sizePolicy().hasHeightForWidth())
+        self.listWidget_navigationMenu.setSizePolicy(sizePolicy)
+        self.listWidget_navigationMenu.setMinimumSize(QtCore.QSize(0, 0))
+        self.listWidget_navigationMenu.setMaximumSize(QtCore.QSize(16777215, 16777215))
         font = QtGui.QFont()
         font.setFamily("Segoe UI")
         font.setPointSize(12)
-        self.listWidget_base.setFont(font)
-        self.listWidget_base.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
-        self.listWidget_base.setStyleSheet("QListView {\n"
+        self.listWidget_navigationMenu.setFont(font)
+        self.listWidget_navigationMenu.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
+        self.listWidget_navigationMenu.setStyleSheet("QListView {\n"
 "    show-decoration-selected: 1;\n"
 "    background-color: rgba(0, 0, 0, 0);\n"
 "    border: none;\n"
@@ -196,234 +194,232 @@ class Ui_MainWindow(object):
 "    height: 0;\n"
 "    background: none;\n"
 "}")
-        self.listWidget_base.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self.listWidget_base.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self.listWidget_base.setIconSize(QtCore.QSize(22, 22))
-        self.listWidget_base.setObjectName("listWidget_base")
+        self.listWidget_navigationMenu.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.listWidget_navigationMenu.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.listWidget_navigationMenu.setIconSize(QtCore.QSize(22, 22))
+        self.listWidget_navigationMenu.setObjectName("listWidget_navigationMenu")
         item = QtWidgets.QListWidgetItem()
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/list/媒体导入.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon.addPixmap(QtGui.QPixmap("resources/img/list/媒体导入.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         item.setIcon(icon)
-        self.listWidget_base.addItem(item)
+        self.listWidget_navigationMenu.addItem(item)
         item = QtWidgets.QListWidgetItem()
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/list/图像识别.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon1.addPixmap(QtGui.QPixmap("resources/img/list/图像识别.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         item.setIcon(icon1)
-        self.listWidget_base.addItem(item)
+        self.listWidget_navigationMenu.addItem(item)
         item = QtWidgets.QListWidgetItem()
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/list/智能整理.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon2.addPixmap(QtGui.QPixmap("resources/img/list/智能整理.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         item.setIcon(icon2)
-        self.listWidget_base.addItem(item)
+        self.listWidget_navigationMenu.addItem(item)
         item = QtWidgets.QListWidgetItem()
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/list/文件去重.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon3.addPixmap(QtGui.QPixmap("resources/img/list/文件去重.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         item.setIcon(icon3)
-        self.listWidget_base.addItem(item)
+        self.listWidget_navigationMenu.addItem(item)
         item = QtWidgets.QListWidgetItem()
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/list/属性写入.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon4.addPixmap(QtGui.QPixmap("resources/img/list/属性写入.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         item.setIcon(icon4)
-        self.listWidget_base.addItem(item)
-        self.verticalLayout_4.addWidget(self.listWidget_base)
-        self.scrollArea_nav.setWidget(self.scrollAreaWidgetContents)
-        self.verticalLayout_3.addWidget(self.scrollArea_nav)
-        self.verticalLayout_3.setStretch(1, 9)
-        self.horizontalLayout_4.addWidget(self.Frame_left)
-        self.horizontalLayout_centerAligned = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_centerAligned.setSpacing(0)
-        self.horizontalLayout_centerAligned.setObjectName("horizontalLayout_centerAligned")
-        self.line_Divide = QtWidgets.QFrame(parent=self.frame_main)
+        self.listWidget_navigationMenu.addItem(item)
+        self.layout_mainMenuContent.addWidget(self.listWidget_navigationMenu)
+        self.scrollArea_mainMenu.setWidget(self.scrollAreaWidgetContents_mainMenu)
+        self.layout_navigationPanel.addWidget(self.scrollArea_mainMenu)
+        self.layout_navigationPanel.setStretch(1, 9)
+        self.layout_mainContainer.addWidget(self.frame_navigationPanel)
+        self.layout_dividerLine = QtWidgets.QHBoxLayout()
+        self.layout_dividerLine.setSpacing(0)
+        self.layout_dividerLine.setObjectName("layout_dividerLine")
+        self.line_verticalDivider = QtWidgets.QFrame(parent=self.frame_mainContainer)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.line_Divide.sizePolicy().hasHeightForWidth())
-        self.line_Divide.setSizePolicy(sizePolicy)
-        self.line_Divide.setMinimumSize(QtCore.QSize(1, 0))
-        self.line_Divide.setMaximumSize(QtCore.QSize(1, 16777215))
-        self.line_Divide.setStyleSheet("background-color: rgb(235, 236, 237);")
-        self.line_Divide.setFrameShape(QtWidgets.QFrame.Shape.HLine)
-        self.line_Divide.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
-        self.line_Divide.setObjectName("line_Divide")
-        self.horizontalLayout_centerAligned.addWidget(self.line_Divide)
-        self.horizontalLayout_4.addLayout(self.horizontalLayout_centerAligned)
-        self.Frame_right = QtWidgets.QFrame(parent=self.frame_main)
-        self.Frame_right.setStyleSheet("border-radius: 12px;")
-        self.Frame_right.setObjectName("Frame_right")
-        self.verticalLayout = QtWidgets.QVBoxLayout(self.Frame_right)
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout.setSpacing(0)
-        self.verticalLayout.setObjectName("verticalLayout")
-        self.frame_head = QtWidgets.QFrame(parent=self.Frame_right)
-        self.frame_head.setMaximumSize(QtCore.QSize(16777215, 16777215))
-        self.frame_head.setStyleSheet("QFrame{\n"
-"background-color: qradialgradient(\n"
-"cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"stop:0.66 rgba(134, 119, 253, 255),\n"
-"stop:1 rgba(119, 111, 252, 255)\n"
-");\n"
+        sizePolicy.setHeightForWidth(self.line_verticalDivider.sizePolicy().hasHeightForWidth())
+        self.line_verticalDivider.setSizePolicy(sizePolicy)
+        self.line_verticalDivider.setMinimumSize(QtCore.QSize(2, 0))
+        self.line_verticalDivider.setMaximumSize(QtCore.QSize(2, 16777215))
+        self.line_verticalDivider.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(230, 235, 240, 200), stop:0.5 rgba(200, 210, 220, 255), stop:1 rgba(230, 235, 240, 200));\n"
+"border: none;\n"
+"border-radius: 1px;")
+        self.line_verticalDivider.setFrameShape(QtWidgets.QFrame.Shape.HLine)
+        self.line_verticalDivider.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
+        self.line_verticalDivider.setObjectName("line_verticalDivider")
+        self.layout_dividerLine.addWidget(self.line_verticalDivider)
+        self.layout_mainContainer.addLayout(self.layout_dividerLine)
+        self.frame_contentPanel = QtWidgets.QFrame(parent=self.frame_mainContainer)
+        self.frame_contentPanel.setStyleSheet("border-radius: 12px;")
+        self.frame_contentPanel.setObjectName("frame_contentPanel")
+        self.layout_contentPanel = QtWidgets.QVBoxLayout(self.frame_contentPanel)
+        self.layout_contentPanel.setContentsMargins(0, 0, 0, 0)
+        self.layout_contentPanel.setSpacing(0)
+        self.layout_contentPanel.setObjectName("layout_contentPanel")
+        self.frame_headerBar = QtWidgets.QFrame(parent=self.frame_contentPanel)
+        self.frame_headerBar.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        self.frame_headerBar.setStyleSheet("QFrame{\n"
+"background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(134, 119, 253, 255), stop:0.5 rgba(156, 140, 255, 255), stop:1 rgba(98, 85, 235, 255));\n"
 "border-top-left-radius:0px;\n"
 "border-top-right-radius:12px;\n"
 "border-bottom-right-radius:0px;\n"
 "border-bottom-left-radius:0px;\n"
 "}")
-        self.frame_head.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frame_head.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frame_head.setObjectName("frame_head")
-        self.horizontalLayout_6 = QtWidgets.QHBoxLayout(self.frame_head)
-        self.horizontalLayout_6.setContentsMargins(9, 9, 9, 9)
-        self.horizontalLayout_6.setSpacing(9)
-        self.horizontalLayout_6.setObjectName("horizontalLayout_6")
+        self.frame_headerBar.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.frame_headerBar.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.frame_headerBar.setObjectName("frame_headerBar")
+        self.layout_headerBar = QtWidgets.QHBoxLayout(self.frame_headerBar)
+        self.layout_headerBar.setContentsMargins(9, 9, 9, 9)
+        self.layout_headerBar.setSpacing(9)
+        self.layout_headerBar.setObjectName("layout_headerBar")
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
-        self.horizontalLayout_6.addItem(spacerItem)
-        self.widget_headVip = QtWidgets.QWidget(parent=self.frame_head)
-        self.widget_headVip.setEnabled(True)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.widget_headVip.sizePolicy().hasHeightForWidth())
-        self.widget_headVip.setSizePolicy(sizePolicy)
-        self.widget_headVip.setMinimumSize(QtCore.QSize(100, 36))
-        self.widget_headVip.setMaximumSize(QtCore.QSize(100, 36))
-        self.widget_headVip.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
-        self.widget_headVip.setStyleSheet(f"image: url({get_resource_path('resources/img/头标/头标-银色标准会员.svg')});\n"
-"background-color: rgba(0, 0, 0,0);\n"
-"border-radius:0px;")
-        self.widget_headVip.setObjectName("widget_headVip")
-        self.horizontalLayout_6.addWidget(self.widget_headVip)
-        self.toolButton_serve = QtWidgets.QToolButton(parent=self.frame_head)
-        self.toolButton_serve.setMinimumSize(QtCore.QSize(36, 36))
-        self.toolButton_serve.setMaximumSize(QtCore.QSize(36, 36))
-        self.toolButton_serve.setStyleSheet("QToolButton {\n"
+        self.layout_headerBar.addItem(spacerItem)
+        self.btn_headerGitHub = QtWidgets.QToolButton(parent=self.frame_headerBar)
+        self.btn_headerGitHub.setMinimumSize(QtCore.QSize(36, 36))
+        self.btn_headerGitHub.setMaximumSize(QtCore.QSize(36, 36))
+        self.btn_headerGitHub.setStyleSheet("QToolButton {\n"
 "    border: none;\n"
 "    padding: 4px;\n"
 "    border-radius: 12px;\n"
 "    background-color: rgba(255, 255, 255, 0);\n"
+"    transition: background-color 200ms ease-in-out;\n"
 "}\n"
 "\n"
 "QToolButton:hover {\n"
-"    background-color: rgba(255, 255, 255, 20);\n"
+"    background-color: rgba(255, 255, 255, 30);\n"
+"    border: 1px solid rgba(255, 255, 255, 40);\n"
 "}\n"
 "\n"
 "QToolButton:pressed {\n"
-"    background-color: rgba(255, 255, 255, 50);\n"
+"    background-color: rgba(255, 255, 255, 60);\n"
+"    border: 1px solid rgba(255, 255, 255, 80);\n"
 "}")
-        self.toolButton_serve.setText("")
+        self.btn_headerGitHub.setText("")
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/窗口控制/服务.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.toolButton_serve.setIcon(icon5)
-        self.toolButton_serve.setIconSize(QtCore.QSize(16, 16))
-        self.toolButton_serve.setObjectName("toolButton_serve")
-        self.horizontalLayout_6.addWidget(self.toolButton_serve)
-        self.toolButton_setting = QtWidgets.QToolButton(parent=self.frame_head)
-        self.toolButton_setting.setMinimumSize(QtCore.QSize(36, 36))
-        self.toolButton_setting.setMaximumSize(QtCore.QSize(36, 36))
-        self.toolButton_setting.setStyleSheet("QToolButton {\n"
+        icon5.addPixmap(QtGui.QPixmap("resources/img/窗口控制/github.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.btn_headerGitHub.setIcon(icon5)
+        self.btn_headerGitHub.setIconSize(QtCore.QSize(20, 20))
+        self.btn_headerGitHub.setObjectName("btn_headerGitHub")
+        self.layout_headerBar.addWidget(self.btn_headerGitHub)
+        self.btn_headerSettings = QtWidgets.QToolButton(parent=self.frame_headerBar)
+        self.btn_headerSettings.setMinimumSize(QtCore.QSize(36, 36))
+        self.btn_headerSettings.setMaximumSize(QtCore.QSize(36, 36))
+        self.btn_headerSettings.setStyleSheet("QToolButton {\n"
 "    border: none;\n"
 "    padding: 4px;\n"
 "    border-radius: 12px;\n"
 "    background-color: rgba(255, 255, 255, 0);\n"
+"    transition: background-color 200ms ease-in-out;\n"
 "}\n"
 "\n"
 "QToolButton:hover {\n"
-"    background-color: rgba(255, 255, 255, 20);\n"
+"    background-color: rgba(255, 255, 255, 30);\n"
+"    border: 1px solid rgba(255, 255, 255, 40);\n"
 "}\n"
 "\n"
 "QToolButton:pressed {\n"
-"    background-color: rgba(255, 255, 255, 50);\n"
+"    background-color: rgba(255, 255, 255, 60);\n"
+"    border: 1px solid rgba(255, 255, 255, 80);\n"
 "}")
-        self.toolButton_setting.setText("")
+        self.btn_headerSettings.setText("")
         icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/窗口控制/设置.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.toolButton_setting.setIcon(icon6)
-        self.toolButton_setting.setIconSize(QtCore.QSize(17, 17))
-        self.toolButton_setting.setObjectName("toolButton_setting")
-        self.horizontalLayout_6.addWidget(self.toolButton_setting)
-        self.toolButton_minimum = QtWidgets.QToolButton(parent=self.frame_head)
-        self.toolButton_minimum.setMinimumSize(QtCore.QSize(36, 36))
-        self.toolButton_minimum.setMaximumSize(QtCore.QSize(36, 36))
-        self.toolButton_minimum.setStyleSheet("QToolButton {\n"
+        icon6.addPixmap(QtGui.QPixmap("resources/img/窗口控制/设置.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.btn_headerSettings.setIcon(icon6)
+        self.btn_headerSettings.setIconSize(QtCore.QSize(18, 18))
+        self.btn_headerSettings.setObjectName("btn_headerSettings")
+        self.layout_headerBar.addWidget(self.btn_headerSettings)
+        self.btn_headerMinimize = QtWidgets.QToolButton(parent=self.frame_headerBar)
+        self.btn_headerMinimize.setMinimumSize(QtCore.QSize(36, 36))
+        self.btn_headerMinimize.setMaximumSize(QtCore.QSize(36, 36))
+        self.btn_headerMinimize.setStyleSheet("QToolButton {\n"
 "    border: none;\n"
 "    padding: 4px;\n"
 "    border-radius: 12px;\n"
 "    background-color: rgba(255, 255, 255, 0);\n"
+"    transition: background-color 200ms ease-in-out;\n"
 "}\n"
 "\n"
 "QToolButton:hover {\n"
-"    background-color: rgba(255, 255, 255, 20);\n"
+"    background-color: rgba(255, 255, 255, 30);\n"
+"    border: 1px solid rgba(255, 255, 255, 40);\n"
 "}\n"
 "\n"
 "QToolButton:pressed {\n"
-"    background-color: rgba(255, 255, 255, 50);\n"
+"    background-color: rgba(255, 255, 255, 60);\n"
+"    border: 1px solid rgba(255, 255, 255, 80);\n"
 "}")
-        self.toolButton_minimum.setText("")
+        self.btn_headerMinimize.setText("")
         icon7 = QtGui.QIcon()
-        icon7.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/窗口控制/最小化.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.toolButton_minimum.setIcon(icon7)
-        self.toolButton_minimum.setIconSize(QtCore.QSize(14, 14))
-        self.toolButton_minimum.setObjectName("toolButton_minimum")
-        self.horizontalLayout_6.addWidget(self.toolButton_minimum)
-        self.toolButton_maximum = QtWidgets.QToolButton(parent=self.frame_head)
-        self.toolButton_maximum.setMinimumSize(QtCore.QSize(36, 36))
-        self.toolButton_maximum.setMaximumSize(QtCore.QSize(36, 36))
-        self.toolButton_maximum.setStyleSheet("QToolButton {\n"
+        icon7.addPixmap(QtGui.QPixmap("resources/img/窗口控制/最小化.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.btn_headerMinimize.setIcon(icon7)
+        self.btn_headerMinimize.setIconSize(QtCore.QSize(14, 14))
+        self.btn_headerMinimize.setObjectName("btn_headerMinimize")
+        self.layout_headerBar.addWidget(self.btn_headerMinimize)
+        self.btn_headerMaximize = QtWidgets.QToolButton(parent=self.frame_headerBar)
+        self.btn_headerMaximize.setMinimumSize(QtCore.QSize(36, 36))
+        self.btn_headerMaximize.setMaximumSize(QtCore.QSize(36, 36))
+        self.btn_headerMaximize.setStyleSheet("QToolButton {\n"
 "    border: none;\n"
 "    padding: 4px;\n"
 "    border-radius: 12px;\n"
 "    background-color: rgba(255, 255, 255, 0);\n"
+"    transition: background-color 200ms ease-in-out;\n"
 "}\n"
 "\n"
 "QToolButton:hover {\n"
-"    background-color: rgba(255, 255, 255, 20);\n"
+"    background-color: rgba(255, 255, 255, 30);\n"
+"    border: 1px solid rgba(255, 255, 255, 40);\n"
 "}\n"
 "\n"
 "QToolButton:pressed {\n"
-"    background-color: rgba(255, 255, 255, 50);\n"
+"    background-color: rgba(255, 255, 255, 60);\n"
+"    border: 1px solid rgba(255, 255, 255, 80);\n"
 "}")
-        self.toolButton_maximum.setText("")
+        self.btn_headerMaximize.setText("")
         icon8 = QtGui.QIcon()
-        icon8.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/窗口控制/最大化.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.toolButton_maximum.setIcon(icon8)
-        self.toolButton_maximum.setIconSize(QtCore.QSize(14, 14))
-        self.toolButton_maximum.setObjectName("toolButton_maximum")
-        self.horizontalLayout_6.addWidget(self.toolButton_maximum)
-        self.toolButton_close = QtWidgets.QToolButton(parent=self.frame_head)
-        self.toolButton_close.setMinimumSize(QtCore.QSize(36, 36))
-        self.toolButton_close.setMaximumSize(QtCore.QSize(36, 36))
-        self.toolButton_close.setStyleSheet("QToolButton {\n"
+        icon8.addPixmap(QtGui.QPixmap("resources/img/窗口控制/最大化.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.btn_headerMaximize.setIcon(icon8)
+        self.btn_headerMaximize.setIconSize(QtCore.QSize(14, 14))
+        self.btn_headerMaximize.setObjectName("btn_headerMaximize")
+        self.layout_headerBar.addWidget(self.btn_headerMaximize)
+        self.btn_headerClose = QtWidgets.QToolButton(parent=self.frame_headerBar)
+        self.btn_headerClose.setMinimumSize(QtCore.QSize(36, 36))
+        self.btn_headerClose.setMaximumSize(QtCore.QSize(36, 36))
+        self.btn_headerClose.setStyleSheet("QToolButton {\n"
 "    border: none;\n"
 "    padding: 4px;\n"
 "    border-radius: 12px;\n"
 "    background-color: rgba(255, 255, 255, 0);\n"
+"    transition: background-color 200ms ease-in-out;\n"
 "}\n"
 "\n"
 "QToolButton:hover {\n"
-"    background-color: rgba(255, 255, 255, 20);\n"
+"    background-color: rgba(255, 255, 255, 30);\n"
+"    border: 1px solid rgba(255, 255, 255, 40);\n"
 "}\n"
 "\n"
 "QToolButton:pressed {\n"
-"    background-color: rgba(255, 255, 255, 50);\n"
+"    background-color: rgba(255, 255, 255, 60);\n"
+"    border: 1px solid rgba(255, 255, 255, 80);\n"
 "}")
-        self.toolButton_close.setText("")
+        self.btn_headerClose.setText("")
         icon9 = QtGui.QIcon()
-        icon9.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/窗口控制/关闭.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.toolButton_close.setIcon(icon9)
-        self.toolButton_close.setIconSize(QtCore.QSize(14, 14))
-        self.toolButton_close.setObjectName("toolButton_close")
-        self.horizontalLayout_6.addWidget(self.toolButton_close)
-        self.verticalLayout.addWidget(self.frame_head)
-        self.frame_content = QtWidgets.QFrame(parent=self.Frame_right)
-        self.frame_content.setStyleSheet("border-radius: 20px;\n"
+        icon9.addPixmap(QtGui.QPixmap("resources/img/窗口控制/关闭.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.btn_headerClose.setIcon(icon9)
+        self.btn_headerClose.setIconSize(QtCore.QSize(14, 14))
+        self.btn_headerClose.setObjectName("btn_headerClose")
+        self.layout_headerBar.addWidget(self.btn_headerClose)
+        self.layout_contentPanel.addWidget(self.frame_headerBar)
+        self.frame_stackedWidgetContainer = QtWidgets.QFrame(parent=self.frame_contentPanel)
+        self.frame_stackedWidgetContainer.setStyleSheet("border-radius: 20px;\n"
 "background:rgb(245, 246, 247);")
-        self.frame_content.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frame_content.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frame_content.setObjectName("frame_content")
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.frame_content)
-        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout_2.setSpacing(0)
-        self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.stackedWidget = QtWidgets.QStackedWidget(parent=self.frame_content)
-        self.stackedWidget.setStyleSheet("${\n"
+        self.frame_stackedWidgetContainer.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.frame_stackedWidgetContainer.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.frame_stackedWidgetContainer.setObjectName("frame_stackedWidgetContainer")
+        self.layout_stackedWidgetContainer = QtWidgets.QVBoxLayout(self.frame_stackedWidgetContainer)
+        self.layout_stackedWidgetContainer.setContentsMargins(0, 0, 0, 0)
+        self.layout_stackedWidgetContainer.setSpacing(0)
+        self.layout_stackedWidgetContainer.setObjectName("layout_stackedWidgetContainer")
+        self.stackedWidget_mainContent = QtWidgets.QStackedWidget(parent=self.frame_stackedWidgetContainer)
+        self.stackedWidget_mainContent.setStyleSheet("${\n"
 "    background-color: rgba(255, 255, 255, 0);\n"
 "    border-bottom-right-radius:20px;\n"
 "}\n"
@@ -465,964 +461,293 @@ class Ui_MainWindow(object):
 "    background:rgba(0,0,0,0%);\n"
 "    border-radius:4px;\n"
 "}")
-        self.stackedWidget.setObjectName("stackedWidget")
-        self.page_0 = QtWidgets.QWidget()
-        self.page_0.setStyleSheet("background: rgb(245, 249, 254);")
-        self.page_0.setObjectName("page_0")
-        self.horizontalLayout_21 = QtWidgets.QHBoxLayout(self.page_0)
-        self.horizontalLayout_21.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_21.setSpacing(0)
-        self.horizontalLayout_21.setObjectName("horizontalLayout_21")
-        self.verticalLayout_32 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_32.setContentsMargins(0, 0, -1, -1)
-        self.verticalLayout_32.setSpacing(0)
-        self.verticalLayout_32.setObjectName("verticalLayout_32")
-        self.scrollArea_page0 = QtWidgets.QScrollArea(parent=self.page_0)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.scrollArea_page0.sizePolicy().hasHeightForWidth())
-        self.scrollArea_page0.setSizePolicy(sizePolicy)
-        self.scrollArea_page0.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
-        self.scrollArea_page0.setLayoutDirection(QtCore.Qt.LayoutDirection.LeftToRight)
-        self.scrollArea_page0.setStyleSheet("QWidget {\n"
-"    background-color: rgb(255, 255, 255);\n"
-"}\n"
-"\n"
-"QScrollBar:vertical {\n"
-"    width: 8px;\n"
-"    background: transparent;\n"
-"    margin: 0px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:vertical {\n"
-"    width: 8px;\n"
-"    min-height: 20px;\n"
-"    background: rgba(125, 125, 125, 20%);\n"
-"    border-radius: 4px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:vertical:hover {\n"
-"    background: rgba(125, 125, 125, 70%);\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:vertical,\n"
-"QScrollBar::sub-line:vertical {\n"
-"    height: 0px;\n"
-"    width: 0px;\n"
-"    background: none;\n"
-"}\n"
-"\n"
-"QScrollBar::add-page:vertical,\n"
-"QScrollBar::sub-page:vertical {\n"
-"    background: transparent;\n"
-"}")
-        self.scrollArea_page0.setWidgetResizable(True)
-        self.scrollArea_page0.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignVCenter)
-        self.scrollArea_page0.setObjectName("scrollArea_page0")
-        self.scrollAreaWidgetContents_folds = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_folds.setGeometry(QtCore.QRect(0, 0, 533, 516))
-        self.scrollAreaWidgetContents_folds.setObjectName("scrollAreaWidgetContents_folds")
-        self.gridLayout_6 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents_folds)
-        self.gridLayout_6.setContentsMargins(9, 9, 9, 9)
-        self.gridLayout_6.setObjectName("gridLayout_6")
-        self.scrollArea_page0.setWidget(self.scrollAreaWidgetContents_folds)
-        self.verticalLayout_32.addWidget(self.scrollArea_page0)
-        self.horizontalLayout_21.addLayout(self.verticalLayout_32)
-        self.verticalFrame_add_folder = QtWidgets.QFrame(parent=self.page_0)
-        self.verticalFrame_add_folder.setStyleSheet("QFrame {\n"
-"    background: rgb(245, 249, 254);\n"
-"    border-radius: 12px;\n"
-"}")
-        self.verticalFrame_add_folder.setObjectName("verticalFrame_add_folder")
-        self.verticalLayout_31 = QtWidgets.QVBoxLayout(self.verticalFrame_add_folder)
-        self.verticalLayout_31.setContentsMargins(6, 12, 6, 6)
-        self.verticalLayout_31.setSpacing(6)
-        self.verticalLayout_31.setObjectName("verticalLayout_31")
-        self.widget_add_folder = QtWidgets.QWidget(parent=self.verticalFrame_add_folder)
-        self.widget_add_folder.setMinimumSize(QtCore.QSize(0, 0))
-        self.widget_add_folder.setMaximumSize(QtCore.QSize(16777215, 16777215))
-        self.widget_add_folder.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
-        self.widget_add_folder.setStyleSheet("background-color: rgb(255, 255, 255);\n"
-"border-radius:18px;\n"
-"border: 2px dashed qradialgradient(\n"
-"cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"stop:0.66 rgba(134, 119, 253, 255),\n"
-"stop:1 rgba(119, 111, 252, 255)\n"
-");")
-        self.widget_add_folder.setObjectName("widget_add_folder")
-        self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.widget_add_folder)
-        self.verticalLayout_6.setContentsMargins(-1, 9, -1, -1)
-        self.verticalLayout_6.setSpacing(9)
-        self.verticalLayout_6.setObjectName("verticalLayout_6")
-        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
-        self.verticalLayout_6.addItem(spacerItem1)
-        self.horizontalLayout_31 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_31.setSpacing(2)
-        self.horizontalLayout_31.setObjectName("horizontalLayout_31")
-        spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
-        self.horizontalLayout_31.addItem(spacerItem2)
-        self.widget_folder = QtWidgets.QWidget(parent=self.widget_add_folder)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.widget_folder.sizePolicy().hasHeightForWidth())
-        self.widget_folder.setSizePolicy(sizePolicy)
-        self.widget_folder.setMinimumSize(QtCore.QSize(36, 36))
-        self.widget_folder.setMaximumSize(QtCore.QSize(36, 36))
-        self.widget_folder.setStyleSheet(f"image: url({get_resource_path('resources/img/page_0/导入文件夹.svg')});\n"
-"background-color: rgba(0, 0, 0, 0);\n"
-"border-radius:0px;\n"
-"border: 0px;")
-        self.widget_folder.setObjectName("widget_folder")
-        self.horizontalLayout_31.addWidget(self.widget_folder)
-        self.pushButton_add_folder = QtWidgets.QPushButton(parent=self.widget_add_folder)
+        self.stackedWidget_mainContent.setObjectName("stackedWidget_mainContent")
+        self.page_mediaImport = QtWidgets.QWidget()
+        self.page_mediaImport.setStyleSheet("background: rgb(245, 249, 254);")
+        self.page_mediaImport.setObjectName("page_mediaImport")
+        self.layout_mediaImportMain = QtWidgets.QHBoxLayout(self.page_mediaImport)
+        self.layout_mediaImportMain.setContentsMargins(0, 0, 0, 0)
+        self.layout_mediaImportMain.setSpacing(0)
+        self.layout_mediaImportMain.setObjectName("layout_mediaImportMain")
+        self.layout_mediaImportContent = QtWidgets.QVBoxLayout()
+        self.layout_mediaImportContent.setContentsMargins(9, 9, 9, 9)
+        self.layout_mediaImportContent.setSpacing(9)
+        self.layout_mediaImportContent.setObjectName("layout_mediaImportContent")
+        self.layout_importSourceControls = QtWidgets.QHBoxLayout()
+        self.layout_importSourceControls.setContentsMargins(9, 9, 9, 9)
+        self.layout_importSourceControls.setSpacing(9)
+        self.layout_importSourceControls.setObjectName("layout_importSourceControls")
+        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
+        self.layout_importSourceControls.addItem(spacerItem1)
+        self.label_importSourceFolder = QtWidgets.QLabel(parent=self.page_mediaImport)
         font = QtGui.QFont()
         font.setPointSize(14)
-        self.pushButton_add_folder.setFont(font)
-        self.pushButton_add_folder.setStyleSheet("QPushButton {\n"
+        self.label_importSourceFolder.setFont(font)
+        self.label_importSourceFolder.setObjectName("label_importSourceFolder")
+        self.layout_importSourceControls.addWidget(self.label_importSourceFolder)
+        self.lineEdit_importSourcePath = QtWidgets.QLineEdit(parent=self.page_mediaImport)
+        self.lineEdit_importSourcePath.setMinimumSize(QtCore.QSize(498, 0))
+        self.lineEdit_importSourcePath.setStyleSheet("QLineEdit {\n"
+"    border: 1px solid #d1d5db;\n"
+"    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(248, 250, 252, 255));\n"
+"    padding: 8px 12px;\n"
+"    border-radius: 8px;\n"
+"    color: #374151;\n"
+"    selection-background-color: rgba(134, 119, 253, 180);\n"
+"    selection-color: white;\n"
+"    font-size: 12px;\n"
+"    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8);\n"
+"    transition: all 0.2s ease-out;\n"
+"}\n"
+"\n"
+"QLineEdit:hover {\n"
+"    border-color: #a5b4fc;\n"
+"    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(241, 245, 249, 255));\n"
+"    box-shadow: 0 2px 4px rgba(166, 175, 195, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9);\n"
+"}\n"
+"\n"
+"QLineEdit:focus {\n"
+"    border: 2px solid #8b5cf6;\n"
+"    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(235, 248, 255, 255));\n"
+"    outline: none;\n"
+"    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1), 0 4px 6px rgba(166, 175, 195, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.9);\n"
+"}\n"
+"\n"
+"QLineEdit:disabled {\n"
+"    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(243, 244, 246, 255), stop:1 rgba(229, 231, 235, 255));\n"
+"    color: #9ca3af;\n"
+"    border-color: #e5e7eb;\n"
+"    box-shadow: none;\n"
+"}")
+        self.lineEdit_importSourcePath.setObjectName("lineEdit_importSourcePath")
+        self.layout_importSourceControls.addWidget(self.lineEdit_importSourcePath)
+        self.btn_importBrowseSource = QtWidgets.QToolButton(parent=self.page_mediaImport)
+        self.btn_importBrowseSource.setStyleSheet("QToolButton {\n"
+"    color: white;\n"
+"    border: none;\n"
+"    padding: 6px 6px;\n"
+"    border-radius: 6px;\n"
+"    background-color: rgb(134, 119, 253);\n"
+"    font-size: 12px;\n"
+"}\n"
+"\n"
+"QToolButton:hover {\n"
+"    background-color: rgb(154, 139, 255);\n"
+"}\n"
+"\n"
+"QToolButton:pressed {\n"
+"    background-color: rgb(94, 79, 253);\n"
+"}")
+        self.btn_importBrowseSource.setObjectName("btn_importBrowseSource")
+        self.layout_importSourceControls.addWidget(self.btn_importBrowseSource)
+        self.layout_mediaImportContent.addLayout(self.layout_importSourceControls)
+        self.layout_importTargetControls = QtWidgets.QHBoxLayout()
+        self.layout_importTargetControls.setContentsMargins(9, 9, 9, 9)
+        self.layout_importTargetControls.setSpacing(9)
+        self.layout_importTargetControls.setObjectName("layout_importTargetControls")
+        self.label_importTargetFolder = QtWidgets.QLabel(parent=self.page_mediaImport)
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.label_importTargetFolder.setFont(font)
+        self.label_importTargetFolder.setObjectName("label_importTargetFolder")
+        self.layout_importTargetControls.addWidget(self.label_importTargetFolder)
+        self.lineEdit_importTargetPath = QtWidgets.QLineEdit(parent=self.page_mediaImport)
+        self.lineEdit_importTargetPath.setMinimumSize(QtCore.QSize(498, 0))
+        self.lineEdit_importTargetPath.setStyleSheet("QLineEdit {\n"
+"    border: 1px solid #d1d5db;\n"
+"    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(248, 250, 252, 255));\n"
+"    padding: 8px 12px;\n"
+"    border-radius: 8px;\n"
+"    color: #374151;\n"
+"    selection-background-color: rgba(134, 119, 253, 180);\n"
+"    selection-color: white;\n"
+"    font-size: 12px;\n"
+"    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8);\n"
+"    transition: all 0.2s ease-out;\n"
+"}\n"
+"\n"
+"QLineEdit:hover {\n"
+"    border-color: #a5b4fc;\n"
+"    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(241, 245, 249, 255));\n"
+"    box-shadow: 0 2px 4px rgba(166, 175, 195, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9);\n"
+"}\n"
+"\n"
+"QLineEdit:focus {\n"
+"    border: 2px solid #8b5cf6;\n"
+"    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(235, 248, 255, 255));\n"
+"    outline: none;\n"
+"    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1), 0 4px 6px rgba(166, 175, 195, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.9);\n"
+"}\n"
+"\n"
+"QLineEdit:disabled {\n"
+"    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(243, 244, 246, 255), stop:1 rgba(229, 231, 235, 255));\n"
+"    color: #9ca3af;\n"
+"    border-color: #e5e7eb;\n"
+"    box-shadow: none;\n"
+"}")
+        self.lineEdit_importTargetPath.setObjectName("lineEdit_importTargetPath")
+        self.layout_importTargetControls.addWidget(self.lineEdit_importTargetPath)
+        self.btn_importBrowseTarget = QtWidgets.QToolButton(parent=self.page_mediaImport)
+        self.btn_importBrowseTarget.setStyleSheet("QToolButton {\n"
+"    color: white;\n"
+"    border: none;\n"
+"    padding: 6px 6px;\n"
+"    border-radius: 6px;\n"
+"    background-color: rgb(134, 119, 253);\n"
+"    font-size: 12px;\n"
+"}\n"
+"\n"
+"QToolButton:hover {\n"
+"    background-color: rgb(154, 139, 255);\n"
+"}\n"
+"\n"
+"QToolButton:pressed {\n"
+"    background-color: rgb(94, 79, 253);\n"
+"}")
+        self.btn_importBrowseTarget.setObjectName("btn_importBrowseTarget")
+        self.layout_importTargetControls.addWidget(self.btn_importBrowseTarget)
+        self.layout_mediaImportContent.addLayout(self.layout_importTargetControls)
+        self.line = QtWidgets.QFrame(parent=self.page_mediaImport)
+        self.line.setMinimumSize(QtCore.QSize(0, 2))
+        self.line.setMaximumSize(QtCore.QSize(16777215, 2))
+        self.line.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(230, 235, 240, 50), stop:0.5 rgba(180, 190, 200, 200), stop:1 rgba(230, 235, 240, 50));\n"
+"border: none;\n"
+"border-radius: 1px;\n"
+"margin: 12px 24px;")
+        self.line.setFrameShape(QtWidgets.QFrame.Shape.HLine)
+        self.line.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
+        self.line.setObjectName("line")
+        self.layout_mediaImportContent.addWidget(self.line)
+        self.verticalLayout = QtWidgets.QVBoxLayout()
+        self.verticalLayout.setContentsMargins(9, 9, 9, 9)
+        self.verticalLayout.setSpacing(9)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.label_statusInfo = QtWidgets.QLabel(parent=self.page_mediaImport)
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.label_statusInfo.setFont(font)
+        self.label_statusInfo.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.pushButton_add_folder.setObjectName("pushButton_add_folder")
-        self.horizontalLayout_31.addWidget(self.pushButton_add_folder)
-        spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
-        self.horizontalLayout_31.addItem(spacerItem3)
-        self.verticalLayout_6.addLayout(self.horizontalLayout_31)
-        self.label_add_folder = QtWidgets.QLabel(parent=self.widget_add_folder)
-        font = QtGui.QFont()
-        font.setPointSize(9)
-        self.label_add_folder.setFont(font)
-        self.label_add_folder.setStyleSheet("QLabel {\n"
-"    color: rgb(150, 150, 150);\n"
-"    qproperty-alignment: AlignCenter;\n"
-"    border: none;\n"
+        self.label_statusInfo.setObjectName("label_statusInfo")
+        self.verticalLayout.addWidget(self.label_statusInfo)
+        self.layout_mediaImportContent.addLayout(self.verticalLayout)
+        self.textBrowser_folderStats = QtWidgets.QTextBrowser(parent=self.page_mediaImport)
+        self.textBrowser_folderStats.setStyleSheet("QTextBrowser {\n"
+"    background-color: #f8f9fa;\n"
+"    border: 1px solid #dee2e6;\n"
+"    border-radius: 8px;\n"
+"    padding: 12px;\n"
+"    font-family: \'Segoe UI\', \'Microsoft YaHei\', sans-serif;\n"
+"    font-size: 13px;\n"
+"    color: #495057;\n"
+"    line-height: 1.5;\n"
+"}\n"
+"\n"
+"QTextBrowser:focus {\n"
+"    border: 1px solid #dee2e6;\n"
+"    outline: none;\n"
+"}\n"
+"\n"
+"QTextBrowser QScrollBar:vertical {\n"
+"    width: 6px;\n"
+"    background: transparent;\n"
+"    border-radius: 3px;\n"
+"}\n"
+"\n"
+"QTextBrowser QScrollBar::handle:vertical {\n"
+"    background: #ced4da;\n"
+"    border-radius: 3px;\n"
+"    min-height: 20px;\n"
+"}\n"
+"\n"
+"QTextBrowser QScrollBar::add-line:vertical,\n"
+"QTextBrowser QScrollBar::sub-line:vertical {\n"
+"    height: 0px;\n"
+"}\n"
+"\n"
+"QTextBrowser QScrollBar::add-page:vertical,\n"
+"QTextBrowser QScrollBar::sub-page:vertical {\n"
+"    background: transparent;\n"
 "}")
-        self.label_add_folder.setObjectName("label_add_folder")
-        self.verticalLayout_6.addWidget(self.label_add_folder)
-        self.verticalLayout_6.setStretch(0, 1)
-        self.verticalLayout_6.setStretch(2, 2)
-        self.verticalLayout_31.addWidget(self.widget_add_folder)
-        spacerItem4 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
-        self.verticalLayout_31.addItem(spacerItem4)
-        self.verticalLayout_31.setStretch(1, 1)
-        self.horizontalLayout_21.addWidget(self.verticalFrame_add_folder)
-        self.horizontalLayout_21.setStretch(0, 1)
-        self.stackedWidget.addWidget(self.page_0)
-        self.page_1 = QtWidgets.QWidget()
+        self.textBrowser_folderStats.setReadOnly(True)
+        self.textBrowser_folderStats.setOpenExternalLinks(False)
+        self.textBrowser_folderStats.setOpenLinks(False)
+        self.textBrowser_folderStats.setObjectName("textBrowser_folderStats")
+        self.layout_mediaImportContent.addWidget(self.textBrowser_folderStats)
+        spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        self.layout_mediaImportContent.addItem(spacerItem2)
+        self.layout_mediaImportMain.addLayout(self.layout_mediaImportContent)
+        self.stackedWidget_mainContent.addWidget(self.page_mediaImport)
+        self.page_ocrRecognition = QtWidgets.QWidget()
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.page_1.sizePolicy().hasHeightForWidth())
-        self.page_1.setSizePolicy(sizePolicy)
-        self.page_1.setStyleSheet("background:rgb(255, 255, 255);\n"
+        sizePolicy.setHeightForWidth(self.page_ocrRecognition.sizePolicy().hasHeightForWidth())
+        self.page_ocrRecognition.setSizePolicy(sizePolicy)
+        self.page_ocrRecognition.setStyleSheet("background:rgb(255, 255, 255);\n"
 "border-top-left-radius:0px;\n"
 "border-top-right-radius:0px;\n"
 "border-bottom-right-radius:12px;\n"
 "border-bottom-left-radius:0px;")
-        self.page_1.setObjectName("page_1")
-        self.verticalLayout_20 = QtWidgets.QVBoxLayout(self.page_1)
-        self.verticalLayout_20.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout_20.setSpacing(0)
-        self.verticalLayout_20.setObjectName("verticalLayout_20")
-        self.verticalFrame = QtWidgets.QFrame(parent=self.page_1)
-        self.verticalFrame.setStyleSheet("background:rgb(255, 255, 255);\n"
-"border-top-left-radius:0px;\n"
-"border-top-right-radius:0px;\n"
-"border-bottom-right-radius:12px;\n"
-"border-bottom-left-radius:0px;")
-        self.verticalFrame.setObjectName("verticalFrame")
-        self.verticalLayout_11 = QtWidgets.QVBoxLayout(self.verticalFrame)
-        self.verticalLayout_11.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout_11.setSpacing(0)
-        self.verticalLayout_11.setObjectName("verticalLayout_11")
-        spacerItem5 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
-        self.verticalLayout_11.addItem(spacerItem5)
-        self.label = QtWidgets.QLabel(parent=self.verticalFrame)
-        self.label.setStyleSheet("QLabel {\n"
-"    font-family: \"Microsoft YaHei\", \"Segoe UI\", sans-serif;\n"
-"    font-size: 18px;\n"
-"    color: #333740;\n"
-"    background-color: transparent;\n"
-"    padding: 4px 8px;\n"
-"    border-radius: 4px;\n"
-"    line-height: 1.5;\n"
-"    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);\n"
-"    qproperty-alignment: AlignCenter;\n"
-"}\n"
-"\n"
-"QLabel#TitleLabel {\n"
-"    font-size: 18px;\n"
-"    font-weight: 600;\n"
-"    color: #1e293b;\n"
-"    padding: 8px 12px;\n"
-"    background: linear-gradient(90deg, rgba(109, 40, 217, 0.05), rgba(139, 92, 246, 0.03));\n"
-"    border-left: 3px solid #6d28d9;\n"
-"}\n"
-"\n"
-"QLabel#HighlightLabel {\n"
-"    font-size: 13px;\n"
-"    font-weight: 500;\n"
-"    padding: 6px 10px;\n"
-"    border-radius: 6px;\n"
-"    background-color: rgba(22, 163, 74, 0.1);\n"
-"    color: #16a34a;\n"
-"    border: 1px solid rgba(22, 163, 74, 0.2);\n"
-"}\n"
-"\n"
-"QLabel#WarningLabel {\n"
-"    background-color: rgba(245, 158, 11, 0.1);\n"
-"    color: #f59e0b;\n"
-"    border: 1px solid rgba(245, 158, 11, 0.2);\n"
-"}\n"
-"\n"
-"QLabel#InteractiveLabel {\n"
-"    color: #6d28d9;\n"
-"    cursor: pointer;\n"
-"    text-decoration: none;\n"
-"}\n"
-"\n"
-"QLabel#InteractiveLabel:hover {\n"
-"    color: #8b5cf6;\n"
-"    background-color: rgba(139, 92, 246, 0.05);\n"
-"    text-decoration: underline;\n"
-"}\n"
-"\n"
-"QLabel#InteractiveLabel:pressed {\n"
-"    color: #5b21b6;\n"
-"    background-color: rgba(139, 92, 246, 0.1);\n"
-"}\n"
-"\n"
-"QLabel:disabled {\n"
-"    color: #9ca3af;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"QLabel#ImageLabel {\n"
-"    padding: 0;\n"
-"    border-radius: 8px;\n"
-"    background-color: #f3f4f6;\n"
-"}\n"
-"\n"
-"QLabel#ImageLabel:hover {\n"
-"    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);\n"
-"}\n"
-"    ")
-        self.label.setObjectName("label")
-        self.verticalLayout_11.addWidget(self.label)
-        spacerItem6 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
-        self.verticalLayout_11.addItem(spacerItem6)
-        self.verticalLayout_20.addWidget(self.verticalFrame)
-        self.stackedWidget.addWidget(self.page_1)
-        self.page_2 = QtWidgets.QWidget()
-        self.page_2.setStyleSheet("border: none;")
-        self.page_2.setObjectName("page_2")
-        self.verticalLayout_29 = QtWidgets.QVBoxLayout(self.page_2)
-        self.verticalLayout_29.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout_29.setSpacing(0)
-        self.verticalLayout_29.setObjectName("verticalLayout_29")
-        self.verticalLayout_34 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_34.setContentsMargins(-1, 0, -1, 0)
-        self.verticalLayout_34.setSpacing(0)
-        self.verticalLayout_34.setObjectName("verticalLayout_34")
-        self.horizontalFrame_3 = QtWidgets.QFrame(parent=self.page_2)
-        self.horizontalFrame_3.setStyleSheet("color: #333333;\n"
-"background:rgb(255, 255, 255);\n"
-"border: none;\n"
-"border-radius: 0px;")
-        self.horizontalFrame_3.setObjectName("horizontalFrame_3")
-        self.horizontalLayout_38 = QtWidgets.QHBoxLayout(self.horizontalFrame_3)
-        self.horizontalLayout_38.setContentsMargins(9, 9, 9, 9)
-        self.horizontalLayout_38.setSpacing(6)
-        self.horizontalLayout_38.setObjectName("horizontalLayout_38")
-        self.label_classification = QtWidgets.QLabel(parent=self.horizontalFrame_3)
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        self.label_classification.setFont(font)
-        self.label_classification.setStyleSheet("QLabel {\n"
-"    color: #333333;\n"
-"    border: none;\n"
-"}")
-        self.label_classification.setObjectName("label_classification")
-        self.horizontalLayout_38.addWidget(self.label_classification)
-        self.label_route = QtWidgets.QLabel(parent=self.horizontalFrame_3)
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        self.label_route.setFont(font)
-        self.label_route.setStyleSheet("QLabel {\n"
-"    color: #333333;\n"
-"    border: none;\n"
-"}")
-        self.label_route.setObjectName("label_route")
-        self.horizontalLayout_38.addWidget(self.label_route)
-        self.label_25 = QtWidgets.QLabel(parent=self.horizontalFrame_3)
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        self.label_25.setFont(font)
-        self.label_25.setStyleSheet("QLabel {\n"
-"    color: #333333;\n"
-"    border: none;\n"
-"}")
-        self.label_25.setObjectName("label_25")
-        self.horizontalLayout_38.addWidget(self.label_25)
-        self.comboBox_level_1 = QtWidgets.QComboBox(parent=self.horizontalFrame_3)
-        self.comboBox_level_1.setMinimumSize(QtCore.QSize(82, 30))
-        font = QtGui.QFont()
-        font.setFamily("Microsoft YaHei")
-        font.setPointSize(-1)
-        self.comboBox_level_1.setFont(font)
-        self.comboBox_level_1.setStyleSheet("QComboBox {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #d1d5db;\n"
-"    border-radius: 6px;\n"
-"    padding: 6px 12px;\n"
-"    color: #374151;\n"
-"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
-"    font-size: 13px;\n"
-"    min-width: 56px;\n"
-"    min-height: 16px;\n"
-"    selection-background-color: #6d28d9;\n"
-"    selection-color: white;\n"
-"    transition: all 0.2s ease-out;\n"
-"}\n"
-"\n"
-"QComboBox::drop-down {\n"
-"    width: 0;\n"
-"    border: none;\n"
-"    padding: 0;\n"
-"}\n"
-"\n"
-"QComboBox::down-arrow {\n"
-"    image: none;\n"
-"}\n"
-"\n"
-"QComboBox:hover {\n"
-"    border-color: #a5b4fc;\n"
-"    background-color: #f8fafc;\n"
-"    box-shadow: 0 1px 3px rgba(166, 175, 195, 0.2);\n"
-"}\n"
-"\n"
-"QComboBox:on {\n"
-"    background-color: #f5f3ff;\n"
-"    border-bottom-left-radius: 0;\n"
-"    border-bottom-right-radius: 0;\n"
-"    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);\n"
-"}\n"
-"\n"
-"QComboBox:pressed {\n"
-"    background-color: #ede9fe;\n"
-"    transform: translateY(1px);\n"
-"}\n"
-"\n"
-"QComboBox:disabled {\n"
-"    background-color: #f3f4f6;\n"
-"    color: #9ca3af;\n"
-"    border-color: #e5e7eb;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView {\n"
-"    border: 1px solid #e5e7eb;\n"
-"    border-top: none;\n"
-"    border-radius: 0 0 6px 6px;\n"
-"    background: white;\n"
-"    padding: 4px 0;\n"
-"    margin-top: -1px;\n"
-"    selection-background-color: #6d28d9;\n"
-"    selection-color: white;\n"
-"    outline: none;\n"
-"    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);\n"
-"    min-width: 88px;\n"
-"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
-"    font-size: 13px;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView::item {\n"
-"    padding: 6px 2px;\n"
-"    margin: 0 4px;\n"
-"    border-radius: 3px;\n"
-"    border-left: 1px solid transparent;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView::item:hover {\n"
-"    background-color: #f8f5ff;\n"
-"    color: #6d28d9;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView::item:selected {\n"
-"    background-color: #faf7ff;\n"
-"    color: #6d28d9;\n"
-"    border-left: 1px solid #6d28d9;\n"
-"    font-weight: normal;\n"
-"    padding-left: 11px;\n"
-"}\n"
-"\n"
-"QComboBox:editable {\n"
-"    background: white;\n"
-"    padding-right: 12px;\n"
-"}\n"
-"\n"
-"QComboBox:editable:on {\n"
-"    background: #f5f3ff;\n"
-"}\n"
-"\n"
-"QComboBox:!editable {\n"
-"    background: #f9fafb;\n"
-"}\n"
-"\n"
-"QComboBox:focus {\n"
-"    border: 1px solid #8b5cf6;\n"
-"    outline: none;\n"
-"    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
-"}")
-        self.comboBox_level_1.setObjectName("comboBox_level_1")
-        self.comboBox_level_1.addItem("")
-        self.comboBox_level_1.addItem("")
-        self.comboBox_level_1.addItem("")
-        self.comboBox_level_1.addItem("")
-        self.comboBox_level_1.addItem("")
-        self.comboBox_level_1.addItem("")
-        self.comboBox_level_1.addItem("")
-        self.horizontalLayout_38.addWidget(self.comboBox_level_1)
-        self.label_17 = QtWidgets.QLabel(parent=self.horizontalFrame_3)
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        self.label_17.setFont(font)
-        self.label_17.setStyleSheet("QLabel {\n"
-"    color: #333333;\n"
-"    border: none;\n"
-"}")
-        self.label_17.setObjectName("label_17")
-        self.horizontalLayout_38.addWidget(self.label_17)
-        self.comboBox_level_2 = QtWidgets.QComboBox(parent=self.horizontalFrame_3)
-        self.comboBox_level_2.setMinimumSize(QtCore.QSize(82, 30))
-        font = QtGui.QFont()
-        font.setFamily("Microsoft YaHei")
-        font.setPointSize(-1)
-        self.comboBox_level_2.setFont(font)
-        self.comboBox_level_2.setStyleSheet("QComboBox {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #d1d5db;\n"
-"    border-radius: 6px;\n"
-"    padding: 6px 12px;\n"
-"    color: #374151;\n"
-"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
-"    font-size: 13px;\n"
-"    min-width: 56px;\n"
-"    min-height: 16px;\n"
-"    selection-background-color: #6d28d9;\n"
-"    selection-color: white;\n"
-"    transition: all 0.2s ease-out;\n"
-"}\n"
-"\n"
-"QComboBox::drop-down {\n"
-"    width: 0;\n"
-"    border: none;\n"
-"    padding: 0;\n"
-"}\n"
-"\n"
-"QComboBox::down-arrow {\n"
-"    image: none;\n"
-"}\n"
-"\n"
-"QComboBox:hover {\n"
-"    border-color: #a5b4fc;\n"
-"    background-color: #f8fafc;\n"
-"    box-shadow: 0 1px 3px rgba(166, 175, 195, 0.2);\n"
-"}\n"
-"\n"
-"QComboBox:on {\n"
-"    background-color: #f5f3ff;\n"
-"    border-bottom-left-radius: 0;\n"
-"    border-bottom-right-radius: 0;\n"
-"    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);\n"
-"}\n"
-"\n"
-"QComboBox:pressed {\n"
-"    background-color: #ede9fe;\n"
-"    transform: translateY(1px);\n"
-"}\n"
-"\n"
-"QComboBox:disabled {\n"
-"    background-color: #f3f4f6;\n"
-"    color: #9ca3af;\n"
-"    border-color: #e5e7eb;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView {\n"
-"    border: 1px solid #e5e7eb;\n"
-"    border-top: none;\n"
-"    border-radius: 0 0 6px 6px;\n"
-"    background: white;\n"
-"    padding: 4px 0;\n"
-"    margin-top: -1px;\n"
-"    selection-background-color: #6d28d9;\n"
-"    selection-color: white;\n"
-"    outline: none;\n"
-"    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);\n"
-"    min-width: 88px;\n"
-"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
-"    font-size: 13px;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView::item {\n"
-"    padding: 6px 2px;\n"
-"    margin: 0 4px;\n"
-"    border-radius: 3px;\n"
-"    border-left: 1px solid transparent;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView::item:hover {\n"
-"    background-color: #f8f5ff;\n"
-"    color: #6d28d9;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView::item:selected {\n"
-"    background-color: #faf7ff;\n"
-"    color: #6d28d9;\n"
-"    border-left: 1px solid #6d28d9;\n"
-"    font-weight: normal;\n"
-"    padding-left: 11px;\n"
-"}\n"
-"\n"
-"QComboBox:editable {\n"
-"    background: white;\n"
-"    padding-right: 12px;\n"
-"}\n"
-"\n"
-"QComboBox:editable:on {\n"
-"    background: #f5f3ff;\n"
-"}\n"
-"\n"
-"QComboBox:!editable {\n"
-"    background: #f9fafb;\n"
-"}\n"
-"\n"
-"QComboBox:focus {\n"
-"    border: 1px solid #8b5cf6;\n"
-"    outline: none;\n"
-"    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
-"}")
-        self.comboBox_level_2.setObjectName("comboBox_level_2")
-        self.comboBox_level_2.addItem("")
-        self.comboBox_level_2.addItem("")
-        self.comboBox_level_2.addItem("")
-        self.comboBox_level_2.addItem("")
-        self.comboBox_level_2.addItem("")
-        self.comboBox_level_2.addItem("")
-        self.comboBox_level_2.addItem("")
-        self.horizontalLayout_38.addWidget(self.comboBox_level_2)
-        self.label_18 = QtWidgets.QLabel(parent=self.horizontalFrame_3)
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        self.label_18.setFont(font)
-        self.label_18.setStyleSheet("QLabel {\n"
-"    color: #333333;\n"
-"    border: none;\n"
-"}")
-        self.label_18.setObjectName("label_18")
-        self.horizontalLayout_38.addWidget(self.label_18)
-        self.comboBox_level_3 = QtWidgets.QComboBox(parent=self.horizontalFrame_3)
-        self.comboBox_level_3.setMinimumSize(QtCore.QSize(82, 30))
-        font = QtGui.QFont()
-        font.setFamily("Microsoft YaHei")
-        font.setPointSize(-1)
-        self.comboBox_level_3.setFont(font)
-        self.comboBox_level_3.setStyleSheet("QComboBox {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #d1d5db;\n"
-"    border-radius: 6px;\n"
-"    padding: 6px 12px;\n"
-"    color: #374151;\n"
-"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
-"    font-size: 13px;\n"
-"    min-width: 56px;\n"
-"    min-height: 16px;\n"
-"    selection-background-color: #6d28d9;\n"
-"    selection-color: white;\n"
-"    transition: all 0.2s ease-out;\n"
-"}\n"
-"\n"
-"QComboBox::drop-down {\n"
-"    width: 0;\n"
-"    border: none;\n"
-"    padding: 0;\n"
-"}\n"
-"\n"
-"QComboBox::down-arrow {\n"
-"    image: none;\n"
-"}\n"
-"\n"
-"QComboBox:hover {\n"
-"    border-color: #a5b4fc;\n"
-"    background-color: #f8fafc;\n"
-"    box-shadow: 0 1px 3px rgba(166, 175, 195, 0.2);\n"
-"}\n"
-"\n"
-"QComboBox:on {\n"
-"    background-color: #f5f3ff;\n"
-"    border-bottom-left-radius: 0;\n"
-"    border-bottom-right-radius: 0;\n"
-"    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);\n"
-"}\n"
-"\n"
-"QComboBox:pressed {\n"
-"    background-color: #ede9fe;\n"
-"    transform: translateY(1px);\n"
-"}\n"
-"\n"
-"QComboBox:disabled {\n"
-"    background-color: #f3f4f6;\n"
-"    color: #9ca3af;\n"
-"    border-color: #e5e7eb;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView {\n"
-"    border: 1px solid #e5e7eb;\n"
-"    border-top: none;\n"
-"    border-radius: 0 0 6px 6px;\n"
-"    background: white;\n"
-"    padding: 4px 0;\n"
-"    margin-top: -1px;\n"
-"    selection-background-color: #6d28d9;\n"
-"    selection-color: white;\n"
-"    outline: none;\n"
-"    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);\n"
-"    min-width: 88px;\n"
-"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
-"    font-size: 13px;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView::item {\n"
-"    padding: 6px 2px;\n"
-"    margin: 0 4px;\n"
-"    border-radius: 3px;\n"
-"    border-left: 1px solid transparent;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView::item:hover {\n"
-"    background-color: #f8f5ff;\n"
-"    color: #6d28d9;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView::item:selected {\n"
-"    background-color: #faf7ff;\n"
-"    color: #6d28d9;\n"
-"    border-left: 1px solid #6d28d9;\n"
-"    font-weight: normal;\n"
-"    padding-left: 11px;\n"
-"}\n"
-"\n"
-"QComboBox:editable {\n"
-"    background: white;\n"
-"    padding-right: 12px;\n"
-"}\n"
-"\n"
-"QComboBox:editable:on {\n"
-"    background: #f5f3ff;\n"
-"}\n"
-"\n"
-"QComboBox:!editable {\n"
-"    background: #f9fafb;\n"
-"}\n"
-"\n"
-"QComboBox:focus {\n"
-"    border: 1px solid #8b5cf6;\n"
-"    outline: none;\n"
-"    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
-"}")
-        self.comboBox_level_3.setObjectName("comboBox_level_3")
-        self.comboBox_level_3.addItem("")
-        self.comboBox_level_3.addItem("")
-        self.comboBox_level_3.addItem("")
-        self.comboBox_level_3.addItem("")
-        self.comboBox_level_3.addItem("")
-        self.comboBox_level_3.addItem("")
-        self.comboBox_level_3.addItem("")
-        self.horizontalLayout_38.addWidget(self.comboBox_level_3)
-        self.label_19 = QtWidgets.QLabel(parent=self.horizontalFrame_3)
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        self.label_19.setFont(font)
-        self.label_19.setStyleSheet("QLabel {\n"
-"    color: #333333;\n"
-"    border: none;\n"
-"}")
-        self.label_19.setObjectName("label_19")
-        self.horizontalLayout_38.addWidget(self.label_19)
-        self.comboBox_level_4 = QtWidgets.QComboBox(parent=self.horizontalFrame_3)
-        self.comboBox_level_4.setMinimumSize(QtCore.QSize(82, 30))
-        font = QtGui.QFont()
-        font.setFamily("Microsoft YaHei")
-        font.setPointSize(-1)
-        self.comboBox_level_4.setFont(font)
-        self.comboBox_level_4.setStyleSheet("QComboBox {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #d1d5db;\n"
-"    border-radius: 6px;\n"
-"    padding: 6px 12px;\n"
-"    color: #374151;\n"
-"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
-"    font-size: 13px;\n"
-"    min-width: 56px;\n"
-"    min-height: 16px;\n"
-"    selection-background-color: #6d28d9;\n"
-"    selection-color: white;\n"
-"    transition: all 0.2s ease-out;\n"
-"}\n"
-"\n"
-"QComboBox::drop-down {\n"
-"    width: 0;\n"
-"    border: none;\n"
-"    padding: 0;\n"
-"}\n"
-"\n"
-"QComboBox::down-arrow {\n"
-"    image: none;\n"
-"}\n"
-"\n"
-"QComboBox:hover {\n"
-"    border-color: #a5b4fc;\n"
-"    background-color: #f8fafc;\n"
-"    box-shadow: 0 1px 3px rgba(166, 175, 195, 0.2);\n"
-"}\n"
-"\n"
-"QComboBox:on {\n"
-"    background-color: #f5f3ff;\n"
-"    border-bottom-left-radius: 0;\n"
-"    border-bottom-right-radius: 0;\n"
-"    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);\n"
-"}\n"
-"\n"
-"QComboBox:pressed {\n"
-"    background-color: #ede9fe;\n"
-"    transform: translateY(1px);\n"
-"}\n"
-"\n"
-"QComboBox:disabled {\n"
-"    background-color: #f3f4f6;\n"
-"    color: #9ca3af;\n"
-"    border-color: #e5e7eb;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView {\n"
-"    border: 1px solid #e5e7eb;\n"
-"    border-top: none;\n"
-"    border-radius: 0 0 6px 6px;\n"
-"    background: white;\n"
-"    padding: 4px 0;\n"
-"    margin-top: -1px;\n"
-"    selection-background-color: #6d28d9;\n"
-"    selection-color: white;\n"
-"    outline: none;\n"
-"    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);\n"
-"    min-width: 88px;\n"
-"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
-"    font-size: 13px;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView::item {\n"
-"    padding: 6px 2px;\n"
-"    margin: 0 4px;\n"
-"    border-radius: 3px;\n"
-"    border-left: 1px solid transparent;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView::item:hover {\n"
-"    background-color: #f8f5ff;\n"
-"    color: #6d28d9;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView::item:selected {\n"
-"    background-color: #faf7ff;\n"
-"    color: #6d28d9;\n"
-"    border-left: 1px solid #6d28d9;\n"
-"    font-weight: normal;\n"
-"    padding-left: 11px;\n"
-"}\n"
-"\n"
-"QComboBox:editable {\n"
-"    background: white;\n"
-"    padding-right: 12px;\n"
-"}\n"
-"\n"
-"QComboBox:editable:on {\n"
-"    background: #f5f3ff;\n"
-"}\n"
-"\n"
-"QComboBox:!editable {\n"
-"    background: #f9fafb;\n"
-"}\n"
-"\n"
-"QComboBox:focus {\n"
-"    border: 1px solid #8b5cf6;\n"
-"    outline: none;\n"
-"    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
-"}")
-        self.comboBox_level_4.setObjectName("comboBox_level_4")
-        self.comboBox_level_4.addItem("")
-        self.comboBox_level_4.addItem("")
-        self.comboBox_level_4.addItem("")
-        self.comboBox_level_4.addItem("")
-        self.comboBox_level_4.addItem("")
-        self.comboBox_level_4.addItem("")
-        self.comboBox_level_4.addItem("")
-        self.horizontalLayout_38.addWidget(self.comboBox_level_4)
-        self.label_20 = QtWidgets.QLabel(parent=self.horizontalFrame_3)
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        self.label_20.setFont(font)
-        self.label_20.setStyleSheet("QLabel {\n"
-"    color: #333333;\n"
-"    border: none;\n"
-"}")
-        self.label_20.setObjectName("label_20")
-        self.horizontalLayout_38.addWidget(self.label_20)
-        self.comboBox_level_5 = QtWidgets.QComboBox(parent=self.horizontalFrame_3)
-        self.comboBox_level_5.setMinimumSize(QtCore.QSize(82, 30))
-        font = QtGui.QFont()
-        font.setFamily("Microsoft YaHei")
-        font.setPointSize(-1)
-        self.comboBox_level_5.setFont(font)
-        self.comboBox_level_5.setStyleSheet("QComboBox {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #d1d5db;\n"
-"    border-radius: 6px;\n"
-"    padding: 6px 12px;\n"
-"    color: #374151;\n"
-"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
-"    font-size: 13px;\n"
-"    min-width: 56px;\n"
-"    min-height: 16px;\n"
-"    selection-background-color: #6d28d9;\n"
-"    selection-color: white;\n"
-"    transition: all 0.2s ease-out;\n"
-"}\n"
-"\n"
-"QComboBox::drop-down {\n"
-"    width: 0;\n"
-"    border: none;\n"
-"    padding: 0;\n"
-"}\n"
-"\n"
-"QComboBox::down-arrow {\n"
-"    image: none;\n"
-"}\n"
-"\n"
-"QComboBox:hover {\n"
-"    border-color: #a5b4fc;\n"
-"    background-color: #f8fafc;\n"
-"    box-shadow: 0 1px 3px rgba(166, 175, 195, 0.2);\n"
-"}\n"
-"\n"
-"QComboBox:on {\n"
-"    background-color: #f5f3ff;\n"
-"    border-bottom-left-radius: 0;\n"
-"    border-bottom-right-radius: 0;\n"
-"    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);\n"
-"}\n"
-"\n"
-"QComboBox:pressed {\n"
-"    background-color: #ede9fe;\n"
-"    transform: translateY(1px);\n"
-"}\n"
-"\n"
-"QComboBox:disabled {\n"
-"    background-color: #f3f4f6;\n"
-"    color: #9ca3af;\n"
-"    border-color: #e5e7eb;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView {\n"
-"    border: 1px solid #e5e7eb;\n"
-"    border-top: none;\n"
-"    border-radius: 0 0 6px 6px;\n"
-"    background: white;\n"
-"    padding: 4px 0;\n"
-"    margin-top: -1px;\n"
-"    selection-background-color: #6d28d9;\n"
-"    selection-color: white;\n"
-"    outline: none;\n"
-"    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);\n"
-"    min-width: 88px;\n"
-"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
-"    font-size: 13px;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView::item {\n"
-"    padding: 6px 2px;\n"
-"    margin: 0 4px;\n"
-"    border-radius: 3px;\n"
-"    border-left: 1px solid transparent;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView::item:hover {\n"
-"    background-color: #f8f5ff;\n"
-"    color: #6d28d9;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView::item:selected {\n"
-"    background-color: #faf7ff;\n"
-"    color: #6d28d9;\n"
-"    border-left: 1px solid #6d28d9;\n"
-"    font-weight: normal;\n"
-"    padding-left: 11px;\n"
-"}\n"
-"\n"
-"QComboBox:editable {\n"
-"    background: white;\n"
-"    padding-right: 12px;\n"
-"}\n"
-"\n"
-"QComboBox:editable:on {\n"
-"    background: #f5f3ff;\n"
-"}\n"
-"\n"
-"QComboBox:!editable {\n"
-"    background: #f9fafb;\n"
-"}\n"
-"\n"
-"QComboBox:focus {\n"
-"    border: 1px solid #8b5cf6;\n"
-"    outline: none;\n"
-"    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
-"}")
-        self.comboBox_level_5.setObjectName("comboBox_level_5")
-        self.comboBox_level_5.addItem("")
-        self.comboBox_level_5.addItem("")
-        self.comboBox_level_5.addItem("")
-        self.comboBox_level_5.addItem("")
-        self.comboBox_level_5.addItem("")
-        self.comboBox_level_5.addItem("")
-        self.comboBox_level_5.addItem("")
-        self.horizontalLayout_38.addWidget(self.comboBox_level_5)
-        self.verticalLayout_34.addWidget(self.horizontalFrame_3)
-        self.rename_Frame = QtWidgets.QFrame(parent=self.page_2)
-        self.rename_Frame.setStyleSheet("border-radius:0px;\n"
+        self.page_ocrRecognition.setObjectName("page_ocrRecognition")
+        self.layout_ocr_main = QtWidgets.QVBoxLayout(self.page_ocrRecognition)
+        self.layout_ocr_main.setContentsMargins(0, 0, 0, 0)
+        self.layout_ocr_main.setSpacing(0)
+        self.layout_ocr_main.setObjectName("layout_ocr_main")
+        self.layout_ocr_content = QtWidgets.QVBoxLayout()
+        self.layout_ocr_content.setContentsMargins(-1, 0, -1, 0)
+        self.layout_ocr_content.setSpacing(0)
+        self.layout_ocr_content.setObjectName("layout_ocr_content")
+        self.frame_ocrExpression = QtWidgets.QFrame(parent=self.page_ocrRecognition)
+        self.frame_ocrExpression.setStyleSheet("border-radius:0px;\n"
 "background:rgb(255, 255, 255);")
-        self.rename_Frame.setObjectName("rename_Frame")
-        self.verticalLayout_35 = QtWidgets.QVBoxLayout(self.rename_Frame)
-        self.verticalLayout_35.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout_35.setSpacing(0)
-        self.verticalLayout_35.setObjectName("verticalLayout_35")
-        self.horizontalLayout_45 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_45.setContentsMargins(9, 6, 9, 6)
-        self.horizontalLayout_45.setSpacing(4)
-        self.horizontalLayout_45.setObjectName("horizontalLayout_45")
-        self.label_buildName = QtWidgets.QLabel(parent=self.rename_Frame)
+        self.frame_ocrExpression.setObjectName("frame_ocrExpression")
+        self.layout_rename_expression = QtWidgets.QVBoxLayout(self.frame_ocrExpression)
+        self.layout_rename_expression.setContentsMargins(0, 0, 0, 0)
+        self.layout_rename_expression.setSpacing(0)
+        self.layout_rename_expression.setObjectName("layout_rename_expression")
+        self.horizontalLayout_47 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_47.setContentsMargins(9, 9, 9, 9)
+        self.horizontalLayout_47.setSpacing(9)
+        self.horizontalLayout_47.setObjectName("horizontalLayout_47")
+        self.label_ocrDescription = QtWidgets.QLabel(parent=self.frame_ocrExpression)
+        self.label_ocrDescription.setMinimumSize(QtCore.QSize(0, 40))
         font = QtGui.QFont()
-        font.setPointSize(12)
-        self.label_buildName.setFont(font)
-        self.label_buildName.setStyleSheet("QLabel {\n"
+        font.setPointSize(14)
+        self.label_ocrDescription.setFont(font)
+        self.label_ocrDescription.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_buildName.setObjectName("label_buildName")
-        self.horizontalLayout_45.addWidget(self.label_buildName)
-        self.frame_Rename = QtWidgets.QFrame(parent=self.rename_Frame)
-        self.frame_Rename.setMinimumSize(QtCore.QSize(88, 36))
-        self.frame_Rename.setMaximumSize(QtCore.QSize(800, 36))
-        self.frame_Rename.setSizeIncrement(QtCore.QSize(0, 32))
-        self.frame_Rename.setStyleSheet("QFrame {\n"
+        self.label_ocrDescription.setObjectName("label_ocrDescription")
+        self.horizontalLayout_47.addWidget(self.label_ocrDescription)
+        self.layout_rename_expression.addLayout(self.horizontalLayout_47)
+        self.frame_ocrExpressionControls = QtWidgets.QFrame(parent=self.frame_ocrExpression)
+        self.frame_ocrExpressionControls.setMinimumSize(QtCore.QSize(0, 54))
+        self.frame_ocrExpressionControls.setStyleSheet("border: none;\n"
+"border-radius: 0px;")
+        self.frame_ocrExpressionControls.setObjectName("frame_ocrExpressionControls")
+        self.layout_expression_tags = QtWidgets.QHBoxLayout(self.frame_ocrExpressionControls)
+        self.layout_expression_tags.setContentsMargins(9, 9, 9, 9)
+        self.layout_expression_tags.setSpacing(9)
+        self.layout_expression_tags.setObjectName("layout_expression_tags")
+        self.label_expression_build_name = QtWidgets.QLabel(parent=self.frame_ocrExpressionControls)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_expression_build_name.setFont(font)
+        self.label_expression_build_name.setStyleSheet("QLabel {\n"
+"    color: #333333;\n"
+"    border: none;\n"
+"}")
+        self.label_expression_build_name.setObjectName("label_expression_build_name")
+        self.layout_expression_tags.addWidget(self.label_expression_build_name)
+        self.frame_ocrExpressionInput = QtWidgets.QFrame(parent=self.frame_ocrExpressionControls)
+        self.frame_ocrExpressionInput.setMinimumSize(QtCore.QSize(88, 36))
+        self.frame_ocrExpressionInput.setMaximumSize(QtCore.QSize(800, 36))
+        self.frame_ocrExpressionInput.setSizeIncrement(QtCore.QSize(0, 32))
+        self.frame_ocrExpressionInput.setStyleSheet("QFrame {\n"
 "    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, \n"
 "                              stop:0 rgb(251, 253, 254), \n"
 "                              stop:0.4 rgb(248, 250, 251), \n"
@@ -1430,694 +755,48 @@ class Ui_MainWindow(object):
 "    border-radius: 6px;\n"
 "    border: 1px solid rgba(230, 235, 240, 0.8);\n"
 "}")
-        self.frame_Rename.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frame_Rename.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frame_Rename.setObjectName("frame_Rename")
-        self.horizontalLayout_53 = QtWidgets.QHBoxLayout(self.frame_Rename)
-        self.horizontalLayout_53.setContentsMargins(9, 0, 9, 0)
-        self.horizontalLayout_53.setSpacing(9)
-        self.horizontalLayout_53.setObjectName("horizontalLayout_53")
-        self.horizontalLayout_45.addWidget(self.frame_Rename)
-        self.pushButton_unique = QtWidgets.QPushButton(parent=self.rename_Frame)
-        self.pushButton_unique.setMinimumSize(QtCore.QSize(78, 28))
-        self.pushButton_unique.setMaximumSize(QtCore.QSize(78, 28))
-        self.pushButton_unique.setStyleSheet("QPushButton {\n"
-"  background-color: #ffffff;\n"
-"  color: #2c3e50;\n"
-"  border: 1px solid #d4d4d4;\n"
-"  text-align: center;\n"
-"  font-size: 14px;\n"
-"  cursor: pointer;\n"
-"  border-radius: 12px;\n"
-"  padding: 4px 10px;\n"
-"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
-"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
-"  text-transform: uppercase;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"  background-color: #f7f7f7;\n"
-"  color: #2c3e50;\n"
-"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
-"}")
-        self.pushButton_unique.setObjectName("pushButton_unique")
-        self.horizontalLayout_45.addWidget(self.pushButton_unique)
-        self.label_point = QtWidgets.QLabel(parent=self.rename_Frame)
+        self.frame_ocrExpressionInput.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.frame_ocrExpressionInput.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.frame_ocrExpressionInput.setObjectName("frame_ocrExpressionInput")
+        self.layout_expression_input = QtWidgets.QHBoxLayout(self.frame_ocrExpressionInput)
+        self.layout_expression_input.setContentsMargins(0, 0, 0, 0)
+        self.layout_expression_input.setSpacing(0)
+        self.layout_expression_input.setObjectName("layout_expression_input")
+        self.lineEdit_ocrExpression = QtWidgets.QLineEdit(parent=self.frame_ocrExpressionInput)
         font = QtGui.QFont()
-        font.setPointSize(12)
-        self.label_point.setFont(font)
-        self.label_point.setStyleSheet("QLabel {\n"
-"    color: #333333;\n"
-"    border: none;\n"
-"}")
-        self.label_point.setObjectName("label_point")
-        self.horizontalLayout_45.addWidget(self.label_point)
-        self.pushButton_extensions = QtWidgets.QPushButton(parent=self.rename_Frame)
-        self.pushButton_extensions.setMinimumSize(QtCore.QSize(64, 28))
-        self.pushButton_extensions.setMaximumSize(QtCore.QSize(64, 28))
-        self.pushButton_extensions.setStyleSheet("QPushButton {\n"
-"  background-color: #ffffff;\n"
-"  color: #2c3e50;\n"
-"  border: 1px solid #d4d4d4;\n"
-"  text-align: center;\n"
-"  font-size: 14px;\n"
-"  cursor: pointer;\n"
-"  border-radius: 12px;\n"
-"  padding: 4px 10px;\n"
-"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
-"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
-"  text-transform: uppercase;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"  background-color: #f7f7f7;\n"
-"  color: #2c3e50;\n"
-"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
-"}")
-        self.pushButton_extensions.setObjectName("pushButton_extensions")
-        self.horizontalLayout_45.addWidget(self.pushButton_extensions)
-        spacerItem7 = QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
-        self.horizontalLayout_45.addItem(spacerItem7)
-        self.verticalLayout_35.addLayout(self.horizontalLayout_45)
-        self.Frame_tags = QtWidgets.QFrame(parent=self.rename_Frame)
-        self.Frame_tags.setMinimumSize(QtCore.QSize(0, 54))
-        self.Frame_tags.setStyleSheet("border: none;\n"
-"border-radius: 0px;")
-        self.Frame_tags.setObjectName("Frame_tags")
-        self.horizontalLayout_54 = QtWidgets.QHBoxLayout(self.Frame_tags)
-        self.horizontalLayout_54.setContentsMargins(9, 0, 0, 0)
-        self.horizontalLayout_54.setSpacing(0)
-        self.horizontalLayout_54.setObjectName("horizontalLayout_54")
-        self.label_RenamingTags = QtWidgets.QLabel(parent=self.Frame_tags)
-        self.label_RenamingTags.setMinimumSize(QtCore.QSize(0, 40))
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        self.label_RenamingTags.setFont(font)
-        self.label_RenamingTags.setStyleSheet("QLabel {\n"
-"    color: #333333;\n"
-"    border: none;\n"
-"}")
-        self.label_RenamingTags.setObjectName("label_RenamingTags")
-        self.horizontalLayout_54.addWidget(self.label_RenamingTags)
-        self.frame_Rename_tags = QtWidgets.QFrame(parent=self.Frame_tags)
-        self.frame_Rename_tags.setMinimumSize(QtCore.QSize(0, 40))
-        self.frame_Rename_tags.setMaximumSize(QtCore.QSize(16777215, 16777215))
-        self.frame_Rename_tags.setSizeIncrement(QtCore.QSize(0, 32))
-        self.frame_Rename_tags.setStyleSheet("QFrame{\n"
-"background:rgba(0, 0, 0, 0);\n"
-"border: 0px;\n"
-"}")
-        self.frame_Rename_tags.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frame_Rename_tags.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frame_Rename_tags.setObjectName("frame_Rename_tags")
-        self.horizontalLayout_57 = QtWidgets.QHBoxLayout(self.frame_Rename_tags)
-        self.horizontalLayout_57.setContentsMargins(6, 6, 0, 6)
-        self.horizontalLayout_57.setSpacing(6)
-        self.horizontalLayout_57.setObjectName("horizontalLayout_57")
-        self.pushButton_original_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_original_tag.setMaximumSize(QtCore.QSize(80, 28))
-        self.pushButton_original_tag.setStyleSheet("QPushButton {\n"
-"  background-color: #ffffff;\n"
-"  color: #2c3e50;\n"
-"  border: 1px solid #d4d4d4;\n"
-"  text-align: center;\n"
-"  font-size: 14px;\n"
-"  border-radius: 12px;\n"
-"  padding: 4px 8px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"  background-color: #f7f7f7;\n"
-"  color: #2c3e50;\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"  background-color: #ececec;\n"
-"  color: #34495e;\n"
-"}")
-        self.pushButton_original_tag.setObjectName("pushButton_original_tag")
-        self.horizontalLayout_57.addWidget(self.pushButton_original_tag)
-        self.pushButton_year_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_year_tag.setMaximumSize(QtCore.QSize(46, 28))
-        self.pushButton_year_tag.setStyleSheet("QPushButton {\n"
-"  background-color: #ffffff;\n"
-"  color: #2c3e50;\n"
-"  border: 1px solid #d4d4d4;\n"
-"  text-align: center;\n"
-"  font-size: 14px;\n"
-"  cursor: pointer;\n"
-"  border-radius: 12px;\n"
-"  padding: 4px 8px;\n"
-"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
-"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
-"  text-transform: uppercase;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"  background-color: #f7f7f7;\n"
-"  color: #2c3e50;\n"
-"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"  background-color: #ececec;\n"
-"  color: #34495e;\n"
-"  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
-"  transform: translateY(2px);\n"
-"}")
-        self.pushButton_year_tag.setObjectName("pushButton_year_tag")
-        self.horizontalLayout_57.addWidget(self.pushButton_year_tag)
-        self.pushButton_month_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_month_tag.setMaximumSize(QtCore.QSize(46, 28))
-        self.pushButton_month_tag.setStyleSheet("QPushButton {\n"
-"  background-color: #ffffff;\n"
-"  color: #2c3e50;\n"
-"  border: 1px solid #d4d4d4;\n"
-"  text-align: center;\n"
-"  font-size: 14px;\n"
-"  cursor: pointer;\n"
-"  border-radius: 12px;\n"
-"  padding: 4px 8px;\n"
-"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
-"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
-"  text-transform: uppercase;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"  background-color: #f7f7f7;\n"
-"  color: #2c3e50;\n"
-"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"  background-color: #ececec;\n"
-"  color: #34495e;\n"
-"  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
-"  transform: translateY(2px);\n"
-"}")
-        self.pushButton_month_tag.setObjectName("pushButton_month_tag")
-        self.horizontalLayout_57.addWidget(self.pushButton_month_tag)
-        self.pushButton_date_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_date_tag.setMaximumSize(QtCore.QSize(32, 28))
-        self.pushButton_date_tag.setStyleSheet("QPushButton {\n"
-"  background-color: #ffffff;\n"
-"  color: #2c3e50;\n"
-"  border: 1px solid #d4d4d4;\n"
-"  text-align: center;\n"
-"  font-size: 14px;\n"
-"  cursor: pointer;\n"
-"  border-radius: 12px;\n"
-"  padding: 4px 8px;\n"
-"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
-"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
-"  text-transform: uppercase;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"  background-color: #f7f7f7;\n"
-"  color: #2c3e50;\n"
-"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"  background-color: #ececec;\n"
-"  color: #34495e;\n"
-"  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
-"  transform: translateY(2px);\n"
-"}")
-        self.pushButton_date_tag.setObjectName("pushButton_date_tag")
-        self.horizontalLayout_57.addWidget(self.pushButton_date_tag)
-        self.pushButton_day_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_day_tag.setMaximumSize(QtCore.QSize(46, 28))
-        self.pushButton_day_tag.setStyleSheet("QPushButton {\n"
-"  background-color: #ffffff;\n"
-"  color: #2c3e50;\n"
-"  border: 1px solid #d4d4d4;\n"
-"  text-align: center;\n"
-"  font-size: 14px;\n"
-"  cursor: pointer;\n"
-"  border-radius: 12px;\n"
-"  padding: 4px 8px;\n"
-"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
-"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
-"  text-transform: uppercase;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"  background-color: #f7f7f7;\n"
-"  color: #2c3e50;\n"
-"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"  background-color: #ececec;\n"
-"  color: #34495e;\n"
-"  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
-"  transform: translateY(2px);\n"
-"}")
-        self.pushButton_day_tag.setObjectName("pushButton_day_tag")
-        self.horizontalLayout_57.addWidget(self.pushButton_day_tag)
-        self.pushButton_time_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_time_tag.setMaximumSize(QtCore.QSize(46, 28))
-        self.pushButton_time_tag.setStyleSheet("QPushButton {\n"
-"  background-color: #ffffff;\n"
-"  color: #2c3e50;\n"
-"  border: 1px solid #d4d4d4;\n"
-"  text-align: center;\n"
-"  font-size: 14px;\n"
-"  cursor: pointer;\n"
-"  border-radius: 12px;\n"
-"  padding: 4px 8px;\n"
-"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
-"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
-"  text-transform: uppercase;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"  background-color: #f7f7f7;\n"
-"  color: #2c3e50;\n"
-"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"  background-color: #ececec;\n"
-"  color: #34495e;\n"
-"  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
-"  transform: translateY(2px);\n"
-"}")
-        self.pushButton_time_tag.setIconSize(QtCore.QSize(16, 16))
-        self.pushButton_time_tag.setObjectName("pushButton_time_tag")
-        self.horizontalLayout_57.addWidget(self.pushButton_time_tag)
-        self.pushButton_make_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_make_tag.setMaximumSize(QtCore.QSize(74, 28))
-        self.pushButton_make_tag.setStyleSheet("QPushButton {\n"
-"  background-color: #ffffff;\n"
-"  color: #2c3e50;\n"
-"  border: 1px solid #d4d4d4;\n"
-"  text-align: center;\n"
-"  font-size: 14px;\n"
-"  cursor: pointer;\n"
-"  border-radius: 12px;\n"
-"  padding: 4px 8px;\n"
-"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
-"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
-"  text-transform: uppercase;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"  background-color: #f7f7f7;\n"
-"  color: #2c3e50;\n"
-"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"  background-color: #ececec;\n"
-"  color: #34495e;\n"
-"  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
-"  transform: translateY(2px);\n"
-"}")
-        self.pushButton_make_tag.setObjectName("pushButton_make_tag")
-        self.horizontalLayout_57.addWidget(self.pushButton_make_tag)
-        self.pushButton_model_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_model_tag.setMaximumSize(QtCore.QSize(74, 28))
-        self.pushButton_model_tag.setStyleSheet("QPushButton {\n"
-"  background-color: #ffffff;\n"
-"  color: #2c3e50;\n"
-"  border: 1px solid #d4d4d4;\n"
-"  text-align: center;\n"
-"  font-size: 14px;\n"
-"  cursor: pointer;\n"
-"  border-radius: 12px;\n"
-"  padding: 4px 8px;\n"
-"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
-"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
-"  text-transform: uppercase;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"  background-color: #f7f7f7;\n"
-"  color: #2c3e50;\n"
-"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"  background-color: #ececec;\n"
-"  color: #34495e;\n"
-"  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
-"  transform: translateY(2px);\n"
-"}")
-        self.pushButton_model_tag.setObjectName("pushButton_model_tag")
-        self.horizontalLayout_57.addWidget(self.pushButton_model_tag)
-        self.pushButton_address_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_address_tag.setMaximumSize(QtCore.QSize(66, 28))
-        self.pushButton_address_tag.setStyleSheet("QPushButton {\n"
-"  background-color: #ffffff;\n"
-"  color: #2c3e50;\n"
-"  border: 1px solid #d4d4d4;\n"
-"  text-align: center;\n"
-"  font-size: 14px;\n"
-"  cursor: pointer;\n"
-"  border-radius: 12px;\n"
-"  padding: 4px 8px;\n"
-"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
-"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
-"  text-transform: uppercase;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"  background-color: #f7f7f7;\n"
-"  color: #2c3e50;\n"
-"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"  background-color: #ececec;\n"
-"  color: #34495e;\n"
-"  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
-"  transform: translateY(2px);\n"
-"}")
-        icon10 = QtGui.QIcon()
-        icon10.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/page_2/位置.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.pushButton_address_tag.setIcon(icon10)
-        self.pushButton_address_tag.setObjectName("pushButton_address_tag")
-        self.horizontalLayout_57.addWidget(self.pushButton_address_tag)
-        self.pushButton_customize_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_customize_tag.setMaximumSize(QtCore.QSize(80, 28))
-        self.pushButton_customize_tag.setStyleSheet("QPushButton {\n"
-"  background-color: #ffffff;\n"
-"  color: #2c3e50;\n"
-"  border: 1px solid #d4d4d4;\n"
-"  text-align: center;\n"
-"  font-size: 14px;\n"
-"  cursor: pointer;\n"
-"  border-radius: 12px;\n"
-"  padding: 4px 8px;\n"
-"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
-"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
-"  text-transform: uppercase;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"  background-color: #f7f7f7;\n"
-"  color: #2c3e50;\n"
-"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"  background-color: #ececec;\n"
-"  color: #34495e;\n"
-"  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
-"  transform: translateY(2px);\n"
-"}")
-        self.pushButton_customize_tag.setObjectName("pushButton_customize_tag")
-        self.horizontalLayout_57.addWidget(self.pushButton_customize_tag)
-        self.horizontalLayout_54.addWidget(self.frame_Rename_tags)
-        self.horizontalLayout_46 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_46.setContentsMargins(-1, -1, 9, -1)
-        self.horizontalLayout_46.setSpacing(4)
-        self.horizontalLayout_46.setObjectName("horizontalLayout_46")
-        spacerItem8 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
-        self.horizontalLayout_46.addItem(spacerItem8)
-        self.label_operation_2 = QtWidgets.QLabel(parent=self.Frame_tags)
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        self.label_operation_2.setFont(font)
-        self.label_operation_2.setStyleSheet("QLabel {\n"
-"    color: #333333;\n"
-"    border: none;\n"
-"}")
-        self.label_operation_2.setObjectName("label_operation_2")
-        self.horizontalLayout_46.addWidget(self.label_operation_2)
-        self.comboBox_separator = QtWidgets.QComboBox(parent=self.Frame_tags)
-        self.comboBox_separator.setMinimumSize(QtCore.QSize(0, 0))
-        self.comboBox_separator.setMaximumSize(QtCore.QSize(87, 16777215))
-        font = QtGui.QFont()
-        font.setFamily("Microsoft YaHei")
-        font.setPointSize(-1)
-        font.setBold(False)
-        font.setItalic(False)
-        self.comboBox_separator.setFont(font)
-        self.comboBox_separator.setStyleSheet("QComboBox {\n"
-"    border: 1px solid rgba(134, 119, 253, 0.8);\n"
-"    background: rgb(245, 249, 254);\n"
-"    border-radius: 4px;\n"
-"    padding: 2px 6px;\n"
-"    color: #333333;\n"
-"    font: 14px \"Microsoft YaHei\";\n"
-"}\n"
-"\n"
-"QComboBox:hover {\n"
-"    border-color: rgba(134, 119, 253, 1);\n"
-"    background: rgb(240, 247, 254);\n"
-"}\n"
-"\n"
-"QComboBox::drop-down {\n"
-"    width: 0px;\n"
-"    border: none;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView {\n"
-"    border: 1px solid rgba(134, 119, 253, 0.3);\n"
-"    background: white;\n"
-"    selection-background-color: rgba(134, 119, 253, 0.15);\n"
-"    outline: none;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView::item {\n"
-"    padding: 1px 6px;\n"
-"    color: #333333;\n"
-"    font: 12px \"Microsoft YaHei\";\n"
-"}")
-        self.comboBox_separator.setObjectName("comboBox_separator")
-        self.comboBox_separator.addItem("")
-        self.comboBox_separator.addItem("")
-        self.comboBox_separator.addItem("")
-        self.comboBox_separator.addItem("")
-        self.comboBox_separator.addItem("")
-        self.comboBox_separator.addItem("")
-        self.comboBox_separator.addItem("")
-        self.comboBox_separator.addItem("")
-        self.horizontalLayout_46.addWidget(self.comboBox_separator)
-        self.horizontalLayout_46.setStretch(2, 1)
-        self.horizontalLayout_54.addLayout(self.horizontalLayout_46)
-        self.verticalLayout_35.addWidget(self.Frame_tags)
-        self.horizontalLayout_55 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_55.setContentsMargins(9, 6, 9, 6)
-        self.horizontalLayout_55.setSpacing(6)
-        self.horizontalLayout_55.setObjectName("horizontalLayout_55")
-        self.horizontalLayout_42 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_42.setSpacing(4)
-        self.horizontalLayout_42.setObjectName("horizontalLayout_42")
-        self.label_timeSources = QtWidgets.QLabel(parent=self.rename_Frame)
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        self.label_timeSources.setFont(font)
-        self.label_timeSources.setStyleSheet("QLabel {\n"
-"    color: #333333;\n"
-"    border: none;\n"
-"}")
-        self.label_timeSources.setObjectName("label_timeSources")
-        self.horizontalLayout_42.addWidget(self.label_timeSources)
-        self.comboBox_timeSource = QtWidgets.QComboBox(parent=self.rename_Frame)
-        self.comboBox_timeSource.setMinimumSize(QtCore.QSize(78, 0))
-        font = QtGui.QFont()
-        font.setFamily("Microsoft YaHei")
-        font.setPointSize(-1)
-        font.setBold(False)
-        font.setItalic(False)
-        self.comboBox_timeSource.setFont(font)
-        self.comboBox_timeSource.setStyleSheet("QComboBox {\n"
-"    border: 1px solid rgba(134, 119, 253, 0.8);\n"
-"    background: rgb(245, 249, 254);\n"
-"    border-radius: 4px;\n"
-"    padding: 2px 6px;\n"
-"    color: #333333;\n"
-"    font: 14px \"Microsoft YaHei\";\n"
-"}\n"
-"\n"
-"QComboBox:hover {\n"
-"    border-color: rgba(134, 119, 253, 1);\n"
-"    background: rgb(240, 247, 254);\n"
-"}\n"
-"\n"
-"QComboBox::drop-down {\n"
-"    width: 0px;\n"
-"    border: none;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView {\n"
-"    border: 1px solid rgba(134, 119, 253, 0.3);\n"
-"    background: white;\n"
-"    selection-background-color: rgba(134, 119, 253, 0.15);\n"
-"    outline: none;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView::item {\n"
-"    padding: 1px 6px;\n"
-"    color: #333333;\n"
-"    font: 12px \"Microsoft YaHei\";\n"
-"}")
-        self.comboBox_timeSource.setObjectName("comboBox_timeSource")
-        self.comboBox_timeSource.addItem("")
-        self.comboBox_timeSource.addItem("")
-        self.comboBox_timeSource.addItem("")
-        self.comboBox_timeSource.addItem("")
-        self.horizontalLayout_42.addWidget(self.comboBox_timeSource)
-        self.horizontalLayout_55.addLayout(self.horizontalLayout_42)
-        self.horizontalLayout_44 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_44.setSpacing(4)
-        self.horizontalLayout_44.setObjectName("horizontalLayout_44")
-        self.label_operation = QtWidgets.QLabel(parent=self.rename_Frame)
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        self.label_operation.setFont(font)
-        self.label_operation.setStyleSheet("QLabel {\n"
-"    color: #333333;\n"
-"    border: none;\n"
-"}")
-        self.label_operation.setObjectName("label_operation")
-        self.horizontalLayout_44.addWidget(self.label_operation)
-        self.comboBox_operation = QtWidgets.QComboBox(parent=self.rename_Frame)
-        self.comboBox_operation.setMinimumSize(QtCore.QSize(78, 0))
-        font = QtGui.QFont()
-        font.setFamily("Microsoft YaHei")
-        font.setPointSize(-1)
-        font.setBold(False)
-        font.setItalic(False)
-        self.comboBox_operation.setFont(font)
-        self.comboBox_operation.setStyleSheet("QComboBox {\n"
-"    border: 1px solid rgba(134, 119, 253, 0.8);\n"
-"    background: rgb(245, 249, 254);\n"
-"    border-radius: 4px;\n"
-"    padding: 2px 6px;\n"
-"    color: #333333;\n"
-"    font: 14px \"Microsoft YaHei\";\n"
-"}\n"
-"\n"
-"QComboBox:hover {\n"
-"    border-color: rgba(134, 119, 253, 1);\n"
-"    background: rgb(240, 247, 254);\n"
-"}\n"
-"\n"
-"QComboBox::drop-down {\n"
-"    width: 0px;\n"
-"    border: none;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView {\n"
-"    border: 1px solid rgba(134, 119, 253, 0.3);\n"
-"    background: white;\n"
-"    selection-background-color: rgba(134, 119, 253, 0.15);\n"
-"    outline: none;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView::item {\n"
-"    padding: 1px 6px;\n"
-"    color: #333333;\n"
-"    font: 12px \"Microsoft YaHei\";\n"
-"}")
-        self.comboBox_operation.setObjectName("comboBox_operation")
-        self.comboBox_operation.addItem("")
-        self.comboBox_operation.addItem("")
-        self.horizontalLayout_44.addWidget(self.comboBox_operation)
-        self.horizontalLayout_55.addLayout(self.horizontalLayout_44)
-        spacerItem9 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
-        self.horizontalLayout_55.addItem(spacerItem9)
-        self.verticalLayout_35.addLayout(self.horizontalLayout_55)
-        self.line_Arrange = QtWidgets.QFrame(parent=self.rename_Frame)
-        self.line_Arrange.setMinimumSize(QtCore.QSize(0, 1))
-        self.line_Arrange.setMaximumSize(QtCore.QSize(16777215, 1))
-        self.line_Arrange.setStyleSheet("background-color: rgb(235, 236, 237);")
-        self.line_Arrange.setFrameShape(QtWidgets.QFrame.Shape.HLine)
-        self.line_Arrange.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
-        self.line_Arrange.setObjectName("line_Arrange")
-        self.verticalLayout_35.addWidget(self.line_Arrange)
-        self.horizontalLayout_58 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_58.setContentsMargins(9, 6, 9, 6)
-        self.horizontalLayout_58.setSpacing(6)
-        self.horizontalLayout_58.setObjectName("horizontalLayout_58")
-        self.rename_Frame_2 = QtWidgets.QFrame(parent=self.rename_Frame)
-        self.rename_Frame_2.setStyleSheet("QFrame{\n"
-"    border: none;\n"
-"    border-radius: 0px;\n"
-"}")
-        self.rename_Frame_2.setObjectName("rename_Frame_2")
-        self.horizontalLayout = QtWidgets.QHBoxLayout(self.rename_Frame_2)
-        self.horizontalLayout.setContentsMargins(0, 6, 0, 6)
-        self.horizontalLayout.setSpacing(6)
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.label_CopyRoute = QtWidgets.QLabel(parent=self.rename_Frame_2)
-        self.label_CopyRoute.setMinimumSize(QtCore.QSize(0, 0))
-        self.label_CopyRoute.setMaximumSize(QtCore.QSize(530, 16777215))
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        self.label_CopyRoute.setFont(font)
-        self.label_CopyRoute.setStyleSheet("QLabel {\n"
-"    qproperty-alignment: \'AlignLeft | AlignVCenter\';\n"
-"    background:rgba(0, 0, 0, 0);\n"
-"    color: #333333;\n"
-"    border: none;\n"
-"}")
-        self.label_CopyRoute.setText("")
-        self.label_CopyRoute.setObjectName("label_CopyRoute")
-        self.horizontalLayout.addWidget(self.label_CopyRoute)
-        self.label_PreviewRoute = QtWidgets.QLabel(parent=self.rename_Frame_2)
-        self.label_PreviewRoute.setMinimumSize(QtCore.QSize(0, 0))
-        self.label_PreviewRoute.setMaximumSize(QtCore.QSize(530, 16777215))
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        self.label_PreviewRoute.setFont(font)
-        self.label_PreviewRoute.setStyleSheet("QLabel {\n"
-"    qproperty-alignment: \'AlignLeft | AlignVCenter\';\n"
-"    background:rgba(0, 0, 0, 0);\n"
-"    color: #333333;\n"
-"    border: none;\n"
-"}")
-        self.label_PreviewRoute.setObjectName("label_PreviewRoute")
-        self.horizontalLayout.addWidget(self.label_PreviewRoute)
-        self.label_21 = QtWidgets.QLabel(parent=self.rename_Frame_2)
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        font.setBold(False)
-        self.label_21.setFont(font)
-        self.label_21.setStyleSheet("QLabel {\n"
-"    color: #333333;\n"
-"    border: none;\n"
-"}")
-        self.label_21.setObjectName("label_21")
-        self.horizontalLayout.addWidget(self.label_21)
-        self.label_PreviewName = QtWidgets.QLabel(parent=self.rename_Frame_2)
-        self.label_PreviewName.setMinimumSize(QtCore.QSize(0, 0))
-        self.label_PreviewName.setMaximumSize(QtCore.QSize(530, 16777215))
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        self.label_PreviewName.setFont(font)
-        self.label_PreviewName.setStyleSheet("QLabel {\n"
-"    qproperty-alignment: \'AlignLeft | AlignVCenter\';\n"
-"    background:rgba(0, 0, 0, 0);\n"
-"    color: #333333;\n"
-"    border: none;\n"
-"}")
-        self.label_PreviewName.setObjectName("label_PreviewName")
-        self.horizontalLayout.addWidget(self.label_PreviewName)
-        spacerItem10 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
-        self.horizontalLayout.addItem(spacerItem10)
-        self.horizontalLayout_58.addWidget(self.rename_Frame_2)
-        self.verticalLayout_35.addLayout(self.horizontalLayout_58)
-        self.verticalLayout_34.addWidget(self.rename_Frame)
-        self.verticalFrame_2 = QtWidgets.QFrame(parent=self.page_2)
-        self.verticalFrame_2.setStyleSheet("background:rgb(255, 255, 255);\n"
+        font.setPointSize(16)
+        self.lineEdit_ocrExpression.setFont(font)
+        self.lineEdit_ocrExpression.setStyleSheet("background: transparent;")
+        self.lineEdit_ocrExpression.setObjectName("lineEdit_ocrExpression")
+        self.layout_expression_input.addWidget(self.lineEdit_ocrExpression)
+        self.layout_expression_tags.addWidget(self.frame_ocrExpressionInput)
+        self.layout_expression_tags.setStretch(1, 1)
+        self.layout_rename_expression.addWidget(self.frame_ocrExpressionControls)
+        self.line_ocrSeparator = QtWidgets.QFrame(parent=self.frame_ocrExpression)
+        self.line_ocrSeparator.setMinimumSize(QtCore.QSize(0, 2))
+        self.line_ocrSeparator.setMaximumSize(QtCore.QSize(16777215, 2))
+        self.line_ocrSeparator.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(230, 235, 240, 50), stop:0.5 rgba(180, 190, 200, 200), stop:1 rgba(230, 235, 240, 50));\n"
+"border: none;\n"
+"border-radius: 1px;\n"
+"margin: 12px 24px;")
+        self.line_ocrSeparator.setFrameShape(QtWidgets.QFrame.Shape.HLine)
+        self.line_ocrSeparator.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
+        self.line_ocrSeparator.setObjectName("line_ocrSeparator")
+        self.layout_rename_expression.addWidget(self.line_ocrSeparator)
+        self.layout_ocr_content.addWidget(self.frame_ocrExpression)
+        self.frame_right_sidebar = QtWidgets.QFrame(parent=self.page_ocrRecognition)
+        self.frame_right_sidebar.setStyleSheet("background:rgb(255, 255, 255);\n"
 "border: none;\n"
 "border-radius: 0px;")
-        self.verticalFrame_2.setObjectName("verticalFrame_2")
-        self.horizontalLayout_36 = QtWidgets.QHBoxLayout(self.verticalFrame_2)
-        self.horizontalLayout_36.setContentsMargins(9, 6, 9, 6)
-        self.horizontalLayout_36.setSpacing(6)
-        self.horizontalLayout_36.setObjectName("horizontalLayout_36")
-        self.progressBar_classification = QtWidgets.QProgressBar(parent=self.verticalFrame_2)
-        self.progressBar_classification.setMinimumSize(QtCore.QSize(0, 0))
-        self.progressBar_classification.setMaximumSize(QtCore.QSize(16777215, 1111111))
-        self.progressBar_classification.setStyleSheet("QProgressBar {\n"
+        self.frame_right_sidebar.setObjectName("frame_right_sidebar")
+        self.horizontalLayout_40 = QtWidgets.QHBoxLayout(self.frame_right_sidebar)
+        self.horizontalLayout_40.setContentsMargins(9, 9, 9, 9)
+        self.horizontalLayout_40.setSpacing(9)
+        self.horizontalLayout_40.setObjectName("horizontalLayout_40")
+        self.progress_bar_expression = QtWidgets.QProgressBar(parent=self.frame_right_sidebar)
+        self.progress_bar_expression.setMinimumSize(QtCore.QSize(0, 0))
+        self.progress_bar_expression.setMaximumSize(QtCore.QSize(16777215, 1111111))
+        self.progress_bar_expression.setStyleSheet("QProgressBar {\n"
 "  text-align: center;\n"
 "  background-color: #FFFFFF;\n"
 "  border: 1px solid #D4D4D4;\n"
@@ -2140,13 +819,13 @@ class Ui_MainWindow(object):
 "  margin: 0.5px;\n"
 "  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);\n"
 "}")
-        self.progressBar_classification.setProperty("value", 0)
-        self.progressBar_classification.setObjectName("progressBar_classification")
-        self.horizontalLayout_36.addWidget(self.progressBar_classification)
-        self.toolButton_startSmartArrange = QtWidgets.QToolButton(parent=self.verticalFrame_2)
-        self.toolButton_startSmartArrange.setMinimumSize(QtCore.QSize(88, 0))
-        self.toolButton_startSmartArrange.setMaximumSize(QtCore.QSize(16777215, 29))
-        self.toolButton_startSmartArrange.setStyleSheet("QToolButton {\n"
+        self.progress_bar_expression.setProperty("value", 0)
+        self.progress_bar_expression.setObjectName("progress_bar_expression")
+        self.horizontalLayout_40.addWidget(self.progress_bar_expression)
+        self.btn_expression_start = QtWidgets.QToolButton(parent=self.frame_right_sidebar)
+        self.btn_expression_start.setMinimumSize(QtCore.QSize(88, 0))
+        self.btn_expression_start.setMaximumSize(QtCore.QSize(16777215, 29))
+        self.btn_expression_start.setStyleSheet("QToolButton {\n"
 "    color: white;\n"
 "    border: none;\n"
 "    padding: 6px 6px;\n"
@@ -2174,29 +853,1613 @@ class Ui_MainWindow(object):
 "        stop:1 rgba(79, 71, 252, 255)\n"
 "    );\n"
 "}")
-        self.toolButton_startSmartArrange.setIconSize(QtCore.QSize(24, 24))
-        self.toolButton_startSmartArrange.setObjectName("toolButton_startSmartArrange")
-        self.horizontalLayout_36.addWidget(self.toolButton_startSmartArrange)
-        self.horizontalLayout_36.setStretch(0, 1)
-        self.verticalLayout_34.addWidget(self.verticalFrame_2)
-        self.horizontalFrame_2 = QtWidgets.QFrame(parent=self.page_2)
-        self.horizontalFrame_2.setStyleSheet("background:rgb(255, 255, 255);\n"
+        self.btn_expression_start.setIconSize(QtCore.QSize(24, 24))
+        self.btn_expression_start.setObjectName("btn_expression_start")
+        self.horizontalLayout_40.addWidget(self.btn_expression_start)
+        self.horizontalLayout_40.setStretch(0, 1)
+        self.layout_ocr_content.addWidget(self.frame_right_sidebar)
+        self.frame_toolbar_container = QtWidgets.QFrame(parent=self.page_ocrRecognition)
+        self.frame_toolbar_container.setStyleSheet("background:rgb(255, 255, 255);\n"
 "border-top-left-radius:0px;\n"
 "border-top-right-radius:0px;\n"
 "border-bottom-right-radius:20px;\n"
 "border-bottom-left-radius:0px;")
-        self.horizontalFrame_2.setObjectName("horizontalFrame_2")
-        self.horizontalLayout_37 = QtWidgets.QHBoxLayout(self.horizontalFrame_2)
-        self.horizontalLayout_37.setContentsMargins(9, 6, 9, 9)
-        self.horizontalLayout_37.setSpacing(0)
-        self.horizontalLayout_37.setObjectName("horizontalLayout_37")
-        self.textEdit_SmartArrange_Log = QtWidgets.QTextEdit(parent=self.horizontalFrame_2)
-        self.textEdit_SmartArrange_Log.setMinimumSize(QtCore.QSize(0, 0))
+        self.frame_toolbar_container.setObjectName("frame_toolbar_container")
+        self.layout_toolbar_container = QtWidgets.QHBoxLayout(self.frame_toolbar_container)
+        self.layout_toolbar_container.setContentsMargins(9, 9, 9, 9)
+        self.layout_toolbar_container.setSpacing(0)
+        self.layout_toolbar_container.setObjectName("layout_toolbar_container")
+        self.text_ocr_log = QtWidgets.QTextEdit(parent=self.frame_toolbar_container)
+        self.text_ocr_log.setMinimumSize(QtCore.QSize(0, 0))
         font = QtGui.QFont()
         font.setFamily("Segoe UI")
         font.setPointSize(-1)
-        self.textEdit_SmartArrange_Log.setFont(font)
-        self.textEdit_SmartArrange_Log.setStyleSheet("QTextEdit {\n"
+        self.text_ocr_log.setFont(font)
+        self.text_ocr_log.setStyleSheet("QTextEdit {\n"
+"    border: 1px solid #d1d5db;\n"
+"    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(248, 250, 252, 255));\n"
+"    padding: 12px;\n"
+"    border-radius: 8px;\n"
+"    font-family: \'Segoe UI\', \'Microsoft YaHei\', sans-serif;\n"
+"    font-size: 14px;\n"
+"    color: #374151;\n"
+"    selection-background-color: rgba(134, 119, 253, 0.5);\n"
+"    selection-color: #fff;\n"
+"    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8);\n"
+"    transition: all 0.2s ease-out;\n"
+"}\n"
+"\n"
+"QTextEdit:hover {\n"
+"    border-color: #a5b4fc;\n"
+"    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(241, 245, 249, 255));\n"
+"    box-shadow: 0 2px 4px rgba(166, 175, 195, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9);\n"
+"}\n"
+"\n"
+"QTextEdit QScrollBar:vertical {\n"
+"    width: 10px;\n"
+"    background: transparent;\n"
+"    margin: 2px;\n"
+"}\n"
+"\n"
+"QTextEdit QScrollBar::handle:vertical {\n"
+"    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(134, 119, 253, 0.2), stop:1 rgba(134, 119, 253, 0.4));\n"
+"    border-radius: 6px;\n"
+"    min-height: 30px;\n"
+"    margin: 2px;\n"
+"    transition: all 0.2s ease-out;\n"
+"}\n"
+"\n"
+"QTextEdit QScrollBar::handle:vertical:hover {\n"
+"    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(134, 119, 253, 0.4), stop:1 rgba(134, 119, 253, 0.6));\n"
+"    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);\n"
+"}\n"
+"\n"
+"QTextEdit QScrollBar::handle:vertical:pressed {\n"
+"    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(134, 119, 253, 0.6), stop:1 rgba(134, 119, 253, 0.8));\n"
+"    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);\n"
+"}\n"
+"\n"
+"QTextEdit QScrollBar:horizontal {\n"
+"    height: 10px;\n"
+"    background: transparent;\n"
+"    margin: 2px;\n"
+"}\n"
+"\n"
+"QTextEdit QScrollBar::handle:horizontal {\n"
+"    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(134, 119, 253, 0.2), stop:1 rgba(134, 119, 253, 0.4));\n"
+"    border-radius: 6px;\n"
+"    min-width: 30px;\n"
+"    margin: 2px;\n"
+"    transition: all 0.2s ease-out;\n"
+"}\n"
+"\n"
+"QTextEdit QScrollBar::add-page:vertical,\n"
+"QTextEdit QScrollBar::sub-page:vertical,\n"
+"QTextEdit QScrollBar::add-page:horizontal,\n"
+"QTextEdit QScrollBar::sub-page:horizontal {\n"
+"    background: transparent;\n"
+"}\n"
+"\n"
+"QTextEdit QScrollBar::add-line:vertical,\n"
+"QTextEdit QScrollBar::sub-line:vertical,\n"
+"QTextEdit QScrollBar::add-line:horizontal,\n"
+"QTextEdit QScrollBar::sub-line:horizontal {\n"
+"    height: 0;\n"
+"    width: 0;\n"
+"    background: transparent;\n"
+"}\n"
+"\n"
+"QTextEdit:focus {\n"
+"    border: 2px solid #8677fd;\n"
+"    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(249, 250, 251, 255));\n"
+"    box-shadow: 0 0 0 3px rgba(134, 119, 253, 0.15), 0 4px 6px rgba(0, 0, 0, 0.05);\n"
+"    outline: none;\n"
+"}")
+        self.text_ocr_log.setReadOnly(True)
+        self.text_ocr_log.setObjectName("text_ocr_log")
+        self.layout_toolbar_container.addWidget(self.text_ocr_log)
+        self.layout_ocr_content.addWidget(self.frame_toolbar_container)
+        self.layout_ocr_main.addLayout(self.layout_ocr_content)
+        self.stackedWidget_mainContent.addWidget(self.page_ocrRecognition)
+        self.page_smartArrange = QtWidgets.QWidget()
+        self.page_smartArrange.setStyleSheet("border: none;")
+        self.page_smartArrange.setObjectName("page_smartArrange")
+        self.layout_smartArrangeMain = QtWidgets.QVBoxLayout(self.page_smartArrange)
+        self.layout_smartArrangeMain.setContentsMargins(0, 0, 0, 0)
+        self.layout_smartArrangeMain.setSpacing(0)
+        self.layout_smartArrangeMain.setObjectName("layout_smartArrangeMain")
+        self.layout_main_content = QtWidgets.QVBoxLayout()
+        self.layout_main_content.setContentsMargins(-1, 0, -1, 0)
+        self.layout_main_content.setSpacing(0)
+        self.layout_main_content.setObjectName("layout_main_content")
+        self.frame_smartArrangeClassification = QtWidgets.QFrame(parent=self.page_smartArrange)
+        self.frame_smartArrangeClassification.setStyleSheet("color: #333333;\n"
+"background:rgb(255, 255, 255);\n"
+"border: none;\n"
+"border-radius: 0px;")
+        self.frame_smartArrangeClassification.setObjectName("frame_smartArrangeClassification")
+        self.layout_smartArrangeControls = QtWidgets.QHBoxLayout(self.frame_smartArrangeClassification)
+        self.layout_smartArrangeControls.setContentsMargins(9, 9, 9, 9)
+        self.layout_smartArrangeControls.setSpacing(9)
+        self.layout_smartArrangeControls.setObjectName("layout_smartArrangeControls")
+        self.label_smartArrangeTitle = QtWidgets.QLabel(parent=self.frame_smartArrangeClassification)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_smartArrangeTitle.setFont(font)
+        self.label_smartArrangeTitle.setStyleSheet("QLabel {\n"
+"    color: #333333;\n"
+"    border: none;\n"
+"}")
+        self.label_smartArrangeTitle.setObjectName("label_smartArrangeTitle")
+        self.layout_smartArrangeControls.addWidget(self.label_smartArrangeTitle)
+        self.label_smartArrangePath = QtWidgets.QLabel(parent=self.frame_smartArrangeClassification)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_smartArrangePath.setFont(font)
+        self.label_smartArrangePath.setStyleSheet("QLabel {\n"
+"    color: #333333;\n"
+"    border: none;\n"
+"}")
+        self.label_smartArrangePath.setObjectName("label_smartArrangePath")
+        self.layout_smartArrangeControls.addWidget(self.label_smartArrangePath)
+        self.label_path_separator = QtWidgets.QLabel(parent=self.frame_smartArrangeClassification)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_path_separator.setFont(font)
+        self.label_path_separator.setStyleSheet("QLabel {\n"
+"    color: #333333;\n"
+"    border: none;\n"
+"}")
+        self.label_path_separator.setObjectName("label_path_separator")
+        self.layout_smartArrangeControls.addWidget(self.label_path_separator)
+        self.combo_classification_level_primary = QtWidgets.QComboBox(parent=self.frame_smartArrangeClassification)
+        self.combo_classification_level_primary.setMinimumSize(QtCore.QSize(82, 30))
+        font = QtGui.QFont()
+        font.setFamily("Microsoft YaHei")
+        font.setPointSize(-1)
+        self.combo_classification_level_primary.setFont(font)
+        self.combo_classification_level_primary.setStyleSheet("QComboBox {\n"
+"    background-color: #ffffff;\n"
+"    border: 1px solid #d1d5db;\n"
+"    border-radius: 6px;\n"
+"    padding: 6px 12px;\n"
+"    color: #374151;\n"
+"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
+"    font-size: 13px;\n"
+"    min-width: 56px;\n"
+"    min-height: 16px;\n"
+"    selection-background-color: #6d28d9;\n"
+"    selection-color: white;\n"
+"    transition: all 0.2s ease-out;\n"
+"}\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    width: 0;\n"
+"    border: none;\n"
+"    padding: 0;\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow {\n"
+"    image: none;\n"
+"}\n"
+"\n"
+"QComboBox:hover {\n"
+"    border-color: #a5b4fc;\n"
+"    background-color: #f8fafc;\n"
+"    box-shadow: 0 1px 3px rgba(166, 175, 195, 0.2);\n"
+"}\n"
+"\n"
+"QComboBox:on {\n"
+"    background-color: #f5f3ff;\n"
+"    border-bottom-left-radius: 0;\n"
+"    border-bottom-right-radius: 0;\n"
+"    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);\n"
+"}\n"
+"\n"
+"QComboBox:pressed {\n"
+"    background-color: #ede9fe;\n"
+"    transform: translateY(1px);\n"
+"}\n"
+"\n"
+"QComboBox:disabled {\n"
+"    background-color: #f3f4f6;\n"
+"    color: #9ca3af;\n"
+"    border-color: #e5e7eb;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView {\n"
+"    border: 1px solid #e5e7eb;\n"
+"    border-top: none;\n"
+"    border-radius: 0 0 6px 6px;\n"
+"    background: white;\n"
+"    padding: 4px 0;\n"
+"    margin-top: -1px;\n"
+"    selection-background-color: #6d28d9;\n"
+"    selection-color: white;\n"
+"    outline: none;\n"
+"    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);\n"
+"    min-width: 88px;\n"
+"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
+"    font-size: 13px;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item {\n"
+"    padding: 6px 2px;\n"
+"    margin: 0 4px;\n"
+"    border-radius: 3px;\n"
+"    border-left: 1px solid transparent;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item:hover {\n"
+"    background-color: #f8f5ff;\n"
+"    color: #6d28d9;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item:selected {\n"
+"    background-color: #faf7ff;\n"
+"    color: #6d28d9;\n"
+"    border-left: 1px solid #6d28d9;\n"
+"    font-weight: normal;\n"
+"    padding-left: 11px;\n"
+"}\n"
+"\n"
+"QComboBox:editable {\n"
+"    background: white;\n"
+"    padding-right: 12px;\n"
+"}\n"
+"\n"
+"QComboBox:editable:on {\n"
+"    background: #f5f3ff;\n"
+"}\n"
+"\n"
+"QComboBox:!editable {\n"
+"    background: #f9fafb;\n"
+"}\n"
+"\n"
+"QComboBox:focus {\n"
+"    border: 1px solid #8b5cf6;\n"
+"    outline: none;\n"
+"    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
+"}")
+        self.combo_classification_level_primary.setObjectName("combo_classification_level_primary")
+        self.combo_classification_level_primary.addItem("")
+        self.combo_classification_level_primary.addItem("")
+        self.combo_classification_level_primary.addItem("")
+        self.combo_classification_level_primary.addItem("")
+        self.combo_classification_level_primary.addItem("")
+        self.combo_classification_level_primary.addItem("")
+        self.combo_classification_level_primary.addItem("")
+        self.layout_smartArrangeControls.addWidget(self.combo_classification_level_primary)
+        self.label_separator_primary = QtWidgets.QLabel(parent=self.frame_smartArrangeClassification)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_separator_primary.setFont(font)
+        self.label_separator_primary.setStyleSheet("QLabel {\n"
+"    color: #333333;\n"
+"    border: none;\n"
+"}")
+        self.label_separator_primary.setObjectName("label_separator_primary")
+        self.layout_smartArrangeControls.addWidget(self.label_separator_primary)
+        self.combo_classification_level_secondary = QtWidgets.QComboBox(parent=self.frame_smartArrangeClassification)
+        self.combo_classification_level_secondary.setMinimumSize(QtCore.QSize(82, 30))
+        font = QtGui.QFont()
+        font.setFamily("Microsoft YaHei")
+        font.setPointSize(-1)
+        self.combo_classification_level_secondary.setFont(font)
+        self.combo_classification_level_secondary.setStyleSheet("QComboBox {\n"
+"    background-color: #ffffff;\n"
+"    border: 1px solid #d1d5db;\n"
+"    border-radius: 6px;\n"
+"    padding: 6px 12px;\n"
+"    color: #374151;\n"
+"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
+"    font-size: 13px;\n"
+"    min-width: 56px;\n"
+"    min-height: 16px;\n"
+"    selection-background-color: #6d28d9;\n"
+"    selection-color: white;\n"
+"    transition: all 0.2s ease-out;\n"
+"}\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    width: 0;\n"
+"    border: none;\n"
+"    padding: 0;\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow {\n"
+"    image: none;\n"
+"}\n"
+"\n"
+"QComboBox:hover {\n"
+"    border-color: #a5b4fc;\n"
+"    background-color: #f8fafc;\n"
+"    box-shadow: 0 1px 3px rgba(166, 175, 195, 0.2);\n"
+"}\n"
+"\n"
+"QComboBox:on {\n"
+"    background-color: #f5f3ff;\n"
+"    border-bottom-left-radius: 0;\n"
+"    border-bottom-right-radius: 0;\n"
+"    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);\n"
+"}\n"
+"\n"
+"QComboBox:pressed {\n"
+"    background-color: #ede9fe;\n"
+"    transform: translateY(1px);\n"
+"}\n"
+"\n"
+"QComboBox:disabled {\n"
+"    background-color: #f3f4f6;\n"
+"    color: #9ca3af;\n"
+"    border-color: #e5e7eb;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView {\n"
+"    border: 1px solid #e5e7eb;\n"
+"    border-top: none;\n"
+"    border-radius: 0 0 6px 6px;\n"
+"    background: white;\n"
+"    padding: 4px 0;\n"
+"    margin-top: -1px;\n"
+"    selection-background-color: #6d28d9;\n"
+"    selection-color: white;\n"
+"    outline: none;\n"
+"    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);\n"
+"    min-width: 88px;\n"
+"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
+"    font-size: 13px;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item {\n"
+"    padding: 6px 2px;\n"
+"    margin: 0 4px;\n"
+"    border-radius: 3px;\n"
+"    border-left: 1px solid transparent;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item:hover {\n"
+"    background-color: #f8f5ff;\n"
+"    color: #6d28d9;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item:selected {\n"
+"    background-color: #faf7ff;\n"
+"    color: #6d28d9;\n"
+"    border-left: 1px solid #6d28d9;\n"
+"    font-weight: normal;\n"
+"    padding-left: 11px;\n"
+"}\n"
+"\n"
+"QComboBox:editable {\n"
+"    background: white;\n"
+"    padding-right: 12px;\n"
+"}\n"
+"\n"
+"QComboBox:editable:on {\n"
+"    background: #f5f3ff;\n"
+"}\n"
+"\n"
+"QComboBox:!editable {\n"
+"    background: #f9fafb;\n"
+"}\n"
+"\n"
+"QComboBox:focus {\n"
+"    border: 1px solid #8b5cf6;\n"
+"    outline: none;\n"
+"    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
+"}")
+        self.combo_classification_level_secondary.setObjectName("combo_classification_level_secondary")
+        self.combo_classification_level_secondary.addItem("")
+        self.combo_classification_level_secondary.addItem("")
+        self.combo_classification_level_secondary.addItem("")
+        self.combo_classification_level_secondary.addItem("")
+        self.combo_classification_level_secondary.addItem("")
+        self.combo_classification_level_secondary.addItem("")
+        self.combo_classification_level_secondary.addItem("")
+        self.layout_smartArrangeControls.addWidget(self.combo_classification_level_secondary)
+        self.label_separator_2 = QtWidgets.QLabel(parent=self.frame_smartArrangeClassification)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_separator_2.setFont(font)
+        self.label_separator_2.setStyleSheet("QLabel {\n"
+"    color: #333333;\n"
+"    border: none;\n"
+"}")
+        self.label_separator_2.setObjectName("label_separator_2")
+        self.layout_smartArrangeControls.addWidget(self.label_separator_2)
+        self.combo_classification_level_secondary1 = QtWidgets.QComboBox(parent=self.frame_smartArrangeClassification)
+        self.combo_classification_level_secondary1.setMinimumSize(QtCore.QSize(82, 30))
+        font = QtGui.QFont()
+        font.setFamily("Microsoft YaHei")
+        font.setPointSize(-1)
+        self.combo_classification_level_secondary1.setFont(font)
+        self.combo_classification_level_secondary1.setStyleSheet("QComboBox {\n"
+"    background-color: #ffffff;\n"
+"    border: 1px solid #d1d5db;\n"
+"    border-radius: 6px;\n"
+"    padding: 6px 12px;\n"
+"    color: #374151;\n"
+"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
+"    font-size: 13px;\n"
+"    min-width: 56px;\n"
+"    min-height: 16px;\n"
+"    selection-background-color: #6d28d9;\n"
+"    selection-color: white;\n"
+"    transition: all 0.2s ease-out;\n"
+"}\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    width: 0;\n"
+"    border: none;\n"
+"    padding: 0;\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow {\n"
+"    image: none;\n"
+"}\n"
+"\n"
+"QComboBox:hover {\n"
+"    border-color: #a5b4fc;\n"
+"    background-color: #f8fafc;\n"
+"    box-shadow: 0 1px 3px rgba(166, 175, 195, 0.2);\n"
+"}\n"
+"\n"
+"QComboBox:on {\n"
+"    background-color: #f5f3ff;\n"
+"    border-bottom-left-radius: 0;\n"
+"    border-bottom-right-radius: 0;\n"
+"    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);\n"
+"}\n"
+"\n"
+"QComboBox:pressed {\n"
+"    background-color: #ede9fe;\n"
+"    transform: translateY(1px);\n"
+"}\n"
+"\n"
+"QComboBox:disabled {\n"
+"    background-color: #f3f4f6;\n"
+"    color: #9ca3af;\n"
+"    border-color: #e5e7eb;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView {\n"
+"    border: 1px solid #e5e7eb;\n"
+"    border-top: none;\n"
+"    border-radius: 0 0 6px 6px;\n"
+"    background: white;\n"
+"    padding: 4px 0;\n"
+"    margin-top: -1px;\n"
+"    selection-background-color: #6d28d9;\n"
+"    selection-color: white;\n"
+"    outline: none;\n"
+"    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);\n"
+"    min-width: 88px;\n"
+"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
+"    font-size: 13px;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item {\n"
+"    padding: 6px 2px;\n"
+"    margin: 0 4px;\n"
+"    border-radius: 3px;\n"
+"    border-left: 1px solid transparent;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item:hover {\n"
+"    background-color: #f8f5ff;\n"
+"    color: #6d28d9;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item:selected {\n"
+"    background-color: #faf7ff;\n"
+"    color: #6d28d9;\n"
+"    border-left: 1px solid #6d28d9;\n"
+"    font-weight: normal;\n"
+"    padding-left: 11px;\n"
+"}\n"
+"\n"
+"QComboBox:editable {\n"
+"    background: white;\n"
+"    padding-right: 12px;\n"
+"}\n"
+"\n"
+"QComboBox:editable:on {\n"
+"    background: #f5f3ff;\n"
+"}\n"
+"\n"
+"QComboBox:!editable {\n"
+"    background: #f9fafb;\n"
+"}\n"
+"\n"
+"QComboBox:focus {\n"
+"    border: 1px solid #8b5cf6;\n"
+"    outline: none;\n"
+"    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
+"}")
+        self.combo_classification_level_secondary1.setObjectName("combo_classification_level_secondary1")
+        self.combo_classification_level_secondary1.addItem("")
+        self.combo_classification_level_secondary1.addItem("")
+        self.combo_classification_level_secondary1.addItem("")
+        self.combo_classification_level_secondary1.addItem("")
+        self.combo_classification_level_secondary1.addItem("")
+        self.combo_classification_level_secondary1.addItem("")
+        self.combo_classification_level_secondary1.addItem("")
+        self.layout_smartArrangeControls.addWidget(self.combo_classification_level_secondary1)
+        self.label_separator_secondary = QtWidgets.QLabel(parent=self.frame_smartArrangeClassification)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_separator_secondary.setFont(font)
+        self.label_separator_secondary.setStyleSheet("QLabel {\n"
+"    color: #333333;\n"
+"    border: none;\n"
+"}")
+        self.label_separator_secondary.setObjectName("label_separator_secondary")
+        self.layout_smartArrangeControls.addWidget(self.label_separator_secondary)
+        self.combo_classification_level_tertiary = QtWidgets.QComboBox(parent=self.frame_smartArrangeClassification)
+        self.combo_classification_level_tertiary.setMinimumSize(QtCore.QSize(82, 30))
+        font = QtGui.QFont()
+        font.setFamily("Microsoft YaHei")
+        font.setPointSize(-1)
+        self.combo_classification_level_tertiary.setFont(font)
+        self.combo_classification_level_tertiary.setStyleSheet("QComboBox {\n"
+"    background-color: #ffffff;\n"
+"    border: 1px solid #d1d5db;\n"
+"    border-radius: 6px;\n"
+"    padding: 6px 12px;\n"
+"    color: #374151;\n"
+"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
+"    font-size: 13px;\n"
+"    min-width: 56px;\n"
+"    min-height: 16px;\n"
+"    selection-background-color: #6d28d9;\n"
+"    selection-color: white;\n"
+"    transition: all 0.2s ease-out;\n"
+"}\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    width: 0;\n"
+"    border: none;\n"
+"    padding: 0;\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow {\n"
+"    image: none;\n"
+"}\n"
+"\n"
+"QComboBox:hover {\n"
+"    border-color: #a5b4fc;\n"
+"    background-color: #f8fafc;\n"
+"    box-shadow: 0 1px 3px rgba(166, 175, 195, 0.2);\n"
+"}\n"
+"\n"
+"QComboBox:on {\n"
+"    background-color: #f5f3ff;\n"
+"    border-bottom-left-radius: 0;\n"
+"    border-bottom-right-radius: 0;\n"
+"    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);\n"
+"}\n"
+"\n"
+"QComboBox:pressed {\n"
+"    background-color: #ede9fe;\n"
+"    transform: translateY(1px);\n"
+"}\n"
+"\n"
+"QComboBox:disabled {\n"
+"    background-color: #f3f4f6;\n"
+"    color: #9ca3af;\n"
+"    border-color: #e5e7eb;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView {\n"
+"    border: 1px solid #e5e7eb;\n"
+"    border-top: none;\n"
+"    border-radius: 0 0 6px 6px;\n"
+"    background: white;\n"
+"    padding: 4px 0;\n"
+"    margin-top: -1px;\n"
+"    selection-background-color: #6d28d9;\n"
+"    selection-color: white;\n"
+"    outline: none;\n"
+"    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);\n"
+"    min-width: 88px;\n"
+"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
+"    font-size: 13px;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item {\n"
+"    padding: 6px 2px;\n"
+"    margin: 0 4px;\n"
+"    border-radius: 3px;\n"
+"    border-left: 1px solid transparent;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item:hover {\n"
+"    background-color: #f8f5ff;\n"
+"    color: #6d28d9;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item:selected {\n"
+"    background-color: #faf7ff;\n"
+"    color: #6d28d9;\n"
+"    border-left: 1px solid #6d28d9;\n"
+"    font-weight: normal;\n"
+"    padding-left: 11px;\n"
+"}\n"
+"\n"
+"QComboBox:editable {\n"
+"    background: white;\n"
+"    padding-right: 12px;\n"
+"}\n"
+"\n"
+"QComboBox:editable:on {\n"
+"    background: #f5f3ff;\n"
+"}\n"
+"\n"
+"QComboBox:!editable {\n"
+"    background: #f9fafb;\n"
+"}\n"
+"\n"
+"QComboBox:focus {\n"
+"    border: 1px solid #8b5cf6;\n"
+"    outline: none;\n"
+"    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
+"}")
+        self.combo_classification_level_tertiary.setObjectName("combo_classification_level_tertiary")
+        self.combo_classification_level_tertiary.addItem("")
+        self.combo_classification_level_tertiary.addItem("")
+        self.combo_classification_level_tertiary.addItem("")
+        self.combo_classification_level_tertiary.addItem("")
+        self.combo_classification_level_tertiary.addItem("")
+        self.combo_classification_level_tertiary.addItem("")
+        self.combo_classification_level_tertiary.addItem("")
+        self.layout_smartArrangeControls.addWidget(self.combo_classification_level_tertiary)
+        self.label_separator_tertiary = QtWidgets.QLabel(parent=self.frame_smartArrangeClassification)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_separator_tertiary.setFont(font)
+        self.label_separator_tertiary.setStyleSheet("QLabel {\n"
+"    color: #333333;\n"
+"    border: none;\n"
+"}")
+        self.label_separator_tertiary.setObjectName("label_separator_tertiary")
+        self.layout_smartArrangeControls.addWidget(self.label_separator_tertiary)
+        self.combo_classification_level_quaternary = QtWidgets.QComboBox(parent=self.frame_smartArrangeClassification)
+        self.combo_classification_level_quaternary.setMinimumSize(QtCore.QSize(82, 30))
+        font = QtGui.QFont()
+        font.setFamily("Microsoft YaHei")
+        font.setPointSize(-1)
+        self.combo_classification_level_quaternary.setFont(font)
+        self.combo_classification_level_quaternary.setStyleSheet("QComboBox {\n"
+"    background-color: #ffffff;\n"
+"    border: 1px solid #d1d5db;\n"
+"    border-radius: 6px;\n"
+"    padding: 6px 12px;\n"
+"    color: #374151;\n"
+"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
+"    font-size: 13px;\n"
+"    min-width: 56px;\n"
+"    min-height: 16px;\n"
+"    selection-background-color: #6d28d9;\n"
+"    selection-color: white;\n"
+"    transition: all 0.2s ease-out;\n"
+"}\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    width: 0;\n"
+"    border: none;\n"
+"    padding: 0;\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow {\n"
+"    image: none;\n"
+"}\n"
+"\n"
+"QComboBox:hover {\n"
+"    border-color: #a5b4fc;\n"
+"    background-color: #f8fafc;\n"
+"    box-shadow: 0 1px 3px rgba(166, 175, 195, 0.2);\n"
+"}\n"
+"\n"
+"QComboBox:on {\n"
+"    background-color: #f5f3ff;\n"
+"    border-bottom-left-radius: 0;\n"
+"    border-bottom-right-radius: 0;\n"
+"    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);\n"
+"}\n"
+"\n"
+"QComboBox:pressed {\n"
+"    background-color: #ede9fe;\n"
+"    transform: translateY(1px);\n"
+"}\n"
+"\n"
+"QComboBox:disabled {\n"
+"    background-color: #f3f4f6;\n"
+"    color: #9ca3af;\n"
+"    border-color: #e5e7eb;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView {\n"
+"    border: 1px solid #e5e7eb;\n"
+"    border-top: none;\n"
+"    border-radius: 0 0 6px 6px;\n"
+"    background: white;\n"
+"    padding: 4px 0;\n"
+"    margin-top: -1px;\n"
+"    selection-background-color: #6d28d9;\n"
+"    selection-color: white;\n"
+"    outline: none;\n"
+"    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);\n"
+"    min-width: 88px;\n"
+"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
+"    font-size: 13px;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item {\n"
+"    padding: 6px 2px;\n"
+"    margin: 0 4px;\n"
+"    border-radius: 3px;\n"
+"    border-left: 1px solid transparent;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item:hover {\n"
+"    background-color: #f8f5ff;\n"
+"    color: #6d28d9;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item:selected {\n"
+"    background-color: #faf7ff;\n"
+"    color: #6d28d9;\n"
+"    border-left: 1px solid #6d28d9;\n"
+"    font-weight: normal;\n"
+"    padding-left: 11px;\n"
+"}\n"
+"\n"
+"QComboBox:editable {\n"
+"    background: white;\n"
+"    padding-right: 12px;\n"
+"}\n"
+"\n"
+"QComboBox:editable:on {\n"
+"    background: #f5f3ff;\n"
+"}\n"
+"\n"
+"QComboBox:!editable {\n"
+"    background: #f9fafb;\n"
+"}\n"
+"\n"
+"QComboBox:focus {\n"
+"    border: 1px solid #8b5cf6;\n"
+"    outline: none;\n"
+"    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
+"}")
+        self.combo_classification_level_quaternary.setObjectName("combo_classification_level_quaternary")
+        self.combo_classification_level_quaternary.addItem("")
+        self.combo_classification_level_quaternary.addItem("")
+        self.combo_classification_level_quaternary.addItem("")
+        self.combo_classification_level_quaternary.addItem("")
+        self.combo_classification_level_quaternary.addItem("")
+        self.combo_classification_level_quaternary.addItem("")
+        self.combo_classification_level_quaternary.addItem("")
+        self.layout_smartArrangeControls.addWidget(self.combo_classification_level_quaternary)
+        self.layout_main_content.addWidget(self.frame_smartArrangeClassification)
+        self.frame_rename = QtWidgets.QFrame(parent=self.page_smartArrange)
+        self.frame_rename.setStyleSheet("border-radius:0px;\n"
+"background:rgb(255, 255, 255);")
+        self.frame_rename.setObjectName("frame_rename")
+        self.layout_rename_panel = QtWidgets.QVBoxLayout(self.frame_rename)
+        self.layout_rename_panel.setContentsMargins(0, 0, 0, 0)
+        self.layout_rename_panel.setSpacing(0)
+        self.layout_rename_panel.setObjectName("layout_rename_panel")
+        self.layout_rename_controls = QtWidgets.QHBoxLayout()
+        self.layout_rename_controls.setContentsMargins(9, 9, 9, 9)
+        self.layout_rename_controls.setSpacing(9)
+        self.layout_rename_controls.setObjectName("layout_rename_controls")
+        self.label_build_name = QtWidgets.QLabel(parent=self.frame_rename)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_build_name.setFont(font)
+        self.label_build_name.setStyleSheet("QLabel {\n"
+"    color: #333333;\n"
+"    border: none;\n"
+"}")
+        self.label_build_name.setObjectName("label_build_name")
+        self.layout_rename_controls.addWidget(self.label_build_name)
+        self.frame_rename_input_container = QtWidgets.QFrame(parent=self.frame_rename)
+        self.frame_rename_input_container.setMinimumSize(QtCore.QSize(88, 36))
+        self.frame_rename_input_container.setMaximumSize(QtCore.QSize(800, 36))
+        self.frame_rename_input_container.setSizeIncrement(QtCore.QSize(0, 32))
+        self.frame_rename_input_container.setStyleSheet("QFrame {\n"
+"    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, \n"
+"                              stop:0 rgb(251, 253, 254), \n"
+"                              stop:0.4 rgb(248, 250, 251), \n"
+"                              stop:1 rgb(246, 248, 249));\n"
+"    border-radius: 6px;\n"
+"    border: 1px solid rgba(230, 235, 240, 0.8);\n"
+"}")
+        self.frame_rename_input_container.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.frame_rename_input_container.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.frame_rename_input_container.setObjectName("frame_rename_input_container")
+        self.layout_rename_input = QtWidgets.QHBoxLayout(self.frame_rename_input_container)
+        self.layout_rename_input.setContentsMargins(9, 0, 9, 0)
+        self.layout_rename_input.setSpacing(9)
+        self.layout_rename_input.setObjectName("layout_rename_input")
+        self.layout_rename_controls.addWidget(self.frame_rename_input_container)
+        self.btn_rename_unique = QtWidgets.QPushButton(parent=self.frame_rename)
+        self.btn_rename_unique.setMinimumSize(QtCore.QSize(78, 28))
+        self.btn_rename_unique.setMaximumSize(QtCore.QSize(78, 28))
+        self.btn_rename_unique.setStyleSheet("QPushButton {\n"
+"  background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(248, 250, 252, 255));\n"
+"  color: #374151;\n"
+"  border: 1px solid #d1d5db;\n"
+"  text-align: center;\n"
+"  font-size: 14px;\n"
+"  cursor: pointer;\n"
+"  border-radius: 8px;\n"
+"  padding: 6px 12px;\n"
+"  transition: all 0.2s ease-out;\n"
+"  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8);\n"
+"  text-transform: uppercase;\n"
+"  font-weight: 500;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"  background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(241, 245, 249, 255));\n"
+"  border-color: #a5b4fc;\n"
+"  box-shadow: 0 2px 4px rgba(166, 175, 195, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9);\n"
+"  transform: translateY(-1px);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"  background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(229, 231, 235, 255), stop:1 rgba(209, 213, 219, 255));\n"
+"  border-color: #9ca3af;\n"
+"  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);\n"
+"  transform: translateY(0px);\n"
+"}\n"
+"\n"
+"QPushButton:disabled {\n"
+"  background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(243, 244, 246, 255), stop:1 rgba(229, 231, 235, 255));\n"
+"  color: #9ca3af;\n"
+"  border-color: #e5e7eb;\n"
+"  box-shadow: none;\n"
+"}")
+        self.btn_rename_unique.setObjectName("btn_rename_unique")
+        self.layout_rename_controls.addWidget(self.btn_rename_unique)
+        self.label_file_extension = QtWidgets.QLabel(parent=self.frame_rename)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_file_extension.setFont(font)
+        self.label_file_extension.setStyleSheet("QLabel {\n"
+"    color: #333333;\n"
+"    border: none;\n"
+"}")
+        self.label_file_extension.setObjectName("label_file_extension")
+        self.layout_rename_controls.addWidget(self.label_file_extension)
+        self.btn_file_extension = QtWidgets.QPushButton(parent=self.frame_rename)
+        self.btn_file_extension.setMinimumSize(QtCore.QSize(64, 28))
+        self.btn_file_extension.setMaximumSize(QtCore.QSize(64, 28))
+        self.btn_file_extension.setStyleSheet("QPushButton {\n"
+"  background-color: #ffffff;\n"
+"  color: #2c3e50;\n"
+"  border: 1px solid #d4d4d4;\n"
+"  text-align: center;\n"
+"  font-size: 14px;\n"
+"  cursor: pointer;\n"
+"  border-radius: 12px;\n"
+"  padding: 4px 10px;\n"
+"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
+"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
+"  text-transform: uppercase;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"  background-color: #f7f7f7;\n"
+"  color: #2c3e50;\n"
+"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
+"}")
+        self.btn_file_extension.setObjectName("btn_file_extension")
+        self.layout_rename_controls.addWidget(self.btn_file_extension)
+        spacerItem3 = QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
+        self.layout_rename_controls.addItem(spacerItem3)
+        self.layout_rename_panel.addLayout(self.layout_rename_controls)
+        self.frame_rename_tags_panel = QtWidgets.QFrame(parent=self.frame_rename)
+        self.frame_rename_tags_panel.setMinimumSize(QtCore.QSize(0, 54))
+        self.frame_rename_tags_panel.setStyleSheet("border: none;\n"
+"border-radius: 0px;")
+        self.frame_rename_tags_panel.setObjectName("frame_rename_tags_panel")
+        self.layout_rename_tags_container = QtWidgets.QHBoxLayout(self.frame_rename_tags_panel)
+        self.layout_rename_tags_container.setContentsMargins(9, 9, 9, 9)
+        self.layout_rename_tags_container.setSpacing(9)
+        self.layout_rename_tags_container.setObjectName("layout_rename_tags_container")
+        self.label_rename_tags = QtWidgets.QLabel(parent=self.frame_rename_tags_panel)
+        self.label_rename_tags.setMinimumSize(QtCore.QSize(0, 40))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_rename_tags.setFont(font)
+        self.label_rename_tags.setStyleSheet("QLabel {\n"
+"    color: #333333;\n"
+"    border: none;\n"
+"}")
+        self.label_rename_tags.setObjectName("label_rename_tags")
+        self.layout_rename_tags_container.addWidget(self.label_rename_tags)
+        self.frame_rename_tags_container = QtWidgets.QFrame(parent=self.frame_rename_tags_panel)
+        self.frame_rename_tags_container.setMinimumSize(QtCore.QSize(0, 40))
+        self.frame_rename_tags_container.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        self.frame_rename_tags_container.setSizeIncrement(QtCore.QSize(0, 32))
+        self.frame_rename_tags_container.setStyleSheet("QFrame{\n"
+"background:rgba(0, 0, 0, 0);\n"
+"border: 0px;\n"
+"}")
+        self.frame_rename_tags_container.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.frame_rename_tags_container.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.frame_rename_tags_container.setObjectName("frame_rename_tags_container")
+        self.layout_rename_tags = QtWidgets.QHBoxLayout(self.frame_rename_tags_container)
+        self.layout_rename_tags.setContentsMargins(6, 6, 0, 6)
+        self.layout_rename_tags.setSpacing(6)
+        self.layout_rename_tags.setObjectName("layout_rename_tags")
+        self.btn_tag_original = QtWidgets.QPushButton(parent=self.frame_rename_tags_container)
+        self.btn_tag_original.setMaximumSize(QtCore.QSize(80, 28))
+        self.btn_tag_original.setStyleSheet("QPushButton {\n"
+"  background-color: #ffffff;\n"
+"  color: #2c3e50;\n"
+"  border: 1px solid #d4d4d4;\n"
+"  text-align: center;\n"
+"  font-size: 14px;\n"
+"  border-radius: 12px;\n"
+"  padding: 4px 8px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"  background-color: #f7f7f7;\n"
+"  color: #2c3e50;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"  background-color: #ececec;\n"
+"  color: #34495e;\n"
+"}")
+        self.btn_tag_original.setObjectName("btn_tag_original")
+        self.layout_rename_tags.addWidget(self.btn_tag_original)
+        self.btn_tag_year = QtWidgets.QPushButton(parent=self.frame_rename_tags_container)
+        self.btn_tag_year.setMaximumSize(QtCore.QSize(46, 28))
+        self.btn_tag_year.setStyleSheet("QPushButton {\n"
+"  background-color: #ffffff;\n"
+"  color: #2c3e50;\n"
+"  border: 1px solid #d4d4d4;\n"
+"  text-align: center;\n"
+"  font-size: 14px;\n"
+"  cursor: pointer;\n"
+"  border-radius: 12px;\n"
+"  padding: 4px 8px;\n"
+"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
+"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
+"  text-transform: uppercase;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"  background-color: #f7f7f7;\n"
+"  color: #2c3e50;\n"
+"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"  background-color: #ececec;\n"
+"  color: #34495e;\n"
+"  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
+"  transform: translateY(2px);\n"
+"}")
+        self.btn_tag_year.setObjectName("btn_tag_year")
+        self.layout_rename_tags.addWidget(self.btn_tag_year)
+        self.btn_tag_month = QtWidgets.QPushButton(parent=self.frame_rename_tags_container)
+        self.btn_tag_month.setMaximumSize(QtCore.QSize(46, 28))
+        self.btn_tag_month.setStyleSheet("QPushButton {\n"
+"  background-color: #ffffff;\n"
+"  color: #2c3e50;\n"
+"  border: 1px solid #d4d4d4;\n"
+"  text-align: center;\n"
+"  font-size: 14px;\n"
+"  cursor: pointer;\n"
+"  border-radius: 12px;\n"
+"  padding: 4px 8px;\n"
+"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
+"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
+"  text-transform: uppercase;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"  background-color: #f7f7f7;\n"
+"  color: #2c3e50;\n"
+"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"  background-color: #ececec;\n"
+"  color: #34495e;\n"
+"  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
+"  transform: translateY(2px);\n"
+"}")
+        self.btn_tag_month.setObjectName("btn_tag_month")
+        self.layout_rename_tags.addWidget(self.btn_tag_month)
+        self.btn_tag_date = QtWidgets.QPushButton(parent=self.frame_rename_tags_container)
+        self.btn_tag_date.setMaximumSize(QtCore.QSize(32, 28))
+        self.btn_tag_date.setStyleSheet("QPushButton {\n"
+"  background-color: #ffffff;\n"
+"  color: #2c3e50;\n"
+"  border: 1px solid #d4d4d4;\n"
+"  text-align: center;\n"
+"  font-size: 14px;\n"
+"  cursor: pointer;\n"
+"  border-radius: 12px;\n"
+"  padding: 4px 8px;\n"
+"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
+"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
+"  text-transform: uppercase;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"  background-color: #f7f7f7;\n"
+"  color: #2c3e50;\n"
+"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"  background-color: #ececec;\n"
+"  color: #34495e;\n"
+"  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
+"  transform: translateY(2px);\n"
+"}")
+        self.btn_tag_date.setObjectName("btn_tag_date")
+        self.layout_rename_tags.addWidget(self.btn_tag_date)
+        self.btn_tag_day = QtWidgets.QPushButton(parent=self.frame_rename_tags_container)
+        self.btn_tag_day.setMaximumSize(QtCore.QSize(46, 28))
+        self.btn_tag_day.setStyleSheet("QPushButton {\n"
+"  background-color: #ffffff;\n"
+"  color: #2c3e50;\n"
+"  border: 1px solid #d4d4d4;\n"
+"  text-align: center;\n"
+"  font-size: 14px;\n"
+"  cursor: pointer;\n"
+"  border-radius: 12px;\n"
+"  padding: 4px 8px;\n"
+"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
+"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
+"  text-transform: uppercase;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"  background-color: #f7f7f7;\n"
+"  color: #2c3e50;\n"
+"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"  background-color: #ececec;\n"
+"  color: #34495e;\n"
+"  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
+"  transform: translateY(2px);\n"
+"}")
+        self.btn_tag_day.setObjectName("btn_tag_day")
+        self.layout_rename_tags.addWidget(self.btn_tag_day)
+        self.btn_tag_time = QtWidgets.QPushButton(parent=self.frame_rename_tags_container)
+        self.btn_tag_time.setMaximumSize(QtCore.QSize(46, 28))
+        self.btn_tag_time.setStyleSheet("QPushButton {\n"
+"  background-color: #ffffff;\n"
+"  color: #2c3e50;\n"
+"  border: 1px solid #d4d4d4;\n"
+"  text-align: center;\n"
+"  font-size: 14px;\n"
+"  cursor: pointer;\n"
+"  border-radius: 12px;\n"
+"  padding: 4px 8px;\n"
+"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
+"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
+"  text-transform: uppercase;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"  background-color: #f7f7f7;\n"
+"  color: #2c3e50;\n"
+"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"  background-color: #ececec;\n"
+"  color: #34495e;\n"
+"  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
+"  transform: translateY(2px);\n"
+"}")
+        self.btn_tag_time.setIconSize(QtCore.QSize(16, 16))
+        self.btn_tag_time.setObjectName("btn_tag_time")
+        self.layout_rename_tags.addWidget(self.btn_tag_time)
+        self.btn_tag_brand = QtWidgets.QPushButton(parent=self.frame_rename_tags_container)
+        self.btn_tag_brand.setMaximumSize(QtCore.QSize(74, 28))
+        self.btn_tag_brand.setStyleSheet("QPushButton {\n"
+"  background-color: #ffffff;\n"
+"  color: #2c3e50;\n"
+"  border: 1px solid #d4d4d4;\n"
+"  text-align: center;\n"
+"  font-size: 14px;\n"
+"  cursor: pointer;\n"
+"  border-radius: 12px;\n"
+"  padding: 4px 8px;\n"
+"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
+"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
+"  text-transform: uppercase;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"  background-color: #f7f7f7;\n"
+"  color: #2c3e50;\n"
+"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"  background-color: #ececec;\n"
+"  color: #34495e;\n"
+"  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
+"  transform: translateY(2px);\n"
+"}")
+        self.btn_tag_brand.setObjectName("btn_tag_brand")
+        self.layout_rename_tags.addWidget(self.btn_tag_brand)
+        self.btn_tag_model = QtWidgets.QPushButton(parent=self.frame_rename_tags_container)
+        self.btn_tag_model.setMaximumSize(QtCore.QSize(74, 28))
+        self.btn_tag_model.setStyleSheet("QPushButton {\n"
+"  background-color: #ffffff;\n"
+"  color: #2c3e50;\n"
+"  border: 1px solid #d4d4d4;\n"
+"  text-align: center;\n"
+"  font-size: 14px;\n"
+"  cursor: pointer;\n"
+"  border-radius: 12px;\n"
+"  padding: 4px 8px;\n"
+"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
+"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
+"  text-transform: uppercase;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"  background-color: #f7f7f7;\n"
+"  color: #2c3e50;\n"
+"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"  background-color: #ececec;\n"
+"  color: #34495e;\n"
+"  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
+"  transform: translateY(2px);\n"
+"}")
+        self.btn_tag_model.setObjectName("btn_tag_model")
+        self.layout_rename_tags.addWidget(self.btn_tag_model)
+        self.btn_tag_location = QtWidgets.QPushButton(parent=self.frame_rename_tags_container)
+        self.btn_tag_location.setMaximumSize(QtCore.QSize(66, 28))
+        self.btn_tag_location.setStyleSheet("QPushButton {\n"
+"  background-color: #ffffff;\n"
+"  color: #2c3e50;\n"
+"  border: 1px solid #d4d4d4;\n"
+"  text-align: center;\n"
+"  font-size: 14px;\n"
+"  cursor: pointer;\n"
+"  border-radius: 12px;\n"
+"  padding: 4px 8px;\n"
+"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
+"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
+"  text-transform: uppercase;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"  background-color: #f7f7f7;\n"
+"  color: #2c3e50;\n"
+"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"  background-color: #ececec;\n"
+"  color: #34495e;\n"
+"  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
+"  transform: translateY(2px);\n"
+"}")
+        icon10 = QtGui.QIcon()
+        icon10.addPixmap(QtGui.QPixmap("resources/img/page_2/位置.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.btn_tag_location.setIcon(icon10)
+        self.btn_tag_location.setObjectName("btn_tag_location")
+        self.layout_rename_tags.addWidget(self.btn_tag_location)
+        self.btn_tag_customize = QtWidgets.QPushButton(parent=self.frame_rename_tags_container)
+        self.btn_tag_customize.setMaximumSize(QtCore.QSize(80, 28))
+        self.btn_tag_customize.setStyleSheet("QPushButton {\n"
+"  background-color: #ffffff;\n"
+"  color: #2c3e50;\n"
+"  border: 1px solid #d4d4d4;\n"
+"  text-align: center;\n"
+"  font-size: 14px;\n"
+"  cursor: pointer;\n"
+"  border-radius: 12px;\n"
+"  padding: 4px 8px;\n"
+"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
+"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
+"  text-transform: uppercase;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"  background-color: #f7f7f7;\n"
+"  color: #2c3e50;\n"
+"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"  background-color: #ececec;\n"
+"  color: #34495e;\n"
+"  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
+"  transform: translateY(2px);\n"
+"}")
+        self.btn_tag_customize.setObjectName("btn_tag_customize")
+        self.layout_rename_tags.addWidget(self.btn_tag_customize)
+        self.layout_rename_tags_container.addWidget(self.frame_rename_tags_container)
+        self.layout_separator_controls = QtWidgets.QHBoxLayout()
+        self.layout_separator_controls.setContentsMargins(-1, -1, 9, -1)
+        self.layout_separator_controls.setSpacing(4)
+        self.layout_separator_controls.setObjectName("layout_separator_controls")
+        spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
+        self.layout_separator_controls.addItem(spacerItem4)
+        self.label_separator_status = QtWidgets.QLabel(parent=self.frame_rename_tags_panel)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_separator_status.setFont(font)
+        self.label_separator_status.setStyleSheet("QLabel {\n"
+"    color: #333333;\n"
+"    border: none;\n"
+"}")
+        self.label_separator_status.setObjectName("label_separator_status")
+        self.layout_separator_controls.addWidget(self.label_separator_status)
+        self.combo_separator = QtWidgets.QComboBox(parent=self.frame_rename_tags_panel)
+        self.combo_separator.setMinimumSize(QtCore.QSize(0, 0))
+        self.combo_separator.setMaximumSize(QtCore.QSize(87, 16777215))
+        font = QtGui.QFont()
+        font.setFamily("Microsoft YaHei")
+        font.setPointSize(-1)
+        font.setBold(False)
+        font.setItalic(False)
+        self.combo_separator.setFont(font)
+        self.combo_separator.setStyleSheet("QComboBox {\n"
+"    border: 1px solid rgba(134, 119, 253, 0.8);\n"
+"    background: rgb(245, 249, 254);\n"
+"    border-radius: 4px;\n"
+"    padding: 2px 6px;\n"
+"    color: #333333;\n"
+"    font: 14px \"Microsoft YaHei\";\n"
+"}\n"
+"\n"
+"QComboBox:hover {\n"
+"    border-color: rgba(134, 119, 253, 1);\n"
+"    background: rgb(240, 247, 254);\n"
+"}\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    width: 0px;\n"
+"    border: none;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView {\n"
+"    border: 1px solid rgba(134, 119, 253, 0.3);\n"
+"    background: white;\n"
+"    selection-background-color: rgba(134, 119, 253, 0.15);\n"
+"    outline: none;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item {\n"
+"    padding: 1px 6px;\n"
+"    color: #333333;\n"
+"    font: 12px \"Microsoft YaHei\";\n"
+"}")
+        self.combo_separator.setObjectName("combo_separator")
+        self.combo_separator.addItem("")
+        self.combo_separator.addItem("")
+        self.combo_separator.addItem("")
+        self.combo_separator.addItem("")
+        self.combo_separator.addItem("")
+        self.combo_separator.addItem("")
+        self.combo_separator.addItem("")
+        self.combo_separator.addItem("")
+        self.layout_separator_controls.addWidget(self.combo_separator)
+        self.layout_separator_controls.setStretch(2, 1)
+        self.layout_rename_tags_container.addLayout(self.layout_separator_controls)
+        self.layout_rename_panel.addWidget(self.frame_rename_tags_panel)
+        self.layout_file_controls = QtWidgets.QHBoxLayout()
+        self.layout_file_controls.setContentsMargins(9, 9, 9, 9)
+        self.layout_file_controls.setSpacing(9)
+        self.layout_file_controls.setObjectName("layout_file_controls")
+        self.layout_time_controls = QtWidgets.QHBoxLayout()
+        self.layout_time_controls.setSpacing(8)
+        self.layout_time_controls.setObjectName("layout_time_controls")
+        self.label_time_sources = QtWidgets.QLabel(parent=self.frame_rename)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_time_sources.setFont(font)
+        self.label_time_sources.setStyleSheet("QLabel {\n"
+"    color: #333333;\n"
+"    border: none;\n"
+"}")
+        self.label_time_sources.setObjectName("label_time_sources")
+        self.layout_time_controls.addWidget(self.label_time_sources)
+        self.combo_time_source = QtWidgets.QComboBox(parent=self.frame_rename)
+        self.combo_time_source.setMinimumSize(QtCore.QSize(78, 0))
+        font = QtGui.QFont()
+        font.setFamily("Microsoft YaHei")
+        font.setPointSize(-1)
+        font.setBold(False)
+        font.setItalic(False)
+        self.combo_time_source.setFont(font)
+        self.combo_time_source.setStyleSheet("QComboBox {\n"
+"    border: 1px solid rgba(134, 119, 253, 0.8);\n"
+"    background: rgb(245, 249, 254);\n"
+"    border-radius: 4px;\n"
+"    padding: 2px 6px;\n"
+"    color: #333333;\n"
+"    font: 14px \"Microsoft YaHei\";\n"
+"}\n"
+"\n"
+"QComboBox:hover {\n"
+"    border-color: rgba(134, 119, 253, 1);\n"
+"    background: rgb(240, 247, 254);\n"
+"}\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    width: 0px;\n"
+"    border: none;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView {\n"
+"    border: 1px solid rgba(134, 119, 253, 0.3);\n"
+"    background: white;\n"
+"    selection-background-color: rgba(134, 119, 253, 0.15);\n"
+"    outline: none;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item {\n"
+"    padding: 1px 6px;\n"
+"    color: #333333;\n"
+"    font: 12px \"Microsoft YaHei\";\n"
+"}")
+        self.combo_time_source.setObjectName("combo_time_source")
+        self.combo_time_source.addItem("")
+        self.combo_time_source.addItem("")
+        self.combo_time_source.addItem("")
+        self.combo_time_source.addItem("")
+        self.layout_time_controls.addWidget(self.combo_time_source)
+        self.layout_file_controls.addLayout(self.layout_time_controls)
+        self.layout_operation_controls = QtWidgets.QHBoxLayout()
+        self.layout_operation_controls.setSpacing(8)
+        self.layout_operation_controls.setObjectName("layout_operation_controls")
+        self.label_operation_type = QtWidgets.QLabel(parent=self.frame_rename)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_operation_type.setFont(font)
+        self.label_operation_type.setStyleSheet("QLabel {\n"
+"    color: #333333;\n"
+"    border: none;\n"
+"}")
+        self.label_operation_type.setObjectName("label_operation_type")
+        self.layout_operation_controls.addWidget(self.label_operation_type)
+        self.combo_operation_type = QtWidgets.QComboBox(parent=self.frame_rename)
+        self.combo_operation_type.setMinimumSize(QtCore.QSize(0, 0))
+        font = QtGui.QFont()
+        font.setFamily("Microsoft YaHei")
+        font.setPointSize(-1)
+        font.setBold(False)
+        font.setItalic(False)
+        self.combo_operation_type.setFont(font)
+        self.combo_operation_type.setStyleSheet("QComboBox {\n"
+"    border: 1px solid rgba(134, 119, 253, 0.8);\n"
+"    background: rgb(245, 249, 254);\n"
+"    border-radius: 4px;\n"
+"    padding: 2px 4px;\n"
+"    color: #333333;\n"
+"    font: 14px \"Microsoft YaHei\";\n"
+"}\n"
+"\n"
+"QComboBox:hover {\n"
+"    border-color: rgba(134, 119, 253, 1);\n"
+"    background: rgb(240, 247, 254);\n"
+"}\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    width: 0px;\n"
+"    border: none;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView {\n"
+"    border: 1px solid rgba(134, 119, 253, 0.3);\n"
+"    background: white;\n"
+"    selection-background-color: rgba(134, 119, 253, 0.15);\n"
+"    outline: none;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item {\n"
+"    padding: 1px 6px;\n"
+"    color: #333333;\n"
+"    font: 12px \"Microsoft YaHei\";\n"
+"}")
+        self.combo_operation_type.setObjectName("combo_operation_type")
+        self.combo_operation_type.addItem("")
+        self.combo_operation_type.addItem("")
+        self.layout_operation_controls.addWidget(self.combo_operation_type)
+        self.layout_file_controls.addLayout(self.layout_operation_controls)
+        spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
+        self.layout_file_controls.addItem(spacerItem5)
+        self.layout_rename_panel.addLayout(self.layout_file_controls)
+        self.line_arrange = QtWidgets.QFrame(parent=self.frame_rename)
+        self.line_arrange.setMinimumSize(QtCore.QSize(0, 1))
+        self.line_arrange.setMaximumSize(QtCore.QSize(16777215, 1))
+        self.line_arrange.setStyleSheet("background-color: rgb(235, 236, 237);")
+        self.line_arrange.setFrameShape(QtWidgets.QFrame.Shape.HLine)
+        self.line_arrange.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
+        self.line_arrange.setObjectName("line_arrange")
+        self.layout_rename_panel.addWidget(self.line_arrange)
+        self.layout_preview_controls = QtWidgets.QHBoxLayout()
+        self.layout_preview_controls.setContentsMargins(9, 9, 9, 9)
+        self.layout_preview_controls.setSpacing(9)
+        self.layout_preview_controls.setObjectName("layout_preview_controls")
+        self.frame_rename_batch = QtWidgets.QFrame(parent=self.frame_rename)
+        self.frame_rename_batch.setStyleSheet("QFrame{\n"
+"    border: none;\n"
+"    border-radius: 0px;\n"
+"}")
+        self.frame_rename_batch.setObjectName("frame_rename_batch")
+        self.layout_rename_preview = QtWidgets.QHBoxLayout(self.frame_rename_batch)
+        self.layout_rename_preview.setContentsMargins(0, 6, 0, 6)
+        self.layout_rename_preview.setSpacing(6)
+        self.layout_rename_preview.setObjectName("layout_rename_preview")
+        self.label_copy_path = QtWidgets.QLabel(parent=self.frame_rename_batch)
+        self.label_copy_path.setMinimumSize(QtCore.QSize(0, 0))
+        self.label_copy_path.setMaximumSize(QtCore.QSize(530, 16777215))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_copy_path.setFont(font)
+        self.label_copy_path.setStyleSheet("QLabel {\n"
+"    qproperty-alignment: \'AlignLeft | AlignVCenter\';\n"
+"    background:rgba(0, 0, 0, 0);\n"
+"    color: #333333;\n"
+"    border: none;\n"
+"}")
+        self.label_copy_path.setText("")
+        self.label_copy_path.setObjectName("label_copy_path")
+        self.layout_rename_preview.addWidget(self.label_copy_path)
+        self.label_preview_path = QtWidgets.QLabel(parent=self.frame_rename_batch)
+        self.label_preview_path.setMinimumSize(QtCore.QSize(0, 0))
+        self.label_preview_path.setMaximumSize(QtCore.QSize(530, 16777215))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_preview_path.setFont(font)
+        self.label_preview_path.setStyleSheet("QLabel {\n"
+"    qproperty-alignment: \'AlignLeft | AlignVCenter\';\n"
+"    background:rgba(0, 0, 0, 0);\n"
+"    color: #333333;\n"
+"    border: none;\n"
+"}")
+        self.label_preview_path.setObjectName("label_preview_path")
+        self.layout_rename_preview.addWidget(self.label_preview_path)
+        self.label_separator_slash = QtWidgets.QLabel(parent=self.frame_rename_batch)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        font.setBold(False)
+        self.label_separator_slash.setFont(font)
+        self.label_separator_slash.setStyleSheet("QLabel {\n"
+"    color: #333333;\n"
+"    border: none;\n"
+"}")
+        self.label_separator_slash.setObjectName("label_separator_slash")
+        self.layout_rename_preview.addWidget(self.label_separator_slash)
+        self.label_preview_name = QtWidgets.QLabel(parent=self.frame_rename_batch)
+        self.label_preview_name.setMinimumSize(QtCore.QSize(0, 0))
+        self.label_preview_name.setMaximumSize(QtCore.QSize(530, 16777215))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_preview_name.setFont(font)
+        self.label_preview_name.setStyleSheet("QLabel {\n"
+"    qproperty-alignment: \'AlignLeft | AlignVCenter\';\n"
+"    background:rgba(0, 0, 0, 0);\n"
+"    color: #333333;\n"
+"    border: none;\n"
+"}")
+        self.label_preview_name.setObjectName("label_preview_name")
+        self.layout_rename_preview.addWidget(self.label_preview_name)
+        spacerItem6 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
+        self.layout_rename_preview.addItem(spacerItem6)
+        self.layout_preview_controls.addWidget(self.frame_rename_batch)
+        self.layout_rename_panel.addLayout(self.layout_preview_controls)
+        self.layout_main_content.addWidget(self.frame_rename)
+        self.frame_rename_preview = QtWidgets.QFrame(parent=self.page_smartArrange)
+        self.frame_rename_preview.setStyleSheet("background:rgb(255, 255, 255);\n"
+"border: none;\n"
+"border-radius: 0px;")
+        self.frame_rename_preview.setObjectName("frame_rename_preview")
+        self.layout_rename_progress = QtWidgets.QHBoxLayout(self.frame_rename_preview)
+        self.layout_rename_progress.setContentsMargins(9, 9, 9, 9)
+        self.layout_rename_progress.setSpacing(9)
+        self.layout_rename_progress.setObjectName("layout_rename_progress")
+        self.progressBar_smartArrange = QtWidgets.QProgressBar(parent=self.frame_rename_preview)
+        self.progressBar_smartArrange.setMinimumSize(QtCore.QSize(0, 0))
+        self.progressBar_smartArrange.setMaximumSize(QtCore.QSize(16777215, 1111111))
+        self.progressBar_smartArrange.setStyleSheet("QProgressBar {\n"
+"  text-align: center;\n"
+"  background-color: #FFFFFF;\n"
+"  border: 1px solid #D4D4D4;\n"
+"  border-radius: 6px;\n"
+"  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);\n"
+"  color: #DADADA;\n"
+"  font-weight: bold;\n"
+"}\n"
+"\n"
+"QProgressBar::chunk {\n"
+"  background-color: qlineargradient(\n"
+"    x1:0, y1:0,\n"
+"    x2:1, y2:0,\n"
+"    stop:0 #A76EFF,\n"
+"    stop:0.33 #8C5AE5,\n"
+"    stop:0.66 #744AC2,\n"
+"    stop:1 #995FFF\n"
+"  );\n"
+"  border-radius: 6px;\n"
+"  margin: 0.5px;\n"
+"  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);\n"
+"}")
+        self.progressBar_smartArrange.setProperty("value", 0)
+        self.progressBar_smartArrange.setObjectName("progressBar_smartArrange")
+        self.layout_rename_progress.addWidget(self.progressBar_smartArrange)
+        self.btn_start_smart_arrange = QtWidgets.QToolButton(parent=self.frame_rename_preview)
+        self.btn_start_smart_arrange.setMinimumSize(QtCore.QSize(88, 0))
+        self.btn_start_smart_arrange.setMaximumSize(QtCore.QSize(16777215, 29))
+        self.btn_start_smart_arrange.setStyleSheet("QToolButton {\n"
+"    color: white;\n"
+"    border: none;\n"
+"    padding: 6px 6px;\n"
+"    border-radius: 6px;\n"
+"    background-color: qradialgradient(\n"
+"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
+"        stop:0.66 rgba(134, 119, 253, 255),\n"
+"        stop:1 rgba(119, 111, 252, 255)\n"
+"    );\n"
+"    font-size: 12px;\n"
+"}\n"
+"\n"
+"QToolButton:hover {\n"
+"    background-color: qradialgradient(\n"
+"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
+"        stop:0.66 rgba(154, 139, 255, 255),\n"
+"        stop:1 rgba(139, 131, 254, 255)\n"
+"    );\n"
+"}\n"
+"\n"
+"QToolButton:pressed {\n"
+"    background-color: qradialgradient(\n"
+"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
+"        stop:0.66 rgba(94, 79, 253, 255),\n"
+"        stop:1 rgba(79, 71, 252, 255)\n"
+"    );\n"
+"}")
+        self.btn_start_smart_arrange.setIconSize(QtCore.QSize(24, 24))
+        self.btn_start_smart_arrange.setObjectName("btn_start_smart_arrange")
+        self.layout_rename_progress.addWidget(self.btn_start_smart_arrange)
+        self.layout_rename_progress.setStretch(0, 1)
+        self.layout_main_content.addWidget(self.frame_rename_preview)
+        self.frame_smart_arrange_controls = QtWidgets.QFrame(parent=self.page_smartArrange)
+        self.frame_smart_arrange_controls.setStyleSheet("background:rgb(255, 255, 255);\n"
+"border-top-left-radius:0px;\n"
+"border-top-right-radius:0px;\n"
+"border-bottom-right-radius:20px;\n"
+"border-bottom-left-radius:0px;")
+        self.frame_smart_arrange_controls.setObjectName("frame_smart_arrange_controls")
+        self.layout_smart_arrange_log = QtWidgets.QHBoxLayout(self.frame_smart_arrange_controls)
+        self.layout_smart_arrange_log.setContentsMargins(9, 6, 9, 9)
+        self.layout_smart_arrange_log.setSpacing(0)
+        self.layout_smart_arrange_log.setObjectName("layout_smart_arrange_log")
+        self.text_edit_smart_arrange_log = QtWidgets.QTextEdit(parent=self.frame_smart_arrange_controls)
+        self.text_edit_smart_arrange_log.setMinimumSize(QtCore.QSize(0, 0))
+        font = QtGui.QFont()
+        font.setFamily("Segoe UI")
+        font.setPointSize(-1)
+        self.text_edit_smart_arrange_log.setFont(font)
+        self.text_edit_smart_arrange_log.setStyleSheet("QTextEdit {\n"
 "    border: 1.5px solid qradialgradient(\n"
 "        cx:0.5, cy:0.5,\n"
 "        radius: 1.2,\n"
@@ -2279,122 +2542,72 @@ class Ui_MainWindow(object):
 "    );\n"
 "    box-shadow: 0 0 0 2px rgba(134, 119, 253, 0.15);\n"
 "}")
-        self.textEdit_SmartArrange_Log.setReadOnly(True)
-        self.textEdit_SmartArrange_Log.setObjectName("textEdit_SmartArrange_Log")
-        self.horizontalLayout_37.addWidget(self.textEdit_SmartArrange_Log)
-        self.verticalLayout_34.addWidget(self.horizontalFrame_2)
-        self.verticalLayout_29.addLayout(self.verticalLayout_34)
-        self.stackedWidget.addWidget(self.page_2)
-        self.page_3 = QtWidgets.QWidget()
-        self.page_3.setObjectName("page_3")
-        self.horizontalLayout_66 = QtWidgets.QHBoxLayout(self.page_3)
-        self.horizontalLayout_66.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_66.setSpacing(0)
-        self.horizontalLayout_66.setObjectName("horizontalLayout_66")
-        self.verticalWidget = QtWidgets.QWidget(parent=self.page_3)
+        self.text_edit_smart_arrange_log.setReadOnly(True)
+        self.text_edit_smart_arrange_log.setObjectName("text_edit_smart_arrange_log")
+        self.layout_smart_arrange_log.addWidget(self.text_edit_smart_arrange_log)
+        self.layout_main_content.addWidget(self.frame_smart_arrange_controls)
+        self.layout_smartArrangeMain.addLayout(self.layout_main_content)
+        self.stackedWidget_mainContent.addWidget(self.page_smartArrange)
+        self.page_duplicateRemoval = QtWidgets.QWidget()
+        self.page_duplicateRemoval.setObjectName("page_duplicateRemoval")
+        self.layout_duplicateRemovalMain = QtWidgets.QHBoxLayout(self.page_duplicateRemoval)
+        self.layout_duplicateRemovalMain.setContentsMargins(0, 0, 0, 0)
+        self.layout_duplicateRemovalMain.setSpacing(0)
+        self.layout_duplicateRemovalMain.setObjectName("layout_duplicateRemovalMain")
+        self.verticalWidget = QtWidgets.QWidget(parent=self.page_duplicateRemoval)
+        self.verticalWidget.setStyleSheet("background:rgb(255, 255, 255);")
         self.verticalWidget.setObjectName("verticalWidget")
-        self.verticalLayout_37 = QtWidgets.QVBoxLayout(self.verticalWidget)
-        self.verticalLayout_37.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout_37.setSpacing(0)
-        self.verticalLayout_37.setObjectName("verticalLayout_37")
-        self.verticalFrame_12 = QtWidgets.QFrame(parent=self.verticalWidget)
-        self.verticalFrame_12.setStyleSheet("background:rgb(255, 255, 255);\n"
+        self.layout_duplicateRemovalLeft = QtWidgets.QVBoxLayout(self.verticalWidget)
+        self.layout_duplicateRemovalLeft.setContentsMargins(0, 0, 0, 0)
+        self.layout_duplicateRemovalLeft.setSpacing(0)
+        self.layout_duplicateRemovalLeft.setObjectName("layout_duplicateRemovalLeft")
+        self.frame_duplicateRemovalTop = QtWidgets.QFrame(parent=self.verticalWidget)
+        self.frame_duplicateRemovalTop.setStyleSheet("background:rgb(255, 255, 255);\n"
 "border-top-left-radius:0px;\n"
 "border-top-right-radius:0px;\n"
 "border-bottom-right-radius:0px;\n"
 "border-bottom-left-radius:0px;")
-        self.verticalFrame_12.setObjectName("verticalFrame_12")
-        self.horizontalLayout_64 = QtWidgets.QHBoxLayout(self.verticalFrame_12)
-        self.horizontalLayout_64.setContentsMargins(9, 6, 9, 6)
-        self.horizontalLayout_64.setSpacing(12)
-        self.horizontalLayout_64.setObjectName("horizontalLayout_64")
-        self.label_8 = QtWidgets.QLabel(parent=self.verticalFrame_12)
+        self.frame_duplicateRemovalTop.setObjectName("frame_duplicateRemovalTop")
+        self.layout_duplicateRemovalTop = QtWidgets.QHBoxLayout(self.frame_duplicateRemovalTop)
+        self.layout_duplicateRemovalTop.setContentsMargins(9, 9, 9, 9)
+        self.layout_duplicateRemovalTop.setSpacing(9)
+        self.layout_duplicateRemovalTop.setObjectName("layout_duplicateRemovalTop")
+        self.layout_duplicateRemovalControlsLeft = QtWidgets.QHBoxLayout()
+        self.layout_duplicateRemovalControlsLeft.setObjectName("layout_duplicateRemovalControlsLeft")
+        self.label_duplicateRemovalDescription = QtWidgets.QLabel(parent=self.frame_duplicateRemovalTop)
         font = QtGui.QFont()
-        font.setPointSize(12)
-        self.label_8.setFont(font)
-        self.label_8.setStyleSheet("QLabel {\n"
+        font.setPointSize(14)
+        self.label_duplicateRemovalDescription.setFont(font)
+        self.label_duplicateRemovalDescription.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_8.setObjectName("label_8")
-        self.horizontalLayout_64.addWidget(self.label_8)
-        self.horizontalSlider_levelContrast = QtWidgets.QSlider(parent=self.verticalFrame_12)
-        self.horizontalSlider_levelContrast.setMinimumSize(QtCore.QSize(284, 32))
-        self.horizontalSlider_levelContrast.setStyleSheet("QSlider {\n"
-"    min-width: 280px;\n"
-"    min-height: 32px;\n"
-"    antialiasing: true;\n"
-"    margin-left: 2px;\n"
-"    margin-right: 2px;\n"
-"}\n"
-"\n"
-"QSlider::groove:horizontal {\n"
-"    height: 6px;\n"
-"    background: qlineargradient(x1:0, y1:0.5, x2:1, y2:0.5,\n"
-"        stop:0 #EC4899,    /* 亮粉色 */\n"
-"        stop:0.5 #8B5CF6,  /* 紫红色 */\n"
-"        stop:1 #06B6D4     /* 青蓝色 */\n"
-"    );\n"
-"    border-radius: 3px;\n"
-"    margin: 8px 0;\n"
-"}\n"
-"\n"
-"QSlider::handle:horizontal {\n"
-"    width: 16px;\n"
-"    height: 16px;\n"
-"    margin: -6px 0;\n"
-"    background: white;\n"
-"    border: 1px solid #EC4899;\n"
-"    border-radius: 8px;\n"
-"    box-shadow: 0 1px 3px rgba(0,0,0,0.1);\n"
-"}\n"
-"\n"
-"QSlider::handle:horizontal:hover {\n"
-"    background: #FDF2F8;\n"
-"    transform: scale(1.15);\n"
-"}")
-        self.horizontalSlider_levelContrast.setMinimum(0)
-        self.horizontalSlider_levelContrast.setMaximum(100)
-        self.horizontalSlider_levelContrast.setSingleStep(0)
-        self.horizontalSlider_levelContrast.setPageStep(0)
-        self.horizontalSlider_levelContrast.setProperty("value", 100)
-        self.horizontalSlider_levelContrast.setSliderPosition(100)
-        self.horizontalSlider_levelContrast.setOrientation(QtCore.Qt.Orientation.Horizontal)
-        self.horizontalSlider_levelContrast.setObjectName("horizontalSlider_levelContrast")
-        self.horizontalLayout_64.addWidget(self.horizontalSlider_levelContrast)
-        self.label_levelContrast = QtWidgets.QLabel(parent=self.verticalFrame_12)
-        font = QtGui.QFont()
-        font.setPointSize(16)
-        font.setBold(False)
-        self.label_levelContrast.setFont(font)
-        self.label_levelContrast.setStyleSheet("QLabel {\n"
-"    color: rgb(134, 139, 253);\n"
-"}")
-        self.label_levelContrast.setObjectName("label_levelContrast")
-        self.horizontalLayout_64.addWidget(self.label_levelContrast)
-        self.horizontalLayout_64.setStretch(1, 1)
-        self.verticalLayout_37.addWidget(self.verticalFrame_12)
-        self.verticalFrame_9 = QtWidgets.QFrame(parent=self.verticalWidget)
-        self.verticalFrame_9.setStyleSheet("background:rgb(255, 255, 255);\n"
+        self.label_duplicateRemovalDescription.setObjectName("label_duplicateRemovalDescription")
+        self.layout_duplicateRemovalControlsLeft.addWidget(self.label_duplicateRemovalDescription)
+        self.layout_duplicateRemovalTop.addLayout(self.layout_duplicateRemovalControlsLeft)
+        self.layout_duplicateRemovalLeft.addWidget(self.frame_duplicateRemovalTop)
+        self.frame_duplicateRemovalProgress = QtWidgets.QFrame(parent=self.verticalWidget)
+        self.frame_duplicateRemovalProgress.setStyleSheet("background:rgb(255, 255, 255);\n"
 "border-top-left-radius:0px;\n"
 "border-top-right-radius:0px;\n"
 "border-bottom-right-radius:0px;\n"
 "border-bottom-left-radius:0px;")
-        self.verticalFrame_9.setObjectName("verticalFrame_9")
-        self.horizontalLayout_60 = QtWidgets.QHBoxLayout(self.verticalFrame_9)
-        self.horizontalLayout_60.setContentsMargins(9, 6, 9, 6)
-        self.horizontalLayout_60.setSpacing(9)
-        self.horizontalLayout_60.setObjectName("horizontalLayout_60")
-        self.progressBar_Contrast = QtWidgets.QProgressBar(parent=self.verticalFrame_9)
-        self.progressBar_Contrast.setMinimumSize(QtCore.QSize(0, 0))
-        self.progressBar_Contrast.setMaximumSize(QtCore.QSize(16777215, 16777215))
-        self.progressBar_Contrast.setStyleSheet("QProgressBar {\n"
+        self.frame_duplicateRemovalProgress.setObjectName("frame_duplicateRemovalProgress")
+        self.horizontalLayout_76 = QtWidgets.QHBoxLayout(self.frame_duplicateRemovalProgress)
+        self.horizontalLayout_76.setContentsMargins(9, 9, 9, 9)
+        self.horizontalLayout_76.setSpacing(9)
+        self.horizontalLayout_76.setObjectName("horizontalLayout_76")
+        self.progressBar_duplicateRemovalProgress = QtWidgets.QProgressBar(parent=self.frame_duplicateRemovalProgress)
+        self.progressBar_duplicateRemovalProgress.setMinimumSize(QtCore.QSize(0, 0))
+        self.progressBar_duplicateRemovalProgress.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        self.progressBar_duplicateRemovalProgress.setStyleSheet("QProgressBar {\n"
 "  text-align: center;\n"
 "  background-color: #FFFFFF;\n"
 "  border: 1px solid #D4D4D4;\n"
 "  border-radius: 6px;\n"
 "  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);\n"
 "  color: #DADADA;\n"
+"  font-weight: bold;\n"
 "}\n"
 "\n"
 "QProgressBar::chunk {\n"
@@ -2410,13 +2623,13 @@ class Ui_MainWindow(object):
 "  margin: 2px;\n"
 "  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);\n"
 "}")
-        self.progressBar_Contrast.setProperty("value", 0)
-        self.progressBar_Contrast.setObjectName("progressBar_Contrast")
-        self.horizontalLayout_60.addWidget(self.progressBar_Contrast)
-        self.toolButton_startContrast = QtWidgets.QToolButton(parent=self.verticalFrame_9)
-        self.toolButton_startContrast.setMinimumSize(QtCore.QSize(88, 32))
-        self.toolButton_startContrast.setMaximumSize(QtCore.QSize(88, 16777215))
-        self.toolButton_startContrast.setStyleSheet("QToolButton {\n"
+        self.progressBar_duplicateRemovalProgress.setProperty("value", 0)
+        self.progressBar_duplicateRemovalProgress.setObjectName("progressBar_duplicateRemovalProgress")
+        self.horizontalLayout_76.addWidget(self.progressBar_duplicateRemovalProgress)
+        self.btn_duplicateRemovalStart = QtWidgets.QToolButton(parent=self.frame_duplicateRemovalProgress)
+        self.btn_duplicateRemovalStart.setMinimumSize(QtCore.QSize(88, 32))
+        self.btn_duplicateRemovalStart.setMaximumSize(QtCore.QSize(16777215, 32))
+        self.btn_duplicateRemovalStart.setStyleSheet("QToolButton {\n"
 "    color: white;\n"
 "    border: none;\n"
 "    padding: 6px 6px;\n"
@@ -2444,341 +2657,156 @@ class Ui_MainWindow(object):
 "        stop:1 rgba(79, 71, 252, 255)\n"
 "    );\n"
 "}")
-        self.toolButton_startContrast.setIconSize(QtCore.QSize(24, 24))
-        self.toolButton_startContrast.setObjectName("toolButton_startContrast")
-        self.horizontalLayout_60.addWidget(self.toolButton_startContrast)
-        self.horizontalLayout_60.setStretch(0, 1)
-        self.verticalLayout_37.addWidget(self.verticalFrame_9)
-        self.verticalFrame_13 = QtWidgets.QFrame(parent=self.verticalWidget)
-        self.verticalFrame_13.setStyleSheet("background:rgb(255, 255, 255);\n"
+        self.btn_duplicateRemovalStart.setIconSize(QtCore.QSize(24, 24))
+        self.btn_duplicateRemovalStart.setObjectName("btn_duplicateRemovalStart")
+        self.horizontalLayout_76.addWidget(self.btn_duplicateRemovalStart)
+        self.horizontalLayout_76.setStretch(0, 1)
+        self.layout_duplicateRemovalLeft.addWidget(self.frame_duplicateRemovalProgress)
+        self.frame_duplicateRemovalLog = QtWidgets.QFrame(parent=self.verticalWidget)
+        self.frame_duplicateRemovalLog.setStyleSheet("background:rgb(255, 255, 255);\n"
 "border-top-left-radius:0px;\n"
 "border-top-right-radius:0px;\n"
 "border-bottom-right-radius:12px;\n"
 "border-bottom-left-radius:0px;")
-        self.verticalFrame_13.setObjectName("verticalFrame_13")
-        self.horizontalLayout_65 = QtWidgets.QHBoxLayout(self.verticalFrame_13)
-        self.horizontalLayout_65.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_65.setSpacing(0)
-        self.horizontalLayout_65.setObjectName("horizontalLayout_65")
-        self.label_image_A = QtWidgets.QLabel(parent=self.verticalFrame_13)
-        self.label_image_A.setStyleSheet("")
-        self.label_image_A.setText("")
-        self.label_image_A.setObjectName("label_image_A")
-        self.horizontalLayout_65.addWidget(self.label_image_A)
-        self.line_contrast = QtWidgets.QFrame(parent=self.verticalFrame_13)
-        self.line_contrast.setMinimumSize(QtCore.QSize(1, 0))
-        self.line_contrast.setMaximumSize(QtCore.QSize(1, 16777215))
-        self.line_contrast.setStyleSheet("background-color: rgb(235, 236, 237);")
-        self.line_contrast.setFrameShape(QtWidgets.QFrame.Shape.VLine)
-        self.line_contrast.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
-        self.line_contrast.setObjectName("line_contrast")
-        self.horizontalLayout_65.addWidget(self.line_contrast)
-        self.label_image_B = QtWidgets.QLabel(parent=self.verticalFrame_13)
-        self.label_image_B.setStyleSheet("")
-        self.label_image_B.setText("")
-        self.label_image_B.setObjectName("label_image_B")
-        self.horizontalLayout_65.addWidget(self.label_image_B)
-        self.verticalLayout_37.addWidget(self.verticalFrame_13)
-        self.verticalLayout_37.setStretch(2, 3)
-        self.horizontalLayout_66.addWidget(self.verticalWidget)
-        self.verticalFrame_similar = QtWidgets.QFrame(parent=self.page_3)
-        self.verticalFrame_similar.setStyleSheet("border-radius: 12px;\n"
-"background:rgb(248, 250, 251);")
-        self.verticalFrame_similar.setObjectName("verticalFrame_similar")
-        self.verticalLayout_38 = QtWidgets.QVBoxLayout(self.verticalFrame_similar)
-        self.verticalLayout_38.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout_38.setSpacing(0)
-        self.verticalLayout_38.setObjectName("verticalLayout_38")
-        self.scrollArea_pageSimilar = QtWidgets.QScrollArea(parent=self.verticalFrame_similar)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.scrollArea_pageSimilar.sizePolicy().hasHeightForWidth())
-        self.scrollArea_pageSimilar.setSizePolicy(sizePolicy)
-        self.scrollArea_pageSimilar.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
-        self.scrollArea_pageSimilar.setLayoutDirection(QtCore.Qt.LayoutDirection.LeftToRight)
-        self.scrollArea_pageSimilar.setStyleSheet("\n"
-"QWidget {\n"
-"    background-color: #FFFFFF;\n"
-"    border-radius: 0;\n"
+        self.frame_duplicateRemovalLog.setObjectName("frame_duplicateRemovalLog")
+        self.layout_duplicateRemovalLog = QtWidgets.QHBoxLayout(self.frame_duplicateRemovalLog)
+        self.layout_duplicateRemovalLog.setContentsMargins(9, 9, 9, 9)
+        self.layout_duplicateRemovalLog.setSpacing(9)
+        self.layout_duplicateRemovalLog.setObjectName("layout_duplicateRemovalLog")
+        self.textEdit_duplicateRemovalLog = QtWidgets.QTextEdit(parent=self.frame_duplicateRemovalLog)
+        self.textEdit_duplicateRemovalLog.setMinimumSize(QtCore.QSize(0, 0))
+        font = QtGui.QFont()
+        font.setFamily("Segoe UI")
+        font.setPointSize(-1)
+        self.textEdit_duplicateRemovalLog.setFont(font)
+        self.textEdit_duplicateRemovalLog.setStyleSheet("QTextEdit {\n"
+"    border: 1.5px solid qradialgradient(\n"
+"        cx:0.5, cy:0.5,\n"
+"        radius: 1.2,\n"
+"        fx:0.45, fy:0.55,\n"
+"        stop:0 rgba(144, 129, 255, 255),\n"
+"        stop:0.7 rgba(129, 121, 255, 220),\n"
+"        stop:1 rgba(108, 97, 224, 200)\n"
+"    );\n"
+"    background: rgb(245, 249, 254);\n"
+"    padding: 8px;\n"
+"    border-radius: 6px;\n"
+"    font-family: \'Segoe UI\', \'Microsoft YaHei\', sans-serif;\n"
+"    font-size: 14px;\n"
+"    color: #333;\n"
+"    selection-background-color: rgba(134, 119, 253, 0.5);\n"
+"    selection-color: #fff;\n"
+"    box-shadow:\n"
+"        inset 0 1px 3px rgba(0, 0, 0, 0.05),\n"
+"        0 2px 8px rgba(134, 119, 253, 0.1);\n"
 "}\n"
 "\n"
-"QScrollBar:vertical {\n"
+"QTextEdit QScrollBar:vertical {\n"
 "    width: 10px;\n"
 "    background: transparent;\n"
-"    margin: 2px 0;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:vertical {\n"
-"    min-height: 30px;\n"
-"    background: rgba(100, 100, 100, 0.15);\n"
-"    border-radius: 5px;\n"
 "    margin: 2px;\n"
-"    transition: background 0.2s ease;\n"
 "}\n"
 "\n"
-"QScrollBar::handle:vertical:hover {\n"
-"    background: rgba(100, 100, 100, 0.25);\n"
+"QTextEdit QScrollBar::handle:vertical {\n"
+"    background: rgba(134, 119, 253, 0.3);\n"
+"    border-radius: 5px;\n"
+"    min-height: 30px;\n"
+"    margin: 2px;\n"
+"    transition: background 0.2s;\n"
 "}\n"
 "\n"
-"QScrollBar::handle:vertical:pressed {\n"
-"    background: rgba(100, 100, 100, 0.35);\n"
+"QTextEdit QScrollBar::handle:vertical:hover {\n"
+"    background: rgba(134, 119, 253, 0.6);\n"
 "}\n"
 "\n"
-"QScrollBar:horizontal {\n"
+"QTextEdit QScrollBar::handle:vertical:pressed {\n"
+"    background: rgba(134, 119, 253, 0.8);\n"
+"}\n"
+"\n"
+"QTextEdit QScrollBar:horizontal {\n"
 "    height: 10px;\n"
 "    background: transparent;\n"
-"    margin: 0 2px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:horizontal {\n"
-"    min-width: 30px;\n"
-"    background: rgba(100, 100, 100, 0.15);\n"
-"    border-radius: 5px;\n"
 "    margin: 2px;\n"
-"    transition: background 0.2s ease;\n"
 "}\n"
 "\n"
-"QScrollBar::handle:horizontal:hover {\n"
-"    background: rgba(100, 100, 100, 0.25);\n"
+"QTextEdit QScrollBar::handle:horizontal {\n"
+"    background: rgba(134, 119, 253, 0.3);\n"
+"    border-radius: 5px;\n"
+"    min-width: 30px;\n"
+"    margin: 2px;\n"
 "}\n"
 "\n"
-"QScrollBar::handle:horizontal:pressed {\n"
-"    background: rgba(100, 100, 100, 0.35);\n"
-"}\n"
-"\n"
-"QScrollBar::add-line,\n"
-"QScrollBar::sub-line,\n"
-"QScrollBar::add-page,\n"
-"QScrollBar::sub-page {\n"
+"QTextEdit QScrollBar::add-page:vertical,\n"
+"QTextEdit QScrollBar::sub-page:vertical,\n"
+"QTextEdit QScrollBar::add-page:horizontal,\n"
+"QTextEdit QScrollBar::sub-page:horizontal {\n"
 "    background: transparent;\n"
-"    border: none;\n"
+"}\n"
+"\n"
+"QTextEdit QScrollBar::add-line:vertical,\n"
+"QTextEdit QScrollBar::sub-line:vertical,\n"
+"QTextEdit QScrollBar::add-line:horizontal,\n"
+"QTextEdit QScrollBar::sub-line:horizontal {\n"
 "    height: 0;\n"
 "    width: 0;\n"
-"}\n"
-"\n"
-"QScrollBar::corner {\n"
 "    background: transparent;\n"
+"}\n"
+"\n"
+"QTextEdit:focus {\n"
+"    border: 1.5px solid qradialgradient(\n"
+"        cx:0.5, cy:0.5,\n"
+"        radius: 1.3,\n"
+"        fx:0.4, fy:0.6,\n"
+"        stop:0 rgba(154, 139, 255, 255),\n"
+"        stop:1 rgba(139, 131, 255, 240)\n"
+"    );\n"
+"    box-shadow: 0 0 0 2px rgba(134, 119, 253, 0.15);\n"
 "}")
-        self.scrollArea_pageSimilar.setWidgetResizable(True)
-        self.scrollArea_pageSimilar.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignVCenter)
-        self.scrollArea_pageSimilar.setObjectName("scrollArea_pageSimilar")
-        self.scrollAreaWidgetContents_Contrast = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_Contrast.setGeometry(QtCore.QRect(0, 0, 40, 18))
-        self.scrollAreaWidgetContents_Contrast.setObjectName("scrollAreaWidgetContents_Contrast")
-        self.gridLayout_2 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents_Contrast)
-        self.gridLayout_2.setObjectName("gridLayout_2")
-        self.scrollArea_pageSimilar.setWidget(self.scrollAreaWidgetContents_Contrast)
-        self.verticalLayout_38.addWidget(self.scrollArea_pageSimilar)
-        self.horizontalWidget_nav = QtWidgets.QWidget(parent=self.verticalFrame_similar)
-        self.horizontalWidget_nav.setStyleSheet("background-color: rgb(255, 255, 255);\n"
-"border-top-left-radius:0px;\n"
-"border-top-right-radius:0px;\n"
-"border-bottom-right-radius:12px;\n"
-"border-bottom-left-radius:0px;")
-        self.horizontalWidget_nav.setObjectName("horizontalWidget_nav")
-        self.horizontalLayout_63 = QtWidgets.QHBoxLayout(self.horizontalWidget_nav)
-        self.horizontalLayout_63.setContentsMargins(6, 6, 6, 6)
-        self.horizontalLayout_63.setSpacing(6)
-        self.horizontalLayout_63.setObjectName("horizontalLayout_63")
-        self.toolButton_delete = QtWidgets.QToolButton(parent=self.horizontalWidget_nav)
-        self.toolButton_delete.setMinimumSize(QtCore.QSize(68, 32))
-        self.toolButton_delete.setMaximumSize(QtCore.QSize(88, 16777215))
-        self.toolButton_delete.setStyleSheet("QToolButton {\n"
-"    color: white;\n"
-"    border: none;\n"
-"    padding: 6px 6px;\n"
-"    border-radius: 6px;\n"
-"    background-color: qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(180, 0, 0, 255),  /* 稍暗的红色 */\n"
-"        stop:1 rgba(130, 0, 0, 255)     /* 更深的暗红色 */\n"
-"    );\n"
-"    font-size: 12px;\n"
-"    /* 增加轻微阴影增强立体感 */\n"
-"    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);\n"
-"}\n"
-"\n"
-"QToolButton:hover {\n"
-"    background-color: qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(200, 0, 0, 255),  /*  hover时稍亮一点 */\n"
-"        stop:1 rgba(150, 0, 0, 255)\n"
-"    );\n"
-"}\n"
-"\n"
-"QToolButton:pressed {\n"
-"    background-color: qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(160, 0, 0, 255),  /* 按下时更暗 */\n"
-"        stop:1 rgba(110, 0, 0, 255)\n"
-"    );\n"
-"    /* 按下时阴影内缩，增强按压感 */\n"
-"    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);\n"
-"}")
-        self.toolButton_delete.setIconSize(QtCore.QSize(24, 24))
-        self.toolButton_delete.setObjectName("toolButton_delete")
-        self.horizontalLayout_63.addWidget(self.toolButton_delete)
-        self.toolButton_move = QtWidgets.QToolButton(parent=self.horizontalWidget_nav)
-        self.toolButton_move.setMinimumSize(QtCore.QSize(68, 32))
-        self.toolButton_move.setMaximumSize(QtCore.QSize(88, 16777215))
-        self.toolButton_move.setStyleSheet("QToolButton {\n"
-"    color: white;\n"
-"    border: none;\n"
-"    padding: 6px 12px; /* 增加水平内边距，视觉更平衡 */\n"
-"    border-radius: 6px;\n"
-"    /* 改用线性渐变，增加层次感和现代感 */\n"
-"    background: qlineargradient(\n"
-"        x1:0, y1:0, x2:0, y2:1,\n"
-"        stop:0 rgba(145, 128, 255, 255),\n"
-"        stop:1 rgba(105, 92, 245, 255)\n"
-"    );\n"
-"    font-size: 12px;\n"
-"    font-weight: 500; /* 轻微加粗文字，提升可读性 */\n"
-"    /* 增加微妙阴影，增强立体感 */\n"
-"    box-shadow: 0 2px 5px rgba(119, 111, 252, 0.3);\n"
-"    /* 过渡动画，使状态变化更平滑 */\n"
-"    transition: all 0.2s ease;\n"
-"}\n"
-"\n"
-"QToolButton:hover {\n"
-"    background: qlineargradient(\n"
-"        x1:0, y1:0, x2:0, y2:1,\n"
-"        stop:0 rgba(160, 143, 255, 255),\n"
-"        stop:1 rgba(120, 107, 255, 255)\n"
-"    );\n"
-"    /* 悬停时轻微放大并加深阴影 */\n"
-"    transform: translateY(-1px);\n"
-"    box-shadow: 0 4px 8px rgba(119, 111, 252, 0.4);\n"
-"}\n"
-"\n"
-"QToolButton:pressed {\n"
-"    background: qlineargradient(\n"
-"        x1:0, y1:0, x2:0, y2:1,\n"
-"        stop:0 rgba(100, 85, 240, 255),\n"
-"        stop:1 rgba(80, 68, 225, 255)\n"
-"    );\n"
-"    /* 按下时恢复位置并添加内阴影 */\n"
-"    transform: translateY(0);\n"
-"    box-shadow: inset 0 2px 4px rgba(70, 58, 200, 0.3);\n"
-"}\n"
-"\n"
-"/* 禁用状态样式，提升完整性 */\n"
-"QToolButton:disabled {\n"
-"    background: qlineargradient(\n"
-"        x1:0, y1:0, x2:0, y2:1,\n"
-"        stop:0 rgba(180, 170, 230, 255),\n"
-"        stop:1 rgba(150, 140, 210, 255)\n"
-"    );\n"
-"    color: rgba(255, 255, 255, 0.7);\n"
-"    box-shadow: none;\n"
-"    transform: none;\n"
-"}")
-        self.toolButton_move.setIconSize(QtCore.QSize(24, 24))
-        self.toolButton_move.setObjectName("toolButton_move")
-        self.horizontalLayout_63.addWidget(self.toolButton_move)
-        self.toolButton_autoSelect = QtWidgets.QToolButton(parent=self.horizontalWidget_nav)
-        self.toolButton_autoSelect.setMinimumSize(QtCore.QSize(68, 32))
-        self.toolButton_autoSelect.setMaximumSize(QtCore.QSize(88, 16777215))
-        self.toolButton_autoSelect.setStyleSheet("QToolButton {\n"
-"    color: white;\n"
-"    border: none;\n"
-"    padding: 2px 4px; /* 优化内边距比例 */\n"
-"    border-radius: 6px;\n"
-"    /* 改用线性渐变增强现代感，使用清新的绿色调 */\n"
-"    background: qlineargradient(\n"
-"        x1:0, y1:0, x2:0, y2:1,\n"
-"        stop:0 rgba(76, 209, 135, 255),  /* 亮绿色 */\n"
-"        stop:1 rgba(57, 181, 114, 255)   /* 深绿色 */\n"
-"    );\n"
-"    font-size: 12px;\n"
-"    font-weight: 500; /* 提升文字清晰度 */\n"
-"    box-shadow: 0 2px 5px rgba(57, 181, 114, 0.3); /* 增加立体感 */\n"
-"    transition: all 0.2s ease; /* 平滑过渡效果 */\n"
-"}\n"
-"\n"
-"QToolButton:hover {\n"
-"    background: qlineargradient(\n"
-"        x1:0, y1:0, x2:0, y2:1,\n"
-"        stop:0 rgba(86, 219, 145, 255),\n"
-"        stop:1 rgba(67, 191, 124, 255)\n"
-"    );\n"
-"    transform: translateY(-1px); /* 轻微上浮效果 */\n"
-"    box-shadow: 0 4px 8px rgba(57, 181, 114, 0.4); /* 增强阴影 */\n"
-"}\n"
-"\n"
-"QToolButton:pressed {\n"
-"    background: qlineargradient(\n"
-"        x1:0, y1:0, x2:0, y2:1,\n"
-"        stop:0 rgba(56, 189, 125, 255),\n"
-"        stop:1 rgba(47, 171, 104, 255)\n"
-"    );\n"
-"    transform: translateY(0); /* 恢复位置 */\n"
-"    box-shadow: inset 0 2px 4px rgba(40, 150, 90, 0.3); /* 内阴影增强按压感 */\n"
-"}\n"
-"\n"
-"/* 补充禁用状态样式 */\n"
-"QToolButton:disabled {\n"
-"    background: qlineargradient(\n"
-"        x1:0, y1:0, x2:0, y2:1,\n"
-"        stop:0 rgba(160, 220, 190, 255),\n"
-"        stop:1 rgba(140, 200, 170, 255)\n"
-"    );\n"
-"    color: rgba(255, 255, 255, 0.7);\n"
-"    box-shadow: none;\n"
-"    transform: none;\n"
-"}")
-        self.toolButton_autoSelect.setIconSize(QtCore.QSize(24, 24))
-        self.toolButton_autoSelect.setObjectName("toolButton_autoSelect")
-        self.horizontalLayout_63.addWidget(self.toolButton_autoSelect)
-        self.verticalLayout_38.addWidget(self.horizontalWidget_nav)
-        self.verticalLayout_38.setStretch(0, 10)
-        self.horizontalLayout_66.addWidget(self.verticalFrame_similar)
-        self.horizontalLayout_66.setStretch(0, 1)
-        self.stackedWidget.addWidget(self.page_3)
-        self.page_4 = QtWidgets.QWidget()
-        self.page_4.setStyleSheet("background:rgb(255, 255, 255);")
-        self.page_4.setObjectName("page_4")
-        self.verticalLayout_47 = QtWidgets.QVBoxLayout(self.page_4)
+        self.textEdit_duplicateRemovalLog.setReadOnly(True)
+        self.textEdit_duplicateRemovalLog.setObjectName("textEdit_duplicateRemovalLog")
+        self.layout_duplicateRemovalLog.addWidget(self.textEdit_duplicateRemovalLog)
+        self.layout_duplicateRemovalLeft.addWidget(self.frame_duplicateRemovalLog)
+        self.layout_duplicateRemovalMain.addWidget(self.verticalWidget)
+        self.stackedWidget_mainContent.addWidget(self.page_duplicateRemoval)
+        self.page_metadataWrite = QtWidgets.QWidget()
+        self.page_metadataWrite.setStyleSheet("background:rgb(255, 255, 255);")
+        self.page_metadataWrite.setObjectName("page_metadataWrite")
+        self.verticalLayout_47 = QtWidgets.QVBoxLayout(self.page_metadataWrite)
         self.verticalLayout_47.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_47.setSpacing(4)
         self.verticalLayout_47.setObjectName("verticalLayout_47")
-        self.horizontalFrame_9 = QtWidgets.QFrame(parent=self.page_4)
-        self.horizontalFrame_9.setStyleSheet("background:rgb(255, 255, 255);\n"
+        self.frame_metadataTop = QtWidgets.QFrame(parent=self.page_metadataWrite)
+        self.frame_metadataTop.setStyleSheet("background:rgb(255, 255, 255);\n"
 "border-top-left-radius:0px;\n"
 "border-top-right-radius:0px;\n"
 "border-bottom-right-radius:0px;\n"
 "border-bottom-left-radius:0px;")
-        self.horizontalFrame_9.setObjectName("horizontalFrame_9")
-        self.horizontalLayout_69 = QtWidgets.QHBoxLayout(self.horizontalFrame_9)
-        self.horizontalLayout_69.setContentsMargins(9, 6, 9, 6)
-        self.horizontalLayout_69.setSpacing(12)
-        self.horizontalLayout_69.setObjectName("horizontalLayout_69")
-        self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_3.setSpacing(6)
-        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.label_35 = QtWidgets.QLabel(parent=self.horizontalFrame_9)
+        self.frame_metadataTop.setObjectName("frame_metadataTop")
+        self.layout_metadataTop = QtWidgets.QHBoxLayout(self.frame_metadataTop)
+        self.layout_metadataTop.setContentsMargins(9, 9, 9, 9)
+        self.layout_metadataTop.setSpacing(9)
+        self.layout_metadataTop.setObjectName("layout_metadataTop")
+        self.layout_metadata_title = QtWidgets.QHBoxLayout()
+        self.layout_metadata_title.setSpacing(6)
+        self.layout_metadata_title.setObjectName("layout_metadata_title")
+        self.label_metadataTitle = QtWidgets.QLabel(parent=self.frame_metadataTop)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_35.setFont(font)
-        self.label_35.setStyleSheet("QLabel {\n"
+        self.label_metadataTitle.setFont(font)
+        self.label_metadataTitle.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_35.setObjectName("label_35")
-        self.horizontalLayout_3.addWidget(self.label_35)
-        self.lineEdit_EXIF_Title = QtWidgets.QLineEdit(parent=self.horizontalFrame_9)
+        self.label_metadataTitle.setObjectName("label_metadataTitle")
+        self.layout_metadata_title.addWidget(self.label_metadataTitle)
+        self.lineEdit_metadataTitle = QtWidgets.QLineEdit(parent=self.frame_metadataTop)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.lineEdit_EXIF_Title.sizePolicy().hasHeightForWidth())
-        self.lineEdit_EXIF_Title.setSizePolicy(sizePolicy)
-        self.lineEdit_EXIF_Title.setStyleSheet("QLineEdit {\n"
-"    border: 1px solid qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(134, 119, 253, 255),\n"
-"        stop:1 rgba(119, 111, 252, 255)\n"
-"    );\n"
+        sizePolicy.setHeightForWidth(self.lineEdit_metadataTitle.sizePolicy().hasHeightForWidth())
+        self.lineEdit_metadataTitle.setSizePolicy(sizePolicy)
+        self.lineEdit_metadataTitle.setStyleSheet("QLineEdit {\n"
+"    border: 1px solid rgb(134, 119, 253);\n"
 "    background: rgb(245, 249, 254);\n"
 "    padding: 8px 6px;\n"
 "    border-radius: 6px;\n"
@@ -2789,11 +2817,7 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "QLineEdit:focus {\n"
-"    border: 2px solid qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(134, 119, 253, 255),\n"
-"        stop:1 rgba(119, 111, 252, 255)\n"
-"    );\n"
+"    border: 2px solid rgb(134, 119, 253);\n"
 "    outline: none;\n"
 "}\n"
 "\n"
@@ -2801,107 +2825,107 @@ class Ui_MainWindow(object):
 "    background: #eaeaea;\n"
 "    color: #aaa;\n"
 "}")
-        self.lineEdit_EXIF_Title.setInputMask("")
-        self.lineEdit_EXIF_Title.setObjectName("lineEdit_EXIF_Title")
-        self.horizontalLayout_3.addWidget(self.lineEdit_EXIF_Title)
-        self.horizontalLayout_3.setStretch(1, 1)
-        self.horizontalLayout_69.addLayout(self.horizontalLayout_3)
+        self.lineEdit_metadataTitle.setInputMask("")
+        self.lineEdit_metadataTitle.setObjectName("lineEdit_metadataTitle")
+        self.layout_metadata_title.addWidget(self.lineEdit_metadataTitle)
+        self.layout_metadata_title.setStretch(1, 1)
+        self.layout_metadataTop.addLayout(self.layout_metadata_title)
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_5.setSpacing(6)
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        self.label_star = QtWidgets.QLabel(parent=self.horizontalFrame_9)
+        self.label_metadataRating = QtWidgets.QLabel(parent=self.frame_metadataTop)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_star.setFont(font)
-        self.label_star.setStyleSheet("QLabel {\n"
+        self.label_metadataRating.setFont(font)
+        self.label_metadataRating.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_star.setObjectName("label_star")
-        self.horizontalLayout_5.addWidget(self.label_star)
-        self.horizontalLayout_star = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_star.setObjectName("horizontalLayout_star")
-        self.pushButton_star_1 = QtWidgets.QPushButton(parent=self.horizontalFrame_9)
-        self.pushButton_star_1.setMinimumSize(QtCore.QSize(22, 22))
-        self.pushButton_star_1.setMaximumSize(QtCore.QSize(22, 22))
-        self.pushButton_star_1.setStyleSheet("QPushButton:hover {\n"
-f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
+        self.label_metadataRating.setObjectName("label_metadataRating")
+        self.horizontalLayout_5.addWidget(self.label_metadataRating)
+        self.layout_rating_buttons = QtWidgets.QHBoxLayout()
+        self.layout_rating_buttons.setObjectName("layout_rating_buttons")
+        self.btn_metadataRating1 = QtWidgets.QPushButton(parent=self.frame_metadataTop)
+        self.btn_metadataRating1.setMinimumSize(QtCore.QSize(22, 22))
+        self.btn_metadataRating1.setMaximumSize(QtCore.QSize(22, 22))
+        self.btn_metadataRating1.setStyleSheet("QPushButton:hover {\n"
+"    image: url(resources/img/page_4/星级_亮.svg);\n"
 "}")
-        self.pushButton_star_1.setText("")
+        self.btn_metadataRating1.setText("")
         icon11 = QtGui.QIcon()
-        icon11.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/page_4/星级_暗.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.pushButton_star_1.setIcon(icon11)
-        self.pushButton_star_1.setIconSize(QtCore.QSize(20, 20))
-        self.pushButton_star_1.setObjectName("pushButton_star_1")
-        self.horizontalLayout_star.addWidget(self.pushButton_star_1)
-        self.pushButton_star_2 = QtWidgets.QPushButton(parent=self.horizontalFrame_9)
-        self.pushButton_star_2.setMinimumSize(QtCore.QSize(22, 22))
-        self.pushButton_star_2.setMaximumSize(QtCore.QSize(22, 22))
-        self.pushButton_star_2.setStyleSheet("QPushButton:hover {\n"
-f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
+        icon11.addPixmap(QtGui.QPixmap("resources/img/page_4/星级_暗.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.btn_metadataRating1.setIcon(icon11)
+        self.btn_metadataRating1.setIconSize(QtCore.QSize(20, 20))
+        self.btn_metadataRating1.setObjectName("btn_metadataRating1")
+        self.layout_rating_buttons.addWidget(self.btn_metadataRating1)
+        self.btn_metadataRating2 = QtWidgets.QPushButton(parent=self.frame_metadataTop)
+        self.btn_metadataRating2.setMinimumSize(QtCore.QSize(22, 22))
+        self.btn_metadataRating2.setMaximumSize(QtCore.QSize(22, 22))
+        self.btn_metadataRating2.setStyleSheet("QPushButton:hover {\n"
+"    image: url(resources/img/page_4/星级_亮.svg);\n"
 "}")
-        self.pushButton_star_2.setText("")
-        self.pushButton_star_2.setIcon(icon11)
-        self.pushButton_star_2.setIconSize(QtCore.QSize(20, 20))
-        self.pushButton_star_2.setObjectName("pushButton_star_2")
-        self.horizontalLayout_star.addWidget(self.pushButton_star_2)
-        self.pushButton_star_3 = QtWidgets.QPushButton(parent=self.horizontalFrame_9)
-        self.pushButton_star_3.setMinimumSize(QtCore.QSize(22, 22))
-        self.pushButton_star_3.setMaximumSize(QtCore.QSize(22, 22))
-        self.pushButton_star_3.setStyleSheet("QPushButton:hover {\n"
-f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
+        self.btn_metadataRating2.setText("")
+        self.btn_metadataRating2.setIcon(icon11)
+        self.btn_metadataRating2.setIconSize(QtCore.QSize(20, 20))
+        self.btn_metadataRating2.setObjectName("btn_metadataRating2")
+        self.layout_rating_buttons.addWidget(self.btn_metadataRating2)
+        self.btn_metadataRating3 = QtWidgets.QPushButton(parent=self.frame_metadataTop)
+        self.btn_metadataRating3.setMinimumSize(QtCore.QSize(22, 22))
+        self.btn_metadataRating3.setMaximumSize(QtCore.QSize(22, 22))
+        self.btn_metadataRating3.setStyleSheet("QPushButton:hover {\n"
+"    image: url(resources/img/page_4/星级_亮.svg);\n"
 "}")
-        self.pushButton_star_3.setText("")
-        self.pushButton_star_3.setIcon(icon11)
-        self.pushButton_star_3.setIconSize(QtCore.QSize(20, 20))
-        self.pushButton_star_3.setObjectName("pushButton_star_3")
-        self.horizontalLayout_star.addWidget(self.pushButton_star_3)
-        self.pushButton_star_4 = QtWidgets.QPushButton(parent=self.horizontalFrame_9)
-        self.pushButton_star_4.setMinimumSize(QtCore.QSize(22, 22))
-        self.pushButton_star_4.setMaximumSize(QtCore.QSize(22, 22))
-        self.pushButton_star_4.setStyleSheet("QPushButton:hover {\n"
-f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')});\n"
+        self.btn_metadataRating3.setText("")
+        self.btn_metadataRating3.setIcon(icon11)
+        self.btn_metadataRating3.setIconSize(QtCore.QSize(20, 20))
+        self.btn_metadataRating3.setObjectName("btn_metadataRating3")
+        self.layout_rating_buttons.addWidget(self.btn_metadataRating3)
+        self.btn_metadataRating4 = QtWidgets.QPushButton(parent=self.frame_metadataTop)
+        self.btn_metadataRating4.setMinimumSize(QtCore.QSize(22, 22))
+        self.btn_metadataRating4.setMaximumSize(QtCore.QSize(22, 22))
+        self.btn_metadataRating4.setStyleSheet("QPushButton:hover {\n"
+"    image: url(resources/img/page_4/星级_亮.svg);\n"
 "}")
-        self.pushButton_star_4.setText("")
-        self.pushButton_star_4.setIcon(icon11)
-        self.pushButton_star_4.setIconSize(QtCore.QSize(20, 20))
-        self.pushButton_star_4.setObjectName("pushButton_star_4")
-        self.horizontalLayout_star.addWidget(self.pushButton_star_4)
-        self.pushButton_star_5 = QtWidgets.QPushButton(parent=self.horizontalFrame_9)
-        self.pushButton_star_5.setMinimumSize(QtCore.QSize(22, 22))
-        self.pushButton_star_5.setMaximumSize(QtCore.QSize(22, 22))
-        self.pushButton_star_5.setStyleSheet("QPushButton:hover {\n"
-f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')};\n"
+        self.btn_metadataRating4.setText("")
+        self.btn_metadataRating4.setIcon(icon11)
+        self.btn_metadataRating4.setIconSize(QtCore.QSize(20, 20))
+        self.btn_metadataRating4.setObjectName("btn_metadataRating4")
+        self.layout_rating_buttons.addWidget(self.btn_metadataRating4)
+        self.btn_metadataRating5 = QtWidgets.QPushButton(parent=self.frame_metadataTop)
+        self.btn_metadataRating5.setMinimumSize(QtCore.QSize(22, 22))
+        self.btn_metadataRating5.setMaximumSize(QtCore.QSize(22, 22))
+        self.btn_metadataRating5.setStyleSheet("QPushButton:hover {\n"
+"    image: url(resources/img/page_4/星级_亮.svg);\n"
 "}")
-        self.pushButton_star_5.setText("")
-        self.pushButton_star_5.setIcon(icon11)
-        self.pushButton_star_5.setIconSize(QtCore.QSize(20, 20))
-        self.pushButton_star_5.setObjectName("pushButton_star_5")
-        self.horizontalLayout_star.addWidget(self.pushButton_star_5)
-        self.horizontalLayout_5.addLayout(self.horizontalLayout_star)
+        self.btn_metadataRating5.setText("")
+        self.btn_metadataRating5.setIcon(icon11)
+        self.btn_metadataRating5.setIconSize(QtCore.QSize(20, 20))
+        self.btn_metadataRating5.setObjectName("btn_metadataRating5")
+        self.layout_rating_buttons.addWidget(self.btn_metadataRating5)
+        self.horizontalLayout_5.addLayout(self.layout_rating_buttons)
         self.horizontalLayout_5.setStretch(1, 1)
-        self.horizontalLayout_69.addLayout(self.horizontalLayout_5)
-        self.horizontalLayout_7 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_7.setSpacing(6)
-        self.horizontalLayout_7.setObjectName("horizontalLayout_7")
-        self.label_36 = QtWidgets.QLabel(parent=self.horizontalFrame_9)
+        self.layout_metadataTop.addLayout(self.horizontalLayout_5)
+        self.layout_metadata_brand = QtWidgets.QHBoxLayout()
+        self.layout_metadata_brand.setSpacing(6)
+        self.layout_metadata_brand.setObjectName("layout_metadata_brand")
+        self.label_metadataBrand = QtWidgets.QLabel(parent=self.frame_metadataTop)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_36.sizePolicy().hasHeightForWidth())
-        self.label_36.setSizePolicy(sizePolicy)
+        sizePolicy.setHeightForWidth(self.label_metadataBrand.sizePolicy().hasHeightForWidth())
+        self.label_metadataBrand.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_36.setFont(font)
-        self.label_36.setStyleSheet("QLabel {\n"
+        self.label_metadataBrand.setFont(font)
+        self.label_metadataBrand.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_36.setObjectName("label_36")
-        self.horizontalLayout_7.addWidget(self.label_36)
-        self.comboBox_brand = QtWidgets.QComboBox(parent=self.horizontalFrame_9)
-        self.comboBox_brand.setMinimumSize(QtCore.QSize(82, 30))
-        self.comboBox_brand.setStyleSheet("QComboBox {\n"
+        self.label_metadataBrand.setObjectName("label_metadataBrand")
+        self.layout_metadata_brand.addWidget(self.label_metadataBrand)
+        self.comboBox_metadataBrand = QtWidgets.QComboBox(parent=self.frame_metadataTop)
+        self.comboBox_metadataBrand.setMinimumSize(QtCore.QSize(82, 30))
+        self.comboBox_metadataBrand.setStyleSheet("QComboBox {\n"
 "    background-color: #ffffff;\n"
 "    border: 1px solid #d1d5db;\n"
 "    border-radius: 6px;\n"
@@ -3060,27 +3084,27 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')};\n"
 "    background: transparent;\n"
 "}\n"
 "")
-        self.comboBox_brand.setObjectName("comboBox_brand")
-        self.comboBox_brand.addItem("")
-        self.horizontalLayout_7.addWidget(self.comboBox_brand)
-        self.horizontalLayout_7.setStretch(1, 1)
-        self.horizontalLayout_69.addLayout(self.horizontalLayout_7)
-        self.horizontalLayout_13 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_13.setSpacing(6)
-        self.horizontalLayout_13.setObjectName("horizontalLayout_13")
-        self.label_37 = QtWidgets.QLabel(parent=self.horizontalFrame_9)
+        self.comboBox_metadataBrand.setObjectName("comboBox_metadataBrand")
+        self.comboBox_metadataBrand.addItem("")
+        self.layout_metadata_brand.addWidget(self.comboBox_metadataBrand)
+        self.layout_metadata_brand.setStretch(1, 1)
+        self.layout_metadataTop.addLayout(self.layout_metadata_brand)
+        self.layout_metadata_model = QtWidgets.QHBoxLayout()
+        self.layout_metadata_model.setSpacing(6)
+        self.layout_metadata_model.setObjectName("layout_metadata_model")
+        self.label_metadataModel = QtWidgets.QLabel(parent=self.frame_metadataTop)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_37.setFont(font)
-        self.label_37.setStyleSheet("QLabel {\n"
+        self.label_metadataModel.setFont(font)
+        self.label_metadataModel.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_37.setObjectName("label_37")
-        self.horizontalLayout_13.addWidget(self.label_37)
-        self.comboBox_model = QtWidgets.QComboBox(parent=self.horizontalFrame_9)
-        self.comboBox_model.setMinimumSize(QtCore.QSize(82, 30))
-        self.comboBox_model.setStyleSheet("QComboBox {\n"
+        self.label_metadataModel.setObjectName("label_metadataModel")
+        self.layout_metadata_model.addWidget(self.label_metadataModel)
+        self.comboBox_metadataModel = QtWidgets.QComboBox(parent=self.frame_metadataTop)
+        self.comboBox_metadataModel.setMinimumSize(QtCore.QSize(82, 30))
+        self.comboBox_metadataModel.setStyleSheet("QComboBox {\n"
 "    background-color: #ffffff;\n"
 "    border: 1px solid #d1d5db;\n"
 "    border-radius: 6px;\n"
@@ -3239,36 +3263,36 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')};\n"
 "    background: transparent;\n"
 "}\n"
 "")
-        self.comboBox_model.setObjectName("comboBox_model")
-        self.horizontalLayout_13.addWidget(self.comboBox_model)
-        self.horizontalLayout_13.setStretch(1, 1)
-        self.horizontalLayout_69.addLayout(self.horizontalLayout_13)
-        self.verticalLayout_47.addWidget(self.horizontalFrame_9)
-        self.horizontalFrame_8 = QtWidgets.QFrame(parent=self.page_4)
+        self.comboBox_metadataModel.setObjectName("comboBox_metadataModel")
+        self.layout_metadata_model.addWidget(self.comboBox_metadataModel)
+        self.layout_metadata_model.setStretch(1, 1)
+        self.layout_metadataTop.addLayout(self.layout_metadata_model)
+        self.verticalLayout_47.addWidget(self.frame_metadataTop)
+        self.horizontalFrame_8 = QtWidgets.QFrame(parent=self.page_metadataWrite)
         self.horizontalFrame_8.setStyleSheet("background:rgb(255, 255, 255);\n"
 "border-top-left-radius:0px;\n"
 "border-top-right-radius:0px;\n"
 "border-bottom-right-radius:0px;\n"
 "border-bottom-left-radius:0px;")
         self.horizontalFrame_8.setObjectName("horizontalFrame_8")
-        self.horizontalLayout_68 = QtWidgets.QHBoxLayout(self.horizontalFrame_8)
-        self.horizontalLayout_68.setContentsMargins(9, 6, 9, 6)
-        self.horizontalLayout_68.setSpacing(12)
-        self.horizontalLayout_68.setObjectName("horizontalLayout_68")
-        self.horizontalLayout_9 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_9.setObjectName("horizontalLayout_9")
-        self.label_38 = QtWidgets.QLabel(parent=self.horizontalFrame_8)
+        self.layout_metadata_author_controls = QtWidgets.QHBoxLayout(self.horizontalFrame_8)
+        self.layout_metadata_author_controls.setContentsMargins(9, 9, 9, 9)
+        self.layout_metadata_author_controls.setSpacing(9)
+        self.layout_metadata_author_controls.setObjectName("layout_metadata_author_controls")
+        self.layout_metadata_author = QtWidgets.QHBoxLayout()
+        self.layout_metadata_author.setObjectName("layout_metadata_author")
+        self.label_metadata_author = QtWidgets.QLabel(parent=self.horizontalFrame_8)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_38.setFont(font)
-        self.label_38.setStyleSheet("QLabel {\n"
+        self.label_metadata_author.setFont(font)
+        self.label_metadata_author.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_38.setObjectName("label_38")
-        self.horizontalLayout_9.addWidget(self.label_38)
-        self.lineEdit_EXIF_Author = QtWidgets.QLineEdit(parent=self.horizontalFrame_8)
-        self.lineEdit_EXIF_Author.setStyleSheet("QLineEdit {\n"
+        self.label_metadata_author.setObjectName("label_metadata_author")
+        self.layout_metadata_author.addWidget(self.label_metadata_author)
+        self.line_edit_metadata_author = QtWidgets.QLineEdit(parent=self.horizontalFrame_8)
+        self.line_edit_metadata_author.setStyleSheet("QLineEdit {\n"
 "    border: 1px solid qradialgradient(\n"
 "        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
 "        stop:0.66 rgba(134, 119, 253, 255),\n"
@@ -3296,24 +3320,24 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')};\n"
 "    background: #eaeaea;\n"
 "    color: #aaa;\n"
 "}")
-        self.lineEdit_EXIF_Author.setObjectName("lineEdit_EXIF_Author")
-        self.horizontalLayout_9.addWidget(self.lineEdit_EXIF_Author)
-        self.horizontalLayout_9.setStretch(1, 1)
-        self.horizontalLayout_68.addLayout(self.horizontalLayout_9)
-        self.horizontalLayout_10 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_10.setObjectName("horizontalLayout_10")
-        self.label_39 = QtWidgets.QLabel(parent=self.horizontalFrame_8)
+        self.line_edit_metadata_author.setObjectName("line_edit_metadata_author")
+        self.layout_metadata_author.addWidget(self.line_edit_metadata_author)
+        self.layout_metadata_author.setStretch(1, 1)
+        self.layout_metadata_author_controls.addLayout(self.layout_metadata_author)
+        self.layout_metadata_theme = QtWidgets.QHBoxLayout()
+        self.layout_metadata_theme.setObjectName("layout_metadata_theme")
+        self.label_metadata_theme = QtWidgets.QLabel(parent=self.horizontalFrame_8)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_39.setFont(font)
-        self.label_39.setStyleSheet("QLabel {\n"
+        self.label_metadata_theme.setFont(font)
+        self.label_metadata_theme.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_39.setObjectName("label_39")
-        self.horizontalLayout_10.addWidget(self.label_39)
-        self.lineEdit_EXIF_Theme = QtWidgets.QLineEdit(parent=self.horizontalFrame_8)
-        self.lineEdit_EXIF_Theme.setStyleSheet("QLineEdit {\n"
+        self.label_metadata_theme.setObjectName("label_metadata_theme")
+        self.layout_metadata_theme.addWidget(self.label_metadata_theme)
+        self.line_edit_metadata_theme = QtWidgets.QLineEdit(parent=self.horizontalFrame_8)
+        self.line_edit_metadata_theme.setStyleSheet("QLineEdit {\n"
 "    border: 1px solid qradialgradient(\n"
 "        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
 "        stop:0.66 rgba(134, 119, 253, 255),\n"
@@ -3341,25 +3365,25 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')};\n"
 "    background: #eaeaea;\n"
 "    color: #aaa;\n"
 "}")
-        self.lineEdit_EXIF_Theme.setObjectName("lineEdit_EXIF_Theme")
-        self.horizontalLayout_10.addWidget(self.lineEdit_EXIF_Theme)
-        self.horizontalLayout_10.setStretch(1, 1)
-        self.horizontalLayout_68.addLayout(self.horizontalLayout_10)
+        self.line_edit_metadata_theme.setObjectName("line_edit_metadata_theme")
+        self.layout_metadata_theme.addWidget(self.line_edit_metadata_theme)
+        self.layout_metadata_theme.setStretch(1, 1)
+        self.layout_metadata_author_controls.addLayout(self.layout_metadata_theme)
         self.horizontalLayout_11 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_11.setObjectName("horizontalLayout_11")
-        self.label_40 = QtWidgets.QLabel(parent=self.horizontalFrame_8)
+        self.label_metadata_copyright = QtWidgets.QLabel(parent=self.horizontalFrame_8)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_40.setFont(font)
-        self.label_40.setStyleSheet("QLabel {\n"
+        self.label_metadata_copyright.setFont(font)
+        self.label_metadata_copyright.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_40.setObjectName("label_40")
-        self.horizontalLayout_11.addWidget(self.label_40)
-        self.lineEdit_EXIF_Copyright = QtWidgets.QLineEdit(parent=self.horizontalFrame_8)
-        self.lineEdit_EXIF_Copyright.setMinimumSize(QtCore.QSize(0, 0))
-        self.lineEdit_EXIF_Copyright.setStyleSheet("QLineEdit {\n"
+        self.label_metadata_copyright.setObjectName("label_metadata_copyright")
+        self.horizontalLayout_11.addWidget(self.label_metadata_copyright)
+        self.line_edit_metadata_copyright = QtWidgets.QLineEdit(parent=self.horizontalFrame_8)
+        self.line_edit_metadata_copyright.setMinimumSize(QtCore.QSize(0, 0))
+        self.line_edit_metadata_copyright.setStyleSheet("QLineEdit {\n"
 "    border: 1px solid qradialgradient(\n"
 "        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
 "        stop:0.66 rgba(134, 119, 253, 255),\n"
@@ -3387,38 +3411,38 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')};\n"
 "    background: #eaeaea;\n"
 "    color: #aaa;\n"
 "}")
-        self.lineEdit_EXIF_Copyright.setObjectName("lineEdit_EXIF_Copyright")
-        self.horizontalLayout_11.addWidget(self.lineEdit_EXIF_Copyright)
+        self.line_edit_metadata_copyright.setObjectName("line_edit_metadata_copyright")
+        self.horizontalLayout_11.addWidget(self.line_edit_metadata_copyright)
         self.horizontalLayout_11.setStretch(1, 1)
-        self.horizontalLayout_68.addLayout(self.horizontalLayout_11)
+        self.layout_metadata_author_controls.addLayout(self.horizontalLayout_11)
         self.verticalLayout_47.addWidget(self.horizontalFrame_8)
-        self.horizontalFrame_10 = QtWidgets.QFrame(parent=self.page_4)
-        self.horizontalFrame_10.setStyleSheet("background:rgb(255, 255, 255);\n"
+        self.frame_exif_controls = QtWidgets.QFrame(parent=self.page_metadataWrite)
+        self.frame_exif_controls.setStyleSheet("background:rgb(255, 255, 255);\n"
 "border-top-left-radius:0px;\n"
 "border-top-right-radius:0px;\n"
 "border-bottom-right-radius:0px;\n"
 "border-bottom-left-radius:0px;")
-        self.horizontalFrame_10.setObjectName("horizontalFrame_10")
-        self.horizontalLayout_72 = QtWidgets.QHBoxLayout(self.horizontalFrame_10)
-        self.horizontalLayout_72.setContentsMargins(9, 6, 9, 6)
-        self.horizontalLayout_72.setSpacing(12)
-        self.horizontalLayout_72.setObjectName("horizontalLayout_72")
-        self.horizontalLayout_15 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_15.setContentsMargins(6, 6, 6, 6)
-        self.horizontalLayout_15.setObjectName("horizontalLayout_15")
-        self.label_44 = QtWidgets.QLabel(parent=self.horizontalFrame_10)
+        self.frame_exif_controls.setObjectName("frame_exif_controls")
+        self.layout_exif_controls = QtWidgets.QHBoxLayout(self.frame_exif_controls)
+        self.layout_exif_controls.setContentsMargins(9, 9, 9, 9)
+        self.layout_exif_controls.setSpacing(9)
+        self.layout_exif_controls.setObjectName("layout_exif_controls")
+        self.layout_shoot_time_controls = QtWidgets.QHBoxLayout()
+        self.layout_shoot_time_controls.setContentsMargins(6, 6, 6, 6)
+        self.layout_shoot_time_controls.setObjectName("layout_shoot_time_controls")
+        self.label_shoot_time = QtWidgets.QLabel(parent=self.frame_exif_controls)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_44.setFont(font)
-        self.label_44.setStyleSheet("QLabel {\n"
+        self.label_shoot_time.setFont(font)
+        self.label_shoot_time.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_44.setObjectName("label_44")
-        self.horizontalLayout_15.addWidget(self.label_44)
-        self.comboBox_shootTime = QtWidgets.QComboBox(parent=self.horizontalFrame_10)
-        self.comboBox_shootTime.setMinimumSize(QtCore.QSize(82, 30))
-        self.comboBox_shootTime.setStyleSheet("QComboBox {\n"
+        self.label_shoot_time.setObjectName("label_shoot_time")
+        self.layout_shoot_time_controls.addWidget(self.label_shoot_time)
+        self.combo_metadata_shoot_time = QtWidgets.QComboBox(parent=self.frame_exif_controls)
+        self.combo_metadata_shoot_time.setMinimumSize(QtCore.QSize(82, 30))
+        self.combo_metadata_shoot_time.setStyleSheet("QComboBox {\n"
 "    background-color: #ffffff;\n"
 "    border: 1px solid #d1d5db;\n"
 "    border-radius: 6px;\n"
@@ -3522,21 +3546,21 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')};\n"
 "    outline: none;\n"
 "    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
 "}")
-        self.comboBox_shootTime.setObjectName("comboBox_shootTime")
-        self.comboBox_shootTime.addItem("")
-        self.comboBox_shootTime.addItem("")
-        self.comboBox_shootTime.addItem("")
-        self.horizontalLayout_15.addWidget(self.comboBox_shootTime)
-        self.dateTimeEdit_shootTime = QtWidgets.QDateTimeEdit(parent=self.horizontalFrame_10)
+        self.combo_metadata_shoot_time.setObjectName("combo_metadata_shoot_time")
+        self.combo_metadata_shoot_time.addItem("")
+        self.combo_metadata_shoot_time.addItem("")
+        self.combo_metadata_shoot_time.addItem("")
+        self.layout_shoot_time_controls.addWidget(self.combo_metadata_shoot_time)
+        self.date_time_metadata_shoot_time = QtWidgets.QDateTimeEdit(parent=self.frame_exif_controls)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.dateTimeEdit_shootTime.sizePolicy().hasHeightForWidth())
-        self.dateTimeEdit_shootTime.setSizePolicy(sizePolicy)
+        sizePolicy.setHeightForWidth(self.date_time_metadata_shoot_time.sizePolicy().hasHeightForWidth())
+        self.date_time_metadata_shoot_time.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setPointSize(-1)
-        self.dateTimeEdit_shootTime.setFont(font)
-        self.dateTimeEdit_shootTime.setStyleSheet("QDateTimeEdit {\n"
+        self.date_time_metadata_shoot_time.setFont(font)
+        self.date_time_metadata_shoot_time.setStyleSheet("QDateTimeEdit {\n"
 "    border: 1px solid qradialgradient(\n"
 "        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
 "        stop:0.66 rgba(134, 119, 253, 255),\n"
@@ -3575,135 +3599,26 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')};\n"
 "    background: #eaeaea;\n"
 "    color: #aaa;\n"
 "}")
-        self.dateTimeEdit_shootTime.setCurrentSection(QtWidgets.QDateTimeEdit.Section.YearSection)
-        self.dateTimeEdit_shootTime.setObjectName("dateTimeEdit_shootTime")
-        self.horizontalLayout_15.addWidget(self.dateTimeEdit_shootTime)
-        self.horizontalLayout_15.setStretch(1, 1)
-        self.horizontalLayout_72.addLayout(self.horizontalLayout_15)
-        self.horizontalLayout_12 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_12.setContentsMargins(6, 6, 6, 6)
-        self.horizontalLayout_12.setSpacing(6)
-        self.horizontalLayout_12.setObjectName("horizontalLayout_12")
-        self.label_41 = QtWidgets.QLabel(parent=self.horizontalFrame_10)
+        self.date_time_metadata_shoot_time.setCurrentSection(QtWidgets.QDateTimeEdit.Section.YearSection)
+        self.date_time_metadata_shoot_time.setObjectName("date_time_metadata_shoot_time")
+        self.layout_shoot_time_controls.addWidget(self.date_time_metadata_shoot_time)
+        self.layout_shoot_time_controls.setStretch(1, 1)
+        self.layout_exif_controls.addLayout(self.layout_shoot_time_controls)
+        self.layout_location_controls = QtWidgets.QHBoxLayout()
+        self.layout_location_controls.setContentsMargins(6, 6, 6, 6)
+        self.layout_location_controls.setSpacing(6)
+        self.layout_location_controls.setObjectName("layout_location_controls")
+        self.label_metadata_location = QtWidgets.QLabel(parent=self.frame_exif_controls)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_41.setFont(font)
-        self.label_41.setStyleSheet("QLabel {\n"
+        self.label_metadata_location.setFont(font)
+        self.label_metadata_location.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_41.setObjectName("label_41")
-        self.horizontalLayout_12.addWidget(self.label_41)
-        self.comboBox_location = QtWidgets.QComboBox(parent=self.horizontalFrame_10)
-        self.comboBox_location.setStyleSheet("QComboBox {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #d1d5db;\n"
-"    border-radius: 6px;\n"
-"    padding: 6px 12px;\n"
-"    color: rgb(0, 0, 0);\n"
-"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
-"    font-size: 13px;\n"
-"    min-width: 56px;\n"
-"    min-height: 16px;\n"
-"    selection-background-color: #6d28d9;\n"
-"    selection-color: white;\n"
-"    transition: all 0.2s ease-out;\n"
-"}\n"
-"\n"
-"QComboBox::drop-down {\n"
-"    width: 0;\n"
-"    border: none;\n"
-"    padding: 0;\n"
-"}\n"
-"\n"
-"QComboBox::down-arrow {\n"
-"    image: none;\n"
-"}\n"
-"\n"
-"QComboBox:hover {\n"
-"    border-color: #a5b4fc;\n"
-"    background-color: #f8fafc;\n"
-"    box-shadow: 0 1px 3px rgba(166, 175, 195, 0.2);\n"
-"}\n"
-"\n"
-"QComboBox:on {\n"
-"    background-color: #f5f3ff;\n"
-"    border-bottom-left-radius: 0;\n"
-"    border-bottom-right-radius: 0;\n"
-"    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);\n"
-"}\n"
-"\n"
-"QComboBox:pressed {\n"
-"    background-color: #ede9fe;\n"
-"    transform: translateY(1px);\n"
-"}\n"
-"\n"
-"QComboBox:disabled {\n"
-"    background-color: #f3f4f6;\n"
-"    color: #9ca3af;\n"
-"    border-color: #e5e7eb;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView {\n"
-"    border: 1px solid #e5e7eb;\n"
-"    border-top: none;\n"
-"    border-radius: 0 0 6px 6px;\n"
-"    background: white;\n"
-"    padding: 4px 0;\n"
-"    margin-top: -1px;\n"
-"    selection-background-color: #6d28d9;\n"
-"    selection-color: white;\n"
-"    outline: none;\n"
-"    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);\n"
-"    min-width: 88px;\n"
-"    font-family: \"Microsoft YaHei\", \"微软雅黑\", sans-serif;\n"
-"    font-size: 13px;\n"
-"    color: black;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView::item {\n"
-"    padding: 6px 2px;\n"
-"    margin: 0 4px;\n"
-"    border-radius: 3px;\n"
-"    border-left: 1px solid transparent;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView::item:hover {\n"
-"    background-color: #f8f5ff;\n"
-"    color: #6d28d9;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView::item:selected {\n"
-"    background-color: #faf7ff;\n"
-"    color: #6d28d9;\n"
-"    border-left: 1px solid #6d28d9;\n"
-"    font-weight: normal;\n"
-"    padding-left: 11px;\n"
-"}\n"
-"\n"
-"QComboBox:editable {\n"
-"    background: white;\n"
-"    padding-right: 12px;\n"
-"}\n"
-"\n"
-"QComboBox:editable:on {\n"
-"    background: #f5f3ff;\n"
-"}\n"
-"\n"
-"QComboBox:!editable {\n"
-"    background: #f9fafb;\n"
-"}\n"
-"\n"
-"QComboBox:focus {\n"
-"    border: 1px solid #8b5cf6;\n"
-"    outline: none;\n"
-"    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
-"}")
-        self.comboBox_location.setObjectName("comboBox_location")
-        self.comboBox_location.addItem("")
-        self.comboBox_location.addItem("")
-        self.horizontalLayout_12.addWidget(self.comboBox_location)
-        self.lineEdit_EXIF_latitude = QtWidgets.QLineEdit(parent=self.horizontalFrame_10)
+        self.label_metadata_location.setObjectName("label_metadata_location")
+        self.layout_location_controls.addWidget(self.label_metadata_location)
+        self.lineEdit_EXIF_latitude = QtWidgets.QLineEdit(parent=self.frame_exif_controls)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -3738,8 +3653,8 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')};\n"
 "    color: #aaa;\n"
 "}")
         self.lineEdit_EXIF_latitude.setObjectName("lineEdit_EXIF_latitude")
-        self.horizontalLayout_12.addWidget(self.lineEdit_EXIF_latitude)
-        self.lineEdit_EXIF_longitude = QtWidgets.QLineEdit(parent=self.horizontalFrame_10)
+        self.layout_location_controls.addWidget(self.lineEdit_EXIF_latitude)
+        self.lineEdit_EXIF_longitude = QtWidgets.QLineEdit(parent=self.frame_exif_controls)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -3774,108 +3689,24 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')};\n"
 "    color: #aaa;\n"
 "}")
         self.lineEdit_EXIF_longitude.setObjectName("lineEdit_EXIF_longitude")
-        self.horizontalLayout_12.addWidget(self.lineEdit_EXIF_longitude)
-        self.horizontalFrame = QtWidgets.QFrame(parent=self.horizontalFrame_10)
-        self.horizontalFrame.setStyleSheet("QFrame {\n"
-"    border: 1px solid qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(134, 119, 253, 255),\n"
-"        stop:1 rgba(119, 111, 252, 255)\n"
-"    );\n"
-"    background: rgb(245, 249, 254);\n"
-"    border-radius: 8px;\n"
-"    transition: all 0.2s ease;\n"
-"}\n"
-"\n"
-"QFrame:focus {\n"
-"    border: 2px solid qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(110, 90, 255, 255),\n"
-"        stop:1 rgba(85, 65, 250, 255)\n"
-"    );\n"
-"    background: rgb(250, 252, 255);\n"
-"    box-shadow: 0 0 8px rgba(134, 119, 253, 0.6);\n"
-"    outline: none;\n"
-"}\n"
-"\n"
-"QFrame:hover:not(:focus):not(:disabled) {\n"
-"    border-color: qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(134, 119, 253, 200),\n"
-"        stop:1 rgba(119, 111, 252, 200)\n"
-"    );\n"
-"\n"
-"    background: rgb(248, 250, 255);\n"
-"}\n"
-"\n"
-"QFrame:disabled {\n"
-"    background: #f0f0f0;\n"
-"    border-color: #ddd;\n"
-"    opacity: 0.8;\n"
-"}\n"
-"\n"
-"/* 可滚动区域的Frame样式 */\n"
-"QFrame[frameShape=\"QFrame::StyledPanel\"] {\n"
-"    border: 1px solid rgba(134, 119, 253, 120);\n"
-"    background: rgb(249, 251, 255);\n"
-"}")
-        self.horizontalFrame.setObjectName("horizontalFrame")
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.horizontalFrame)
-        self.horizontalLayout_2.setContentsMargins(4, 4, 4, 4)
-        self.horizontalLayout_2.setSpacing(0)
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.lineEdit_EXIF_Position = QtWidgets.QLineEdit(parent=self.horizontalFrame)
-        self.lineEdit_EXIF_Position.setMinimumSize(QtCore.QSize(0, 0))
-        self.lineEdit_EXIF_Position.setStyleSheet("QLineEdit {\n"
-"    border: 0px;\n"
-"    background: rgba(0, 0, 0, 0);\n"
-"    padding: 0px;\n"
-"    border-radius: 0px;\n"
-"    color: #333;\n"
-"    font-size: 14px;\n"
-"}\n"
-"\n"
-"QLineEdit:focus {\n"
-"    border: 0px;\n"
-"    outline: none;\n"
-"}\n"
-"\n"
-"QLineEdit:disabled {\n"
-"    color: #aaa;\n"
-"}")
-        self.lineEdit_EXIF_Position.setInputMask("")
-        self.lineEdit_EXIF_Position.setObjectName("lineEdit_EXIF_Position")
-        self.horizontalLayout_2.addWidget(self.lineEdit_EXIF_Position)
-        self.pushButton_Position = QtWidgets.QPushButton(parent=self.horizontalFrame)
-        self.pushButton_Position.setMinimumSize(QtCore.QSize(20, 20))
-        self.pushButton_Position.setMaximumSize(QtCore.QSize(20, 20))
-        self.pushButton_Position.setStyleSheet("background:rgba(0, 0, 0, 0);")
-        self.pushButton_Position.setText("")
-        icon12 = QtGui.QIcon()
-        icon12.addPixmap(QtGui.QPixmap(get_resource_path("resources/img/page_4/位置.svg")), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.pushButton_Position.setIcon(icon12)
-        self.pushButton_Position.setIconSize(QtCore.QSize(20, 20))
-        self.pushButton_Position.setObjectName("pushButton_Position")
-        self.horizontalLayout_2.addWidget(self.pushButton_Position)
-        self.horizontalLayout_12.addWidget(self.horizontalFrame)
-        self.horizontalLayout_12.setStretch(4, 1)
-        self.horizontalLayout_72.addLayout(self.horizontalLayout_12)
-        self.verticalLayout_47.addWidget(self.horizontalFrame_10)
-        self.verticalFrame_15 = QtWidgets.QFrame(parent=self.page_4)
-        self.verticalFrame_15.setStyleSheet("background:rgb(255, 255, 255);\n"
+        self.layout_location_controls.addWidget(self.lineEdit_EXIF_longitude)
+        self.layout_exif_controls.addLayout(self.layout_location_controls)
+        self.verticalLayout_47.addWidget(self.frame_exif_controls)
+        self.frame_exif_actions = QtWidgets.QFrame(parent=self.page_metadataWrite)
+        self.frame_exif_actions.setStyleSheet("background:rgb(255, 255, 255);\n"
 "border-top-left-radius:0px;\n"
 "border-top-right-radius:0px;\n"
 "border-bottom-right-radius:0px;\n"
 "border-bottom-left-radius:0px;")
-        self.verticalFrame_15.setObjectName("verticalFrame_15")
-        self.horizontalLayout_70 = QtWidgets.QHBoxLayout(self.verticalFrame_15)
-        self.horizontalLayout_70.setContentsMargins(9, 6, 9, 6)
-        self.horizontalLayout_70.setSpacing(9)
-        self.horizontalLayout_70.setObjectName("horizontalLayout_70")
-        self.progressBar_EXIF = QtWidgets.QProgressBar(parent=self.verticalFrame_15)
-        self.progressBar_EXIF.setMinimumSize(QtCore.QSize(0, 0))
-        self.progressBar_EXIF.setMaximumSize(QtCore.QSize(16777215, 16777215))
-        self.progressBar_EXIF.setStyleSheet("QProgressBar {\n"
+        self.frame_exif_actions.setObjectName("frame_exif_actions")
+        self.layout_exif_actions = QtWidgets.QHBoxLayout(self.frame_exif_actions)
+        self.layout_exif_actions.setContentsMargins(9, 9, 9, 9)
+        self.layout_exif_actions.setSpacing(9)
+        self.layout_exif_actions.setObjectName("layout_exif_actions")
+        self.progressBar_metadataWrite = QtWidgets.QProgressBar(parent=self.frame_exif_actions)
+        self.progressBar_metadataWrite.setMinimumSize(QtCore.QSize(0, 0))
+        self.progressBar_metadataWrite.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        self.progressBar_metadataWrite.setStyleSheet("QProgressBar {\n"
 "  text-align: center;\n"
 "  background-color: #FFFFFF;\n"
 "  border: 1px solid #D4D4D4;\n"
@@ -3898,46 +3729,33 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')};\n"
 "  margin: 2px;\n"
 "  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);\n"
 "}")
-        self.progressBar_EXIF.setProperty("value", 0)
-        self.progressBar_EXIF.setObjectName("progressBar_EXIF")
-        self.horizontalLayout_70.addWidget(self.progressBar_EXIF)
-        self.toolButton_StartEXIF = QtWidgets.QToolButton(parent=self.verticalFrame_15)
-        self.toolButton_StartEXIF.setMinimumSize(QtCore.QSize(88, 32))
-        self.toolButton_StartEXIF.setMaximumSize(QtCore.QSize(16777215, 32))
-        self.toolButton_StartEXIF.setStyleSheet("QToolButton {\n"
+        self.progressBar_metadataWrite.setProperty("value", 0)
+        self.progressBar_metadataWrite.setObjectName("progressBar_metadataWrite")
+        self.layout_exif_actions.addWidget(self.progressBar_metadataWrite)
+        self.toolButton_startMetadataWrite = QtWidgets.QToolButton(parent=self.frame_exif_actions)
+        self.toolButton_startMetadataWrite.setMinimumSize(QtCore.QSize(88, 32))
+        self.toolButton_startMetadataWrite.setMaximumSize(QtCore.QSize(16777215, 32))
+        self.toolButton_startMetadataWrite.setStyleSheet("QToolButton {\n"
 "    color: white;\n"
 "    border: none;\n"
 "    padding: 6px 6px;\n"
 "    border-radius: 6px;\n"
-"    background-color: qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(134, 119, 253, 255),\n"
-"        stop:1 rgba(119, 111, 252, 255)\n"
-"    );\n"
+"    background-color: rgb(134, 119, 253);\n"
 "    font-size: 12px;\n"
 "}\n"
 "\n"
 "QToolButton:hover {\n"
-"    background-color: qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(154, 139, 255, 255),\n"
-"        stop:1 rgba(139, 131, 254, 255)\n"
-"    );\n"
+"    background-color: rgb(154, 139, 255);\n"
 "}\n"
 "\n"
 "QToolButton:pressed {\n"
-"    background-color: qradialgradient(\n"
-"        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"        stop:0.66 rgba(94, 79, 253, 255),\n"
-"        stop:1 rgba(79, 71, 252, 255)\n"
-"    );\n"
+"    background-color: rgb(94, 79, 253);\n"
 "}")
-        self.toolButton_StartEXIF.setIconSize(QtCore.QSize(24, 24))
-        self.toolButton_StartEXIF.setObjectName("toolButton_StartEXIF")
-        self.horizontalLayout_70.addWidget(self.toolButton_StartEXIF)
-        self.horizontalLayout_70.setStretch(0, 1)
-        self.verticalLayout_47.addWidget(self.verticalFrame_15)
-        self.horizontalFrame_log = QtWidgets.QFrame(parent=self.page_4)
+        self.toolButton_startMetadataWrite.setIconSize(QtCore.QSize(24, 24))
+        self.toolButton_startMetadataWrite.setObjectName("toolButton_startMetadataWrite")
+        self.layout_exif_actions.addWidget(self.toolButton_startMetadataWrite)
+        self.verticalLayout_47.addWidget(self.frame_exif_actions)
+        self.horizontalFrame_log = QtWidgets.QFrame(parent=self.page_metadataWrite)
         self.horizontalFrame_log.setStyleSheet("background:rgb(255, 255, 255);\n"
 "border-top-left-radius:0px;\n"
 "border-top-right-radius:0px;\n"
@@ -3945,8 +3763,8 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')};\n"
 "border-bottom-left-radius:0px;")
         self.horizontalFrame_log.setObjectName("horizontalFrame_log")
         self.horizontalLayout_71 = QtWidgets.QHBoxLayout(self.horizontalFrame_log)
-        self.horizontalLayout_71.setContentsMargins(9, 6, 9, 9)
-        self.horizontalLayout_71.setSpacing(0)
+        self.horizontalLayout_71.setContentsMargins(9, 9, 9, 9)
+        self.horizontalLayout_71.setSpacing(9)
         self.horizontalLayout_71.setObjectName("horizontalLayout_71")
         self.textEdit_WriteEXIF_Log = QtWidgets.QTextEdit(parent=self.horizontalFrame_log)
         self.textEdit_WriteEXIF_Log.setMinimumSize(QtCore.QSize(0, 0))
@@ -3955,14 +3773,7 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')};\n"
         font.setPointSize(-1)
         self.textEdit_WriteEXIF_Log.setFont(font)
         self.textEdit_WriteEXIF_Log.setStyleSheet("QTextEdit {\n"
-"    border: 1.5px solid qradialgradient(\n"
-"        cx:0.5, cy:0.5,\n"
-"        radius: 1.2,\n"
-"        fx:0.45, fy:0.55,\n"
-"        stop:0 rgba(144, 129, 255, 255),\n"
-"        stop:0.7 rgba(129, 121, 255, 220),\n"
-"        stop:1 rgba(108, 97, 224, 200)\n"
-"    );\n"
+"    border: 1.5px solid rgb(134, 119, 253);\n"
 "    background: rgb(245, 249, 254);\n"
 "    padding: 8px;\n"
 "    border-radius: 6px;\n"
@@ -3971,9 +3782,6 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')};\n"
 "    color: #333;\n"
 "    selection-background-color: rgba(134, 119, 253, 0.5);\n"
 "    selection-color: #fff;\n"
-"    box-shadow:\n"
-"        inset 0 1px 3px rgba(0, 0, 0, 0.05),\n"
-"        0 2px 8px rgba(134, 119, 253, 0.1);\n"
 "}\n"
 "\n"
 "QTextEdit QScrollBar:vertical {\n"
@@ -3987,7 +3795,6 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')};\n"
 "    border-radius: 5px;\n"
 "    min-height: 30px;\n"
 "    margin: 2px;\n"
-"    transition: background 0.2s;\n"
 "}\n"
 "\n"
 "QTextEdit QScrollBar::handle:vertical:hover {\n"
@@ -4028,159 +3835,152 @@ f"    image: url({get_resource_path('resources/img/page_4/星级_亮.svg')};\n"
 "}\n"
 "\n"
 "QTextEdit:focus {\n"
-"    border: 1.5px solid qradialgradient(\n"
-"        cx:0.5, cy:0.5,\n"
-"        radius: 1.3,\n"
-"        fx:0.4, fy:0.6,\n"
-"        stop:0 rgba(154, 139, 255, 255),\n"
-"        stop:1 rgba(139, 131, 255, 240)\n"
-"    );\n"
-"    box-shadow: 0 0 0 2px rgba(134, 119, 253, 0.15);\n"
+"    border: 1.5px solid rgb(154, 139, 255);\n"
 "}")
         self.textEdit_WriteEXIF_Log.setReadOnly(True)
         self.textEdit_WriteEXIF_Log.setObjectName("textEdit_WriteEXIF_Log")
         self.horizontalLayout_71.addWidget(self.textEdit_WriteEXIF_Log)
         self.verticalLayout_47.addWidget(self.horizontalFrame_log)
-        self.stackedWidget.addWidget(self.page_4)
-        self.verticalLayout_2.addWidget(self.stackedWidget)
-        self.verticalLayout.addWidget(self.frame_content)
-        self.verticalLayout.setStretch(1, 12)
-        self.horizontalLayout_4.addWidget(self.Frame_right)
-        self.horizontalLayout_4.setStretch(2, 1)
-        self.gridLayout.addWidget(self.frame_main, 0, 0, 1, 1)
-        MainWindow.setCentralWidget(self.centralwidget)
+        self.stackedWidget_mainContent.addWidget(self.page_metadataWrite)
+        self.layout_stackedWidgetContainer.addWidget(self.stackedWidget_mainContent)
+        self.layout_contentPanel.addWidget(self.frame_stackedWidgetContainer)
+        self.layout_contentPanel.setStretch(1, 12)
+        self.layout_mainContainer.addWidget(self.frame_contentPanel)
+        self.layout_mainContainer.setStretch(2, 1)
+        self.layout_mainWindow.addWidget(self.frame_mainContainer)
+        MainWindow.setCentralWidget(self.centralWidget_main)
 
         self.retranslateUi(MainWindow)
-        self.listWidget_base.setCurrentRow(0)
-        self.stackedWidget.setCurrentIndex(0)
-        self.listWidget_base.currentRowChanged['int'].connect(self.stackedWidget.setCurrentIndex) # type: ignore
+        self.listWidget_navigationMenu.setCurrentRow(0)
+        self.stackedWidget_mainContent.setCurrentIndex(0)
+        self.listWidget_navigationMenu.currentRowChanged['int'].connect(self.stackedWidget_mainContent.setCurrentIndex) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.pushButton_logo.setText(_translate("MainWindow", "LeafView"))
-        __sortingEnabled = self.listWidget_base.isSortingEnabled()
-        self.listWidget_base.setSortingEnabled(False)
-        item = self.listWidget_base.item(0)
+        MainWindow.setWindowTitle(_translate("MainWindow", "LeafView - 媒体文件管理工具"))
+        self.btn_appTitle.setText(_translate("MainWindow", "LeafView"))
+        __sortingEnabled = self.listWidget_navigationMenu.isSortingEnabled()
+        self.listWidget_navigationMenu.setSortingEnabled(False)
+        item = self.listWidget_navigationMenu.item(0)
         item.setText(_translate("MainWindow", "媒体导入"))
-        item = self.listWidget_base.item(1)
-        item.setText(_translate("MainWindow", "识字整理"))
-        item = self.listWidget_base.item(2)
-        item.setText(_translate("MainWindow", "智能整理"))
-        item = self.listWidget_base.item(3)
-        item.setText(_translate("MainWindow", "文件去重"))
-        item = self.listWidget_base.item(4)
-        item.setText(_translate("MainWindow", "属性写入"))
-        self.listWidget_base.setSortingEnabled(__sortingEnabled)
-        self.pushButton_add_folder.setText(_translate("MainWindow", "添加文件夹"))
-        self.label_add_folder.setText(_translate("MainWindow", "点击添加或拖动文件夹到此处"))
-        self.label.setText(_translate("MainWindow", "正在建设中..."))
-        self.label_classification.setText(_translate("MainWindow", "文件夹整理："))
-        self.label_route.setText(_translate("MainWindow", "目录"))
-        self.label_25.setText(_translate("MainWindow", "\\"))
-        self.comboBox_level_1.setItemText(0, _translate("MainWindow", "不分类"))
-        self.comboBox_level_1.setItemText(1, _translate("MainWindow", "年份"))
-        self.comboBox_level_1.setItemText(2, _translate("MainWindow", "月份"))
-        self.comboBox_level_1.setItemText(3, _translate("MainWindow", "拍摄设备"))
-        self.comboBox_level_1.setItemText(4, _translate("MainWindow", "相机型号"))
-        self.comboBox_level_1.setItemText(5, _translate("MainWindow", "拍摄省份"))
-        self.comboBox_level_1.setItemText(6, _translate("MainWindow", "拍摄城市"))
-        self.label_17.setText(_translate("MainWindow", "\\"))
-        self.comboBox_level_2.setItemText(0, _translate("MainWindow", "不分类"))
-        self.comboBox_level_2.setItemText(1, _translate("MainWindow", "年份"))
-        self.comboBox_level_2.setItemText(2, _translate("MainWindow", "月份"))
-        self.comboBox_level_2.setItemText(3, _translate("MainWindow", "拍摄设备"))
-        self.comboBox_level_2.setItemText(4, _translate("MainWindow", "相机型号"))
-        self.comboBox_level_2.setItemText(5, _translate("MainWindow", "拍摄省份"))
-        self.comboBox_level_2.setItemText(6, _translate("MainWindow", "拍摄城市"))
-        self.label_18.setText(_translate("MainWindow", "\\"))
-        self.comboBox_level_3.setItemText(0, _translate("MainWindow", "不分类"))
-        self.comboBox_level_3.setItemText(1, _translate("MainWindow", "年份"))
-        self.comboBox_level_3.setItemText(2, _translate("MainWindow", "月份"))
-        self.comboBox_level_3.setItemText(3, _translate("MainWindow", "拍摄设备"))
-        self.comboBox_level_3.setItemText(4, _translate("MainWindow", "相机型号"))
-        self.comboBox_level_3.setItemText(5, _translate("MainWindow", "拍摄省份"))
-        self.comboBox_level_3.setItemText(6, _translate("MainWindow", "拍摄城市"))
-        self.label_19.setText(_translate("MainWindow", "\\"))
-        self.comboBox_level_4.setItemText(0, _translate("MainWindow", "不分类"))
-        self.comboBox_level_4.setItemText(1, _translate("MainWindow", "年份"))
-        self.comboBox_level_4.setItemText(2, _translate("MainWindow", "月份"))
-        self.comboBox_level_4.setItemText(3, _translate("MainWindow", "拍摄设备"))
-        self.comboBox_level_4.setItemText(4, _translate("MainWindow", "相机型号"))
-        self.comboBox_level_4.setItemText(5, _translate("MainWindow", "拍摄省份"))
-        self.comboBox_level_4.setItemText(6, _translate("MainWindow", "拍摄城市"))
-        self.label_20.setText(_translate("MainWindow", "\\"))
-        self.comboBox_level_5.setItemText(0, _translate("MainWindow", "不分类"))
-        self.comboBox_level_5.setItemText(1, _translate("MainWindow", "年份"))
-        self.comboBox_level_5.setItemText(2, _translate("MainWindow", "月份"))
-        self.comboBox_level_5.setItemText(3, _translate("MainWindow", "拍摄设备"))
-        self.comboBox_level_5.setItemText(4, _translate("MainWindow", "相机型号"))
-        self.comboBox_level_5.setItemText(5, _translate("MainWindow", "拍摄省份"))
-        self.comboBox_level_5.setItemText(6, _translate("MainWindow", "拍摄城市"))
-        self.label_buildName.setText(_translate("MainWindow", "文件名构建："))
-        self.pushButton_unique.setText(_translate("MainWindow", "唯一标识"))
-        self.label_point.setText(_translate("MainWindow", "."))
-        self.pushButton_extensions.setText(_translate("MainWindow", "扩展名"))
-        self.label_RenamingTags.setText(_translate("MainWindow", "命名标签："))
-        self.pushButton_original_tag.setText(_translate("MainWindow", "原名"))
-        self.pushButton_year_tag.setText(_translate("MainWindow", "年份"))
-        self.pushButton_month_tag.setText(_translate("MainWindow", "月份"))
-        self.pushButton_date_tag.setText(_translate("MainWindow", "日"))
-        self.pushButton_day_tag.setText(_translate("MainWindow", "星期"))
-        self.pushButton_time_tag.setText(_translate("MainWindow", "时间"))
-        self.pushButton_make_tag.setText(_translate("MainWindow", "品牌"))
-        self.pushButton_model_tag.setText(_translate("MainWindow", "型号"))
-        self.pushButton_address_tag.setText(_translate("MainWindow", "位置"))
-        self.pushButton_customize_tag.setText(_translate("MainWindow", "自定义"))
-        self.label_operation_2.setText(_translate("MainWindow", "分隔"))
-        self.comboBox_separator.setItemText(0, _translate("MainWindow", "-"))
-        self.comboBox_separator.setItemText(1, _translate("MainWindow", "无"))
-        self.comboBox_separator.setItemText(2, _translate("MainWindow", "空格"))
-        self.comboBox_separator.setItemText(3, _translate("MainWindow", "_"))
-        self.comboBox_separator.setItemText(4, _translate("MainWindow", "."))
-        self.comboBox_separator.setItemText(5, _translate("MainWindow", ","))
-        self.comboBox_separator.setItemText(6, _translate("MainWindow", "|"))
-        self.comboBox_separator.setItemText(7, _translate("MainWindow", "~"))
-        self.label_timeSources.setText(_translate("MainWindow", "时间"))
-        self.comboBox_timeSource.setItemText(0, _translate("MainWindow", "最早时间"))
-        self.comboBox_timeSource.setItemText(1, _translate("MainWindow", "拍摄日期"))
-        self.comboBox_timeSource.setItemText(2, _translate("MainWindow", "创建时间"))
-        self.comboBox_timeSource.setItemText(3, _translate("MainWindow", "修改时间"))
-        self.label_operation.setText(_translate("MainWindow", "整理方式"))
-        self.comboBox_operation.setItemText(0, _translate("MainWindow", "移动文件"))
-        self.comboBox_operation.setItemText(1, _translate("MainWindow", "复制文件"))
-        self.label_PreviewRoute.setText(_translate("MainWindow", "不分类"))
-        self.label_21.setText(_translate("MainWindow", "/"))
-        self.label_PreviewName.setText(_translate("MainWindow", "文件名不变"))
-        self.toolButton_startSmartArrange.setText(_translate("MainWindow", "开始整理"))
-        self.label_8.setText(_translate("MainWindow", "相似度"))
-        self.label_levelContrast.setText(_translate("MainWindow", "完全一致（100%）"))
-        self.toolButton_startContrast.setText(_translate("MainWindow", "开始对比"))
-        self.toolButton_delete.setText(_translate("MainWindow", "删除"))
-        self.toolButton_move.setText(_translate("MainWindow", "移动"))
-        self.toolButton_autoSelect.setText(_translate("MainWindow", "自动选择"))
-        self.label_35.setText(_translate("MainWindow", "标题"))
-        self.lineEdit_EXIF_Title.setPlaceholderText(_translate("MainWindow", "图像标题"))
-        self.label_star.setText(_translate("MainWindow", "星级"))
-        self.label_36.setText(_translate("MainWindow", "品牌"))
-        self.comboBox_brand.setItemText(0, _translate("MainWindow", "不写入"))
-        self.label_37.setText(_translate("MainWindow", "机型"))
-        self.label_38.setText(_translate("MainWindow", "作者"))
-        self.lineEdit_EXIF_Author.setPlaceholderText(_translate("MainWindow", "YangShengzhou"))
-        self.label_39.setText(_translate("MainWindow", "主题"))
-        self.lineEdit_EXIF_Theme.setPlaceholderText(_translate("MainWindow", "图像主题"))
-        self.label_40.setText(_translate("MainWindow", "版权"))
-        self.lineEdit_EXIF_Copyright.setPlaceholderText(_translate("MainWindow", "©2025 LeafView. "))
-        self.label_44.setText(_translate("MainWindow", "拍摄时间"))
-        self.comboBox_shootTime.setItemText(0, _translate("MainWindow", "不写入"))
-        self.comboBox_shootTime.setItemText(1, _translate("MainWindow", "从文件名"))
-        self.comboBox_shootTime.setItemText(2, _translate("MainWindow", "指定时间"))
-        self.dateTimeEdit_shootTime.setDisplayFormat(_translate("MainWindow", "yyyy/MM/dd HH:mm:ss"))
-        self.label_41.setText(_translate("MainWindow", "拍摄地点 "))
-        self.comboBox_location.setItemText(0, _translate("MainWindow", "搜位置"))
-        self.comboBox_location.setItemText(1, _translate("MainWindow", "经纬度"))
+        item = self.listWidget_navigationMenu.item(1)
+        item.setText(_translate("MainWindow", "文字识别整理"))
+        item = self.listWidget_navigationMenu.item(2)
+        item.setText(_translate("MainWindow", "智能分类整理"))
+        item = self.listWidget_navigationMenu.item(3)
+        item.setText(_translate("MainWindow", "重复文件清理"))
+        item = self.listWidget_navigationMenu.item(4)
+        item.setText(_translate("MainWindow", "元数据写入"))
+        self.listWidget_navigationMenu.setSortingEnabled(__sortingEnabled)
+        self.label_importSourceFolder.setText(_translate("MainWindow", "源文件夹路径"))
+        self.lineEdit_importSourcePath.setPlaceholderText(_translate("MainWindow", "单击右侧按钮选择要处理的文件夹"))
+        self.btn_importBrowseSource.setText(_translate("MainWindow", "选择文件夹"))
+        self.label_importTargetFolder.setText(_translate("MainWindow", "目标文件夹路径"))
+        self.lineEdit_importTargetPath.setPlaceholderText(_translate("MainWindow", "单击右侧按钮选择目标的文件夹"))
+        self.btn_importBrowseTarget.setText(_translate("MainWindow", "选择文件夹"))
+        self.label_statusInfo.setText(_translate("MainWindow", "一切准备就绪"))
+        self.label_ocrDescription.setText(_translate("MainWindow", "自动识别图片中的文字，根据设置的关键词进行分类整理。"))
+        self.label_expression_build_name.setText(_translate("MainWindow", "关键词设置（用|分隔）"))
+        self.btn_expression_start.setText(_translate("MainWindow", "开始识别"))
+        self.label_smartArrangeTitle.setText(_translate("MainWindow", "文件夹整理："))
+        self.label_smartArrangePath.setText(_translate("MainWindow", "目录"))
+        self.label_path_separator.setText(_translate("MainWindow", "\\"))
+        self.combo_classification_level_primary.setItemText(0, _translate("MainWindow", "不分类"))
+        self.combo_classification_level_primary.setItemText(1, _translate("MainWindow", "年份"))
+        self.combo_classification_level_primary.setItemText(2, _translate("MainWindow", "月份"))
+        self.combo_classification_level_primary.setItemText(3, _translate("MainWindow", "拍摄设备"))
+        self.combo_classification_level_primary.setItemText(4, _translate("MainWindow", "相机型号"))
+        self.combo_classification_level_primary.setItemText(5, _translate("MainWindow", "拍摄省份"))
+        self.combo_classification_level_primary.setItemText(6, _translate("MainWindow", "拍摄城市"))
+        self.label_separator_primary.setText(_translate("MainWindow", "\\"))
+        self.combo_classification_level_secondary.setItemText(0, _translate("MainWindow", "不分类"))
+        self.combo_classification_level_secondary.setItemText(1, _translate("MainWindow", "年份"))
+        self.combo_classification_level_secondary.setItemText(2, _translate("MainWindow", "月份"))
+        self.combo_classification_level_secondary.setItemText(3, _translate("MainWindow", "拍摄设备"))
+        self.combo_classification_level_secondary.setItemText(4, _translate("MainWindow", "相机型号"))
+        self.combo_classification_level_secondary.setItemText(5, _translate("MainWindow", "拍摄省份"))
+        self.combo_classification_level_secondary.setItemText(6, _translate("MainWindow", "拍摄城市"))
+        self.label_separator_2.setText(_translate("MainWindow", "\\"))
+        self.combo_classification_level_secondary1.setItemText(0, _translate("MainWindow", "不分类"))
+        self.combo_classification_level_secondary1.setItemText(1, _translate("MainWindow", "年份"))
+        self.combo_classification_level_secondary1.setItemText(2, _translate("MainWindow", "月份"))
+        self.combo_classification_level_secondary1.setItemText(3, _translate("MainWindow", "拍摄设备"))
+        self.combo_classification_level_secondary1.setItemText(4, _translate("MainWindow", "相机型号"))
+        self.combo_classification_level_secondary1.setItemText(5, _translate("MainWindow", "拍摄省份"))
+        self.combo_classification_level_secondary1.setItemText(6, _translate("MainWindow", "拍摄城市"))
+        self.label_separator_secondary.setText(_translate("MainWindow", "\\"))
+        self.combo_classification_level_tertiary.setItemText(0, _translate("MainWindow", "不分类"))
+        self.combo_classification_level_tertiary.setItemText(1, _translate("MainWindow", "年份"))
+        self.combo_classification_level_tertiary.setItemText(2, _translate("MainWindow", "月份"))
+        self.combo_classification_level_tertiary.setItemText(3, _translate("MainWindow", "拍摄设备"))
+        self.combo_classification_level_tertiary.setItemText(4, _translate("MainWindow", "相机型号"))
+        self.combo_classification_level_tertiary.setItemText(5, _translate("MainWindow", "拍摄省份"))
+        self.combo_classification_level_tertiary.setItemText(6, _translate("MainWindow", "拍摄城市"))
+        self.label_separator_tertiary.setText(_translate("MainWindow", "\\"))
+        self.combo_classification_level_quaternary.setItemText(0, _translate("MainWindow", "不分类"))
+        self.combo_classification_level_quaternary.setItemText(1, _translate("MainWindow", "年份"))
+        self.combo_classification_level_quaternary.setItemText(2, _translate("MainWindow", "月份"))
+        self.combo_classification_level_quaternary.setItemText(3, _translate("MainWindow", "拍摄设备"))
+        self.combo_classification_level_quaternary.setItemText(4, _translate("MainWindow", "相机型号"))
+        self.combo_classification_level_quaternary.setItemText(5, _translate("MainWindow", "拍摄省份"))
+        self.combo_classification_level_quaternary.setItemText(6, _translate("MainWindow", "拍摄城市"))
+        self.label_build_name.setText(_translate("MainWindow", "文件重命名规则："))
+        self.btn_rename_unique.setText(_translate("MainWindow", "唯一标识"))
+        self.label_file_extension.setText(_translate("MainWindow", "."))
+        self.btn_file_extension.setText(_translate("MainWindow", "扩展名"))
+        self.label_rename_tags.setText(_translate("MainWindow", "文件名组成："))
+        self.btn_tag_original.setText(_translate("MainWindow", "原名"))
+        self.btn_tag_year.setText(_translate("MainWindow", "年份"))
+        self.btn_tag_month.setText(_translate("MainWindow", "月份"))
+        self.btn_tag_date.setText(_translate("MainWindow", "日"))
+        self.btn_tag_day.setText(_translate("MainWindow", "星期"))
+        self.btn_tag_time.setText(_translate("MainWindow", "时间"))
+        self.btn_tag_brand.setText(_translate("MainWindow", "品牌"))
+        self.btn_tag_model.setText(_translate("MainWindow", "型号"))
+        self.btn_tag_location.setText(_translate("MainWindow", "位置"))
+        self.btn_tag_customize.setText(_translate("MainWindow", "自定义"))
+        self.label_separator_status.setText(_translate("MainWindow", "分隔"))
+        self.combo_separator.setItemText(0, _translate("MainWindow", "-"))
+        self.combo_separator.setItemText(1, _translate("MainWindow", "无"))
+        self.combo_separator.setItemText(2, _translate("MainWindow", "空格"))
+        self.combo_separator.setItemText(3, _translate("MainWindow", "_"))
+        self.combo_separator.setItemText(4, _translate("MainWindow", "."))
+        self.combo_separator.setItemText(5, _translate("MainWindow", ","))
+        self.combo_separator.setItemText(6, _translate("MainWindow", "|"))
+        self.combo_separator.setItemText(7, _translate("MainWindow", "~"))
+        self.label_time_sources.setText(_translate("MainWindow", "文件时间依据"))
+        self.combo_time_source.setItemText(0, _translate("MainWindow", "最早时间"))
+        self.combo_time_source.setItemText(1, _translate("MainWindow", "拍摄日期"))
+        self.combo_time_source.setItemText(2, _translate("MainWindow", "创建时间"))
+        self.combo_time_source.setItemText(3, _translate("MainWindow", "修改时间"))
+        self.label_operation_type.setText(_translate("MainWindow", "文件处理方式"))
+        self.combo_operation_type.setItemText(0, _translate("MainWindow", "复制"))
+        self.combo_operation_type.setItemText(1, _translate("MainWindow", "移动"))
+        self.label_preview_path.setText(_translate("MainWindow", "不分类"))
+        self.label_separator_slash.setText(_translate("MainWindow", "/"))
+        self.label_preview_name.setText(_translate("MainWindow", "文件名不变"))
+        self.btn_start_smart_arrange.setText(_translate("MainWindow", "开始整理"))
+        self.label_duplicateRemovalDescription.setText(_translate("MainWindow", "检测重复文件，其余重复文件将移至回收站（可恢复）。"))
+        self.btn_duplicateRemovalStart.setText(_translate("MainWindow", "开始清理"))
+        self.label_metadataTitle.setText(_translate("MainWindow", "标题"))
+        self.lineEdit_metadataTitle.setPlaceholderText(_translate("MainWindow", "图像标题"))
+        self.label_metadataRating.setText(_translate("MainWindow", "星级"))
+        self.label_metadataBrand.setText(_translate("MainWindow", "品牌"))
+        self.comboBox_metadataBrand.setItemText(0, _translate("MainWindow", "不写入"))
+        self.label_metadataModel.setText(_translate("MainWindow", "机型"))
+        self.label_metadata_author.setText(_translate("MainWindow", "作者"))
+        self.line_edit_metadata_author.setPlaceholderText(_translate("MainWindow", "YangShengzhou"))
+        self.label_metadata_theme.setText(_translate("MainWindow", "主题"))
+        self.line_edit_metadata_theme.setPlaceholderText(_translate("MainWindow", "图像主题"))
+        self.label_metadata_copyright.setText(_translate("MainWindow", "版权"))
+        self.line_edit_metadata_copyright.setPlaceholderText(_translate("MainWindow", "©2025 LeafView. "))
+        self.label_shoot_time.setText(_translate("MainWindow", "拍摄时间"))
+        self.combo_metadata_shoot_time.setItemText(0, _translate("MainWindow", "不写入"))
+        self.combo_metadata_shoot_time.setItemText(1, _translate("MainWindow", "从文件名"))
+        self.combo_metadata_shoot_time.setItemText(2, _translate("MainWindow", "指定时间"))
+        self.date_time_metadata_shoot_time.setDisplayFormat(_translate("MainWindow", "yyyy/MM/dd HH:mm:ss"))
+        self.label_metadata_location.setText(_translate("MainWindow", "拍摄地点 "))
         self.lineEdit_EXIF_latitude.setPlaceholderText(_translate("MainWindow", "纬度"))
         self.lineEdit_EXIF_longitude.setPlaceholderText(_translate("MainWindow", "经度"))
-        self.lineEdit_EXIF_Position.setPlaceholderText(_translate("MainWindow", "江西科技师范大学"))
-        self.toolButton_StartEXIF.setText(_translate("MainWindow", "开始写入"))
+        self.toolButton_startMetadataWrite.setText(_translate("MainWindow", "开始写入"))

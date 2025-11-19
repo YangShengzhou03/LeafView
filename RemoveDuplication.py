@@ -179,7 +179,7 @@ class Contrast(QtWidgets.QWidget):
         self.display_all_images()
 
     def refresh_selection_visuals(self):
-        layout = self.parent.gridLayout_2
+        layout = self.parent.layout_contrast_images
         for i in reversed(range(layout.count())):
             widget = layout.itemAt(i).widget()
             if isinstance(widget, QtWidgets.QLabel):
@@ -323,7 +323,7 @@ class Contrast(QtWidgets.QWidget):
                                           "已保存当前处理进度，您可以稍后继续处理。")
 
     def display_all_images(self):
-        layout = self.parent.gridLayout_2
+        layout = self.parent.layout_contrast_images
         self.clear_layout(layout)
         layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
         duplicate_groups = {k: v for k, v in self.groups.items() if len(v) > 1}

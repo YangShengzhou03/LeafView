@@ -3,15 +3,22 @@ import io
 import json
 import os
 import subprocess
+import logging
 from pathlib import Path
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import time
 
 import exifread
 import pillow_heif
-import requests
 from PIL import Image
 from PyQt6 import QtCore
 
+from ReverseGeocoding import get_address_from_coordinates
 from common import get_resource_path
+
+# 配置日志记录
+logger = logging.getLogger(__name__)
 
 IMAGE_EXTENSIONS = (
     '.jpg', '.jpeg', '.png', '.heic', '.tiff', '.tif', '.bmp', '.webp', '.gif', '.svg', 
@@ -94,22 +101,45 @@ class SmartArrangeThread(QtCore.QThread):
         self.time_derive = time_derive
         self._is_running = True
         self._stop_flag = False
+        self._stop_lock = threading.Lock()
         self.total_files = 0
         self.processed_files = 0
+        self.processed_lock = threading.Lock()
         self.log_signal = parent.log_signal if parent else None
         self.files_to_rename = []
+        self.files_lock = threading.Lock()
 
     def calculate_total_files(self):
-        self.total_files = 0
-        for folder_info in self.folders:
-            folder_path = Path(folder_info['path'])
-            if folder_info.get('include_sub', 0):
-                for root, _, files in os.walk(folder_path):
-                    self.total_files += len(files)
-            else:
-                self.total_files += len([f for f in os.listdir(folder_path) if (folder_path / f).is_file()])
-        
-        self.log("DEBUG", f"总文件数: {self.total_files}")
+        """计算总文件数，增强错误处理"""
+        try:
+            self.total_files = 0
+            for folder_info in self.folders:
+                try:
+                    folder_path = Path(folder_info['path'])
+                    
+                    # 增强的路径验证
+                    if not self._validate_folder_path(folder_path):
+                        continue
+                        
+                    if folder_info.get('include_sub', 0):
+                        self._count_files_recursive(folder_path)
+                    else:
+                        self._count_files_direct(folder_path)
+                            
+                except (OSError, IOError) as e:
+                    logger.error(f"访问文件夹失败 {folder_info.get('path', 'unknown')}: {str(e)}")
+                    self.log("ERROR", f"无法访问文件夹: {str(e)}")
+                except Exception as e:
+                    logger.error(f"处理文件夹信息时出错: {str(e)}")
+                    self.log("ERROR", f"处理文件夹时出错: {str(e)}")
+                    
+            logger.info(f"总文件数: {self.total_files}")
+            self.log("DEBUG", f"总文件数: {self.total_files}")
+            
+        except Exception as e:
+            logger.error(f"计算总文件数时出错: {str(e)}")
+            self.log("ERROR", f"计算文件数量失败: {str(e)}")
+            self.total_files = 0
 
     def load_geographic_data(self):
         try:
@@ -133,27 +163,33 @@ class SmartArrangeThread(QtCore.QThread):
                 if self._stop_flag:
                     self.log("WARNING", "您已经取消了整理文件的操作")
                     break
-                if self.destination_root:
-                    destination_path = Path(self.destination_root).resolve()
-                    folder_path = Path(folder_info['path']).resolve()
-                    if len(destination_path.parts) > len(folder_path.parts) and destination_path.parts[:len(folder_path.parts)] == folder_path.parts:
-                        self.log("ERROR", "目标文件夹不能是要整理的文件夹的子文件夹，这样会导致重复处理！")
-                        break
+                    
+                # 增强的目标文件夹验证
+                if not self._validate_destination_folder(folder_info):
+                    continue
+                    
                 try:
                     if not self.classification_structure and not self.file_name_structure:
                         self.organize_without_classification(folder_info['path'])
                     else:
                         self.process_folder_with_classification(folder_info)
+                    success_count += 1
+                except (OSError, IOError) as e:
+                    self.log("ERROR", f"文件操作失败 {folder_info['path']}: {str(e)}")
+                    fail_count += 1
                 except Exception as e:
-                    self.log("ERROR", f"处理文件夹 {folder_info['path']} 时出错了: {str(e)}")
+                    self.log("ERROR", f"处理文件夹失败 {folder_info['path']}: {str(e)}")
                     fail_count += 1
             
             if not self._stop_flag:
                 try:
                     self.process_renaming()
                     success_count = len(self.files_to_rename) - fail_count
+                except (OSError, IOError) as e:
+                    self.log("ERROR", f"重命名文件失败: {str(e)}")
+                    fail_count += 1
                 except Exception as e:
-                    self.log("ERROR", f"给文件重命名时出错了: {str(e)}")
+                    self.log("ERROR", f"重命名过程出错: {str(e)}")
                     fail_count += 1
                 
                 if not self.destination_root:
@@ -177,35 +213,68 @@ class SmartArrangeThread(QtCore.QThread):
         
         if folder_info.get('include_sub', 0):
             for root, _, files in os.walk(folder_path):
-                for file in files:
-                    if self._stop_flag:
+                # 批量处理，每批处理100个文件
+                batch_size = 100
+                for i in range(0, len(files), batch_size):
+                    if self.is_stopped():
                         self.log("WARNING", "您已经取消了当前文件夹的处理")
                         return
-                    full_file_path = Path(root) / file
-                    if self.destination_root:
-                        self.process_single_file(full_file_path)
-                    else:
-                        self.process_single_file(full_file_path, base_folder=folder_path)
-                    self.processed_files += 1
-                    if self.total_files > 0:
-                        percent_complete = int((self.processed_files / self.total_files) * 80)
-                        self.progress_signal.emit(percent_complete)
+                    
+                    batch_files = files[i:i + batch_size]
+                    for file in batch_files:
+                        if self.is_stopped():
+                            self.log("WARNING", "您已经取消了当前文件夹的处理")
+                            return
+                        full_file_path = Path(root) / file
+                        if self.destination_root:
+                            self.process_single_file(full_file_path)
+                        else:
+                            self.process_single_file(full_file_path, base_folder=folder_path)
+                        
+                        with self.processed_lock:
+                            self.processed_files += 1
+                        
+                        if self.total_files > 0:
+                            percent_complete = int((self.processed_files / self.total_files) * 80)
+                            self.progress_signal.emit(percent_complete)
+                    
+                    # 批次之间短暂休息，减少CPU占用
+                    time.sleep(0.01)
         else:
-            for file in os.listdir(folder_path):
-                if self._stop_flag:
-                    self.log("WARNING", "文件夹处理被用户中断")
-                    return
-                full_file_path = folder_path / file
-                if full_file_path.is_file():
-                    # 如果有目标根路径（复制操作），则不传递base_folder参数
-                    if self.destination_root:
-                        self.process_single_file(full_file_path)
-                    else:
-                        self.process_single_file(full_file_path)
-                    self.processed_files += 1
-                    if self.total_files > 0:
-                        percent_complete = int((self.processed_files / self.total_files) * 80)
-                        self.progress_signal.emit(percent_complete)
+            # 获取文件列表，分批处理
+            try:
+                all_files = [f for f in os.listdir(folder_path) if (folder_path / f).is_file()]
+                batch_size = 100
+                
+                for i in range(0, len(all_files), batch_size):
+                    if self.is_stopped():
+                        self.log("WARNING", "文件夹处理被用户中断")
+                        return
+                    
+                    batch_files = all_files[i:i + batch_size]
+                    for file in batch_files:
+                        if self.is_stopped():
+                            self.log("WARNING", "文件夹处理被用户中断")
+                            return
+                        full_file_path = folder_path / file
+                        # 如果有目标根路径（复制操作），则不传递base_folder参数
+                        if self.destination_root:
+                            self.process_single_file(full_file_path)
+                        else:
+                            self.process_single_file(full_file_path)
+                        
+                        with self.processed_lock:
+                            self.processed_files += 1
+                        
+                        if self.total_files > 0:
+                            percent_complete = int((self.processed_files / self.total_files) * 80)
+                            self.progress_signal.emit(percent_complete)
+                    
+                    # 批次之间短暂休息，减少CPU占用
+                    time.sleep(0.01)
+                    
+            except Exception as e:
+                self.log("ERROR", f"处理文件夹时出错: {str(e)}")
 
     def process_renaming(self):
         file_count = {}
@@ -328,8 +397,93 @@ class SmartArrangeThread(QtCore.QThread):
         self.log("WARNING", f"已为您删除了 {deleted_count} 个空文件夹")
     
     def stop(self):
-        self._stop_flag = True
+        """停止线程操作"""
+        with self._stop_lock:
+            self._stop_flag = True
         self.log("INFO", "正在停止智能整理操作...")
+    
+    def is_stopped(self):
+        """线程安全的停止状态检查"""
+        with self._stop_lock:
+            return self._stop_flag
+
+    def _validate_folder_path(self, folder_path):
+        """验证文件夹路径的有效性"""
+        try:
+            if not folder_path.exists():
+                logger.warning(f"文件夹不存在: {folder_path}")
+                self.log("WARNING", f"文件夹不存在: {folder_path}")
+                return False
+                
+            if not folder_path.is_dir():
+                logger.warning(f"路径不是文件夹: {folder_path}")
+                self.log("WARNING", f"路径不是文件夹: {folder_path}")
+                return False
+                
+            # 检查读取权限
+            folder_path.iterdir()
+            return True
+            
+        except PermissionError:
+            logger.error(f"没有权限访问文件夹: {folder_path}")
+            self.log("ERROR", f"没有权限访问文件夹: {folder_path}")
+            return False
+        except Exception as e:
+            logger.error(f"验证文件夹路径失败 {folder_path}: {str(e)}")
+            self.log("ERROR", f"文件夹验证失败: {str(e)}")
+            return False
+
+    def _validate_destination_folder(self, folder_info):
+        """验证目标文件夹配置"""
+        if not self.destination_root:
+            return True
+            
+        try:
+            destination_path = Path(self.destination_root).resolve()
+            folder_path = Path(folder_info['path']).resolve()
+            
+            # 检查目标文件夹是否是源文件夹的子文件夹
+            if len(destination_path.parts) > len(folder_path.parts) and destination_path.parts[:len(folder_path.parts)] == folder_path.parts:
+                self.log("ERROR", "目标文件夹不能是要整理的文件夹的子文件夹，这样会导致重复处理！")
+                return False
+                
+            # 检查目标文件夹是否存在，不存在则创建
+            if not destination_path.exists():
+                destination_path.mkdir(parents=True, exist_ok=True)
+                self.log("INFO", f"创建目标文件夹: {destination_path}")
+                
+            return True
+            
+        except Exception as e:
+            self.log("ERROR", f"目标文件夹验证失败: {str(e)}")
+            return False
+
+    def _count_files_recursive(self, folder_path):
+        """递归统计文件数量"""
+        try:
+            for root, _, files in os.walk(folder_path):
+                if self._stop_flag:
+                    break
+                try:
+                    self.total_files += len(files)
+                except Exception as e:
+                    logger.error(f"统计文件数量失败 {root}: {str(e)}")
+                    self.log("WARNING", f"部分文件统计失败: {str(e)}")
+        except Exception as e:
+            logger.error(f"递归遍历文件夹失败 {folder_path}: {str(e)}")
+            self.log("ERROR", f"文件夹遍历失败: {str(e)}")
+
+    def _count_files_direct(self, folder_path):
+        """直接统计文件夹内文件数量"""
+        try:
+            files = os.listdir(folder_path)
+            self.total_files += len([f for f in files if (folder_path / f).is_file()])
+        except PermissionError:
+            logger.error(f"没有权限访问文件夹: {folder_path}")
+            self.log("ERROR", f"没有权限访问文件夹: {folder_path}")
+        except Exception as e:
+            logger.error(f"列出文件夹内容失败 {folder_path}: {str(e)}")
+            self.log("ERROR", f"读取文件夹失败: {str(e)}")
 
     def _recursive_delete_empty_folders(self, folder_path, source_folders):
         deleted_count = 0
@@ -389,6 +543,17 @@ class SmartArrangeThread(QtCore.QThread):
         exif_data = {}
         file_path_obj = Path(file_path)
         suffix = file_path_obj.suffix.lower()
+        
+        # 文件大小检查，避免处理过大的文件
+        try:
+            file_size = file_path_obj.stat().st_size
+            if file_size > 500 * 1024 * 1024:  # 500MB限制
+                self.log("WARNING", f"跳过过大的文件: {file_path_obj.name} ({file_size / 1024 / 1024:.1f}MB)")
+                exif_data['DateTime'] = datetime.datetime.fromtimestamp(file_path_obj.stat().st_mtime).strftime('%Y-%m-%d %H:%M:%S')
+                return exif_data
+        except Exception:
+            pass
+        
         create_time = datetime.datetime.fromtimestamp(file_path_obj.stat().st_ctime)
         modify_time = datetime.datetime.fromtimestamp(file_path_obj.stat().st_mtime)
         
@@ -416,15 +581,19 @@ class SmartArrangeThread(QtCore.QThread):
                 
         except Exception as e:
             self.log("DEBUG", f"获取 {file_path} 的EXIF数据时出错: {str(e)}")
-            exif_data['DateTime'] = create_time.strftime('%Y-%m-%d %H:%M:%S')
+            exif_data['DateTime'] = modify_time.strftime('%Y-%m-%d %H:%M:%S')
         return exif_data
 
     def _process_image_exif(self, file_path, exif_data):
-        with open(file_path, 'rb') as f:
-            tags = exifread.process_file(f, details=False)
-        date_taken = self.parse_exif_datetime(tags)
-        self._extract_gps_and_camera_info(tags, exif_data)
-        return date_taken
+        try:
+            with open(file_path, 'rb') as f:
+                tags = exifread.process_file(f, details=False)
+            date_taken = self.parse_exif_datetime(tags)
+            self._extract_gps_and_camera_info(tags, exif_data)
+            return date_taken
+        except Exception as e:
+            self.log("DEBUG", f"处理图片EXIF数据时出错 {file_path}: {str(e)}")
+            return None
 
     def _process_raw_exif(self, file_path, exif_data):
         """处理RAW格式文件（ARW、CR2、CR3、NEF等）的EXIF信息读取"""
@@ -433,6 +602,15 @@ class SmartArrangeThread(QtCore.QThread):
         if not os.path.exists(file_path):
             self.log("DEBUG", f"文件不存在: {file_path}")
             return None
+        
+        # 文件大小检查
+        try:
+            file_size = os.path.getsize(file_path)
+            if file_size > 200 * 1024 * 1024:  # 200MB限制
+                self.log("DEBUG", f"RAW文件过大，跳过: {file_path} ({file_size / 1024 / 1024:.1f}MB)")
+                return None
+        except Exception:
+            pass
         
         # 构建exiftool路径
         exiftool_path = os.path.join(os.path.dirname(__file__), "resources", "exiftool", "exiftool.exe")
@@ -444,7 +622,7 @@ class SmartArrangeThread(QtCore.QThread):
         try:
             # 使用exiftool读取EXIF信息
             cmd = [exiftool_path, file_path]
-            result = subprocess.run(cmd, capture_output=True, text=False, timeout=30)
+            result = subprocess.run(cmd, capture_output=True, text=False, timeout=15)  # 减少超时时间
             
             if result.returncode != 0:
                 error_msg = result.stderr.decode('utf-8', errors='ignore') if result.stderr else "未知错误"
@@ -776,8 +954,17 @@ class SmartArrangeThread(QtCore.QThread):
             'Model': model or None
         })
 
-    def _get_video_metadata(self, file_path, timeout=30):
+    def _get_video_metadata(self, file_path, timeout=15):  # 减少超时时间
         try:
+            # 文件大小检查
+            try:
+                file_size = os.path.getsize(file_path)
+                if file_size > 500 * 1024 * 1024:  # 500MB限制
+                    self.log("DEBUG", f"视频文件过大，跳过: {file_path} ({file_size / 1024 / 1024:.1f}MB)")
+                    return None
+            except Exception:
+                pass
+                
             file_path_normalized = str(file_path).replace('\\', '/')
             cmd = f"{get_resource_path('resources/exiftool/exiftool.exe')} -fast \"{file_path_normalized}\""
 
@@ -797,7 +984,11 @@ class SmartArrangeThread(QtCore.QThread):
 
             return metadata
 
+        except subprocess.TimeoutExpired:
+            self.log("DEBUG", f"读取视频文件 {file_path} 的EXIF数据超时")
+            return None
         except Exception as e:
+            self.log("DEBUG", f"读取视频文件 {file_path} 的EXIF数据时出错: {str(e)}")
             return None
 
     def parse_exif_datetime(self, tags):
@@ -1004,41 +1195,6 @@ class SmartArrangeThread(QtCore.QThread):
             )
         else:
             return "未知省份", "未知城市"
-    def get_address(self, latitude: float, longitude: float) -> str:
-        if not (isinstance(latitude, (int, float)) and isinstance(longitude, (int, float))):
-            return "未知位置"
-        
-        try:
-            from config_manager import config_manager
-            
-            if not config_manager.can_call_gaode_api():
-                self.log("WARNING", "高德 API 调用次数已达上限。")
-                return "未知位置"
-            
-            user_key = "0db079da53e08cbb62b52a42f657b994"
-            
-            if not user_key:
-                return "未知位置"
-            
-            url = f"https://restapi.amap.com/v3/geocode/regeo?key={user_key}&location={longitude},{latitude}&extensions=base"
-            response = requests.get(url, timeout=5)
-            data = response.json()
-
-            if data.get("infocode") == "10044":
-                self.log("WARNING", "抱歉，本月高德 API 调用额度已被其他用户耗尽。这是我在 2025 年大三时写的练习程序，无力承担高昂费用，感谢理解。")
-                return "未知位置"
-            
-            if data.get("status") == "1":
-                address = data.get("regeocode", {}).get("formatted_address", "")
-                if address:
-                    config_manager.record_gaode_api_call()
-                    return address
-                else:
-                    return "未知位置"
-            else:
-                return "未知位置"
-        except Exception as e:
-            return "未知位置"
 
     @staticmethod
     def convert_to_degrees(value):
@@ -1084,6 +1240,18 @@ class SmartArrangeThread(QtCore.QThread):
         
     def process_single_file(self, file_path, base_folder=None):
         try:
+            if self.is_stopped():
+                return
+                
+            # 文件大小检查，避免处理过大的文件
+            try:
+                file_size = file_path.stat().st_size
+                if file_size > 500 * 1024 * 1024:  # 500MB限制
+                    self.log("WARNING", f"跳过过大的文件: {file_path.name} ({file_size / 1024 / 1024:.1f}MB)")
+                    return
+            except Exception:
+                pass
+                
             exif_data = self.get_exif_data(file_path)
             
             file_time = datetime.datetime.strptime(exif_data['DateTime'], '%Y-%m-%d %H:%M:%S') if exif_data.get('DateTime') else None
@@ -1112,11 +1280,16 @@ class SmartArrangeThread(QtCore.QThread):
                 operation_type = "移动"
             
             if needs_operation:
-                self.files_to_rename.append({
-                    'old_path': str(file_path),
-                    'new_path': str(full_target_path)
-                })
+                with self.files_lock:
+                    self.files_to_rename.append({
+                        'old_path': str(file_path),
+                        'new_path': str(full_target_path)
+                    })
             
+            # 线程安全地更新处理计数
+            with self.processed_lock:
+                self.processed_files += 1
+                
         except Exception as e:
             self.log("ERROR", f"处理文件 {file_path} 时出错: {str(e)}")
 
@@ -1168,7 +1341,7 @@ class SmartArrangeThread(QtCore.QThread):
                 if cached_address and cached_address != "未知位置":
                     return cached_address
                 
-                address = self.get_address(lat, lon)
+                address = get_address_from_coordinates(lat, lon)
                 if address and address != "未知位置":
                     config_manager.cache_location(lat, lon, address)
                     return address

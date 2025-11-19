@@ -11,27 +11,15 @@
     "exif_title": "",
     "exif_author": "",
     "exif_subject": "",
-    "exif_copyright": "你好啊",
+    "exif_copyright": "",
     "exif_position": "",
     "exif_latitude": "",
     "exif_longitude": "",
     "exif_location_index": 0,
-    "exif_camera_brand": "不写入",
+    "exif_camera_brand": "Alpa",
     "exif_camera_model": "",
     "exif_shoot_time_index": 0,
-    "exif_shoot_time": "2025:09:25 19:21:26",
-    "exif_star_rating": 3,
-    "exif_settings": {
-      "title": "",
-      "author": "",
-      "subject": "",
-      "rating": "0",
-      "copyright": "",
-      "position": "",
-      "latitude": "",
-      "longitude": "",
-      "camera_brand": "",
-      "camera_model": ""
-    }
+    "exif_shoot_time": "2025:11:18 14:32:20",
+    "exif_star_rating": 0
   }
 }

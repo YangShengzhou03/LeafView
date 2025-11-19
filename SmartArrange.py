@@ -40,8 +40,8 @@ class SmartArrange(QtWidgets.QWidget):
             "~": "~"
         }
         
-        self.available_layout = self.parent.horizontalLayout_57
-        self.selected_layout = self.parent.horizontalLayout_53
+        self.available_layout = self.parent.layout_rename_tags
+        self.selected_layout = self.parent.layout_rename_selected
         
         self.SmartArrange_thread = None
         self.SmartArrange_settings = []
@@ -96,113 +96,196 @@ class SmartArrange(QtWidgets.QWidget):
         self.update_operation_display()
 
     def toggle_SmartArrange(self):
+        """智能整理开关，简化用户交互流程"""
         if self.SmartArrange_thread and self.SmartArrange_thread.isRunning():
             self.SmartArrange_thread.stop()
             self.parent.toolButton_startSmartArrange.setText("开始整理")
             self.parent.progressBar_classification.setValue(0)
+            self._show_operation_status("整理已停止", 2000)
         else:
             folders = self.folder_page.get_all_folders() if self.folder_page else []
             if not folders:
                 self.log("WARNING", "请先导入一个包含文件的文件夹。")
+                self._show_operation_status("请先添加文件夹", 2500)
                 return
 
-            reply = QMessageBox.question(
-                self,
-                "即将开始整理，确定吗？",
-                "重要提醒：整理文件的操作一旦开始就没办法恢复了！\n\n"
-                "• 移动操作：文件会被搬到新位置，原来的地方就没有了\n"
-                "• 复制操作：文件会在新位置创建一份，原目录文件原封不动\n\n"
-                "答应我，一定要先备份好重要文件再开始！\n\n"
-                "确定要开始整理吗？",
-                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
-                QMessageBox.StandardButton.No
-            )
-            
-            if reply != QMessageBox.StandardButton.Yes:
-                self.log("INFO", "您取消了整理操作")
+            # 快速确认流程
+            if not self._quick_confirm_operation():
                 return
+                
+            # 智能预检查
+            if not self._smart_pre_check(folders):
+                return
+                
+            # 启动整理线程
+            self._start_smart_arrange_thread(folders)
 
-            SmartArrange_structure = [
-                getattr(self.parent, f'comboBox_level_{i}').currentText()
-                for i in range(1, 6)
-                if getattr(self.parent, f'comboBox_level_{i}').isEnabled() and
-                   getattr(self.parent, f'comboBox_level_{i}').currentText() != "不分类"
-            ]
-
-            file_name_structure = [self.selected_layout.itemAt(i).widget().text()
-                                   for i in range(self.selected_layout.count())
-                                   if isinstance(self.selected_layout.itemAt(i).widget(), QtWidgets.QPushButton)]
-            
-            separator_text = self.parent.comboBox_separator.currentText()
-            separator = self.separator_mapping.get(separator_text, "-")
-            
-            operation_type = self.parent.comboBox_operation.currentIndex()
-            operation_text = "移动" if operation_type == 0 else "复制"
-            
-            if not SmartArrange_structure and not file_name_structure:
-                self.log("WARNING", f"执行{operation_text}操作：将文件夹中的所有文件提取到顶层目录")
-            elif not SmartArrange_structure:
-                self.log("WARNING", f"执行{operation_text}操作：仅重命名文件，不进行分类")
-            elif not file_name_structure:
-                self.log("WARNING", f"执行{operation_text}操作：仅进行分类，不重命名文件")
-            else:
-                self.log("WARNING", f"执行{operation_text}操作：进行分类和重命名")
-            
-            file_name_parts = []
-            for i in range(self.selected_layout.count()):
-                button = self.selected_layout.itemAt(i).widget()
-                if isinstance(button, QtWidgets.QPushButton):
-                    tag_name = button.text()
-                    if button.property('original_text') == '自定义' and button.property('custom_content') is not None:
-                        file_name_parts.append({
-                            'tag': tag_name,
-                            'content': button.property('custom_content')
-                        })
+    def _quick_confirm_operation(self):
+        """快速确认操作，减少用户交互"""
+        operation_type = self.parent.comboBox_operation.currentIndex()
+        operation_text = "移动" if operation_type == 0 else "复制"
+        
+        # 智能生成简洁确认信息
+        confirm_message = self._generate_smart_confirmation(operation_type, [])
+        
+        # 使用更简洁的确认对话框
+        reply = QMessageBox.question(
+            self,
+            f"开始{operation_text}整理",
+            confirm_message,
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.Yes  # 默认选择Yes，减少操作步骤
+        )
+        
+        if reply != QMessageBox.StandardButton.Yes:
+            self.log("INFO", "用户取消整理操作")
+            return False
+        return True
+        
+    def _smart_pre_check(self, folders):
+        """智能预检查"""
+        try:
+            # 检查文件数量
+            total_files = 0
+            for folder_info in folders:
+                folder_path = Path(folder_info['path'])
+                if folder_path.exists():
+                    if folder_info.get('include_sub', 0):
+                        for root, _, files in os.walk(folder_path):
+                            total_files += len(files)
                     else:
-                        file_name_parts.append({
-                            'tag': tag_name,
-                            'content': None
-                        })
+                        files = os.listdir(folder_path)
+                        total_files += len([f for f in files if (folder_path / f).is_file()])
+            
+            if total_files == 0:
+                self.log("WARNING", "未检测到文件")
+                self._show_operation_status("文件夹中没有文件", 2000)
+                return False
+                
+            # 检查目标路径
+            if self.parent.lineEdit_destination.text():
+                dest_path = Path(self.parent.lineEdit_destination.text())
+                try:
+                    dest_path.mkdir(parents=True, exist_ok=True)
+                except Exception as e:
+                    self.log("ERROR", f"无法创建目标文件夹: {str(e)}")
+                    self._show_operation_status("目标文件夹创建失败", 2500)
+                    return False
+                    
+            return True
+            
+        except Exception as e:
+            self.log("ERROR", f"预检查失败: {str(e)}")
+            return False
+            
+    def _start_smart_arrange_thread(self, folders):
+        """启动智能整理线程"""
+        SmartArrange_structure = [
+            getattr(self.parent, f'comboBox_level_{i}').currentText()
+            for i in range(1, 6)
+            if getattr(self.parent, f'comboBox_level_{i}').isEnabled() and
+               getattr(self.parent, f'comboBox_level_{i}').currentText() != "不分类"
+        ]
 
-            operation_summary = f"操作类型: {operation_text}"
-            if SmartArrange_structure:
-                operation_summary += f", 分类结构: {' → '.join(SmartArrange_structure)}"
-            if file_name_parts:
-                filename_tags = []
-                for tag_info in file_name_parts:
-                    if tag_info['content'] is not None:
-                        filename_tags.append(tag_info['content'])
-                    else:
-                        filename_tags.append(tag_info['tag'])
-                operation_summary += f", 文件名标签: {'+'.join(filename_tags)}"
-            if self.destination_root:
-                operation_summary += f", 目标路径: {self.destination_root}"
-            
-            self.log("INFO", f"摘要: {operation_summary}")
-            
-            self.SmartArrange_thread = SmartArrangeThread(
-                parent=self,
-                folders=folders,
-                classification_structure=SmartArrange_structure or None,
-                file_name_structure=file_name_parts or None,
-                destination_root=self.destination_root,
-                separator=separator,
-                time_derive=self.parent.comboBox_timeSource.currentText()
-            )
-            self.SmartArrange_thread.finished.connect(self.on_thread_finished)
-            self.SmartArrange_thread.progress_signal.connect(self.update_progress_bar)
-            self.SmartArrange_thread.start()
-            self.parent.toolButton_startSmartArrange.setText("停止整理")
+        file_name_parts = []
+        for i in range(self.selected_layout.count()):
+            button = self.selected_layout.itemAt(i).widget()
+            if isinstance(button, QtWidgets.QPushButton):
+                tag_name = button.text()
+                if button.property('original_text') == '自定义' and button.property('custom_content') is not None:
+                    file_name_parts.append({
+                        'tag': tag_name,
+                        'content': button.property('custom_content')
+                    })
+                else:
+                    file_name_parts.append({
+                        'tag': tag_name,
+                        'content': None
+                    })
+
+        separator_text = self.parent.comboBox_separator.currentText()
+        separator = self.separator_mapping.get(separator_text, "-")
+        
+        operation_type = self.parent.comboBox_operation.currentIndex()
+        operation_text = "移动" if operation_type == 0 else "复制"
+        
+        if not SmartArrange_structure and not file_name_parts:
+            self.log("WARNING", f"执行{operation_text}操作：将文件夹中的所有文件提取到顶层目录")
+        elif not SmartArrange_structure:
+            self.log("WARNING", f"执行{operation_text}操作：仅重命名文件，不进行分类")
+        elif not file_name_parts:
+            self.log("WARNING", f"执行{operation_text}操作：仅进行分类，不重命名文件")
+        else:
+            self.log("WARNING", f"执行{operation_text}操作：进行分类和重命名")
+        
+        operation_summary = f"操作类型: {operation_text}"
+        if SmartArrange_structure:
+            operation_summary += f", 分类结构: {' → '.join(SmartArrange_structure)}"
+        if file_name_parts:
+            filename_tags = []
+            for tag_info in file_name_parts:
+                if tag_info['content'] is not None:
+                    filename_tags.append(tag_info['content'])
+                else:
+                    filename_tags.append(tag_info['tag'])
+            operation_summary += f", 文件名标签: {'+'.join(filename_tags)}"
+        if self.destination_root:
+            operation_summary += f", 目标路径: {self.destination_root}"
+        
+        self.log("INFO", f"摘要: {operation_summary}")
+        
+        self.SmartArrange_thread = SmartArrangeThread(
+            parent=self,
+            folders=folders,
+            classification_structure=SmartArrange_structure or None,
+            file_name_structure=file_name_parts or None,
+            destination_root=self.destination_root,
+            separator=separator,
+            time_derive=self.parent.comboBox_timeSource.currentText()
+        )
+        self.SmartArrange_thread.finished.connect(self.on_thread_finished)
+        self.SmartArrange_thread.progress_signal.connect(self.update_progress_bar)
+        self.SmartArrange_thread.start()
+        self.parent.toolButton_startSmartArrange.setText("停止整理")
+        self._show_operation_status("开始整理文件...", 1500)
 
     def on_thread_finished(self):
+        """线程结束处理"""
         self.parent.toolButton_startSmartArrange.setText("开始整理")
         self.SmartArrange_thread = None
         self.update_progress_bar(100)
         
-        QMessageBox.information(self, "操作完成", "文件整理操作已完成！\n\n您可以在目标位置查看整理后的文件。")
+        if hasattr(self, 'SmartArrange_thread') and hasattr(self.SmartArrange_thread, 'error'):
+            error_msg = str(self.SmartArrange_thread.error)
+            self.log("ERROR", f"整理过程中发生错误: {error_msg}")
+            QMessageBox.critical(self, "整理失败", f"操作失败: {error_msg}")
+            self._show_operation_status("整理失败", 3000)
+        else:
+            self.log("INFO", "整理完成")
+            QMessageBox.information(self, "整理完成", "文件整理成功！")
+            self._show_operation_status("整理完成", 2000)
 
     def handle_combobox_selection(self, level, index):
+        """处理下拉框选择事件"""
         self.update_combobox_state(level)
+
+    def _generate_smart_confirmation(self, operation_type, folders):
+        """智能生成确认信息"""
+        # 统计文件信息
+        total_files = 0
+        for folder in folders:
+            if os.path.exists(folder):
+                for root, dirs, files in os.walk(folder):
+                    total_files += len(files)
+        
+        operation_text = "移动" if operation_type == 0 else "复制"
+        
+        if total_files == 0:
+            return f"{operation_text}模式：未检测到文件，请确保文件夹中包含文件。"
+        elif total_files == 1:
+            return f"{operation_text}模式：检测到1个文件，将根据标签进行分类整理。"
+        else:
+            return f"{operation_text}模式：检测到{total_files}个文件，将根据标签进行分类整理。\n\n操作完成后可在目标位置查看结果。"
 
     def update_combobox_state(self, level):
         current_text = getattr(self.parent, f'comboBox_level_{level}').currentText()

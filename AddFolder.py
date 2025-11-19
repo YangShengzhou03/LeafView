@@ -1,6 +1,8 @@
 from PyQt6 import QtWidgets, QtCore, QtGui
 from PyQt6.QtWidgets import QFileDialog, QMessageBox, QProgressDialog, QVBoxLayout, QPushButton, QTextEdit, QDialog
 import os
+import pathlib
+from collections import Counter
 
 from common import get_resource_path, detect_media_type
 from config_manager import config_manager
@@ -15,6 +17,7 @@ class FolderPage(QtWidgets.QWidget):
         self.init_page()
         self._setup_drag_drop()
         self._setup_click_behavior()
+        self._setup_context_menu()
         self._load_saved_folders()
     
     def _setup_drag_drop(self):
@@ -25,6 +28,11 @@ class FolderPage(QtWidgets.QWidget):
     def _setup_click_behavior(self):
         self.parent.widget_add_folder.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
         self.parent.widget_add_folder.mousePressEvent = self._open_folder_dialog_on_click
+
+    def _setup_context_menu(self):
+        """设置右键菜单"""
+        self.parent.scrollAreaWidgetContents_folds.setContextMenuPolicy(QtCore.Qt.ContextMenuPolicy.CustomContextMenu)
+        self.parent.scrollAreaWidgetContents_folds.customContextMenuRequested.connect(self._show_context_menu)
 
     def init_page(self):
         self.parent.pushButton_add_folder.clicked.connect(self._open_folder_dialog)
@@ -260,6 +268,12 @@ class FolderPage(QtWidgets.QWidget):
 
         self.parent._update_empty_state(bool(self.folder_items))
         remove_button.clicked.connect(lambda: self.remove_folder_item(folder_frame))
+        
+        # 为文件夹项添加右键菜单
+        folder_frame.setContextMenuPolicy(QtCore.Qt.ContextMenuPolicy.CustomContextMenu)
+        folder_frame.customContextMenuRequested.connect(
+            lambda pos, item_data=item_data: self._show_folder_item_menu(pos, item_data)
+        )
         
         config_manager.add_folder(folder_path)
 
@@ -636,13 +650,208 @@ class FolderPage(QtWidgets.QWidget):
                     layout.addWidget(close_btn, alignment=QtCore.Qt.AlignmentFlag.AlignRight)
                     
                     details_dialog.setLayout(layout)
-                    details_dialog.exec()
+                details_dialog.exec()
             else:
                 QMessageBox.information(
                     self, 
                     "添加完成", 
                     message
                 )
+
+    def _show_context_menu(self, position):
+        """显示右键菜单"""
+        if not self.folder_items:
+            return
+            
+        menu = QtWidgets.QMenu(self)
+        menu.setStyleSheet("""
+            QMenu {
+                background-color: white;
+                border: 1px solid #e0e0e0;
+                border-radius: 4px;
+                padding: 4px;
+            }
+            QMenu::item {
+                padding: 6px 20px;
+                border-radius: 2px;
+            }
+            QMenu::item:selected {
+                background-color: #f0f0f0;
+            }
+            QMenu::separator {
+                height: 1px;
+                background-color: #e0e0e0;
+                margin: 4px 0;
+            }
+        """)
+        
+        # 添加菜单项
+        select_all_action = menu.addAction("全选")
+        select_none_action = menu.addAction("全不选")
+        menu.addSeparator()
+        
+        enable_all_sub_action = menu.addAction("全部包含子文件夹")
+        disable_all_sub_action = menu.addAction("全部不包含子文件夹")
+        menu.addSeparator()
+        
+        remove_all_action = menu.addAction("移除所有文件夹")
+        refresh_action = menu.addAction("刷新列表")
+        
+        # 显示菜单
+        action = menu.exec(self.parent.scrollAreaWidgetContents_folds.mapToGlobal(position))
+        
+        if action == select_all_action:
+            self._select_all_folders(True)
+        elif action == select_none_action:
+            self._select_all_folders(False)
+        elif action == enable_all_sub_action:
+            self._set_all_subfolders(True)
+        elif action == disable_all_sub_action:
+            self._set_all_subfolders(False)
+        elif action == remove_all_action:
+            self._remove_all_folders()
+        elif action == refresh_action:
+            self._refresh_folder_list()
+
+    def _select_all_folders(self, select):
+        """全选或全不选所有文件夹"""
+        for item in self.folder_items:
+            item['checkbox'].setChecked(select)
+
+    def _set_all_subfolders(self, include_sub):
+        """设置所有文件夹的子文件夹包含状态"""
+        for item in self.folder_items:
+            item['checkbox'].setChecked(include_sub)
+            config_manager.update_folder_include_sub(item['path'], include_sub)
+
+    def _remove_all_folders(self):
+        """移除所有文件夹"""
+        if not self.folder_items:
+            return
+            
+        reply = QtWidgets.QMessageBox.question(
+            self, 
+            "确认移除", 
+            f"确定要移除所有 {len(self.folder_items)} 个文件夹吗？",
+            QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No,
+            QtWidgets.QMessageBox.StandardButton.No
+        )
+        
+        if reply == QtWidgets.QMessageBox.StandardButton.Yes:
+            # 复制列表避免修改时出错
+            items_copy = self.folder_items.copy()
+            for item in items_copy:
+                self.remove_folder_item(item['frame'])
+
+    def _refresh_folder_list(self):
+        """刷新文件夹列表"""
+        # 保存当前状态
+        current_paths = [item['path'] for item in self.folder_items]
+        current_sub_states = {item['path']: item['checkbox'].isChecked() for item in self.folder_items}
+        
+        # 清除现有项目
+        for item in self.folder_items.copy():
+            self.remove_folder_item(item['frame'])
+        
+        # 重新添加文件夹
+        for folder_path in current_paths:
+            if os.path.exists(folder_path) and os.path.isdir(folder_path):
+                folder_name = os.path.basename(folder_path) if os.path.basename(folder_path) else folder_path
+                self._create_folder_item(folder_path, folder_name)
+                
+                # 恢复子文件夹状态
+                for item in self.folder_items:
+                    if item['path'] == folder_path:
+                        item['checkbox'].setChecked(current_sub_states.get(folder_path, True))
+                        break
+        
+        QtWidgets.QMessageBox.information(self, "刷新完成", "文件夹列表已刷新")
+
+    def _show_folder_item_menu(self, position, item_data):
+        """显示单个文件夹项的右键菜单"""
+        menu = QtWidgets.QMenu(self)
+        menu.setStyleSheet("""
+            QMenu {
+                background-color: white;
+                border: 1px solid #e0e0e0;
+                border-radius: 4px;
+                padding: 4px;
+            }
+            QMenu::item {
+                padding: 6px 20px;
+                border-radius: 2px;
+            }
+            QMenu::item:selected {
+                background-color: #f0f0f0;
+            }
+        """)
+        
+        # 添加菜单项
+        open_action = menu.addAction("打开文件夹")
+        copy_path_action = menu.addAction("复制路径")
+        menu.addSeparator()
+        
+        toggle_sub_action = menu.addAction("切换子文件夹状态")
+        rename_action = menu.addAction("重命名显示")
+        menu.addSeparator()
+        
+        remove_action = menu.addAction("移除文件夹")
+        
+        # 显示菜单
+        action = menu.exec(item_data['frame'].mapToGlobal(position))
+        
+        if action == open_action:
+            self._open_folder_in_explorer(item_data['path'])
+        elif action == copy_path_action:
+            self._copy_folder_path(item_data['path'])
+        elif action == toggle_sub_action:
+            self._toggle_folder_sub_status(item_data)
+        elif action == rename_action:
+            self._rename_folder_display(item_data)
+        elif action == remove_action:
+            self.remove_folder_item(item_data['frame'])
+
+    def _open_folder_in_explorer(self, folder_path):
+        """在资源管理器中打开文件夹"""
+        try:
+            import subprocess
+            import platform
+            
+            if platform.system() == 'Windows':
+                subprocess.Popen(['explorer', folder_path])
+            elif platform.system() == 'Darwin':  # macOS
+                subprocess.Popen(['open', folder_path])
+            else:  # Linux
+                subprocess.Popen(['xdg-open', folder_path])
+        except Exception as e:
+            QtWidgets.QMessageBox.warning(self, "打开失败", f"无法打开文件夹: {str(e)}")
+
+    def _copy_folder_path(self, folder_path):
+        """复制文件夹路径到剪贴板"""
+        try:
+            clipboard = QtWidgets.QApplication.clipboard()
+            clipboard.setText(folder_path)
+            QtWidgets.QMessageBox.information(self, "复制成功", "文件夹路径已复制到剪贴板")
+        except Exception as e:
+            QtWidgets.QMessageBox.warning(self, "复制失败", f"无法复制路径: {str(e)}")
+
+    def _toggle_folder_sub_status(self, item_data):
+        """切换文件夹的子文件夹包含状态"""
+        current_state = item_data['checkbox'].isChecked()
+        item_data['checkbox'].setChecked(not current_state)
+        config_manager.update_folder_include_sub(item_data['path'], not current_state)
+
+    def _rename_folder_display(self, item_data):
+        """重命名文件夹显示名称"""
+        new_name, ok = QtWidgets.QInputDialog.getText(
+            self, 
+            "重命名显示", 
+            "输入新的显示名称:",
+            text=item_data['name']
+        )
+        
+        if ok and new_name.strip():
+            item_data['name_label'].setText(new_name.strip())
 
     def _load_saved_folders(self):
         saved_folders = config_manager.get_folders()

@@ -11,9 +11,13 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>软件更新</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>:/icons/icon.ico</normaloff>:/icons/icon.ico</iconset>
+  </property>
+  <layout class="QVBoxLayout" name="mainLayout">
    <property name="spacing">
     <number>0</number>
    </property>
@@ -30,7 +34,7 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QFrame" name="frame">
+    <widget class="QFrame" name="backgroundFrame">
      <property name="minimumSize">
       <size>
        <width>512</width>
@@ -38,9 +42,9 @@
       </size>
      </property>
      <property name="styleSheet">
-      <string notr="true">QFrame#frame{
-background-color: rgb(245, 249, 254);
-border-radius:25px;
+      <string notr="true">QFrame#backgroundFrame {
+    background-color: #f5f9fe;
+    border-radius: 25px;
 }</string>
      </property>
      <property name="frameShape">
@@ -49,7 +53,7 @@ border-radius:25px;
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="4">
+     <layout class="QHBoxLayout" name="contentLayout" stretch="4">
       <property name="spacing">
        <number>12</number>
       </property>
@@ -66,7 +70,7 @@ border-radius:25px;
        <number>0</number>
       </property>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_6" stretch="9">
+       <layout class="QVBoxLayout" name="dialogLayout" stretch="9">
         <property name="spacing">
          <number>0</number>
         </property>
@@ -83,31 +87,17 @@ border-radius:25px;
          <number>9</number>
         </property>
         <item>
-         <widget class="QWidget" name="widget_3" native="true">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>16777215</height>
-           </size>
-          </property>
+         <widget class="QWidget" name="headerWidget" native="true">
           <property name="styleSheet">
-           <string notr="true">.QWidget{
-background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                                  stop:0 rgb(105, 27, 253), 
-                                  stop:1 rgb(200, 160, 240));
-border-radius:16px;
-color: rgb(255, 255, 255);
-}
-
-</string>
+           <string notr="true">QWidget#headerWidget {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #691bfd, 
+                                      stop: 1 #c8a0f0);
+    border-radius: 16px;
+    color: #ffffff;
+}</string>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="5">
+          <layout class="QHBoxLayout" name="headerLayout" stretch="5">
            <property name="spacing">
             <number>18</number>
            </property>
@@ -124,14 +114,14 @@ color: rgb(255, 255, 255);
             <number>18</number>
            </property>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <layout class="QHBoxLayout" name="messageLayout">
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout_5" stretch="1,3,1">
+              <layout class="QVBoxLayout" name="textLayout" stretch="1,3,1">
                <property name="spacing">
                 <number>0</number>
                </property>
                <item>
-                <widget class="QLabel" name="label_title">
+                <widget class="QLabel" name="titleLabel">
                  <property name="font">
                   <font>
                    <pointsize>22</pointsize>
@@ -139,19 +129,22 @@ color: rgb(255, 255, 255);
                   </font>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">QLabel {
-    color: rgba(222, 255, 255, 255);
-    qproperty-alignment: 'AlignCenter';
+                  <string notr="true">QLabel#titleLabel {
+    color: #deffff;
+    text-align: center;
     margin-bottom: 12px;
 }</string>
                  </property>
                  <property name="text">
-                  <string>Dialog Title</string>
+                  <string>发现新版本</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="label_content">
+                <widget class="QLabel" name="messageLabel">
                  <property name="font">
                   <font>
                    <pointsize>12</pointsize>
@@ -159,18 +152,24 @@ color: rgb(255, 255, 255);
                   </font>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">color: rgb(250, 250, 250)</string>
+                  <string notr="true">QLabel#messageLabel {
+    color: #fafafa;
+    text-align: left;
+}</string>
                  </property>
                  <property name="text">
-                  <string>Dialog content</string>
+                  <string>检测到新版本可用，建议您及时更新以获得更好的使用体验。是否立即下载并安装更新？</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
                  </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
                 </widget>
                </item>
                <item>
-                <layout class="QHBoxLayout" name="horizontalLayout">
+                <layout class="QHBoxLayout" name="buttonLayout">
                  <property name="spacing">
                   <number>12</number>
                  </property>
@@ -178,7 +177,7 @@ color: rgb(255, 255, 255);
                   <number>6</number>
                  </property>
                  <item>
-                  <spacer name="horizontalSpacer_2">
+                  <spacer name="buttonSpacer">
                    <property name="orientation">
                     <enum>Qt::Horizontal</enum>
                    </property>
@@ -191,7 +190,7 @@ color: rgb(255, 255, 255);
                   </spacer>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="pushButton_cancel">
+                  <widget class="QPushButton" name="cancelButton">
                    <property name="minimumSize">
                     <size>
                      <width>88</width>
@@ -205,30 +204,39 @@ color: rgb(255, 255, 255);
                     </size>
                    </property>
                    <property name="styleSheet">
-                    <string notr="true">QPushButton {
+                    <string notr="true">QPushButton#cancelButton {
     background-color: rgba(250, 250, 250, 100);
-    color: white;
+    color: #ffffff;
     border: none;
     border-radius: 8px;
     font-family: 'Microsoft YaHei';
     font-size: 12px;
+    font-weight: normal;
 }
 
-QPushButton:hover {
-    background-color: rgba(250, 250, 250,130);
+QPushButton#cancelButton:hover {
+    background-color: rgba(250, 250, 250, 130);
 }
 
-QPushButton:pressed {
-    background-color: rgba(250, 250, 250,180);
+QPushButton#cancelButton:pressed {
+    background-color: rgba(250, 250, 250, 180);
+}
+
+QPushButton#cancelButton:disabled {
+    background-color: rgba(250, 250, 250, 50);
+    color: rgba(255, 255, 255, 150);
 }</string>
                    </property>
                    <property name="text">
                     <string>暂不更新</string>
                    </property>
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="pushButton_download">
+                  <widget class="QPushButton" name="updateButton">
                    <property name="minimumSize">
                     <size>
                      <width>88</width>
@@ -242,26 +250,38 @@ QPushButton:pressed {
                     </size>
                    </property>
                    <property name="styleSheet">
-                    <string notr="true">QPushButton {
+                    <string notr="true">QPushButton#updateButton {
     background-color: rgba(105, 27, 253, 180);
-    color: white;
+    color: #ffffff;
     border: none;
     border-radius: 8px;
     font-family: 'Microsoft YaHei';
     font-size: 12px;
+    font-weight: normal;
 }
 
-QPushButton:hover {
+QPushButton#updateButton:hover {
     background-color: rgba(105, 27, 253, 120);
 }
 
-QPushButton:pressed {
+QPushButton#updateButton:pressed {
     background-color: rgba(105, 27, 253, 250);
+}
+
+QPushButton#updateButton:disabled {
+    background-color: rgba(105, 27, 253, 50);
+    color: rgba(255, 255, 255, 150);
 }</string>
                    </property>
                    <property name="text">
                     <string>立即下载</string>
                    </property>
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
+                   <property name="default">
+                    <bool>true</bool>
+                  </property>
                   </widget>
                  </item>
                 </layout>
