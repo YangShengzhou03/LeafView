@@ -5,6 +5,9 @@ import os
 import subprocess
 import logging
 from pathlib import Path
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import time
 
 import exifread
 import pillow_heif
@@ -98,10 +101,13 @@ class SmartArrangeThread(QtCore.QThread):
         self.time_derive = time_derive
         self._is_running = True
         self._stop_flag = False
+        self._stop_lock = threading.Lock()
         self.total_files = 0
         self.processed_files = 0
+        self.processed_lock = threading.Lock()
         self.log_signal = parent.log_signal if parent else None
         self.files_to_rename = []
+        self.files_lock = threading.Lock()
 
     def calculate_total_files(self):
         """计算总文件数，增强错误处理"""
@@ -359,8 +365,14 @@ class SmartArrangeThread(QtCore.QThread):
     
     def stop(self):
         """停止线程操作"""
-        self._stop_flag = True
+        with self._stop_lock:
+            self._stop_flag = True
         self.log("INFO", "正在停止智能整理操作...")
+    
+    def is_stopped(self):
+        """线程安全的停止状态检查"""
+        with self._stop_lock:
+            return self._stop_flag
 
     def _validate_folder_path(self, folder_path):
         """验证文件夹路径的有效性"""
@@ -1158,6 +1170,9 @@ class SmartArrangeThread(QtCore.QThread):
         
     def process_single_file(self, file_path, base_folder=None):
         try:
+            if self.is_stopped():
+                return
+                
             exif_data = self.get_exif_data(file_path)
             
             file_time = datetime.datetime.strptime(exif_data['DateTime'], '%Y-%m-%d %H:%M:%S') if exif_data.get('DateTime') else None
@@ -1186,11 +1201,16 @@ class SmartArrangeThread(QtCore.QThread):
                 operation_type = "移动"
             
             if needs_operation:
-                self.files_to_rename.append({
-                    'old_path': str(file_path),
-                    'new_path': str(full_target_path)
-                })
+                with self.files_lock:
+                    self.files_to_rename.append({
+                        'old_path': str(file_path),
+                        'new_path': str(full_target_path)
+                    })
             
+            # 线程安全地更新处理计数
+            with self.processed_lock:
+                self.processed_files += 1
+                
         except Exception as e:
             self.log("ERROR", f"处理文件 {file_path} 时出错: {str(e)}")
 

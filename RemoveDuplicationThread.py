@@ -1,4 +1,9 @@
+import os
+import logging
+from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import threading
+import time
 
 import numpy as np
 import pillow_heif
@@ -66,6 +71,7 @@ class HashWorker(QtCore.QThread):
         self.hash_size = hash_size
         self.max_workers = max_workers
         self._is_running = True
+        self._stop_lock = threading.Lock()
 
     def run(self):
         try:
@@ -80,32 +86,64 @@ class HashWorker(QtCore.QThread):
                 if path.lower().endswith(supported_extensions)
             ]
             total = len(filtered_paths)
+            
+            if total == 0:
+                self.hash_completed.emit({})
+                return
 
-            with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
-                future_to_path = {
-                    executor.submit(ImageHasher.dhash, path, self.hash_size): path
-                    for path in filtered_paths
-                }
+            # 分批处理，避免内存占用过高
+            batch_size = 50
+            processed_count = 0
+            
+            for batch_start in range(0, total, batch_size):
+                if not self.is_running():
+                    return
+                    
+                batch_end = min(batch_start + batch_size, total)
+                batch_paths = filtered_paths[batch_start:batch_end]
+                
+                with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+                    future_to_path = {
+                        executor.submit(ImageHasher.dhash, path, self.hash_size): path
+                        for path in batch_paths
+                    }
 
-                for i, future in enumerate(as_completed(future_to_path)):
-                    if not self._is_running:
-                        return
+                    for future in as_completed(future_to_path):
+                        if not self.is_running():
+                            # 取消剩余任务
+                            for f in future_to_path:
+                                f.cancel()
+                            return
 
-                    path = future_to_path[future]
-                    result = future.result()
-                    if result is not None:
-                        hashes[path] = result
+                        path = future_to_path[future]
+                        try:
+                            result = future.result(timeout=30)  # 增加超时控制
+                            if result is not None:
+                                hashes[path] = result
+                        except Exception as e:
+                            # 单个文件处理失败不影响整体流程
+                            pass
 
-                    if (i + 1) % 10 == 0 or (i + 1) == total:
-                        self.progress_updated.emit(int((i + 1) / total * 40))
+                        processed_count += 1
+                        if processed_count % 10 == 0 or processed_count == total:
+                            self.progress_updated.emit(int(processed_count / total * 40))
+                
+                # 批次间短暂休眠，降低CPU占用
+                if self.is_running() and batch_start + batch_size < total:
+                    time.sleep(0.1)
 
-            if self._is_running:
+            if self.is_running():
                 self.hash_completed.emit(hashes)
         except Exception as e:
             self.error_occurred.emit(str(e))
 
     def stop(self):
-        self._is_running = False
+        with self._stop_lock:
+            self._is_running = False
+    
+    def is_running(self):
+        with self._stop_lock:
+            return self._is_running
 
 
 class ContrastWorker(QThread):
@@ -119,13 +157,13 @@ class ContrastWorker(QThread):
         self.hash_dict = hash_dict
         self.similarity_threshold = similarity_threshold
         self._is_running = True
+        self._stop_lock = threading.Lock()
 
     def log(self, level, message):
         self.log_signal.emit(level, message)
 
     def run(self):
         try:
-            self._is_running = True
             image_paths = list(self.hash_dict.keys())
             
             if not image_paths:
@@ -138,7 +176,7 @@ class ContrastWorker(QThread):
             
             similar_groups = self._optimized_grouping(image_paths)
             
-            if self._is_running:
+            if self.is_running():
                 self.log("DEBUG", f"相似度对比完成，发现 {len(similar_groups)} 组相似图片")
                 self.result_signal.emit(similar_groups)
                 self.finished_signal.emit()
@@ -156,7 +194,7 @@ class ContrastWorker(QThread):
         
         hash_groups = {}
         for i, path in enumerate(image_paths):
-            if not self._is_running:
+            if not self.is_running():
                 break
                 
             hash_bits = self.hash_dict[path]
@@ -173,7 +211,7 @@ class ContrastWorker(QThread):
         total_groups = len(hash_groups)
         
         for group_paths in hash_groups.values():
-            if not self._is_running:
+            if not self.is_running():
                 break
                 
             if len(group_paths) == 1:
@@ -181,7 +219,7 @@ class ContrastWorker(QThread):
                 
             current_group = []
             for i in range(len(group_paths)):
-                if not self._is_running:
+                if not self.is_running():
                     break
                     
                 path1 = group_paths[i]

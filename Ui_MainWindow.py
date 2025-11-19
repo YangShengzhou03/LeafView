@@ -307,14 +307,17 @@ class Ui_MainWindow(object):
 "    padding: 4px;\n"
 "    border-radius: 12px;\n"
 "    background-color: rgba(255, 255, 255, 0);\n"
+"    transition: background-color 200ms ease-in-out;\n"
 "}\n"
 "\n"
 "QToolButton:hover {\n"
-"    background-color: rgba(255, 255, 255, 20);\n"
+"    background-color: rgba(255, 255, 255, 30);\n"
+"    border: 1px solid rgba(255, 255, 255, 40);\n"
 "}\n"
 "\n"
 "QToolButton:pressed {\n"
-"    background-color: rgba(255, 255, 255, 50);\n"
+"    background-color: rgba(255, 255, 255, 60);\n"
+"    border: 1px solid rgba(255, 255, 255, 80);\n"
 "}")
         self.btn_headerSettings.setText("")
         icon6 = QtGui.QIcon()
@@ -331,14 +334,17 @@ class Ui_MainWindow(object):
 "    padding: 4px;\n"
 "    border-radius: 12px;\n"
 "    background-color: rgba(255, 255, 255, 0);\n"
+"    transition: background-color 200ms ease-in-out;\n"
 "}\n"
 "\n"
 "QToolButton:hover {\n"
-"    background-color: rgba(255, 255, 255, 20);\n"
+"    background-color: rgba(255, 255, 255, 30);\n"
+"    border: 1px solid rgba(255, 255, 255, 40);\n"
 "}\n"
 "\n"
 "QToolButton:pressed {\n"
-"    background-color: rgba(255, 255, 255, 50);\n"
+"    background-color: rgba(255, 255, 255, 60);\n"
+"    border: 1px solid rgba(255, 255, 255, 80);\n"
 "}")
         self.btn_headerMinimize.setText("")
         icon7 = QtGui.QIcon()
@@ -355,14 +361,17 @@ class Ui_MainWindow(object):
 "    padding: 4px;\n"
 "    border-radius: 12px;\n"
 "    background-color: rgba(255, 255, 255, 0);\n"
+"    transition: background-color 200ms ease-in-out;\n"
 "}\n"
 "\n"
 "QToolButton:hover {\n"
-"    background-color: rgba(255, 255, 255, 20);\n"
+"    background-color: rgba(255, 255, 255, 30);\n"
+"    border: 1px solid rgba(255, 255, 255, 40);\n"
 "}\n"
 "\n"
 "QToolButton:pressed {\n"
-"    background-color: rgba(255, 255, 255, 50);\n"
+"    background-color: rgba(255, 255, 255, 60);\n"
+"    border: 1px solid rgba(255, 255, 255, 80);\n"
 "}")
         self.btn_headerMaximize.setText("")
         icon8 = QtGui.QIcon()
@@ -379,14 +388,17 @@ class Ui_MainWindow(object):
 "    padding: 4px;\n"
 "    border-radius: 12px;\n"
 "    background-color: rgba(255, 255, 255, 0);\n"
+"    transition: background-color 200ms ease-in-out;\n"
 "}\n"
 "\n"
 "QToolButton:hover {\n"
-"    background-color: rgba(255, 255, 255, 20);\n"
+"    background-color: rgba(255, 255, 255, 30);\n"
+"    border: 1px solid rgba(255, 255, 255, 40);\n"
 "}\n"
 "\n"
 "QToolButton:pressed {\n"
-"    background-color: rgba(255, 255, 255, 50);\n"
+"    background-color: rgba(255, 255, 255, 60);\n"
+"    border: 1px solid rgba(255, 255, 255, 80);\n"
 "}")
         self.btn_headerClose.setText("")
         icon9 = QtGui.QIcon()
@@ -802,7 +814,7 @@ class Ui_MainWindow(object):
 "border-bottom-left-radius:0px;")
         self.frame_toolbar_container.setObjectName("frame_toolbar_container")
         self.layout_toolbar_container = QtWidgets.QHBoxLayout(self.frame_toolbar_container)
-        self.layout_toolbar_container.setContentsMargins(9, 6, 9, 9)
+        self.layout_toolbar_container.setContentsMargins(9, 9, 9, 9)
         self.layout_toolbar_container.setSpacing(0)
         self.layout_toolbar_container.setObjectName("layout_toolbar_container")
         self.text_ocr_log = QtWidgets.QTextEdit(parent=self.frame_toolbar_container)
