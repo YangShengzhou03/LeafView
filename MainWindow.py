@@ -46,6 +46,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
         self.btn_headerGitHub.clicked.connect(self.feedback)
         self.btn_headerSettings.clicked.connect(author)
+        
+        # 连接文件夹选择按钮
+        if hasattr(self, 'btn_importBrowseSource'):
+            self.btn_importBrowseSource.clicked.connect(self._select_source_folder)
+        if hasattr(self, 'btn_importBrowseTarget'):
+            self.btn_importBrowseTarget.clicked.connect(self._select_target_folder)
 
     def _setup_drag_handlers(self):
         self.frame_headerBar.mousePressEvent = self._on_mouse_press
@@ -306,6 +312,30 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                                       '%2BsIEOWFE6cA0ayLLBdYwpMsKYveyufXSOE5FBe7bb9xxvuNYVsEn&busi_data'
                                       '=eyJncm91cENvZGUiOiIxMDIxNDcxODEzIiwidG9rZW4iOiJDaFYxYVpySU9FUVJr'
                                       'RzkwdUZ2QlFVUTQzZzV2VS83TE9mY0NNREluaUZCR05YcnNjWmpKU2V5Q2FYTllFVlJ'
-                                      'MIiwidWluIjoiMzU1NTg0NDY3OSJ9&data=M7fVC3YlI68T2S2VpmsR20t9s_xJj6HNpF'
+                                      'MIiwidWluIjoiMzU1ODQ0Njc5In0&data=M7fVC3YlI68T2S2VpmsR20t9s_xJj6HNpF'
                                       '0GGk2ImSQ9iCE8fZomQgrn_ADRZF0Ee4OSY0x6k2tI5P47NlkWug&svctype=4&tempid'
                                       '=h5_group_info'))
+
+    def _select_source_folder(self):
+        """选择源文件夹"""
+        folder_path = QtWidgets.QFileDialog.getExistingDirectory(
+            self,
+            "选择要处理的文件夹",
+            "",
+            QtWidgets.QFileDialog.Option.ShowDirsOnly
+        )
+        
+        if folder_path and hasattr(self, 'lineEdit_importSourcePath'):
+            self.lineEdit_importSourcePath.setText(folder_path)
+
+    def _select_target_folder(self):
+        """选择目标文件夹"""
+        folder_path = QtWidgets.QFileDialog.getExistingDirectory(
+            self,
+            "选择目标文件夹",
+            "",
+            QtWidgets.QFileDialog.Option.ShowDirsOnly
+        )
+        
+        if folder_path and hasattr(self, 'lineEdit_importTargetPath'):
+            self.lineEdit_importTargetPath.setText(folder_path)
