@@ -903,24 +903,36 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
                        </property>
                        <property name="styleSheet">
                         <string notr="true">QLineEdit {
-    border: 1px solid rgb(134, 119, 253);
-    background: rgb(245, 249, 254);
-    padding: 8px 6px;
-    border-radius: 6px;
-    color: #333;
+    border: 1px solid #d1d5db;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(248, 250, 252, 255));
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: #374151;
     selection-background-color: rgba(134, 119, 253, 180);
     selection-color: white;
     font-size: 12px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transition: all 0.2s ease-out;
+}
+
+QLineEdit:hover {
+    border-color: #a5b4fc;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(241, 245, 249, 255));
+    box-shadow: 0 2px 4px rgba(166, 175, 195, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 QLineEdit:focus {
-    border: 2px solid rgb(134, 119, 253);
+    border: 2px solid #8b5cf6;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(235, 248, 255, 255));
     outline: none;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1), 0 4px 6px rgba(166, 175, 195, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 QLineEdit:disabled {
-    background: #eaeaea;
-    color: #aaa;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(243, 244, 246, 255), stop:1 rgba(229, 231, 235, 255));
+    color: #9ca3af;
+    border-color: #e5e7eb;
+    box-shadow: none;
 }</string>
                        </property>
                        <property name="placeholderText">
@@ -934,18 +946,31 @@ QLineEdit:disabled {
                         <string notr="true">QToolButton {
     color: white;
     border: none;
-    padding: 6px 6px;
-    border-radius: 6px;
-    background-color: rgb(134, 119, 253);
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(134, 119, 253, 255), stop:1 rgba(124, 109, 243, 255));
     font-size: 12px;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(134, 119, 253, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.2s ease-out;
 }
 
 QToolButton:hover {
-    background-color: rgb(154, 139, 255);
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(154, 139, 255, 255), stop:1 rgba(144, 129, 235, 255));
+    box-shadow: 0 4px 8px rgba(134, 119, 253, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
 }
 
 QToolButton:pressed {
-    background-color: rgb(94, 79, 253);
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(94, 79, 253, 255), stop:1 rgba(84, 69, 233, 255));
+    box-shadow: 0 1px 2px rgba(134, 119, 253, 0.15), inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    transform: translateY(0px);
+}
+
+QToolButton:disabled {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(229, 231, 235, 255), stop:1 rgba(209, 213, 219, 255));
+    color: #9ca3af;
+    box-shadow: none;
 }</string>
                        </property>
                        <property name="text">
@@ -994,24 +1019,36 @@ QToolButton:pressed {
                        </property>
                        <property name="styleSheet">
                         <string notr="true">QLineEdit {
-    border: 1px solid rgb(134, 119, 253);
-    background: rgb(245, 249, 254);
-    padding: 8px 6px;
-    border-radius: 6px;
-    color: #333;
+    border: 1px solid #d1d5db;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(248, 250, 252, 255));
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: #374151;
     selection-background-color: rgba(134, 119, 253, 180);
     selection-color: white;
     font-size: 12px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transition: all 0.2s ease-out;
+}
+
+QLineEdit:hover {
+    border-color: #a5b4fc;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(241, 245, 249, 255));
+    box-shadow: 0 2px 4px rgba(166, 175, 195, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 QLineEdit:focus {
-    border: 2px solid rgb(134, 119, 253);
+    border: 2px solid #8b5cf6;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(235, 248, 255, 255));
     outline: none;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1), 0 4px 6px rgba(166, 175, 195, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 QLineEdit:disabled {
-    background: #eaeaea;
-    color: #aaa;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(243, 244, 246, 255), stop:1 rgba(229, 231, 235, 255));
+    color: #9ca3af;
+    border-color: #e5e7eb;
+    box-shadow: none;
 }</string>
                        </property>
                        <property name="placeholderText">
@@ -1593,25 +1630,23 @@ border-bottom-left-radius:0px;</string>
                         </property>
                         <property name="styleSheet">
                          <string notr="true">QTextEdit {
-    border: 1.5px solid qradialgradient(
-        cx:0.5, cy:0.5,
-        radius: 1.2,
-        fx:0.45, fy:0.55,
-        stop:0 rgba(144, 129, 255, 255),
-        stop:0.7 rgba(129, 121, 255, 220),
-        stop:1 rgba(108, 97, 224, 200)
-    );
-    background: rgb(245, 249, 254);
-    padding: 8px;
-    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(248, 250, 252, 255));
+    padding: 12px;
+    border-radius: 8px;
     font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
     font-size: 14px;
-    color: #333;
+    color: #374151;
     selection-background-color: rgba(134, 119, 253, 0.5);
     selection-color: #fff;
-    box-shadow:
-        inset 0 1px 3px rgba(0, 0, 0, 0.05),
-        0 2px 8px rgba(134, 119, 253, 0.1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transition: all 0.2s ease-out;
+}
+
+QTextEdit:hover {
+    border-color: #a5b4fc;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(241, 245, 249, 255));
+    box-shadow: 0 2px 4px rgba(166, 175, 195, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 QTextEdit QScrollBar:vertical {
@@ -1621,19 +1656,21 @@ QTextEdit QScrollBar:vertical {
 }
 
 QTextEdit QScrollBar::handle:vertical {
-    background: rgba(134, 119, 253, 0.3);
-    border-radius: 5px;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(134, 119, 253, 0.2), stop:1 rgba(134, 119, 253, 0.4));
+    border-radius: 6px;
     min-height: 30px;
     margin: 2px;
-    transition: background 0.2s;
+    transition: all 0.2s ease-out;
 }
 
 QTextEdit QScrollBar::handle:vertical:hover {
-    background: rgba(134, 119, 253, 0.6);
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(134, 119, 253, 0.4), stop:1 rgba(134, 119, 253, 0.6));
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 QTextEdit QScrollBar::handle:vertical:pressed {
-    background: rgba(134, 119, 253, 0.8);
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(134, 119, 253, 0.6), stop:1 rgba(134, 119, 253, 0.8));
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 QTextEdit QScrollBar:horizontal {
@@ -1643,10 +1680,11 @@ QTextEdit QScrollBar:horizontal {
 }
 
 QTextEdit QScrollBar::handle:horizontal {
-    background: rgba(134, 119, 253, 0.3);
-    border-radius: 5px;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(134, 119, 253, 0.2), stop:1 rgba(134, 119, 253, 0.4));
+    border-radius: 6px;
     min-width: 30px;
     margin: 2px;
+    transition: all 0.2s ease-out;
 }
 
 QTextEdit QScrollBar::add-page:vertical,
@@ -1666,14 +1704,10 @@ QTextEdit QScrollBar::sub-line:horizontal {
 }
 
 QTextEdit:focus {
-    border: 1.5px solid qradialgradient(
-        cx:0.5, cy:0.5,
-        radius: 1.3,
-        fx:0.4, fy:0.6,
-        stop:0 rgba(154, 139, 255, 255),
-        stop:1 rgba(139, 131, 255, 240)
-    );
-    box-shadow: 0 0 0 2px rgba(134, 119, 253, 0.15);
+    border: 2px solid #8677fd;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(249, 250, 251, 255));
+    box-shadow: 0 0 0 3px rgba(134, 119, 253, 0.15), 0 4px 6px rgba(0, 0, 0, 0.05);
+    outline: none;
 }</string>
                         </property>
                         <property name="readOnly">
@@ -1813,107 +1847,130 @@ border-radius: 0px;</string>
                         </property>
                         <property name="styleSheet">
                          <string notr="true">QComboBox {
-    background-color: #ffffff;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(248, 250, 252, 255));
     border: 1px solid #d1d5db;
-    border-radius: 6px;
-    padding: 6px 12px;
+    border-radius: 8px;
+    padding: 6px 12px 6px 16px;
     color: #374151;
     font-family: &quot;Microsoft YaHei&quot;, &quot;微软雅黑&quot;, sans-serif;
     font-size: 13px;
     min-width: 56px;
     min-height: 16px;
-    selection-background-color: #6d28d9;
+    selection-background-color: #8b5cf6;
     selection-color: white;
-    transition: all 0.2s ease-out;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 QComboBox::drop-down {
-    width: 0;
+    width: 32px;
     border: none;
-    padding: 0;
+    border-left: 1px solid #e5e7eb;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(248, 250, 252, 255), stop:1 rgba(255, 255, 255, 255));
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
 }
 
 QComboBox::down-arrow {
-    image: none;
+    image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOCIgdmlld0JveD0iMCAwIDEyIDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xIDFMNiA2TDExIDEiIHN0cm9rZT0iIzY3NDE1MSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+);
+    width: 12px;
+    height: 8px;
 }
 
 QComboBox:hover {
     border-color: #a5b4fc;
-    background-color: #f8fafc;
-    box-shadow: 0 1px 3px rgba(166, 175, 195, 0.2);
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(241, 245, 249, 255));
+    box-shadow: 0 2px 4px rgba(166, 175, 195, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+QComboBox:hover::down-arrow {
+    image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOCIgdmlld0JveD0iMCAwIDEyIDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xIDFMNiA2TDExIDEiIHN0cm9rZT0iIzg2NzNkYiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+);
 }
 
 QComboBox:on {
-    background-color: #f5f3ff;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(235, 248, 255, 255), stop:1 rgba(248, 250, 252, 255));
+    border-color: #8b5cf6;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.15);
+}
+
+QComboBox:on::drop-down {
+    border-bottom-right-radius: 0;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(235, 248, 255, 255), stop:1 rgba(255, 255, 255, 255));
+}
+
+QComboBox:on::down-arrow {
+    transform: rotate(180deg);
+    image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOCIgdmlld0JveD0iMCAwIDEyIDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xIDFMNiA2TDExIDEiIHN0cm9rZT0iIzg2NzNkYiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+);
 }
 
 QComboBox:pressed {
-    background-color: #ede9fe;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(229, 231, 235, 255), stop:1 rgba(243, 244, 246, 255));
     transform: translateY(1px);
 }
 
 QComboBox:disabled {
-    background-color: #f3f4f6;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(243, 244, 246, 255), stop:1 rgba(229, 231, 235, 255));
     color: #9ca3af;
     border-color: #e5e7eb;
+    box-shadow: none;
 }
 
 QComboBox QAbstractItemView {
-    border: 1px solid #e5e7eb;
-    border-top: none;
-    border-radius: 0 0 6px 6px;
-    background: white;
+    border: 1px solid #d1d5db;
+    border-top: 1px solid #8b5cf6;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(248, 250, 252, 255));
     padding: 4px 0;
     margin-top: -1px;
-    selection-background-color: #6d28d9;
+    selection-background-color: #8b5cf6;
     selection-color: white;
     outline: none;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.06);
     min-width: 88px;
     font-family: &quot;Microsoft YaHei&quot;, &quot;微软雅黑&quot;, sans-serif;
     font-size: 13px;
 }
 
 QComboBox QAbstractItemView::item {
-    padding: 6px 2px;
+    padding: 8px 16px;
     margin: 0 4px;
-    border-radius: 3px;
-    border-left: 1px solid transparent;
+    border-radius: 4px;
+    border-left: 2px solid transparent;
 }
 
 QComboBox QAbstractItemView::item:hover {
-    background-color: #f8f5ff;
-    color: #6d28d9;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(241, 245, 249, 255), stop:1 rgba(235, 248, 255, 255));
+    color: #8b5cf6;
+    border-left-color: #a5b4fc;
 }
 
 QComboBox QAbstractItemView::item:selected {
-    background-color: #faf7ff;
-    color: #6d28d9;
-    border-left: 1px solid #6d28d9;
-    font-weight: normal;
-    padding-left: 11px;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(235, 248, 255, 255), stop:1 rgba(229, 246, 255, 255));
+    color: #7c3aed;
+    border-left-color: #8b5cf6;
+    font-weight: 500;
 }
 
 QComboBox:editable {
-    background: white;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(248, 250, 252, 255));
     padding-right: 12px;
 }
 
 QComboBox:editable:on {
-    background: #f5f3ff;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(235, 248, 255, 255), stop:1 rgba(248, 250, 252, 255));
 }
 
 QComboBox:!editable {
-    background: #f9fafb;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(248, 250, 252, 255));
 }
 
 QComboBox:focus {
-    border: 1px solid #8b5cf6;
+    border: 2px solid #8b5cf6;
     outline: none;
-    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1), 0 4px 6px rgba(166, 175, 195, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }</string>
                         </property>
                         <item>
@@ -2780,23 +2837,39 @@ background:rgb(255, 255, 255);</string>
                           </property>
                           <property name="styleSheet">
                            <string notr="true">QPushButton {
-  background-color: #ffffff;
-  color: #2c3e50;
-  border: 1px solid #d4d4d4;
+  background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(248, 250, 252, 255));
+  color: #374151;
+  border: 1px solid #d1d5db;
   text-align: center;
   font-size: 14px;
   cursor: pointer;
-  border-radius: 12px;
-  padding: 4px 10px;
-  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 6px 12px;
+  transition: all 0.2s ease-out;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8);
   text-transform: uppercase;
+  font-weight: 500;
 }
 
 QPushButton:hover {
-  background-color: #f7f7f7;
-  color: #2c3e50;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(241, 245, 249, 255));
+  border-color: #a5b4fc;
+  box-shadow: 0 2px 4px rgba(166, 175, 195, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transform: translateY(-1px);
+}
+
+QPushButton:pressed {
+  background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(229, 231, 235, 255), stop:1 rgba(209, 213, 219, 255));
+  border-color: #9ca3af;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  transform: translateY(0px);
+}
+
+QPushButton:disabled {
+  background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(243, 244, 246, 255), stop:1 rgba(229, 231, 235, 255));
+  color: #9ca3af;
+  border-color: #e5e7eb;
+  box-shadow: none;
 }</string>
                           </property>
                           <property name="text">
