@@ -609,9 +609,49 @@ class Ui_MainWindow(object):
         self.label_statusInfo.setObjectName("label_statusInfo")
         self.verticalLayout.addWidget(self.label_statusInfo)
         self.layout_mediaImportContent.addLayout(self.verticalLayout)
-        self.textBrowser_info = QtWidgets.QTextBrowser(parent=self.page_mediaImport)
-        self.textBrowser_info.setObjectName("textBrowser_info")
-        self.layout_mediaImportContent.addWidget(self.textBrowser_info)
+        self.textBrowser_folderStats = QtWidgets.QTextBrowser(parent=self.page_mediaImport)
+        self.textBrowser_folderStats.setStyleSheet("QTextBrowser {\n"
+"    background-color: #f8f9fa;\n"
+"    border: 1px solid #dee2e6;\n"
+"    border-radius: 8px;\n"
+"    padding: 12px;\n"
+"    font-family: \'Segoe UI\', \'Microsoft YaHei\', sans-serif;\n"
+"    font-size: 13px;\n"
+"    color: #495057;\n"
+"    line-height: 1.5;\n"
+"}\n"
+"\n"
+"QTextBrowser:focus {\n"
+"    border: 1px solid #dee2e6;\n"
+"    outline: none;\n"
+"}\n"
+"\n"
+"QTextBrowser QScrollBar:vertical {\n"
+"    width: 6px;\n"
+"    background: transparent;\n"
+"    border-radius: 3px;\n"
+"}\n"
+"\n"
+"QTextBrowser QScrollBar::handle:vertical {\n"
+"    background: #ced4da;\n"
+"    border-radius: 3px;\n"
+"    min-height: 20px;\n"
+"}\n"
+"\n"
+"QTextBrowser QScrollBar::add-line:vertical,\n"
+"QTextBrowser QScrollBar::sub-line:vertical {\n"
+"    height: 0px;\n"
+"}\n"
+"\n"
+"QTextBrowser QScrollBar::add-page:vertical,\n"
+"QTextBrowser QScrollBar::sub-page:vertical {\n"
+"    background: transparent;\n"
+"}")
+        self.textBrowser_folderStats.setReadOnly(True)
+        self.textBrowser_folderStats.setOpenExternalLinks(False)
+        self.textBrowser_folderStats.setOpenLinks(False)
+        self.textBrowser_folderStats.setObjectName("textBrowser_folderStats")
+        self.layout_mediaImportContent.addWidget(self.textBrowser_folderStats)
         spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
         self.layout_mediaImportContent.addItem(spacerItem2)
         self.layout_mediaImportMain.addLayout(self.layout_mediaImportContent)

@@ -1109,7 +1109,56 @@ margin: 12px 24px;</string>
                     </layout>
                    </item>
                    <item>
-                    <widget class="QTextBrowser" name="textBrowser_info"/>
+                    <widget class="QTextBrowser" name="textBrowser_folderStats">
+                     <property name="styleSheet">
+                      <string notr="true">QTextBrowser {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 12px;
+    font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+    font-size: 13px;
+    color: #495057;
+    line-height: 1.5;
+}
+
+QTextBrowser:focus {
+    border: 1px solid #dee2e6;
+    outline: none;
+}
+
+QTextBrowser QScrollBar:vertical {
+    width: 6px;
+    background: transparent;
+    border-radius: 3px;
+}
+
+QTextBrowser QScrollBar::handle:vertical {
+    background: #ced4da;
+    border-radius: 3px;
+    min-height: 20px;
+}
+
+QTextBrowser QScrollBar::add-line:vertical,
+QTextBrowser QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QTextBrowser QScrollBar::add-page:vertical,
+QTextBrowser QScrollBar::sub-page:vertical {
+    background: transparent;
+}</string>
+                     </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
+                     <property name="openExternalLinks">
+                      <bool>false</bool>
+                     </property>
+                     <property name="openLinks">
+                      <bool>false</bool>
+                     </property>
+                    </widget>
                    </item>
                    <item>
                     <spacer name="spacer_bottom_margin">

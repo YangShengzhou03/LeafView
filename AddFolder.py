@@ -1,6 +1,8 @@
 from PyQt6 import QtWidgets, QtCore, QtGui
 from PyQt6.QtWidgets import QFileDialog, QMessageBox, QProgressDialog, QVBoxLayout, QPushButton, QTextEdit, QDialog
 import os
+import pathlib
+from collections import Counter
 
 from common import get_resource_path, detect_media_type
 from config_manager import config_manager
