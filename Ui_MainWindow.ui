@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>983</width>
-    <height>583</height>
+    <width>933</width>
+    <height>536</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -193,7 +193,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
                <x>0</x>
                <y>0</y>
                <width>156</width>
-               <height>531</height>
+               <height>484</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="layout_mainMenuContent">
@@ -884,7 +884,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
                       <widget class="QLineEdit" name="lineEdit_importSourcePath">
                        <property name="minimumSize">
                         <size>
-                         <width>548</width>
+                         <width>498</width>
                          <height>0</height>
                         </size>
                        </property>
@@ -1001,7 +1001,7 @@ QToolButton:pressed {
                       <widget class="QLineEdit" name="lineEdit_importTargetPath">
                        <property name="minimumSize">
                         <size>
-                         <width>548</width>
+                         <width>498</width>
                          <height>0</height>
                         </size>
                        </property>
@@ -1203,7 +1203,7 @@ background:rgb(255, 255, 255);</string>
                           </property>
                           <property name="font">
                            <font>
-                            <pointsize>12</pointsize>
+                            <pointsize>14</pointsize>
                            </font>
                           </property>
                           <property name="styleSheet">
@@ -1213,7 +1213,7 @@ background:rgb(255, 255, 255);</string>
 }</string>
                           </property>
                           <property name="text">
-                           <string>根据图像上的文字进行识别整理，匹配到的将会按文件夹分类，如A1|A2，识别到A1则全部放入A1文件夹。</string>
+                           <string>自动识别图片中的文字，根据设置的关键词进行分类整理。</string>
                           </property>
                          </widget>
                         </item>
@@ -1261,7 +1261,7 @@ border-radius: 0px;</string>
 }</string>
                            </property>
                            <property name="text">
-                            <string>文字正则表达式</string>
+                            <string>关键词设置（用|分隔）</string>
                            </property>
                           </widget>
                          </item>
@@ -2638,7 +2638,7 @@ background:rgb(255, 255, 255);</string>
 }</string>
                           </property>
                           <property name="text">
-                           <string>文件名构建：</string>
+                           <string>文件重命名规则：</string>
                           </property>
                          </widget>
                         </item>
@@ -2858,7 +2858,7 @@ border-radius: 0px;</string>
 }</string>
                            </property>
                            <property name="text">
-                            <string>命名标签：</string>
+                            <string>文件名组成：</string>
                            </property>
                           </widget>
                          </item>
@@ -3503,7 +3503,7 @@ QComboBox QAbstractItemView::item {
 }</string>
                             </property>
                             <property name="text">
-                             <string>时间来源</string>
+                             <string>文件时间依据</string>
                             </property>
                            </widget>
                           </item>
@@ -3599,7 +3599,7 @@ QComboBox QAbstractItemView::item {
 }</string>
                             </property>
                             <property name="text">
-                             <string>整理方式</string>
+                             <string>文件处理方式</string>
                             </property>
                            </widget>
                           </item>
@@ -4210,7 +4210,7 @@ border-bottom-left-radius:0px;</string>
                           <widget class="QLabel" name="label_duplicateRemovalDescription">
                            <property name="font">
                             <font>
-                             <pointsize>16</pointsize>
+                             <pointsize>14</pointsize>
                             </font>
                            </property>
                            <property name="styleSheet">
@@ -4220,7 +4220,7 @@ border-bottom-left-radius:0px;</string>
 }</string>
                            </property>
                            <property name="text">
-                            <string>文件去重，将会把相同的放入到回收站中。只保留一份。</string>
+                            <string>检测重复文件，其余重复文件将移至回收站（可恢复）。</string>
                            </property>
                           </widget>
                          </item>

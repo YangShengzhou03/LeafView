@@ -164,6 +164,6 @@ class Ui_UpdateDialog(object):
         _translate = QtCore.QCoreApplication.translate
         UpdateDialog.setWindowTitle(_translate("UpdateDialog", "软件更新"))
         self.titleLabel.setText(_translate("UpdateDialog", "发现新版本"))
-        self.messageLabel.setText(_translate("UpdateDialog", "有新版本可用，是否立即下载更新？"))
+        self.messageLabel.setText(_translate("UpdateDialog", "检测到新版本可用，建议您及时更新以获得更好的使用体验。是否立即下载并安装更新？"))
         self.cancelButton.setText(_translate("UpdateDialog", "暂不更新"))
         self.updateButton.setText(_translate("UpdateDialog", "立即下载"))
