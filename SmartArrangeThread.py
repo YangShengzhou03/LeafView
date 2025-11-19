@@ -213,35 +213,68 @@ class SmartArrangeThread(QtCore.QThread):
         
         if folder_info.get('include_sub', 0):
             for root, _, files in os.walk(folder_path):
-                for file in files:
-                    if self._stop_flag:
+                # 批量处理，每批处理100个文件
+                batch_size = 100
+                for i in range(0, len(files), batch_size):
+                    if self.is_stopped():
                         self.log("WARNING", "您已经取消了当前文件夹的处理")
                         return
-                    full_file_path = Path(root) / file
-                    if self.destination_root:
-                        self.process_single_file(full_file_path)
-                    else:
-                        self.process_single_file(full_file_path, base_folder=folder_path)
-                    self.processed_files += 1
-                    if self.total_files > 0:
-                        percent_complete = int((self.processed_files / self.total_files) * 80)
-                        self.progress_signal.emit(percent_complete)
+                    
+                    batch_files = files[i:i + batch_size]
+                    for file in batch_files:
+                        if self.is_stopped():
+                            self.log("WARNING", "您已经取消了当前文件夹的处理")
+                            return
+                        full_file_path = Path(root) / file
+                        if self.destination_root:
+                            self.process_single_file(full_file_path)
+                        else:
+                            self.process_single_file(full_file_path, base_folder=folder_path)
+                        
+                        with self.processed_lock:
+                            self.processed_files += 1
+                        
+                        if self.total_files > 0:
+                            percent_complete = int((self.processed_files / self.total_files) * 80)
+                            self.progress_signal.emit(percent_complete)
+                    
+                    # 批次之间短暂休息，减少CPU占用
+                    time.sleep(0.01)
         else:
-            for file in os.listdir(folder_path):
-                if self._stop_flag:
-                    self.log("WARNING", "文件夹处理被用户中断")
-                    return
-                full_file_path = folder_path / file
-                if full_file_path.is_file():
-                    # 如果有目标根路径（复制操作），则不传递base_folder参数
-                    if self.destination_root:
-                        self.process_single_file(full_file_path)
-                    else:
-                        self.process_single_file(full_file_path)
-                    self.processed_files += 1
-                    if self.total_files > 0:
-                        percent_complete = int((self.processed_files / self.total_files) * 80)
-                        self.progress_signal.emit(percent_complete)
+            # 获取文件列表，分批处理
+            try:
+                all_files = [f for f in os.listdir(folder_path) if (folder_path / f).is_file()]
+                batch_size = 100
+                
+                for i in range(0, len(all_files), batch_size):
+                    if self.is_stopped():
+                        self.log("WARNING", "文件夹处理被用户中断")
+                        return
+                    
+                    batch_files = all_files[i:i + batch_size]
+                    for file in batch_files:
+                        if self.is_stopped():
+                            self.log("WARNING", "文件夹处理被用户中断")
+                            return
+                        full_file_path = folder_path / file
+                        # 如果有目标根路径（复制操作），则不传递base_folder参数
+                        if self.destination_root:
+                            self.process_single_file(full_file_path)
+                        else:
+                            self.process_single_file(full_file_path)
+                        
+                        with self.processed_lock:
+                            self.processed_files += 1
+                        
+                        if self.total_files > 0:
+                            percent_complete = int((self.processed_files / self.total_files) * 80)
+                            self.progress_signal.emit(percent_complete)
+                    
+                    # 批次之间短暂休息，减少CPU占用
+                    time.sleep(0.01)
+                    
+            except Exception as e:
+                self.log("ERROR", f"处理文件夹时出错: {str(e)}")
 
     def process_renaming(self):
         file_count = {}
@@ -510,6 +543,17 @@ class SmartArrangeThread(QtCore.QThread):
         exif_data = {}
         file_path_obj = Path(file_path)
         suffix = file_path_obj.suffix.lower()
+        
+        # 文件大小检查，避免处理过大的文件
+        try:
+            file_size = file_path_obj.stat().st_size
+            if file_size > 500 * 1024 * 1024:  # 500MB限制
+                self.log("WARNING", f"跳过过大的文件: {file_path_obj.name} ({file_size / 1024 / 1024:.1f}MB)")
+                exif_data['DateTime'] = datetime.datetime.fromtimestamp(file_path_obj.stat().st_mtime).strftime('%Y-%m-%d %H:%M:%S')
+                return exif_data
+        except Exception:
+            pass
+        
         create_time = datetime.datetime.fromtimestamp(file_path_obj.stat().st_ctime)
         modify_time = datetime.datetime.fromtimestamp(file_path_obj.stat().st_mtime)
         
@@ -537,15 +581,19 @@ class SmartArrangeThread(QtCore.QThread):
                 
         except Exception as e:
             self.log("DEBUG", f"获取 {file_path} 的EXIF数据时出错: {str(e)}")
-            exif_data['DateTime'] = create_time.strftime('%Y-%m-%d %H:%M:%S')
+            exif_data['DateTime'] = modify_time.strftime('%Y-%m-%d %H:%M:%S')
         return exif_data
 
     def _process_image_exif(self, file_path, exif_data):
-        with open(file_path, 'rb') as f:
-            tags = exifread.process_file(f, details=False)
-        date_taken = self.parse_exif_datetime(tags)
-        self._extract_gps_and_camera_info(tags, exif_data)
-        return date_taken
+        try:
+            with open(file_path, 'rb') as f:
+                tags = exifread.process_file(f, details=False)
+            date_taken = self.parse_exif_datetime(tags)
+            self._extract_gps_and_camera_info(tags, exif_data)
+            return date_taken
+        except Exception as e:
+            self.log("DEBUG", f"处理图片EXIF数据时出错 {file_path}: {str(e)}")
+            return None
 
     def _process_raw_exif(self, file_path, exif_data):
         """处理RAW格式文件（ARW、CR2、CR3、NEF等）的EXIF信息读取"""
@@ -554,6 +602,15 @@ class SmartArrangeThread(QtCore.QThread):
         if not os.path.exists(file_path):
             self.log("DEBUG", f"文件不存在: {file_path}")
             return None
+        
+        # 文件大小检查
+        try:
+            file_size = os.path.getsize(file_path)
+            if file_size > 200 * 1024 * 1024:  # 200MB限制
+                self.log("DEBUG", f"RAW文件过大，跳过: {file_path} ({file_size / 1024 / 1024:.1f}MB)")
+                return None
+        except Exception:
+            pass
         
         # 构建exiftool路径
         exiftool_path = os.path.join(os.path.dirname(__file__), "resources", "exiftool", "exiftool.exe")
@@ -565,7 +622,7 @@ class SmartArrangeThread(QtCore.QThread):
         try:
             # 使用exiftool读取EXIF信息
             cmd = [exiftool_path, file_path]
-            result = subprocess.run(cmd, capture_output=True, text=False, timeout=30)
+            result = subprocess.run(cmd, capture_output=True, text=False, timeout=15)  # 减少超时时间
             
             if result.returncode != 0:
                 error_msg = result.stderr.decode('utf-8', errors='ignore') if result.stderr else "未知错误"
@@ -897,8 +954,17 @@ class SmartArrangeThread(QtCore.QThread):
             'Model': model or None
         })
 
-    def _get_video_metadata(self, file_path, timeout=30):
+    def _get_video_metadata(self, file_path, timeout=15):  # 减少超时时间
         try:
+            # 文件大小检查
+            try:
+                file_size = os.path.getsize(file_path)
+                if file_size > 500 * 1024 * 1024:  # 500MB限制
+                    self.log("DEBUG", f"视频文件过大，跳过: {file_path} ({file_size / 1024 / 1024:.1f}MB)")
+                    return None
+            except Exception:
+                pass
+                
             file_path_normalized = str(file_path).replace('\\', '/')
             cmd = f"{get_resource_path('resources/exiftool/exiftool.exe')} -fast \"{file_path_normalized}\""
 
@@ -918,7 +984,11 @@ class SmartArrangeThread(QtCore.QThread):
 
             return metadata
 
+        except subprocess.TimeoutExpired:
+            self.log("DEBUG", f"读取视频文件 {file_path} 的EXIF数据超时")
+            return None
         except Exception as e:
+            self.log("DEBUG", f"读取视频文件 {file_path} 的EXIF数据时出错: {str(e)}")
             return None
 
     def parse_exif_datetime(self, tags):
