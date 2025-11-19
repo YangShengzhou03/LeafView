@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(933, 536)
+        MainWindow.resize(949, 536)
         self.centralWidget_main = QtWidgets.QWidget(parent=MainWindow)
         self.centralWidget_main.setObjectName("centralWidget_main")
         self.layout_mainWindow = QtWidgets.QVBoxLayout(self.centralWidget_main)
@@ -237,9 +237,11 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.line_verticalDivider.sizePolicy().hasHeightForWidth())
         self.line_verticalDivider.setSizePolicy(sizePolicy)
-        self.line_verticalDivider.setMinimumSize(QtCore.QSize(1, 0))
-        self.line_verticalDivider.setMaximumSize(QtCore.QSize(1, 16777215))
-        self.line_verticalDivider.setStyleSheet("background-color: rgb(235, 236, 237);")
+        self.line_verticalDivider.setMinimumSize(QtCore.QSize(2, 0))
+        self.line_verticalDivider.setMaximumSize(QtCore.QSize(2, 16777215))
+        self.line_verticalDivider.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(230, 235, 240, 200), stop:0.5 rgba(200, 210, 220, 255), stop:1 rgba(230, 235, 240, 200));\n"
+"border: none;\n"
+"border-radius: 1px;")
         self.line_verticalDivider.setFrameShape(QtWidgets.QFrame.Shape.HLine)
         self.line_verticalDivider.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
         self.line_verticalDivider.setObjectName("line_verticalDivider")
@@ -255,11 +257,7 @@ class Ui_MainWindow(object):
         self.frame_headerBar = QtWidgets.QFrame(parent=self.frame_contentPanel)
         self.frame_headerBar.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.frame_headerBar.setStyleSheet("QFrame{\n"
-"background-color: qradialgradient(\n"
-"cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
-"stop:0.66 rgba(134, 119, 253, 255),\n"
-"stop:1 rgba(119, 111, 252, 255)\n"
-");\n"
+"background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(134, 119, 253, 255), stop:0.5 rgba(156, 140, 255, 255), stop:1 rgba(98, 85, 235, 255));\n"
 "border-top-left-radius:0px;\n"
 "border-top-right-radius:12px;\n"
 "border-bottom-right-radius:0px;\n"
@@ -282,14 +280,17 @@ class Ui_MainWindow(object):
 "    padding: 4px;\n"
 "    border-radius: 12px;\n"
 "    background-color: rgba(255, 255, 255, 0);\n"
+"    transition: background-color 200ms ease-in-out;\n"
 "}\n"
 "\n"
 "QToolButton:hover {\n"
-"    background-color: rgba(255, 255, 255, 20);\n"
+"    background-color: rgba(255, 255, 255, 30);\n"
+"    border: 1px solid rgba(255, 255, 255, 40);\n"
 "}\n"
 "\n"
 "QToolButton:pressed {\n"
-"    background-color: rgba(255, 255, 255, 50);\n"
+"    background-color: rgba(255, 255, 255, 60);\n"
+"    border: 1px solid rgba(255, 255, 255, 80);\n"
 "}")
         self.btn_headerGitHub.setText("")
         icon5 = QtGui.QIcon()
@@ -521,6 +522,13 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.setSpacing(9)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.checkbox_include_subfolders = QtWidgets.QCheckBox(parent=self.page_mediaImport)
+        self.checkbox_include_subfolders.setStyleSheet("QCheckBox {\n"
+"    font-size: 13px;\n"
+"    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif;\n"
+"    color: #444;\n"
+"    spacing: 8px;\n"
+"    padding: 4px 0;\n"
+"}")
         self.checkbox_include_subfolders.setObjectName("checkbox_include_subfolders")
         self.horizontalLayout_2.addWidget(self.checkbox_include_subfolders)
         self.layout_mediaImportContent.addLayout(self.horizontalLayout_2)
@@ -579,6 +587,12 @@ class Ui_MainWindow(object):
         self.layout_importTargetControls.addWidget(self.btn_importBrowseTarget)
         self.layout_mediaImportContent.addLayout(self.layout_importTargetControls)
         self.line = QtWidgets.QFrame(parent=self.page_mediaImport)
+        self.line.setMinimumSize(QtCore.QSize(0, 2))
+        self.line.setMaximumSize(QtCore.QSize(16777215, 2))
+        self.line.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(230, 235, 240, 50), stop:0.5 rgba(180, 190, 200, 200), stop:1 rgba(230, 235, 240, 50));\n"
+"border: none;\n"
+"border-radius: 1px;\n"
+"margin: 12px 24px;")
         self.line.setFrameShape(QtWidgets.QFrame.Shape.HLine)
         self.line.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
         self.line.setObjectName("line")
@@ -695,9 +709,12 @@ class Ui_MainWindow(object):
         self.layout_expression_tags.setStretch(1, 1)
         self.layout_rename_expression.addWidget(self.frame_ocrExpressionControls)
         self.line_ocrSeparator = QtWidgets.QFrame(parent=self.frame_ocrExpression)
-        self.line_ocrSeparator.setMinimumSize(QtCore.QSize(0, 1))
-        self.line_ocrSeparator.setMaximumSize(QtCore.QSize(16777215, 1))
-        self.line_ocrSeparator.setStyleSheet("background-color: rgb(235, 236, 237);")
+        self.line_ocrSeparator.setMinimumSize(QtCore.QSize(0, 2))
+        self.line_ocrSeparator.setMaximumSize(QtCore.QSize(16777215, 2))
+        self.line_ocrSeparator.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(230, 235, 240, 50), stop:0.5 rgba(180, 190, 200, 200), stop:1 rgba(230, 235, 240, 50));\n"
+"border: none;\n"
+"border-radius: 1px;\n"
+"margin: 12px 24px;")
         self.line_ocrSeparator.setFrameShape(QtWidgets.QFrame.Shape.HLine)
         self.line_ocrSeparator.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
         self.line_ocrSeparator.setObjectName("line_ocrSeparator")
