@@ -1109,6 +1109,9 @@ margin: 12px 24px;</string>
                     </layout>
                    </item>
                    <item>
+                    <widget class="QTextBrowser" name="textBrowser_info"/>
+                   </item>
+                   <item>
                     <spacer name="spacer_bottom_margin">
                      <property name="orientation">
                       <enum>Qt::Vertical</enum>
