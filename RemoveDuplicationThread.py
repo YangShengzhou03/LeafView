@@ -17,6 +17,11 @@ class ImageHasher:
     @staticmethod
     def dhash(image_path, hash_size=8):
         try:
+            # 文件大小检查，避免处理过大的文件
+            file_size = os.path.getsize(image_path)
+            if file_size > 100 * 1024 * 1024:  # 100MB限制
+                return None
+                
             ext = image_path.lower().split('.')[-1]
             if ext in ('heic', 'heif'):
                 heif_file = pillow_heif.read_heif(image_path)
@@ -37,6 +42,13 @@ class ImageHasher:
                 return None
             if (w / h) < 0.2 or (w / h) > 5:
                 return None
+
+            # 限制最大尺寸，避免内存占用过高
+            max_dimension = 2000
+            if w > max_dimension or h > max_dimension:
+                ratio = min(max_dimension / w, max_dimension / h)
+                new_w, new_h = int(w * ratio), int(h * ratio)
+                img = img.resize((new_w, new_h), Image.Resampling.BILINEAR)
 
             image = img.convert('L').resize(
                 (hash_size + 1, hash_size),
@@ -253,5 +265,10 @@ class ContrastWorker(QThread):
         return final_groups
 
     def stop(self):
-        self._is_running = False
+        with self._stop_lock:
+            self._is_running = False
         self.log("WARNING", "正在停止相似度对比操作...")
+    
+    def is_running(self):
+        with self._stop_lock:
+            return self._is_running

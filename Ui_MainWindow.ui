@@ -956,41 +956,6 @@ QToolButton:pressed {
                     </layout>
                    </item>
                    <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_2">
-                     <property name="spacing">
-                      <number>9</number>
-                     </property>
-                     <property name="leftMargin">
-                      <number>9</number>
-                     </property>
-                     <property name="topMargin">
-                      <number>9</number>
-                     </property>
-                     <property name="rightMargin">
-                      <number>9</number>
-                     </property>
-                     <property name="bottomMargin">
-                      <number>9</number>
-                     </property>
-                     <item>
-                      <widget class="QCheckBox" name="checkbox_include_subfolders">
-                       <property name="styleSheet">
-                        <string notr="true">QCheckBox {
-    font-size: 13px;
-    font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, sans-serif;
-    color: #444;
-    spacing: 8px;
-    padding: 4px 0;
-}</string>
-                       </property>
-                       <property name="text">
-                        <string>包含子文件夹</string>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </item>
-                   <item>
                     <layout class="QHBoxLayout" name="layout_importTargetControls">
                      <property name="spacing">
                       <number>9</number>

@@ -1173,6 +1173,15 @@ class SmartArrangeThread(QtCore.QThread):
             if self.is_stopped():
                 return
                 
+            # 文件大小检查，避免处理过大的文件
+            try:
+                file_size = file_path.stat().st_size
+                if file_size > 500 * 1024 * 1024:  # 500MB限制
+                    self.log("WARNING", f"跳过过大的文件: {file_path.name} ({file_size / 1024 / 1024:.1f}MB)")
+                    return
+            except Exception:
+                pass
+                
             exif_data = self.get_exif_data(file_path)
             
             file_time = datetime.datetime.strptime(exif_data['DateTime'], '%Y-%m-%d %H:%M:%S') if exif_data.get('DateTime') else None

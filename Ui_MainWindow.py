@@ -529,21 +529,6 @@ class Ui_MainWindow(object):
         self.btn_importBrowseSource.setObjectName("btn_importBrowseSource")
         self.layout_importSourceControls.addWidget(self.btn_importBrowseSource)
         self.layout_mediaImportContent.addLayout(self.layout_importSourceControls)
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_2.setContentsMargins(9, 9, 9, 9)
-        self.horizontalLayout_2.setSpacing(9)
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.checkbox_include_subfolders = QtWidgets.QCheckBox(parent=self.page_mediaImport)
-        self.checkbox_include_subfolders.setStyleSheet("QCheckBox {\n"
-"    font-size: 13px;\n"
-"    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif;\n"
-"    color: #444;\n"
-"    spacing: 8px;\n"
-"    padding: 4px 0;\n"
-"}")
-        self.checkbox_include_subfolders.setObjectName("checkbox_include_subfolders")
-        self.horizontalLayout_2.addWidget(self.checkbox_include_subfolders)
-        self.layout_mediaImportContent.addLayout(self.horizontalLayout_2)
         self.layout_importTargetControls = QtWidgets.QHBoxLayout()
         self.layout_importTargetControls.setContentsMargins(9, 9, 9, 9)
         self.layout_importTargetControls.setSpacing(9)
@@ -3811,7 +3796,6 @@ class Ui_MainWindow(object):
         self.label_importSourceFolder.setText(_translate("MainWindow", "源文件夹路径"))
         self.lineEdit_importSourcePath.setPlaceholderText(_translate("MainWindow", "单击右侧按钮选择要处理的文件夹"))
         self.btn_importBrowseSource.setText(_translate("MainWindow", "选择文件夹"))
-        self.checkbox_include_subfolders.setText(_translate("MainWindow", "包含子文件夹"))
         self.label_importTargetFolder.setText(_translate("MainWindow", "目标文件夹路径"))
         self.lineEdit_importTargetPath.setPlaceholderText(_translate("MainWindow", "单击右侧按钮选择目标的文件夹"))
         self.btn_importBrowseTarget.setText(_translate("MainWindow", "选择文件夹"))
