@@ -78,7 +78,7 @@ border-radius:12px;
          <property name="styleSheet">
           <string notr="true">background:rgba(0, 0, 0, 0);</string>
          </property>
-         <layout class="QVBoxLayout" name="sidebarNavigationLayout" stretch="0,9">
+         <layout class="QVBoxLayout" name="sidebarLayout" stretch="0,9">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -196,7 +196,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
                <height>520</height>
               </rect>
              </property>
-             <layout class="QVBoxLayout" name="sidebarScrollLayout">
+             <layout class="QVBoxLayout" name="sidebarContentLayout">
               <property name="spacing">
                <number>12</number>
               </property>
@@ -385,7 +385,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="dividerLayout">
+        <layout class="QHBoxLayout" name="sidebarDividerLayout">
          <property name="spacing">
           <number>0</number>
          </property>
@@ -854,7 +854,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
                   <number>0</number>
                  </property>
                  <item>
-                  <layout class="QVBoxLayout" name="homeMainContentLayout">
+                  <layout class="QVBoxLayout" name="homeContentLayout">
                    <property name="spacing">
                     <number>0</number>
                    </property>
@@ -954,7 +954,7 @@ QScrollBar::sub-page:vertical {
     border-radius: 12px;
 }</string>
                    </property>
-                   <layout class="QVBoxLayout" name="homeAddFolderLayout" stretch="0,1">
+                   <layout class="QVBoxLayout" name="addFolderLayout" stretch="0,1">
                     <property name="spacing">
                      <number>6</number>
                     </property>
@@ -996,7 +996,7 @@ stop:0.66 rgba(134, 119, 253, 255),
 stop:1 rgba(119, 111, 252, 255)
 );</string>
                       </property>
-                      <layout class="QVBoxLayout" name="addFolderWidgetLayout" stretch="1,0,2">
+                      <layout class="QVBoxLayout" name="folderWidgetLayout" stretch="1,0,2">
                        <property name="spacing">
                         <number>9</number>
                        </property>
@@ -1063,7 +1063,7 @@ border: 0px;</string>
                           </widget>
                          </item>
                          <item>
-                          <widget class="QPushButton" name="addFolderPageButton">
+                          <widget class="QPushButton" name="addFolderButton">
                            <property name="font">
                             <font>
                              <pointsize>14</pointsize>
@@ -1096,7 +1096,7 @@ border: 0px;</string>
                         </layout>
                        </item>
                        <item>
-                        <widget class="QLabel" name="addFolderHintLabel">
+                        <widget class="QLabel" name="addFolderHint">
                          <property name="font">
                           <font>
                            <pointsize>9</pointsize>
@@ -1149,7 +1149,7 @@ border-top-right-radius:0px;
 border-bottom-right-radius:12px;
 border-bottom-left-radius:0px;</string>
                 </property>
-                <layout class="QVBoxLayout" name="importMainLayout" stretch="0,0">
+                <layout class="QVBoxLayout" name="importLayout" stretch="0,0">
                  <property name="spacing">
                   <number>0</number>
                  </property>
@@ -1195,7 +1195,7 @@ border-bottom-left-radius:0px;</string>
                      <number>18</number>
                     </property>
                     <item>
-                     <widget class="QLabel" name="importTitleLabel">
+                     <widget class="QLabel" name="importTitle">
                       <property name="font">
                        <font>
                         <family>Microsoft YaHei UI</family>
@@ -1212,7 +1212,7 @@ border-bottom-left-radius:0px;</string>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLabel" name="importRouteLabel">
+                     <widget class="QLabel" name="importRoute">
                       <property name="font">
                        <font>
                         <family>Microsoft YaHei UI</family>
@@ -1241,7 +1241,7 @@ border-bottom-left-radius:0px;</string>
                      </spacer>
                     </item>
                     <item>
-                     <widget class="QLabel" name="importSeparatorLabel">
+                     <widget class="QLabel" name="importSeparator">
                       <property name="font">
                        <font>
                         <family>Microsoft YaHei UI</family>
@@ -1257,7 +1257,7 @@ border-bottom-left-radius:0px;</string>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLabel" name="importStatusLabel">
+                     <widget class="QLabel" name="importStatus">
                       <property name="font">
                        <font>
                         <family>Microsoft YaHei UI</family>
@@ -1325,9 +1325,9 @@ QFrame:focus {
     box-shadow: 0 0 0 2px rgba(134, 119, 253, 0.15);
 }</string>
                       </property>
-                      <layout class="QHBoxLayout" name="sourceFolderGroupLayout">
+                      <layout class="QHBoxLayout" name="sourceFolderLayout">
                        <item>
-                        <widget class="QLabel" name="sourceFolderLabel">
+                        <widget class="QLabel" name="sourceFolder">
                          <property name="minimumSize">
                           <size>
                            <width>80</width>
@@ -1346,7 +1346,7 @@ QFrame:focus {
                         </widget>
                        </item>
                        <item>
-                        <widget class="QLineEdit" name="sourceFolderPathInput">
+                        <widget class="QLineEdit" name="sourceFolderInput">
                          <property name="font">
                           <font>
                            <family>Microsoft YaHei UI</family>
@@ -1369,7 +1369,7 @@ selection-color: #1f2937;</string>
                         </widget>
                        </item>
                        <item>
-                        <widget class="QPushButton" name="browseSourcePathButton">
+                        <widget class="QPushButton" name="browseSourceButton">
                          <property name="minimumSize">
                           <size>
                            <width>80</width>
@@ -1438,9 +1438,9 @@ QFrame:focus {
     box-shadow: 0 0 0 2px rgba(134, 119, 253, 0.15);
 }</string>
                       </property>
-                      <layout class="QHBoxLayout" name="targetFolderGroupLayout">
+                      <layout class="QHBoxLayout" name="targetFolderLayout">
                        <item>
-                        <widget class="QLabel" name="targetFolderLabel">
+                        <widget class="QLabel" name="targetFolder">
                          <property name="minimumSize">
                           <size>
                            <width>80</width>
@@ -1459,7 +1459,7 @@ QFrame:focus {
                         </widget>
                        </item>
                        <item>
-                        <widget class="QLineEdit" name="targetFolderPathInput">
+                        <widget class="QLineEdit" name="targetFolderInput">
                          <property name="font">
                           <font>
                            <family>Microsoft YaHei UI</family>
@@ -1482,7 +1482,7 @@ selection-color: #1f2937;</string>
                         </widget>
                        </item>
                        <item>
-                        <widget class="QPushButton" name="browseTargetPathButton">
+                        <widget class="QPushButton" name="browseTargetButton">
                          <property name="minimumSize">
                           <size>
                            <width>80</width>
@@ -1562,7 +1562,7 @@ QPushButton:pressed {
                   <number>0</number>
                  </property>
                  <item>
-                  <layout class="QVBoxLayout" name="classificationPageContentLayout">
+                  <layout class="QVBoxLayout" name="classificationContentLayout">
                    <property name="spacing">
                     <number>0</number>
                    </property>
@@ -1580,7 +1580,7 @@ background:rgb(255, 255, 255);
 border: none;
 border-radius: 0px;</string>
                      </property>
-                     <layout class="QHBoxLayout" name="classificationHeaderBarLayout">
+                     <layout class="QHBoxLayout" name="classificationHeaderLayout">
                       <property name="spacing">
                        <number>6</number>
                       </property>
@@ -1597,7 +1597,7 @@ border-radius: 0px;</string>
                        <number>9</number>
                       </property>
                       <item>
-                       <widget class="QLabel" name="classificationLabel">
+                       <widget class="QLabel" name="classification">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -1615,7 +1615,7 @@ border-radius: 0px;</string>
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLabel" name="routeLabel">
+                       <widget class="QLabel" name="route">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -1633,7 +1633,7 @@ border-radius: 0px;</string>
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLabel" name="separatorLabel">
+                       <widget class="QLabel" name="separator">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -2545,7 +2545,7 @@ background:rgb(255, 255, 255);</string>
                          <number>6</number>
                         </property>
                         <item>
-                         <widget class="QLabel" name="buildNameLabel">
+                         <widget class="QLabel" name="buildName">
                           <property name="font">
                            <font>
                             <pointsize>12</pointsize>
@@ -2598,7 +2598,7 @@ background:rgb(255, 255, 255);</string>
                           <property name="frameShadow">
                            <enum>QFrame::Raised</enum>
                           </property>
-                          <layout class="QHBoxLayout" name="renameFrameLayout">
+                          <layout class="QHBoxLayout" name="renameContentLayout">
                            <property name="spacing">
                             <number>9</number>
                            </property>
@@ -2658,7 +2658,7 @@ QPushButton:hover {
                          </widget>
                         </item>
                         <item>
-                         <widget class="QLabel" name="pointLabel">
+                         <widget class="QLabel" name="point">
                           <property name="font">
                            <font>
                             <pointsize>12</pointsize>
@@ -2759,7 +2759,7 @@ border-radius: 0px;</string>
                           <number>0</number>
                          </property>
                          <item>
-                          <widget class="QLabel" name="renamingTagsLabel">
+                          <widget class="QLabel" name="renamingTags">
                            <property name="minimumSize">
                             <size>
                              <width>0</width>
@@ -2814,7 +2814,7 @@ border: 0px;
                            <property name="frameShadow">
                             <enum>QFrame::Raised</enum>
                            </property>
-                           <layout class="QHBoxLayout" name="renameTagsLayout">
+                           <layout class="QHBoxLayout" name="tagsInputLayout">
                             <property name="spacing">
                              <number>6</number>
                             </property>
@@ -3286,7 +3286,7 @@ QPushButton:pressed {
                             </widget>
                            </item>
                            <item>
-                            <widget class="QComboBox" name="fileNameSeparatorComboBox">
+                            <widget class="QComboBox" name="fileNameSeparator">
                              <property name="minimumSize">
                               <size>
                                <width>0</width>
@@ -3410,7 +3410,7 @@ QComboBox QAbstractItemView::item {
                            <number>4</number>
                           </property>
                           <item>
-                           <widget class="QLabel" name="timeSourceLabel">
+                           <widget class="QLabel" name="timeSource">
                             <property name="font">
                              <font>
                               <pointsize>12</pointsize>
@@ -3428,7 +3428,7 @@ QComboBox QAbstractItemView::item {
                            </widget>
                           </item>
                           <item>
-                           <widget class="QComboBox" name="timeSourceComboBox">
+                           <widget class="QComboBox" name="timeSource">
                             <property name="minimumSize">
                              <size>
                               <width>78</width>
@@ -3506,7 +3506,7 @@ QComboBox QAbstractItemView::item {
                            <number>4</number>
                           </property>
                           <item>
-                           <widget class="QLabel" name="operationLabel">
+                           <widget class="QLabel" name="operation">
                             <property name="font">
                              <font>
                               <pointsize>12</pointsize>
@@ -3524,7 +3524,7 @@ QComboBox QAbstractItemView::item {
                            </widget>
                           </item>
                           <item>
-                           <widget class="QComboBox" name="fileOperationComboBox">
+                           <widget class="QComboBox" name="fileOperation">
                             <property name="minimumSize">
                              <size>
                               <width>78</width>
@@ -3665,7 +3665,7 @@ QComboBox QAbstractItemView::item {
                             <number>6</number>
                            </property>
                            <item>
-                            <widget class="QLabel" name="copyRouteLabel">
+                            <widget class="QLabel" name="copyRoute">
                              <property name="minimumSize">
                               <size>
                                <width>0</width>
@@ -3697,7 +3697,7 @@ QComboBox QAbstractItemView::item {
                             </widget>
                            </item>
                            <item>
-                            <widget class="QLabel" name="previewRouteLabel">
+                            <widget class="QLabel" name="previewRoute">
                              <property name="minimumSize">
                               <size>
                                <width>0</width>
@@ -3748,7 +3748,7 @@ QComboBox QAbstractItemView::item {
                             </widget>
                            </item>
                            <item>
-                            <widget class="QLabel" name="previewNameLabel">
+                            <widget class="QLabel" name="previewName">
                              <property name="minimumSize">
                               <size>
                                <width>0</width>
@@ -4122,7 +4122,7 @@ border-bottom-left-radius:0px;</string>
                         <number>6</number>
                        </property>
                        <item>
-                        <widget class="QLabel" name="similarityLabel">
+                        <widget class="QLabel" name="similarity">
                          <property name="font">
                           <font>
                            <pointsize>12</pointsize>
@@ -4206,7 +4206,7 @@ QSlider::handle:horizontal:hover {
                         </widget>
                        </item>
                        <item>
-                        <widget class="QLabel" name="similarityValueLabel">
+                        <widget class="QLabel" name="similarityValue">
                          <property name="font">
                           <font>
                            <pointsize>16</pointsize>
@@ -4378,7 +4378,7 @@ border-bottom-left-radius:0px;</string>
                         <number>0</number>
                        </property>
                        <item>
-                        <widget class="QLabel" name="imageALabel">
+                        <widget class="QLabel" name="imageA">
                          <property name="styleSheet">
                           <string notr="true"/>
                          </property>
@@ -4410,7 +4410,7 @@ border-bottom-left-radius:0px;</string>
                         </widget>
                        </item>
                        <item>
-                        <widget class="QLabel" name="imageBLabel">
+                        <widget class="QLabel" name="imageB">
                          <property name="styleSheet">
                           <string notr="true"/>
                          </property>
@@ -4842,7 +4842,7 @@ border-bottom-left-radius:0px;</string>
                        <number>6</number>
                       </property>
                       <item>
-                       <widget class="QLabel" name="titleLabel">
+                       <widget class="QLabel" name="title">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -4913,7 +4913,7 @@ QLineEdit:disabled {
                        <number>6</number>
                       </property>
                       <item>
-                       <widget class="QLabel" name="starLabel">
+                       <widget class="QLabel" name="star">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -5112,7 +5112,7 @@ QLineEdit:disabled {
                        <number>6</number>
                       </property>
                       <item>
-                       <widget class="QLabel" name="brandLabel">
+                       <widget class="QLabel" name="brand">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                           <horstretch>0</horstretch>
@@ -5136,7 +5136,7 @@ QLineEdit:disabled {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="cameraBrandComboBox">
+                       <widget class="QComboBox" name="cameraBrand">
                         <property name="minimumSize">
                          <size>
                           <width>82</width>
@@ -5319,7 +5319,7 @@ QComboBox QAbstractItemView QScrollBar::sub-line:horizontal {
                        <number>6</number>
                       </property>
                       <item>
-                       <widget class="QLabel" name="modelLabel">
+                       <widget class="QLabel" name="model">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -5337,7 +5337,7 @@ QComboBox QAbstractItemView QScrollBar::sub-line:horizontal {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="cameraModelComboBox">
+                       <widget class="QComboBox" name="cameraModel">
                         <property name="minimumSize">
                          <size>
                           <width>82</width>
@@ -5540,7 +5540,7 @@ border-bottom-left-radius:0px;</string>
                     <item>
                      <layout class="QHBoxLayout" name="locationInputLayout" stretch="0,1">
                       <item>
-                       <widget class="QLabel" name="authorLabel">
+                       <widget class="QLabel" name="author">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -5599,7 +5599,7 @@ QLineEdit:disabled {
                     <item>
                      <layout class="QHBoxLayout" name="contactInputLayout" stretch="0,1">
                       <item>
-                       <widget class="QLabel" name="themeLabel">
+                       <widget class="QLabel" name="theme">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -5658,7 +5658,7 @@ QLineEdit:disabled {
                     <item>
                      <layout class="QHBoxLayout" name="descriptionInputLayout" stretch="0,1">
                       <item>
-                       <widget class="QLabel" name="copyrightLabel">
+                       <widget class="QLabel" name="copyright">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -5763,7 +5763,7 @@ border-bottom-left-radius:0px;</string>
                        <number>6</number>
                       </property>
                       <item>
-                       <widget class="QLabel" name="shootTimeLabel">
+                       <widget class="QLabel" name="shootTime">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -5781,7 +5781,7 @@ border-bottom-left-radius:0px;</string>
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="shootTimeSourceComboBox">
+                       <widget class="QComboBox" name="shootTimeSource">
                         <property name="minimumSize">
                          <size>
                           <width>82</width>
