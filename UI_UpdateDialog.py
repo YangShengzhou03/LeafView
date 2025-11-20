@@ -10,87 +10,87 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 
 class Ui_UpdateDialog(object):
-    def setupUi(self, updateMainDialog):
-        updateMainDialog.setObjectName("updateMainDialog")
-        updateMainDialog.setGeometry(QtCore.QRect(0, 0, 512, 320))
+    def setupUi(self, softwareUpdateDialog):
+        softwareUpdateDialog.setObjectName("softwareUpdateDialog")
+        softwareUpdateDialog.setGeometry(QtCore.QRect(0, 0, 512, 320))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/icons/icon.ico"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        updateMainDialog.setWindowIcon(icon)
-        self.dialogMainLayout = QtWidgets.QVBoxLayout(updateMainDialog)
-        self.dialogMainLayout.setContentsMargins(0, 0, 0, 0)
-        self.dialogMainLayout.setSpacing(0)
-        self.dialogMainLayout.setObjectName("dialogMainLayout")
-        self.dialogBackgroundFrame = QtWidgets.QFrame(parent=updateMainDialog)
-        self.dialogBackgroundFrame.setMinimumSize(QtCore.QSize(512, 320))
-        self.dialogBackgroundFrame.setStyleSheet("QFrame#backgroundFrame {\n"
+        softwareUpdateDialog.setWindowIcon(icon)
+        self.updateDialogMainLayout = QtWidgets.QVBoxLayout(softwareUpdateDialog)
+        self.updateDialogMainLayout.setContentsMargins(0, 0, 0, 0)
+        self.updateDialogMainLayout.setSpacing(0)
+        self.updateDialogMainLayout.setObjectName("updateDialogMainLayout")
+        self.updateDialogBackgroundFrame = QtWidgets.QFrame(parent=softwareUpdateDialog)
+        self.updateDialogBackgroundFrame.setMinimumSize(QtCore.QSize(512, 320))
+        self.updateDialogBackgroundFrame.setStyleSheet("QFrame#backgroundFrame {\n"
 "    background-color: #f5f9fe;\n"
 "    border-radius: 25px;\n"
 "}")
-        self.dialogBackgroundFrame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.dialogBackgroundFrame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.dialogBackgroundFrame.setObjectName("dialogBackgroundFrame")
-        self.dialogContentLayout = QtWidgets.QHBoxLayout(self.dialogBackgroundFrame)
-        self.dialogContentLayout.setContentsMargins(0, 0, 0, 0)
-        self.dialogContentLayout.setSpacing(12)
-        self.dialogContentLayout.setObjectName("dialogContentLayout")
-        self.dialogMessageLayout = QtWidgets.QVBoxLayout()
-        self.dialogMessageLayout.setContentsMargins(9, 9, 9, 9)
-        self.dialogMessageLayout.setSpacing(0)
-        self.dialogMessageLayout.setObjectName("dialogMessageLayout")
-        self.dialogHeaderWidget = QtWidgets.QWidget(parent=self.dialogBackgroundFrame)
-        self.dialogHeaderWidget.setStyleSheet("QWidget#dialogHeaderWidget {\n"
+        self.updateDialogBackgroundFrame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.updateDialogBackgroundFrame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.updateDialogBackgroundFrame.setObjectName("updateDialogBackgroundFrame")
+        self.updateDialogContentLayout = QtWidgets.QHBoxLayout(self.updateDialogBackgroundFrame)
+        self.updateDialogContentLayout.setContentsMargins(0, 0, 0, 0)
+        self.updateDialogContentLayout.setSpacing(12)
+        self.updateDialogContentLayout.setObjectName("updateDialogContentLayout")
+        self.updateDialogMessageLayout = QtWidgets.QVBoxLayout()
+        self.updateDialogMessageLayout.setContentsMargins(9, 9, 9, 9)
+        self.updateDialogMessageLayout.setSpacing(0)
+        self.updateDialogMessageLayout.setObjectName("updateDialogMessageLayout")
+        self.updateDialogHeaderWidget = QtWidgets.QWidget(parent=self.updateDialogBackgroundFrame)
+        self.updateDialogHeaderWidget.setStyleSheet("QWidget#dialogHeaderWidget {\n"
 "    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "                                      stop: 0 #691bfd, \n"
 "                                      stop: 1 #c8a0f0);\n"
 "    border-radius: 16px;\n"
 "    color: #ffffff;\n"
 "}")
-        self.dialogHeaderWidget.setObjectName("dialogHeaderWidget")
-        self.dialogHeaderLayout = QtWidgets.QHBoxLayout(self.dialogHeaderWidget)
-        self.dialogHeaderLayout.setContentsMargins(18, 18, 18, 18)
-        self.dialogHeaderLayout.setSpacing(18)
-        self.dialogHeaderLayout.setObjectName("dialogHeaderLayout")
-        self.dialogMessageContainerLayout = QtWidgets.QHBoxLayout()
-        self.dialogMessageContainerLayout.setObjectName("dialogMessageContainerLayout")
-        self.dialogTextLayout = QtWidgets.QVBoxLayout()
-        self.dialogTextLayout.setSpacing(0)
-        self.dialogTextLayout.setObjectName("dialogTextLayout")
-        self.dialogTitleLabel = QtWidgets.QLabel(parent=self.dialogHeaderWidget)
+        self.updateDialogHeaderWidget.setObjectName("updateDialogHeaderWidget")
+        self.updateDialogHeaderLayout = QtWidgets.QHBoxLayout(self.updateDialogHeaderWidget)
+        self.updateDialogHeaderLayout.setContentsMargins(18, 18, 18, 18)
+        self.updateDialogHeaderLayout.setSpacing(18)
+        self.updateDialogHeaderLayout.setObjectName("updateDialogHeaderLayout")
+        self.updateDialogMessageContainerLayout = QtWidgets.QHBoxLayout()
+        self.updateDialogMessageContainerLayout.setObjectName("updateDialogMessageContainerLayout")
+        self.updateDialogTextLayout = QtWidgets.QVBoxLayout()
+        self.updateDialogTextLayout.setSpacing(0)
+        self.updateDialogTextLayout.setObjectName("updateDialogTextLayout")
+        self.updateDialogTitleLabel = QtWidgets.QLabel(parent=self.updateDialogHeaderWidget)
         font = QtGui.QFont()
         font.setPointSize(22)
         font.setBold(True)
-        self.dialogTitleLabel.setFont(font)
-        self.dialogTitleLabel.setStyleSheet("QLabel#dialogTitleLabel {\n"
+        self.updateDialogTitleLabel.setFont(font)
+        self.updateDialogTitleLabel.setStyleSheet("QLabel#dialogTitleLabel {\n"
 "    color: #deffff;\n"
 "    text-align: center;\n"
 "    margin-bottom: 12px;\n"
 "}")
-        self.dialogTitleLabel.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.dialogTitleLabel.setObjectName("dialogTitleLabel")
-        self.dialogTextLayout.addWidget(self.dialogTitleLabel)
-        self.dialogMessageLabel = QtWidgets.QLabel(parent=self.dialogHeaderWidget)
+        self.updateDialogTitleLabel.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.updateDialogTitleLabel.setObjectName("updateDialogTitleLabel")
+        self.updateDialogTextLayout.addWidget(self.updateDialogTitleLabel)
+        self.updateDialogMessageLabel = QtWidgets.QLabel(parent=self.updateDialogHeaderWidget)
         font = QtGui.QFont()
         font.setPointSize(12)
         font.setBold(False)
-        self.dialogMessageLabel.setFont(font)
-        self.dialogMessageLabel.setStyleSheet("QLabel#dialogMessageLabel {\n"
+        self.updateDialogMessageLabel.setFont(font)
+        self.updateDialogMessageLabel.setStyleSheet("QLabel#dialogMessageLabel {\n"
 "    color: #fafafa;\n"
 "    text-align: left;\n"
 "}")
-        self.dialogMessageLabel.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignTop)
-        self.dialogMessageLabel.setWordWrap(True)
-        self.dialogMessageLabel.setObjectName("dialogMessageLabel")
-        self.dialogTextLayout.addWidget(self.dialogMessageLabel)
-        self.dialogButtonsLayout = QtWidgets.QHBoxLayout()
-        self.dialogButtonsLayout.setContentsMargins(-1, -1, 6, -1)
-        self.dialogButtonsLayout.setSpacing(12)
-        self.dialogButtonsLayout.setObjectName("dialogButtonsLayout")
+        self.updateDialogMessageLabel.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignTop)
+        self.updateDialogMessageLabel.setWordWrap(True)
+        self.updateDialogMessageLabel.setObjectName("updateDialogMessageLabel")
+        self.updateDialogTextLayout.addWidget(self.updateDialogMessageLabel)
+        self.updateDialogButtonsLayout = QtWidgets.QHBoxLayout()
+        self.updateDialogButtonsLayout.setContentsMargins(-1, -1, 6, -1)
+        self.updateDialogButtonsLayout.setSpacing(12)
+        self.updateDialogButtonsLayout.setObjectName("updateDialogButtonsLayout")
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
-        self.dialogButtonsLayout.addItem(spacerItem)
-        self.dialogCloseSecondaryButton = QtWidgets.QPushButton(parent=self.dialogHeaderWidget)
-        self.dialogCloseSecondaryButton.setMinimumSize(QtCore.QSize(88, 30))
-        self.dialogCloseSecondaryButton.setMaximumSize(QtCore.QSize(88, 30))
-        self.dialogCloseSecondaryButton.setStyleSheet("QPushButton#dialogCloseSecondaryButton {\n"
+        self.updateDialogButtonsLayout.addItem(spacerItem)
+        self.updateDialogCloseButton = QtWidgets.QPushButton(parent=self.updateDialogHeaderWidget)
+        self.updateDialogCloseButton.setMinimumSize(QtCore.QSize(88, 30))
+        self.updateDialogCloseButton.setMaximumSize(QtCore.QSize(88, 30))
+        self.updateDialogCloseButton.setStyleSheet("QPushButton#updateDialogCloseButton {\n"
 "    background-color: rgba(250, 250, 250, 100);\n"
 "    color: #ffffff;\n"
 "    border: none;\n"
@@ -100,25 +100,25 @@ class Ui_UpdateDialog(object):
 "    font-weight: normal;\n"
 "}\n"
 "\n"
-"QPushButton#dialogCloseSecondaryButton:hover {\n"
+"QPushButton#updateDialogCloseButton:hover {\n"
 "    background-color: rgba(250, 250, 250, 130);\n"
 "}\n"
 "\n"
-"QPushButton#dialogCloseSecondaryButton:pressed {\n"
+"QPushButton#updateDialogCloseButton:pressed {\n"
 "    background-color: rgba(250, 250, 250, 180);\n"
 "}\n"
 "\n"
-"QPushButton#dialogCloseSecondaryButton:disabled {\n"
+"QPushButton#updateDialogCloseButton:disabled {\n"
 "    background-color: rgba(250, 250, 250, 50);\n"
 "    color: rgba(255, 255, 255, 150);\n"
 "}")
-        self.dialogCloseSecondaryButton.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
-        self.dialogCloseSecondaryButton.setObjectName("dialogCloseSecondaryButton")
-        self.dialogButtonsLayout.addWidget(self.dialogCloseSecondaryButton)
-        self.dialogUpdatePrimaryButton = QtWidgets.QPushButton(parent=self.dialogHeaderWidget)
-        self.dialogUpdatePrimaryButton.setMinimumSize(QtCore.QSize(88, 30))
-        self.dialogUpdatePrimaryButton.setMaximumSize(QtCore.QSize(88, 30))
-        self.dialogUpdatePrimaryButton.setStyleSheet("QPushButton#dialogUpdatePrimaryButton {\n"
+        self.updateDialogCloseButton.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
+        self.updateDialogCloseButton.setObjectName("updateDialogCloseButton")
+        self.updateDialogButtonsLayout.addWidget(self.updateDialogCloseButton)
+        self.updateDialogUpdateButton = QtWidgets.QPushButton(parent=self.updateDialogHeaderWidget)
+        self.updateDialogUpdateButton.setMinimumSize(QtCore.QSize(88, 30))
+        self.updateDialogUpdateButton.setMaximumSize(QtCore.QSize(88, 30))
+        self.updateDialogUpdateButton.setStyleSheet("QPushButton#updateDialogUpdateButton {\n"
 "    background-color: rgba(105, 27, 253, 180);\n"
 "    color: #ffffff;\n"
 "    border: none;\n"
@@ -128,42 +128,42 @@ class Ui_UpdateDialog(object):
 "    font-weight: normal;\n"
 "}\n"
 "\n"
-"QPushButton#dialogUpdatePrimaryButton:hover {\n"
+"QPushButton#updateDialogUpdateButton:hover {\n"
 "    background-color: rgba(105, 27, 253, 120);\n"
 "}\n"
 "\n"
-"QPushButton#dialogUpdatePrimaryButton:pressed {\n"
+"QPushButton#updateDialogUpdateButton:pressed {\n"
 "    background-color: rgba(105, 27, 253, 250);\n"
 "}\n"
 "\n"
-"QPushButton#dialogUpdatePrimaryButton:disabled {\n"
+"QPushButton#updateDialogUpdateButton:disabled {\n"
 "    background-color: rgba(105, 27, 253, 50);\n"
 "    color: rgba(255, 255, 255, 150);\n"
 "}")
-        self.dialogUpdatePrimaryButton.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
-        self.dialogUpdatePrimaryButton.setDefault(True)
-        self.dialogUpdatePrimaryButton.setObjectName("dialogUpdatePrimaryButton")
-        self.dialogButtonsLayout.addWidget(self.dialogUpdatePrimaryButton)
-        self.dialogTextLayout.addLayout(self.dialogButtonsLayout)
-        self.dialogTextLayout.setStretch(0, 1)
-        self.dialogTextLayout.setStretch(1, 3)
-        self.dialogTextLayout.setStretch(2, 1)
-        self.dialogMessageContainerLayout.addLayout(self.dialogTextLayout)
-        self.dialogHeaderLayout.addLayout(self.dialogMessageContainerLayout)
-        self.dialogHeaderLayout.setStretch(0, 5)
-        self.dialogMessageLayout.addWidget(self.dialogHeaderWidget)
-        self.dialogMessageLayout.setStretch(0, 9)
-        self.dialogContentLayout.addLayout(self.dialogMessageLayout)
-        self.dialogContentLayout.setStretch(0, 4)
-        self.dialogMainLayout.addWidget(self.dialogBackgroundFrame)
+        self.updateDialogUpdateButton.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
+        self.updateDialogUpdateButton.setDefault(True)
+        self.updateDialogUpdateButton.setObjectName("updateDialogUpdateButton")
+        self.updateDialogButtonsLayout.addWidget(self.updateDialogUpdateButton)
+        self.updateDialogTextLayout.addLayout(self.updateDialogButtonsLayout)
+        self.updateDialogTextLayout.setStretch(0, 1)
+        self.updateDialogTextLayout.setStretch(1, 3)
+        self.updateDialogTextLayout.setStretch(2, 1)
+        self.updateDialogMessageContainerLayout.addLayout(self.updateDialogTextLayout)
+        self.updateDialogHeaderLayout.addLayout(self.updateDialogMessageContainerLayout)
+        self.updateDialogHeaderLayout.setStretch(0, 5)
+        self.updateDialogMessageLayout.addWidget(self.updateDialogHeaderWidget)
+        self.updateDialogMessageLayout.setStretch(0, 9)
+        self.updateDialogContentLayout.addLayout(self.updateDialogMessageLayout)
+        self.updateDialogContentLayout.setStretch(0, 4)
+        self.updateDialogMainLayout.addWidget(self.updateDialogBackgroundFrame)
 
-        self.retranslateUi(updateMainDialog)
-        QtCore.QMetaObject.connectSlotsByName(updateMainDialog)
+        self.retranslateUi(softwareUpdateDialog)
+        QtCore.QMetaObject.connectSlotsByName(softwareUpdateDialog)
 
-    def retranslateUi(self, updateMainDialog):
+    def retranslateUi(self, softwareUpdateDialog):
         _translate = QtCore.QCoreApplication.translate
-        updateMainDialog.setWindowTitle(_translate("UpdateDialog", "软件更新"))
-        self.dialogTitleLabel.setText(_translate("UpdateDialog", "发现新版本"))
-        self.dialogMessageLabel.setText(_translate("UpdateDialog", "检测到新版本可用，建议您及时更新以获得更好的使用体验。是否立即下载并安装更新？"))
-        self.dialogCloseSecondaryButton.setText(_translate("UpdateDialog", "暂不更新"))
-        self.dialogUpdatePrimaryButton.setText(_translate("UpdateDialog", "立即下载"))
+        softwareUpdateDialog.setWindowTitle(_translate("UpdateDialog", "软件更新"))
+        self.updateDialogTitleLabel.setText(_translate("UpdateDialog", "发现新版本"))
+        self.updateDialogMessageLabel.setText(_translate("UpdateDialog", "检测到新版本可用，建议您及时更新以获得更好的使用体验。是否立即下载并安装更新？"))
+        self.updateDialogCloseButton.setText(_translate("UpdateDialog", "暂不更新"))
+        self.updateDialogUpdateButton.setText(_translate("UpdateDialog", "立即下载"))

@@ -31,7 +31,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
         self._connect_buttons()
         
-        self.scrollArea_mainMenu.setAlignment(
+        self.navigationScrollArea.setAlignment(
             QtCore.Qt.AlignmentFlag.AlignLeading | 
             QtCore.Qt.AlignmentFlag.AlignLeft | 
             QtCore.Qt.AlignmentFlag.AlignTop
@@ -40,12 +40,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
     def _connect_buttons(self):
-        self.btn_headerClose.clicked.connect(self.close)
-        self.btn_headerMaximize.clicked.connect(self._toggle_maximize)
-        self.btn_headerMinimize.clicked.connect(self.showMinimized)
+        self.closeButton.clicked.connect(self.close)
+        self.maximizeButton.clicked.connect(self._toggle_maximize)
+        self.minimizeButton.clicked.connect(self.showMinimized)
         
-        self.btn_headerGitHub.clicked.connect(self.feedback)
-        self.btn_headerSettings.clicked.connect(author)
+        self.serviceButton.clicked.connect(self.feedback)
+        self.settingsButton.clicked.connect(author)
         
         # 连接文件夹选择按钮
         if hasattr(self, 'btn_importBrowseSource'):
@@ -54,9 +54,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.btn_importBrowseTarget.clicked.connect(self._select_target_folder)
 
     def _setup_drag_handlers(self):
-        self.frame_headerBar.mousePressEvent = self._on_mouse_press
-        self.frame_headerBar.mouseMoveEvent = self._on_mouse_move
-        self.frame_headerBar.mouseReleaseEvent = self._on_mouse_release
+        self.headerFrame.mousePressEvent = self._on_mouse_press
+        self.headerFrame.mouseMoveEvent = self._on_mouse_move
+        self.headerFrame.mouseReleaseEvent = self._on_mouse_release
         
         self._is_dragging = False
         self._drag_start_pos = QtCore.QPoint()
@@ -112,7 +112,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def _create_quick_toolbar(self):
         """创建快速操作工具栏 - 新增功能"""
         # 在左侧导航区域添加快速工具栏
-        quick_toolbar = QtWidgets.QFrame(parent=self.frame_navigationPanel)
+        quick_toolbar = QtWidgets.QFrame(parent=self.sidebarFrame)
         quick_toolbar.setObjectName("quick_toolbar")
         quick_toolbar.setStyleSheet("""
             QFrame#quick_toolbar {
@@ -172,7 +172,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         toolbar_layout.addWidget(self.btn_quick_exif)
         
         # 添加到左侧布局（在logo下方，导航菜单上方）
-        self.layout_navigationPanel.insertWidget(1, quick_toolbar)
+        self.sidebarLayout.insertWidget(1, quick_toolbar)
     
     def _setup_keyboard_shortcuts(self):
         """设置全局快捷键 - 新增功能"""

@@ -62,7 +62,7 @@ border-radius:12px;
         <number>0</number>
        </property>
        <item>
-        <widget class="QFrame" name="sidebarFrame">
+        <widget class="QFrame" name="navSidebarFrame">
          <property name="minimumSize">
           <size>
            <width>162</width>
@@ -78,7 +78,7 @@ border-radius:12px;
          <property name="styleSheet">
           <string notr="true">background:rgba(0, 0, 0, 0);</string>
          </property>
-         <layout class="QVBoxLayout" name="sidebarLayout" stretch="0,9">
+         <layout class="QVBoxLayout" name="navSidebarLayout" stretch="0,9">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -95,7 +95,7 @@ border-radius:12px;
            <number>0</number>
           </property>
           <item>
-           <widget class="QFrame" name="logoFrame">
+           <widget class="QFrame" name="navLogoFrame">
             <property name="styleSheet">
              <string notr="true">border: none;</string>
             </property>
@@ -105,7 +105,7 @@ border-radius:12px;
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
             </property>
-            <layout class="QHBoxLayout" name="logoLayout">
+            <layout class="QHBoxLayout" name="navLogoLayout">
              <property name="spacing">
               <number>0</number>
              </property>
@@ -122,7 +122,7 @@ border-radius:12px;
               <number>0</number>
              </property>
              <item>
-              <widget class="QPushButton" name="appLogoButton">
+              <widget class="QPushButton" name="navLogoButton">
                <property name="font">
                 <font>
                  <pointsize>20</pointsize>
@@ -145,7 +145,7 @@ border-radius:12px;
            </widget>
           </item>
           <item>
-           <widget class="QScrollArea" name="navigationScrollArea">
+           <widget class="QScrollArea" name="navScrollArea">
             <property name="styleSheet">
              <string notr="true">QScrollBar:vertical{
     width:8px;
@@ -187,7 +187,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
             <property name="widgetResizable">
              <bool>true</bool>
             </property>
-            <widget class="QWidget" name="navigationScrollContent">
+            <widget class="QWidget" name="navScrollContent">
              <property name="geometry">
               <rect>
                <x>0</x>
@@ -196,7 +196,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
                <height>520</height>
               </rect>
              </property>
-             <layout class="QVBoxLayout" name="navigationContentLayout">
+             <layout class="QVBoxLayout" name="navContentLayout">
               <property name="spacing">
                <number>12</number>
               </property>
@@ -213,7 +213,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
                <number>0</number>
               </property>
               <item>
-               <widget class="QListWidget" name="navigationMenuList">
+               <widget class="QListWidget" name="navigationMenuListWidget">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                   <horstretch>0</horstretch>
@@ -441,7 +441,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
            <number>0</number>
           </property>
           <item>
-           <widget class="QFrame" name="headerFrame">
+           <widget class="QFrame" name="appHeaderFrame">
             <property name="maximumSize">
              <size>
               <width>16777215</width>
@@ -467,7 +467,7 @@ border-bottom-left-radius:0px;
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
             </property>
-            <layout class="QHBoxLayout" name="headerLayout" stretch="0,0,0,0,0,0,0">
+            <layout class="QHBoxLayout" name="appHeaderLayout" stretch="0,0,0,0,0,0,0">
              <property name="spacing">
               <number>9</number>
              </property>
@@ -497,7 +497,7 @@ border-bottom-left-radius:0px;
               </spacer>
              </item>
              <item>
-              <widget class="QWidget" name="vipBadgeWidget" native="true">
+              <widget class="QWidget" name="headerVipBadgeWidget" native="true">
                <property name="enabled">
                 <bool>true</bool>
                </property>
@@ -530,7 +530,7 @@ border-radius:0px;</string>
               </widget>
              </item>
              <item>
-              <widget class="QToolButton" name="serviceButton">
+              <widget class="QToolButton" name="headerServiceButton">
                <property name="minimumSize">
                 <size>
                  <width>36</width>
@@ -575,7 +575,7 @@ QToolButton:pressed {
               </widget>
              </item>
              <item>
-              <widget class="QToolButton" name="settingsButton">
+              <widget class="QToolButton" name="headerSettingsButton">
                <property name="minimumSize">
                 <size>
                  <width>36</width>
@@ -620,7 +620,7 @@ QToolButton:pressed {
               </widget>
              </item>
              <item>
-              <widget class="QToolButton" name="minimizeButton">
+              <widget class="QToolButton" name="headerMinimizeButton">
                <property name="minimumSize">
                 <size>
                  <width>36</width>
@@ -665,7 +665,7 @@ QToolButton:pressed {
               </widget>
              </item>
              <item>
-              <widget class="QToolButton" name="maximizeButton">
+              <widget class="QToolButton" name="headerMaximizeButton">
                <property name="minimumSize">
                 <size>
                  <width>36</width>
@@ -710,7 +710,7 @@ QToolButton:pressed {
               </widget>
              </item>
              <item>
-              <widget class="QToolButton" name="closeButton">
+              <widget class="QToolButton" name="headerCloseButton">
                <property name="minimumSize">
                 <size>
                  <width>36</width>
@@ -758,7 +758,7 @@ QToolButton:pressed {
            </widget>
           </item>
           <item>
-           <widget class="QFrame" name="contentAreaFrame">
+           <widget class="QFrame" name="mainContentFrame">
             <property name="styleSheet">
              <string notr="true">border-radius: 20px;
 background:rgb(245, 246, 247);</string>
@@ -769,7 +769,7 @@ background:rgb(245, 246, 247);</string>
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
             </property>
-            <layout class="QVBoxLayout" name="contentAreaLayout">
+            <layout class="QVBoxLayout" name="mainContentLayout">
              <property name="spacing">
               <number>0</number>
              </property>
@@ -792,7 +792,6 @@ background:rgb(245, 246, 247);</string>
 	background-color: rgba(255, 255, 255, 0);
     border-bottom-right-radius:20px;
 }
-
 
 QScrollBar:vertical{
     width:8px;
@@ -834,7 +833,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
                <property name="currentIndex">
                 <number>0</number>
                </property>
-               <widget class="QWidget" name="homePage">
+               <widget class="QWidget" name="pageHome">
                 <property name="styleSheet">
                  <string notr="true">background: rgb(245, 249, 254);</string>
                 </property>
@@ -866,7 +865,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
                     <number>0</number>
                    </property>
                    <item>
-                    <widget class="QScrollArea" name="homeScrollArea">
+                    <widget class="QScrollArea" name="homeMainScrollArea">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -948,14 +947,14 @@ QScrollBar::sub-page:vertical {
                   </layout>
                  </item>
                  <item>
-                  <widget class="QFrame" name="addFolderFrame">
+                  <widget class="QFrame" name="homeAddFolderFrame">
                    <property name="styleSheet">
                     <string notr="true">QFrame {
     background: rgb(245, 249, 254);
     border-radius: 12px;
 }</string>
                    </property>
-                   <layout class="QVBoxLayout" name="addFolderLayout" stretch="0,1">
+                   <layout class="QVBoxLayout" name="homeAddFolderLayout" stretch="0,1">
                     <property name="spacing">
                      <number>6</number>
                     </property>
@@ -972,7 +971,7 @@ QScrollBar::sub-page:vertical {
                      <number>6</number>
                     </property>
                     <item>
-                     <widget class="QWidget" name="addFolderWidget" native="true">
+                     <widget class="QWidget" name="homeAddFolderWidget" native="true">
                       <property name="minimumSize">
                        <size>
                         <width>0</width>
@@ -1167,140 +1166,380 @@ border-bottom-left-radius:0px;</string>
                   <number>0</number>
                  </property>
                  <item>
-                  <widget class="QFrame" name="placeholderFrame">
+                  <widget class="QFrame" name="importHeaderFrame">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>60</height>
+                    </size>
+                   </property>
                    <property name="styleSheet">
-                    <string notr="true">background:rgb(255, 255, 255);
+                    <string notr="true">color: #333333;
+background:rgb(255, 255, 255);
 border-top-left-radius:0px;
 border-top-right-radius:0px;
-border-bottom-right-radius:12px;
+border-bottom-right-radius:0px;
 border-bottom-left-radius:0px;</string>
                    </property>
-                   <layout class="QVBoxLayout" name="placeholderLayout">
-                    <property name="spacing">
-                     <number>0</number>
-                    </property>
+                   <layout class="QHBoxLayout" name="importHeaderLayout">
                     <property name="leftMargin">
-                     <number>0</number>
+                     <number>18</number>
                     </property>
                     <property name="topMargin">
-                     <number>0</number>
+                     <number>18</number>
                     </property>
                     <property name="rightMargin">
-                     <number>0</number>
+                     <number>18</number>
                     </property>
                     <property name="bottomMargin">
-                     <number>0</number>
+                     <number>18</number>
                     </property>
                     <item>
-                     <spacer name="verticalSpacer">
-                      <property name="orientation">
-                       <enum>Qt::Vertical</enum>
+                     <widget class="QLabel" name="importTitleLabel">
+                      <property name="font">
+                       <font>
+                        <family>Microsoft YaHei UI</family>
+                        <pointsize>14</pointsize>
+                        <bold>true</bold>
+                       </font>
                       </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>20</width>
-                        <height>40</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="placeholderLabel">
                       <property name="styleSheet">
-                       <string notr="true">QLabel {
-    font-family: &quot;Microsoft YaHei&quot;, &quot;Segoe UI&quot;, sans-serif;
-    font-size: 18px;
-    color: #333740;
-    background-color: transparent;
-    padding: 4px 8px;
-    border-radius: 4px;
-    line-height: 1.5;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    qproperty-alignment: AlignCenter;
-}
-
-QLabel#TitleLabel {
-    font-size: 18px;
-    font-weight: 600;
-    color: #1e293b;
-    padding: 8px 12px;
-    background: linear-gradient(90deg, rgba(109, 40, 217, 0.05), rgba(139, 92, 246, 0.03));
-    border-left: 3px solid #6d28d9;
-}
-
-QLabel#HighlightLabel {
-    font-size: 13px;
-    font-weight: 500;
-    padding: 6px 10px;
-    border-radius: 6px;
-    background-color: rgba(22, 163, 74, 0.1);
-    color: #16a34a;
-    border: 1px solid rgba(22, 163, 74, 0.2);
-}
-
-QLabel#WarningLabel {
-    background-color: rgba(245, 158, 11, 0.1);
-    color: #f59e0b;
-    border: 1px solid rgba(245, 158, 11, 0.2);
-}
-
-QLabel#InteractiveLabel {
-    color: #6d28d9;
-    cursor: pointer;
-    text-decoration: none;
-}
-
-QLabel#InteractiveLabel:hover {
-    color: #8b5cf6;
-    background-color: rgba(139, 92, 246, 0.05);
-    text-decoration: underline;
-}
-
-QLabel#InteractiveLabel:pressed {
-    color: #5b21b6;
-    background-color: rgba(139, 92, 246, 0.1);
-}
-
-QLabel:disabled {
-    color: #9ca3af;
-    background-color: transparent;
-}
-
-QLabel#ImageLabel {
-    padding: 0;
-    border-radius: 8px;
-    background-color: #f3f4f6;
-}
-
-QLabel#ImageLabel:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-    </string>
+                       <string notr="true">color: #333333;</string>
                       </property>
                       <property name="text">
-                       <string>正在建设中...</string>
+                       <string>媒体导入</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <spacer name="placeholderSpacer">
-                      <property name="orientation">
-                       <enum>Qt::Vertical</enum>
+                     <widget class="QLabel" name="importRouteLabel">
+                      <property name="font">
+                       <font>
+                        <family>Microsoft YaHei UI</family>
+                        <pointsize>10</pointsize>
+                       </font>
                       </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>20</width>
-                        <height>40</height>
-                       </size>
+                      <property name="styleSheet">
+                       <string notr="true">color: #666666;</string>
                       </property>
-                     </spacer>
+                      <property name="text">
+                       <string>Home / 媒体导入</string>
+                      </property>
+                     </widget>
                     </item>
-                   </layout>
-                  </widget>
-                 </item>
+                    <item>
+                     <spacer name="horizontalSpacer_20">
+                      <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>40</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="importSeparatorLabel">
+                       <property name="font">
+                        <font>
+                         <family>Microsoft YaHei UI</family>
+                         <pointsize>10</pointsize>
+                        </font>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">color: #999999;</string>
+                       </property>
+                       <property name="text">
+                        <string>|</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="importStatusLabel">
+                       <property name="font">
+                        <font>
+                         <family>Microsoft YaHei UI</family>
+                         <pointsize>10</pointsize>
+                        </font>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">color: #666666;</string>
+                       </property>
+                       <property name="text">
+                        <string>准备导入</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QFrame" name="importContentFrame">
+                    <property name="styleSheet">
+                     <string notr="true">background:rgb(255, 255, 255);
+border-top-left-radius:0px;
+border-top-right-radius:0px;
+border-bottom-right-radius:12px;
+border-bottom-left-radius:0px;</string>
+                    </property>
+                    <layout class="QVBoxLayout" name="importContentLayout">
+                     <property name="leftMargin">
+                      <number>18</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>18</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>18</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>18</number>
+                     </property>
+                     <item>
+                      <widget class="QFrame" name="sourceFolderFrame">
+                       <property name="styleSheet">
+                        <string notr="true">QFrame {
+    border: 1.5px solid qradialgradient(
+        cx:0.5, cy:0.5,
+        radius: 1.2,
+        fx:0.45, fy:0.55,
+        stop:0 rgba(144, 129, 255, 255),
+        stop:0.7 rgba(129, 121, 255, 220),
+        stop:1 rgba(108, 97, 224, 200)
+    );
+    background: rgb(245, 249, 254);
+    padding: 8px;
+    border-radius: 6px;
+}
+
+QFrame:focus {
+    border: 1.5px solid qradialgradient(
+        cx:0.5, cy:0.5,
+        radius: 1.3,
+        fx:0.4, fy:0.6,
+        stop:0 rgba(154, 139, 255, 255),
+        stop:1 rgba(139, 131, 255, 240)
+    );
+    box-shadow: 0 0 0 2px rgba(134, 119, 253, 0.15);
+}</string>
+                       </property>
+                       <layout class="QHBoxLayout" name="sourceFolderLayout">
+                        <item>
+                         <widget class="QLabel" name="label_importSource">
+                          <property name="minimumSize">
+                           <size>
+                            <width>80</width>
+                            <height>0</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <family>Microsoft YaHei UI</family>
+                            <pointsize>10</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>源文件夹：</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QLineEdit" name="lineEdit_importSourcePath">
+                          <property name="font">
+                           <font>
+                            <family>Microsoft YaHei UI</family>
+                            <pointsize>10</pointsize>
+                           </font>
+                          </property>
+                          <property name="styleSheet">
+                           <string notr="true">border: 1px solid #d1d5db;
+border-radius: 4px;
+padding: 6px 8px;
+background: white;
+color: #374151;
+font-size: 14px;
+selection-background-color: rgba(134, 119, 253, 0.3);
+selection-color: #1f2937;</string>
+                          </property>
+                          <property name="placeholderText">
+                           <string>请选择源文件夹路径</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QPushButton" name="btn_importBrowseSource">
+                          <property name="minimumSize">
+                           <size>
+                            <width>80</width>
+                            <height>0</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <family>Microsoft YaHei UI</family>
+                            <pointsize>10</pointsize>
+                           </font>
+                          </property>
+                          <property name="styleSheet">
+                           <string notr="true">QPushButton {
+    background-color: rgba(134, 119, 253, 255);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+QPushButton:hover {
+    background-color: rgba(154, 139, 255, 255);
+}
+
+QPushButton:pressed {
+    background-color: rgba(94, 79, 253, 255);
+}</string>
+                          </property>
+                          <property name="text">
+                           <string>浏览</string>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QFrame" name="targetFolderFrame">
+                       <property name="styleSheet">
+                        <string notr="true">QFrame {
+    border: 1.5px solid qradialgradient(
+        cx:0.5, cy:0.5,
+        radius: 1.2,
+        fx:0.45, fy:0.55,
+        stop:0 rgba(144, 129, 255, 255),
+        stop:0.7 rgba(129, 121, 255, 220),
+        stop:1 rgba(108, 97, 224, 200)
+    );
+    background: rgb(245, 249, 254);
+    padding: 8px;
+    border-radius: 6px;
+}
+
+QFrame:focus {
+    border: 1.5px solid qradialgradient(
+        cx:0.5, cy:0.5,
+        radius: 1.3,
+        fx:0.4, fy:0.6,
+        stop:0 rgba(154, 139, 255, 255),
+        stop:1 rgba(139, 131, 255, 240)
+    );
+    box-shadow: 0 0 0 2px rgba(134, 119, 253, 0.15);
+}</string>
+                       </property>
+                       <layout class="QHBoxLayout" name="targetFolderLayout">
+                        <item>
+                         <widget class="QLabel" name="label_importTarget">
+                          <property name="minimumSize">
+                           <size>
+                            <width>80</width>
+                            <height>0</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <family>Microsoft YaHei UI</family>
+                            <pointsize>10</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>目标文件夹：</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QLineEdit" name="lineEdit_importTargetPath">
+                          <property name="font">
+                           <font>
+                            <family>Microsoft YaHei UI</family>
+                            <pointsize>10</pointsize>
+                           </font>
+                          </property>
+                          <property name="styleSheet">
+                           <string notr="true">border: 1px solid #d1d5db;
+border-radius: 4px;
+padding: 6px 8px;
+background: white;
+color: #374151;
+font-size: 14px;
+selection-background-color: rgba(134, 119, 253, 0.3);
+selection-color: #1f2937;</string>
+                          </property>
+                          <property name="placeholderText">
+                           <string>请选择目标文件夹路径</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QPushButton" name="btn_importBrowseTarget">
+                          <property name="minimumSize">
+                           <size>
+                            <width>80</width>
+                            <height>0</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <family>Microsoft YaHei UI</family>
+                            <pointsize>10</pointsize>
+                           </font>
+                          </property>
+                          <property name="styleSheet">
+                           <string notr="true">QPushButton {
+    background-color: rgba(134, 119, 253, 255);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+QPushButton:hover {
+    background-color: rgba(154, 139, 255, 255);
+}
+
+QPushButton:pressed {
+    background-color: rgba(94, 79, 253, 255);
+}</string>
+                          </property>
+                          <property name="text">
+                           <string>浏览</string>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item>
+                      <spacer name="verticalSpacer_21">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>40</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
                 </layout>
                </widget>
-               <widget class="QWidget" name="settingsPage">
+               <widget class="QWidget" name="pageSettings">
                 <property name="styleSheet">
                  <string notr="true">border: none;</string>
                 </property>
@@ -1339,7 +1578,7 @@ background:rgb(255, 255, 255);
 border: none;
 border-radius: 0px;</string>
                      </property>
-                     <layout class="QHBoxLayout" name="horizontalLayout_38">
+                     <layout class="QHBoxLayout" name="settingsHeaderLayout">
                       <property name="spacing">
                        <number>6</number>
                       </property>
@@ -1356,7 +1595,7 @@ border-radius: 0px;</string>
                        <number>9</number>
                       </property>
                       <item>
-                       <widget class="QLabel" name="classificationLabel">
+                       <widget class="QLabel" name="settingsClassificationLabel">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -1374,7 +1613,7 @@ border-radius: 0px;</string>
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLabel" name="routeLabel">
+                       <widget class="QLabel" name="settingsRouteLabel">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -1392,7 +1631,7 @@ border-radius: 0px;</string>
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLabel" name="separatorLabel">
+                       <widget class="QLabel" name="settingsSeparatorLabel">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -1410,7 +1649,7 @@ border-radius: 0px;</string>
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="level1ComboBox">
+                       <widget class="QComboBox" name="settingsClassificationLevel1ComboBox">
                         <property name="minimumSize">
                          <size>
                           <width>82</width>
@@ -1566,7 +1805,7 @@ QComboBox:focus {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLabel" name="separator2Label">
+                       <widget class="QLabel" name="settingsSeparator2Label">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -1584,7 +1823,7 @@ QComboBox:focus {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="level2ComboBox">
+                       <widget class="QComboBox" name="settingsClassificationLevel2ComboBox">
                         <property name="minimumSize">
                          <size>
                           <width>82</width>
@@ -1740,7 +1979,7 @@ QComboBox:focus {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLabel" name="separator3Label">
+                       <widget class="QLabel" name="settingsSeparator3Label">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -1758,7 +1997,7 @@ QComboBox:focus {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="level3ComboBox">
+                       <widget class="QComboBox" name="settingsClassificationLevel3ComboBox">
                         <property name="minimumSize">
                          <size>
                           <width>82</width>
@@ -1914,7 +2153,7 @@ QComboBox:focus {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLabel" name="separator4Label">
+                       <widget class="QLabel" name="settingsSeparator4Label">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -1932,7 +2171,7 @@ QComboBox:focus {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="level4ComboBox">
+                       <widget class="QComboBox" name="settingsClassificationLevel4ComboBox">
                         <property name="minimumSize">
                          <size>
                           <width>82</width>
@@ -2088,7 +2327,7 @@ QComboBox:focus {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLabel" name="separator5Label">
+                       <widget class="QLabel" name="settingsSeparator5Label">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -2106,7 +2345,7 @@ QComboBox:focus {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="level5ComboBox">
+                       <widget class="QComboBox" name="settingsClassificationLevel5ComboBox">
                         <property name="minimumSize">
                          <size>
                           <width>82</width>
@@ -2377,7 +2616,7 @@ background:rgb(255, 255, 255);</string>
                          </widget>
                         </item>
                         <item>
-                         <widget class="QPushButton" name="uniqueButton">
+                         <widget class="QPushButton" name="settingsUniqueButton">
                           <property name="minimumSize">
                            <size>
                             <width>78</width>
@@ -2417,7 +2656,7 @@ QPushButton:hover {
                          </widget>
                         </item>
                         <item>
-                         <widget class="QLabel" name="pointLabel">
+                         <widget class="QLabel" name="settingsPointLabel">
                           <property name="font">
                            <font>
                             <pointsize>12</pointsize>
@@ -2435,7 +2674,7 @@ QPushButton:hover {
                          </widget>
                         </item>
                         <item>
-                         <widget class="QPushButton" name="extensionsButton">
+                         <widget class="QPushButton" name="settingsExtensionsButton">
                           <property name="minimumSize">
                            <size>
                             <width>64</width>
@@ -2518,7 +2757,7 @@ border-radius: 0px;</string>
                           <number>0</number>
                          </property>
                          <item>
-                          <widget class="QLabel" name="renamingTagsLabel">
+                          <widget class="QLabel" name="settingsRenamingTagsLabel">
                            <property name="minimumSize">
                             <size>
                              <width>0</width>
@@ -2590,7 +2829,7 @@ border: 0px;
                              <number>6</number>
                             </property>
                             <item>
-                             <widget class="QPushButton" name="originalTagButton">
+                             <widget class="QPushButton" name="settingsOriginalTagButton">
                               <property name="maximumSize">
                                <size>
                                 <width>80</width>
@@ -2624,7 +2863,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="yearTagButton">
+                             <widget class="QPushButton" name="settingsYearTagButton">
                               <property name="maximumSize">
                                <size>
                                 <width>46</width>
@@ -2665,7 +2904,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="monthTagButton">
+                             <widget class="QPushButton" name="settingsMonthTagButton">
                               <property name="maximumSize">
                                <size>
                                 <width>46</width>
@@ -2706,7 +2945,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="dateTagButton">
+                             <widget class="QPushButton" name="settingsDateTagButton">
                               <property name="maximumSize">
                                <size>
                                 <width>32</width>
@@ -2747,7 +2986,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="dayTagButton">
+                             <widget class="QPushButton" name="settingsDayTagButton">
                               <property name="maximumSize">
                                <size>
                                 <width>46</width>
@@ -2788,7 +3027,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="timeTagButton">
+                             <widget class="QPushButton" name="settingsTimeTagButton">
                               <property name="maximumSize">
                                <size>
                                 <width>46</width>
@@ -2835,7 +3074,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="makeTagButton">
+                             <widget class="QPushButton" name="settingsMakeTagButton">
                               <property name="maximumSize">
                                <size>
                                 <width>74</width>
@@ -2876,7 +3115,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="modelTagButton">
+                             <widget class="QPushButton" name="settingsModelTagButton">
                               <property name="maximumSize">
                                <size>
                                 <width>74</width>
@@ -2917,7 +3156,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="addressTagButton">
+                             <widget class="QPushButton" name="settingsAddressTagButton">
                               <property name="maximumSize">
                                <size>
                                 <width>66</width>
@@ -2962,7 +3201,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="customizeTagButton">
+                             <widget class="QPushButton" name="settingsCustomizeTagButton">
                               <property name="maximumSize">
                                <size>
                                 <width>80</width>
@@ -3045,7 +3284,7 @@ QPushButton:pressed {
                             </widget>
                            </item>
                            <item>
-                            <widget class="QComboBox" name="separatorComboBox">
+                            <widget class="QComboBox" name="settingsFileNameSeparatorComboBox">
                              <property name="minimumSize">
                               <size>
                                <width>0</width>
@@ -3187,7 +3426,7 @@ QComboBox QAbstractItemView::item {
                            </widget>
                           </item>
                           <item>
-                           <widget class="QComboBox" name="timeSourceComboBox">
+                           <widget class="QComboBox" name="settingsTimeSourceComboBox">
                             <property name="minimumSize">
                              <size>
                               <width>78</width>
@@ -3283,7 +3522,7 @@ QComboBox QAbstractItemView::item {
                            </widget>
                           </item>
                           <item>
-                           <widget class="QComboBox" name="operationComboBox">
+                           <widget class="QComboBox" name="settingsFileOperationComboBox">
                             <property name="minimumSize">
                              <size>
                               <width>78</width>
@@ -3710,7 +3949,7 @@ border-bottom-left-radius:0px;</string>
                        <number>9</number>
                       </property>
                       <item>
-                       <widget class="QTextEdit" name="smartArrangeLogTextEdit">
+                       <widget class="QTextEdit" name="smartArrangeLogOutputTextEdit">
                         <property name="minimumSize">
                          <size>
                           <width>0</width>
@@ -4895,7 +5134,7 @@ QLineEdit:disabled {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="brandComboBox">
+                       <widget class="QComboBox" name="settingsCameraBrandComboBox">
                         <property name="minimumSize">
                          <size>
                           <width>82</width>
@@ -5096,7 +5335,7 @@ QComboBox QAbstractItemView QScrollBar::sub-line:horizontal {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="modelComboBox">
+                       <widget class="QComboBox" name="settingsCameraModelComboBox">
                         <property name="minimumSize">
                          <size>
                           <width>82</width>
@@ -5540,7 +5779,7 @@ border-bottom-left-radius:0px;</string>
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="shootTimeComboBox">
+                       <widget class="QComboBox" name="settingsShootTimeSourceComboBox">
                         <property name="minimumSize">
                          <size>
                           <width>82</width>
@@ -6391,7 +6630,7 @@ QTextEdit:focus {
  <resources/>
  <connections>
   <connection>
-   <sender>navigationMenuList</sender>
+   <sender>navigationMenuListWidget</sender>
    <signal>currentRowChanged(int)</signal>
    <receiver>stackedWidget</receiver>
    <slot>setCurrentIndex(int)</slot>

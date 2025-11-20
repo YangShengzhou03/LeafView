@@ -510,19 +510,19 @@ class WriteExif(QWidget):
     def load_exif_settings(self):
         try:
             if title := config_manager.get_setting("exif_title"):
-                 self.parent.titleLineEdit.setText(title)
-             
-             if author := config_manager.get_setting("exif_author"):
-                 self.parent.authorLineEdit.setText(author)
-                 
-             if subject := config_manager.get_setting("exif_subject"):
-                 self.parent.themeLineEdit.setText(subject)
-                 
-             if copyright := config_manager.get_setting("exif_copyright"):
-                 self.parent.copyrightLineEdit.setText(copyright)
-             
-             if position := config_manager.get_setting("exif_position"):
-                 self.parent.positionLineEdit.setText(position)
+                self.parent.titleLineEdit.setText(title)
+            
+            if author := config_manager.get_setting("exif_author"):
+                self.parent.authorLineEdit.setText(author)
+                
+            if subject := config_manager.get_setting("exif_subject"):
+                self.parent.themeLineEdit.setText(subject)
+                
+            if copyright := config_manager.get_setting("exif_copyright"):
+                self.parent.copyrightLineEdit.setText(copyright)
+            
+            if position := config_manager.get_setting("exif_position"):
+                self.parent.positionLineEdit.setText(position)
                 
             if latitude := config_manager.get_setting("exif_latitude"):
                 self.parent.lineEdit_EXIF_latitude.setText(latitude)
@@ -531,23 +531,23 @@ class WriteExif(QWidget):
                 self.parent.lineEdit_EXIF_longitude.setText(longitude)
             
             if location_index := config_manager.get_setting("exif_location_index"):
-                 self.parent.locationComboBox.setCurrentIndex(int(location_index))
-                 self.on_combobox_location_changed(int(location_index))
+                self.parent.locationComboBox.setCurrentIndex(int(location_index))
+                self.on_combobox_location_changed(int(location_index))
             
             if camera_brand := config_manager.get_setting("exif_camera_brand"):
-                 index = self.parent.brandComboBox.findText(camera_brand)
-                 if index >= 0:
-                     self.parent.brandComboBox.setCurrentIndex(index)
-                     self._on_brand_changed(index)
-             
-             if camera_model := config_manager.get_setting("exif_camera_model"):
-                 index = self.parent.modelComboBox.findText(camera_model)
-                 if index >= 0:
-                     self.parent.modelComboBox.setCurrentIndex(index)
-             
-             if shoot_time_index := config_manager.get_setting("exif_shoot_time_index"):
-                 self.parent.shootTimeComboBox.setCurrentIndex(int(shoot_time_index))
-                 self.on_combobox_time_changed(int(shoot_time_index))
+                index = self.parent.brandComboBox.findText(camera_brand)
+                if index >= 0:
+                    self.parent.brandComboBox.setCurrentIndex(index)
+                    self._on_brand_changed(index)
+            
+            if camera_model := config_manager.get_setting("exif_camera_model"):
+                index = self.parent.modelComboBox.findText(camera_model)
+                if index >= 0:
+                    self.parent.modelComboBox.setCurrentIndex(index)
+            
+            if shoot_time_index := config_manager.get_setting("exif_shoot_time_index"):
+                self.parent.shootTimeComboBox.setCurrentIndex(int(shoot_time_index))
+                self.on_combobox_time_changed(int(shoot_time_index))
             
             if star_rating := config_manager.get_setting("exif_star_rating"):
                 self.set_selected_star(int(star_rating))
@@ -557,9 +557,9 @@ class WriteExif(QWidget):
     def save_exif_settings(self):
         try:
             config_manager.update_setting("exif_title", self.parent.titleLineEdit.text())
-             config_manager.update_setting("exif_author", self.parent.authorLineEdit.text())
-             config_manager.update_setting("exif_subject", self.parent.themeLineEdit.text())
-             config_manager.update_setting("exif_copyright", self.parent.copyrightLineEdit.text())
+            config_manager.update_setting("exif_author", self.parent.authorLineEdit.text())
+            config_manager.update_setting("exif_subject", self.parent.themeLineEdit.text())
+            config_manager.update_setting("exif_copyright", self.parent.copyrightLineEdit.text())
             
             config_manager.update_setting("exif_position", self.parent.positionLineEdit.text())
             config_manager.update_setting("exif_latitude", self.parent.lineEdit_EXIF_latitude.text())
@@ -568,9 +568,9 @@ class WriteExif(QWidget):
             config_manager.update_setting("exif_location_index", self.parent.locationComboBox.currentIndex())
             
             config_manager.update_setting("exif_camera_brand", self.parent.brandComboBox.currentText())
-             config_manager.update_setting("exif_camera_model", self.parent.modelComboBox.currentText())
-             
-             config_manager.update_setting("exif_shoot_time_index", self.parent.shootTimeComboBox.currentIndex())
+            config_manager.update_setting("exif_camera_model", self.parent.modelComboBox.currentText())
+            
+            config_manager.update_setting("exif_shoot_time_index", self.parent.shootTimeComboBox.currentIndex())
             config_manager.update_setting("exif_shoot_time", 
                                         self.parent.dateTimeEdit_shootTime.dateTime().toString("yyyy:MM:dd HH:mm:ss"))
             
