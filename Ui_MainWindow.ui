@@ -131,9 +131,28 @@ border-radius:12px;
                <property name="styleSheet">
                 <string notr="true">QPushButton {
     color: rgba(134, 119, 253, 255);
-    padding: 4px;
-    border: none;
+    padding: 8px 16px;
+    border: 2px solid rgba(134, 119, 253, 0.3);
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+    font-size: 20px;
     qproperty-alignment: AlignCenter;
+    box-shadow: 0 2px 12px rgba(134, 119, 253, 0.15);
+    transition: all 0.3s ease;
+}
+
+QPushButton:hover {
+    background-color: rgba(255, 255, 255, 1);
+    border-color: rgba(134, 119, 253, 0.5);
+    box-shadow: 0 4px 20px rgba(134, 119, 253, 0.25);
+    transform: translateY(-1px);
+}
+
+QPushButton:pressed {
+    background-color: rgba(245, 245, 255, 1);
+    transform: translateY(0);
+    box-shadow: 0 1px 8px rgba(134, 119, 253, 0.2);
 }</string>
                </property>
                <property name="text">
@@ -246,41 +265,44 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
     show-decoration-selected: 1;
     background-color: rgba(0, 0, 0, 0);
     border: none;
-    border-radius: 8px;
-    padding: 2px;
+    border-radius: 12px;
+    padding: 4px;
     outline: 0;
     font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
 }
 
 QListView::item {
     background-color: transparent;
-    padding: 10px 2px;
-    margin: 2px 0;
-    border-radius: 6px;
+    padding: 12px 16px;
+    margin: 4px 0;
+    border-radius: 8px;
     color: #333333;
     font-size: 14px;
+    font-weight: 500;
     border: 1px solid transparent;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
 }
 
 QListView::item:hover {
-    background-color: #e9ecef;
-    border-color: #dee2e6;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-    transform: translateY(-1px);
+    background-color: rgba(134, 119, 253, 0.08);
+    border-color: rgba(134, 119, 253, 0.2);
+    box-shadow: 0 4px 12px rgba(134, 119, 253, 0.1);
+    transform: translateX(4px);
 }
 
 QListView::item:selected {
-    background-color: #f0f2ff;
+    background-color: rgba(134, 119, 253, 0.15);
     color: #6c5ce7;
-    font-weight: 500;
-    border-left: 3px solid #6c5ce7;
-    padding-left: 8px;
-    box-shadow: 0 3px 8px rgba(108, 92, 231, 0.15);
+    font-weight: 600;
+    border-left: 4px solid #6c5ce7;
+    padding-left: 12px;
+    box-shadow: 0 6px 16px rgba(108, 92, 231, 0.2);
 }
 
 QListView::item:selected:hover {
-    background-color: #e6e9ff;
+    background-color: rgba(134, 119, 253, 0.2);
+    box-shadow: 0 8px 20px rgba(108, 92, 231, 0.25);
 }
 
 QListView::item:disabled {
@@ -290,29 +312,43 @@ QListView::item:disabled {
 
 QListView::item:focus {
     outline: none;
-    border: 1px dotted #6c5ce7;
+    border: 1px dotted rgba(134, 119, 253, 0.5);
+}
+
+QListView::icon {
+    margin-right: 12px;
 }
 
 QScrollBar:vertical {
     border: none;
-    background: #f1f1f1;
-    width: 10px;
-    margin: 0;
+    background: rgba(245, 245, 245, 0.8);
+    width: 8px;
+    border-radius: 4px;
+    margin: 4px 0;
 }
 
 QScrollBar::handle:vertical {
-    background: #d1d1d1;
-    min-height: 20px;
-    border-radius: 5px;
+    background: rgba(134, 119, 253, 0.3);
+    min-height: 24px;
+    border-radius: 4px;
+    transition: background 0.3s ease;
 }
 
 QScrollBar::handle:vertical:hover {
-    background: #c1c1c1;
+    background: rgba(134, 119, 253, 0.5);
+}
+
+QScrollBar::handle:vertical:pressed {
+    background: rgba(134, 119, 253, 0.7);
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: transparent;
 }
 
 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
     height: 0;
-    background: none;
+    background: transparent;
 }</string>
                 </property>
                 <property name="verticalScrollBarPolicy">
@@ -449,7 +485,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">QFrame{
+                <string notr="true">QFrame{
 background-color: qradialgradient(
 cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
 stop:0.66 rgba(134, 119, 253, 255),
@@ -459,8 +495,9 @@ border-top-left-radius:0px;
 border-top-right-radius:12px;
 border-bottom-right-radius:0px;
 border-bottom-left-radius:0px;
+box-shadow: 0 4px 20px rgba(134, 119, 253, 0.3);
 }</string>
-            </property>
+               </property>
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
@@ -545,18 +582,31 @@ border-radius:0px;</string>
                </property>
                <property name="styleSheet">
                 <string notr="true">QToolButton {
-    border: none;
-	padding: 4px;
-	border-radius: 12px;
-    background-color: rgba(255, 255, 255, 0);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 4px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 QToolButton:hover {
-    background-color: rgba(255, 255, 255, 20);
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
 }
 
 QToolButton:pressed {
-    background-color: rgba(255, 255, 255, 50);
+    background: rgba(255, 255, 255, 0.35);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(0);
+}
+
+QToolButton::menu-indicator {
+    image: none;
 }</string>
                </property>
                <property name="text">
@@ -590,18 +640,31 @@ QToolButton:pressed {
                </property>
                <property name="styleSheet">
                 <string notr="true">QToolButton {
-    border: none;
-	padding: 4px;
-	border-radius: 12px;
-    background-color: rgba(255, 255, 255, 0);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 4px;
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
 
 QToolButton:hover {
-    background-color: rgba(255, 255, 255, 20);
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
 }
 
 QToolButton:pressed {
-    background-color: rgba(255, 255, 255, 50);
+    background-color: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    transform: translateY(0);
+}
+
+QToolButton::menu-indicator {
+    image: none;
 }</string>
                </property>
                <property name="text">
@@ -635,18 +698,31 @@ QToolButton:pressed {
                </property>
                <property name="styleSheet">
                 <string notr="true">QToolButton {
-    border: none;
-	padding: 4px;
-	border-radius: 12px;
-    background-color: rgba(255, 255, 255, 0);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 4px;
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
 
 QToolButton:hover {
-    background-color: rgba(255, 255, 255, 20);
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
 }
 
 QToolButton:pressed {
-    background-color: rgba(255, 255, 255, 50);
+    background-color: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    transform: translateY(0);
+}
+
+QToolButton::menu-indicator {
+    image: none;
 }</string>
                </property>
                <property name="text">
@@ -680,18 +756,31 @@ QToolButton:pressed {
                </property>
                <property name="styleSheet">
                 <string notr="true">QToolButton {
-    border: none;
-	padding: 4px;
-	border-radius: 12px;
-    background-color: rgba(255, 255, 255, 0);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 4px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 QToolButton:hover {
-    background-color: rgba(255, 255, 255, 20);
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
 }
 
 QToolButton:pressed {
-    background-color: rgba(255, 255, 255, 50);
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(0);
+}
+
+QToolButton::menu-indicator {
+    image: none;
 }</string>
                </property>
                <property name="text">
@@ -725,18 +814,31 @@ QToolButton:pressed {
                </property>
                <property name="styleSheet">
                 <string notr="true">QToolButton {
-    border: none;
-	padding: 4px;
-	border-radius: 12px;
-    background-color: rgba(255, 255, 255, 0);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 4px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 QToolButton:hover {
-    background-color: rgba(255, 255, 255, 20);
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
 }
 
 QToolButton:pressed {
-    background-color: rgba(255, 255, 255, 50);
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(0);
+}
+
+QToolButton::menu-indicator {
+    image: none;
 }</string>
                </property>
                <property name="text">
@@ -3645,29 +3747,40 @@ QProgressBar::chunk {
     color: white;
     border: none;
     padding: 6px 6px;
-    border-radius: 6px;
-    background-color: qradialgradient(
+    border-radius: 12px;
+    background: qradialgradient(
         cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
         stop:0.66 rgba(134, 119, 253, 255),
         stop:1 rgba(119, 111, 252, 255)
     );
-    font-size: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 4px 16px rgba(134, 119, 253, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 QToolButton:hover {
-    background-color: qradialgradient(
+    background: qradialgradient(
         cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
         stop:0.66 rgba(154, 139, 255, 255),
         stop:1 rgba(139, 131, 254, 255)
     );
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 24px rgba(134, 119, 253, 0.4);
+    transform: translateY(-2px);
 }
 
 QToolButton:pressed {
-    background-color: qradialgradient(
+    background: qradialgradient(
         cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
         stop:0.66 rgba(94, 79, 253, 255),
         stop:1 rgba(79, 71, 252, 255)
     );
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 8px rgba(134, 119, 253, 0.3);
+    transform: translateY(0);
 }</string>
                         </property>
                         <property name="text">
@@ -3733,17 +3846,33 @@ border-bottom-left-radius:0px;</string>
         stop:0.7 rgba(129, 121, 255, 220),
         stop:1 rgba(108, 97, 224, 200)
     );
-    background: rgb(245, 249, 254);
-    padding: 8px;
-    border-radius: 6px;
+    background: rgba(245, 249, 254, 0.95);
+    padding: 12px;
+    border-radius: 12px;
     font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
     font-size: 14px;
+    font-weight: 500;
     color: #333;
-    selection-background-color: rgba(134, 119, 253, 0.5);
+    selection-background-color: rgba(134, 119, 253, 0.6);
     selection-color: #fff;
+    backdrop-filter: blur(10px);
     box-shadow:
         inset 0 1px 3px rgba(0, 0, 0, 0.05),
-        0 2px 8px rgba(134, 119, 253, 0.1);
+        0 4px 16px rgba(134, 119, 253, 0.15);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+QTextEdit:hover {
+    border: 1.5px solid qradialgradient(
+        cx:0.5, cy:0.5,
+        radius: 1.3,
+        fx:0.4, fy:0.6,
+        stop:0 rgba(154, 139, 255, 255),
+        stop:1 rgba(139, 131, 255, 240)
+    );
+    box-shadow:
+        inset 0 1px 3px rgba(0, 0, 0, 0.05),
+        0 8px 24px rgba(134, 119, 253, 0.2);
 }
 
 QTextEdit QScrollBar:vertical {
@@ -3805,7 +3934,10 @@ QTextEdit:focus {
         stop:0 rgba(154, 139, 255, 255),
         stop:1 rgba(139, 131, 255, 240)
     );
-    box-shadow: 0 0 0 2px rgba(134, 119, 253, 0.15);
+    box-shadow:
+        inset 0 1px 3px rgba(0, 0, 0, 0.05),
+        0 0 0 2px rgba(134, 119, 253, 0.15),
+        0 8px 24px rgba(134, 119, 253, 0.25);
 }</string>
                         </property>
                         <property name="readOnly">
@@ -4070,31 +4202,41 @@ QProgressBar::chunk {
                          <property name="styleSheet">
                           <string notr="true">QToolButton {
     color: white;
-    border: none;
-    padding: 6px 6px;
-    border-radius: 6px;
-    background-color: qradialgradient(
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 8px 16px;
+    border-radius: 12px;
+    background: qradialgradient(
         cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
         stop:0.66 rgba(134, 119, 253, 255),
         stop:1 rgba(119, 111, 252, 255)
     );
-    font-size: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 16px rgba(134, 119, 253, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 QToolButton:hover {
-    background-color: qradialgradient(
+    background: qradialgradient(
         cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
         stop:0.66 rgba(154, 139, 255, 255),
         stop:1 rgba(139, 131, 254, 255)
     );
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 24px rgba(134, 119, 253, 0.4);
+    transform: translateY(-2px);
 }
 
 QToolButton:pressed {
-    background-color: qradialgradient(
+    background: qradialgradient(
         cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
         stop:0.66 rgba(94, 79, 253, 255),
         stop:1 rgba(79, 71, 252, 255)
     );
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 8px rgba(134, 119, 253, 0.3);
+    transform: translateY(0);
 }</string>
                          </property>
                          <property name="text">
