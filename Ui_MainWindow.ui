@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <widget class="QMainWindow" name="mainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,8 +13,8 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout">
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="mainLayout">
     <property name="leftMargin">
      <number>0</number>
     </property>
@@ -31,7 +31,7 @@
      <number>0</number>
     </property>
     <item row="0" column="0">
-     <widget class="QFrame" name="frame_main">
+     <widget class="QFrame" name="frameMain">
       <property name="styleSheet">
        <string notr="true">QFrame{
 background-color: rgb(255, 255, 255);
@@ -62,7 +62,7 @@ border-radius:12px;
         <number>0</number>
        </property>
        <item>
-        <widget class="QFrame" name="Frame_left">
+        <widget class="QFrame" name="frameNavigation">
          <property name="minimumSize">
           <size>
            <width>162</width>
@@ -78,7 +78,7 @@ border-radius:12px;
          <property name="styleSheet">
           <string notr="true">background:rgba(0, 0, 0, 0);</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,9">
+         <layout class="QVBoxLayout" name="navigationLayout" stretch="0,9">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -95,7 +95,7 @@ border-radius:12px;
            <number>0</number>
           </property>
           <item>
-           <widget class="QFrame" name="frame_logo">
+           <widget class="QFrame" name="frameLogo">
             <property name="styleSheet">
              <string notr="true">border: none;</string>
             </property>
@@ -105,7 +105,7 @@ border-radius:12px;
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
             </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <layout class="QHBoxLayout" name="logoLayout">
              <property name="spacing">
               <number>0</number>
              </property>
@@ -122,7 +122,7 @@ border-radius:12px;
               <number>0</number>
              </property>
              <item>
-              <widget class="QPushButton" name="pushButton_logo">
+              <widget class="QPushButton" name="btnLogo">
                <property name="font">
                 <font>
                  <pointsize>20</pointsize>
@@ -145,7 +145,7 @@ border-radius:12px;
            </widget>
           </item>
           <item>
-           <widget class="QScrollArea" name="scrollArea_nav">
+           <widget class="QScrollArea" name="scrollNavigation">
             <property name="styleSheet">
              <string notr="true">QScrollBar:vertical{
     width:8px;
@@ -187,7 +187,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
             <property name="widgetResizable">
              <bool>true</bool>
             </property>
-            <widget class="QWidget" name="scrollAreaWidgetContents">
+            <widget class="QWidget" name="navigationContent">
              <property name="geometry">
               <rect>
                <x>0</x>
@@ -196,7 +196,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
                <height>520</height>
               </rect>
              </property>
-             <layout class="QVBoxLayout" name="verticalLayout_4">
+             <layout class="QVBoxLayout" name="navigationContentLayout">
               <property name="spacing">
                <number>12</number>
               </property>
@@ -213,7 +213,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
                <number>0</number>
               </property>
               <item>
-               <widget class="QListWidget" name="listWidget_base">
+               <widget class="QListWidget" name="listNavigation">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                   <horstretch>0</horstretch>
@@ -385,12 +385,12 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_centerAligned">
+        <layout class="QHBoxLayout" name="dividerLayout">
          <property name="spacing">
           <number>0</number>
          </property>
          <item>
-          <widget class="Line" name="line_Divide">
+          <widget class="Line" name="lineDivider">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -420,11 +420,11 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
         </layout>
        </item>
        <item>
-        <widget class="QFrame" name="Frame_right">
+        <widget class="QFrame" name="frameContent">
          <property name="styleSheet">
           <string notr="true">border-radius: 12px;</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout" stretch="0,12">
+         <layout class="QVBoxLayout" name="contentLayout" stretch="0,12">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -441,7 +441,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
            <number>0</number>
           </property>
           <item>
-           <widget class="QFrame" name="frame_head">
+           <widget class="QFrame" name="frameHeader">
             <property name="maximumSize">
              <size>
               <width>16777215</width>
@@ -467,7 +467,7 @@ border-bottom-left-radius:0px;
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
             </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,0,0,0,0,0,0">
+            <layout class="QHBoxLayout" name="headerLayout" stretch="0,0,0,0,0,0,0">
              <property name="spacing">
               <number>9</number>
              </property>
@@ -484,7 +484,7 @@ border-bottom-left-radius:0px;
               <number>9</number>
              </property>
              <item>
-              <spacer name="horizontalSpacer">
+              <spacer name="headerSpacer">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -497,7 +497,7 @@ border-bottom-left-radius:0px;
               </spacer>
              </item>
              <item>
-              <widget class="QWidget" name="widget_headVip" native="true">
+              <widget class="QWidget" name="widgetVip" native="true">
                <property name="enabled">
                 <bool>true</bool>
                </property>
@@ -530,7 +530,7 @@ border-radius:0px;</string>
               </widget>
              </item>
              <item>
-              <widget class="QToolButton" name="toolButton_serve">
+              <widget class="QToolButton" name="btnService">
                <property name="minimumSize">
                 <size>
                  <width>36</width>
@@ -575,7 +575,7 @@ QToolButton:pressed {
               </widget>
              </item>
              <item>
-              <widget class="QToolButton" name="toolButton_setting">
+              <widget class="QToolButton" name="btnSettings">
                <property name="minimumSize">
                 <size>
                  <width>36</width>
@@ -620,7 +620,7 @@ QToolButton:pressed {
               </widget>
              </item>
              <item>
-              <widget class="QToolButton" name="toolButton_minimum">
+              <widget class="QToolButton" name="btnMinimize">
                <property name="minimumSize">
                 <size>
                  <width>36</width>
@@ -665,7 +665,7 @@ QToolButton:pressed {
               </widget>
              </item>
              <item>
-              <widget class="QToolButton" name="toolButton_maximum">
+              <widget class="QToolButton" name="btnMaximize">
                <property name="minimumSize">
                 <size>
                  <width>36</width>
@@ -710,7 +710,7 @@ QToolButton:pressed {
               </widget>
              </item>
              <item>
-              <widget class="QToolButton" name="toolButton_close">
+              <widget class="QToolButton" name="btnClose">
                <property name="minimumSize">
                 <size>
                  <width>36</width>
@@ -758,7 +758,7 @@ QToolButton:pressed {
            </widget>
           </item>
           <item>
-           <widget class="QFrame" name="frame_content">
+           <widget class="QFrame" name="frameContentArea">
             <property name="styleSheet">
              <string notr="true">border-radius: 20px;
 background:rgb(245, 246, 247);</string>
@@ -769,7 +769,7 @@ background:rgb(245, 246, 247);</string>
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
             </property>
-            <layout class="QVBoxLayout" name="verticalLayout_2">
+            <layout class="QVBoxLayout" name="contentAreaLayout">
              <property name="spacing">
               <number>0</number>
              </property>
@@ -786,7 +786,7 @@ background:rgb(245, 246, 247);</string>
               <number>0</number>
              </property>
              <item>
-              <widget class="QStackedWidget" name="stackedWidget">
+              <widget class="QStackedWidget" name="stackedContent">
                <property name="styleSheet">
                 <string notr="true">${
 	background-color: rgba(255, 255, 255, 0);
@@ -834,11 +834,11 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
                <property name="currentIndex">
                 <number>0</number>
                </property>
-               <widget class="QWidget" name="page_0">
+               <widget class="QWidget" name="pageWelcome">
                 <property name="styleSheet">
                  <string notr="true">background: rgb(245, 249, 254);</string>
                 </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_21" stretch="1,0">
+                <layout class="QHBoxLayout" name="welcomeLayout" stretch="1,0">
                  <property name="spacing">
                   <number>0</number>
                  </property>
@@ -855,7 +855,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
                   <number>0</number>
                  </property>
                  <item>
-                  <layout class="QVBoxLayout" name="verticalLayout_32">
+                  <layout class="QVBoxLayout" name="welcomeLeftLayout">
                    <property name="spacing">
                     <number>0</number>
                    </property>
@@ -866,7 +866,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
                     <number>0</number>
                    </property>
                    <item>
-                    <widget class="QScrollArea" name="scrollArea_page0">
+                    <widget class="QScrollArea" name="scrollWelcomeFolders">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -919,7 +919,7 @@ QScrollBar::sub-page:vertical {
                      <property name="alignment">
                       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                      </property>
-                     <widget class="QWidget" name="scrollAreaWidgetContents_folds">
+                     <widget class="QWidget" name="scrollWelcomeContent">
                       <property name="geometry">
                        <rect>
                         <x>0</x>
@@ -928,7 +928,7 @@ QScrollBar::sub-page:vertical {
                         <height>516</height>
                        </rect>
                       </property>
-                      <layout class="QGridLayout" name="gridLayout_6">
+                      <layout class="QGridLayout" name="welcomeFoldersLayout">
                        <property name="leftMargin">
                         <number>9</number>
                        </property>
@@ -948,14 +948,14 @@ QScrollBar::sub-page:vertical {
                   </layout>
                  </item>
                  <item>
-                  <widget class="QFrame" name="verticalFrame_add_folder">
+                  <widget class="QFrame" name="frameAddFolder">
                    <property name="styleSheet">
                     <string notr="true">QFrame {
     background: rgb(245, 249, 254);
     border-radius: 12px;
 }</string>
                    </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_31" stretch="0,1">
+                   <layout class="QVBoxLayout" name="addFolderLayout" stretch="0,1">
                     <property name="spacing">
                      <number>6</number>
                     </property>
@@ -972,7 +972,7 @@ QScrollBar::sub-page:vertical {
                      <number>6</number>
                     </property>
                     <item>
-                     <widget class="QWidget" name="widget_add_folder" native="true">
+                     <widget class="QWidget" name="widgetAddFolder" native="true">
                       <property name="minimumSize">
                        <size>
                         <width>0</width>
@@ -1036,7 +1036,7 @@ stop:1 rgba(119, 111, 252, 255)
                           </spacer>
                          </item>
                          <item>
-                          <widget class="QWidget" name="widget_folder" native="true">
+                          <widget class="QWidget" name="widgetFolderIcon" native="true">
                            <property name="sizePolicy">
                             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                              <horstretch>0</horstretch>
@@ -1064,7 +1064,7 @@ border: 0px;</string>
                           </widget>
                          </item>
                          <item>
-                          <widget class="QPushButton" name="pushButton_add_folder">
+                          <widget class="QPushButton" name="btnAddFolder">
                            <property name="font">
                             <font>
                              <pointsize>14</pointsize>
@@ -1097,7 +1097,7 @@ border: 0px;</string>
                         </layout>
                        </item>
                        <item>
-                        <widget class="QLabel" name="label_add_folder">
+                        <widget class="QLabel" name="labelAddFolderHint">
                          <property name="font">
                           <font>
                            <pointsize>9</pointsize>
@@ -1136,7 +1136,7 @@ border: 0px;</string>
                  </item>
                 </layout>
                </widget>
-               <widget class="QWidget" name="page_1">
+               <widget class="QWidget" name="pageGallery">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -1150,7 +1150,7 @@ border-top-right-radius:0px;
 border-bottom-right-radius:12px;
 border-bottom-left-radius:0px;</string>
                 </property>
-                <layout class="QVBoxLayout" name="verticalLayout_20" stretch="0">
+                <layout class="QVBoxLayout" name="galleryLayout" stretch="0">
                  <property name="spacing">
                   <number>0</number>
                  </property>
@@ -1167,7 +1167,7 @@ border-bottom-left-radius:0px;</string>
                   <number>0</number>
                  </property>
                  <item>
-                  <widget class="QFrame" name="verticalFrame">
+                  <widget class="QFrame" name="frameGallery">
                    <property name="styleSheet">
                     <string notr="true">background:rgb(255, 255, 255);
 border-top-left-radius:0px;
@@ -1175,7 +1175,7 @@ border-top-right-radius:0px;
 border-bottom-right-radius:12px;
 border-bottom-left-radius:0px;</string>
                    </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_11">
+                   <layout class="QVBoxLayout" name="galleryFrameLayout">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -1300,7 +1300,7 @@ QLabel#ImageLabel:hover {
                  </item>
                 </layout>
                </widget>
-               <widget class="QWidget" name="page_2">
+               <widget class="QWidget" name="pageViewer">
                 <property name="styleSheet">
                  <string notr="true">border: none;</string>
                 </property>
@@ -3820,7 +3820,7 @@ QTextEdit:focus {
                  </item>
                 </layout>
                </widget>
-               <widget class="QWidget" name="page_3">
+               <widget class="QWidget" name="pageSettings">
                 <layout class="QHBoxLayout" name="horizontalLayout_66" stretch="1,0">
                  <property name="spacing">
                   <number>0</number>
@@ -4550,7 +4550,7 @@ QToolButton:disabled {
                  </item>
                 </layout>
                </widget>
-               <widget class="QWidget" name="page_4">
+               <widget class="QWidget" name="pageAbout">
                 <property name="styleSheet">
                  <string notr="true">background:rgb(255, 255, 255);</string>
                 </property>
@@ -6391,9 +6391,9 @@ QTextEdit:focus {
  <resources/>
  <connections>
   <connection>
-   <sender>listWidget_base</sender>
+   <sender>listNavigation</sender>
    <signal>currentRowChanged(int)</signal>
-   <receiver>stackedWidget</receiver>
+   <receiver>stackedContent</receiver>
    <slot>setCurrentIndex(int)</slot>
    <hints>
     <hint type="sourcelabel">

@@ -21,24 +21,24 @@ class FolderPage(QtWidgets.QWidget):
         self._load_saved_folders()
     
     def _setup_drag_drop(self):
-        self.parent.widget_add_folder.setAcceptDrops(True)
-        self.parent.widget_add_folder.dragEnterEvent = self.dragEnterEvent
-        self.parent.widget_add_folder.dropEvent = self.dropEvent
+        self.parent.widgetAddFolder.setAcceptDrops(True)
+        self.parent.widgetAddFolder.dragEnterEvent = self.dragEnterEvent
+        self.parent.widgetAddFolder.dropEvent = self.dropEvent
     
     def _setup_click_behavior(self):
-        self.parent.widget_add_folder.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
-        self.parent.widget_add_folder.mousePressEvent = self._open_folder_dialog_on_click
+        self.parent.widgetAddFolder.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
+        self.parent.widgetAddFolder.mousePressEvent = self._open_folder_dialog_on_click
 
     def _setup_context_menu(self):
         """设置右键菜单"""
-        self.parent.scrollAreaWidgetContents_folds.setContextMenuPolicy(QtCore.Qt.ContextMenuPolicy.CustomContextMenu)
-        self.parent.scrollAreaWidgetContents_folds.customContextMenuRequested.connect(self._show_context_menu)
+        self.parent.scrollWelcomeContent.setContextMenuPolicy(QtCore.Qt.ContextMenuPolicy.CustomContextMenu)
+        self.parent.scrollWelcomeContent.customContextMenuRequested.connect(self._show_context_menu)
 
     def init_page(self):
-        self.parent.pushButton_add_folder.clicked.connect(self._open_folder_dialog)
+        self.parent.btnAddFolder.clicked.connect(self._open_folder_dialog)
 
     def _connect_buttons(self):
-        self.parent.pushButton_add_folder.clicked.connect(self._open_folder_dialog)
+        self.parent.btnAddFolder.clicked.connect(self._open_folder_dialog)
     
     def _open_folder_dialog_on_click(self, event):
         if event.button() == QtCore.Qt.MouseButton.LeftButton:
@@ -170,7 +170,7 @@ class FolderPage(QtWidgets.QWidget):
             )
 
     def _create_folder_item(self, folder_path, folder_name):
-        folder_frame = QtWidgets.QFrame(parent=self.parent.scrollAreaWidgetContents_folds)
+        folder_frame = QtWidgets.QFrame(parent=self.parent.scrollWelcomeContent)
         folder_frame.setFixedHeight(48)
         folder_frame.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.ArrowCursor))
         layout = QtWidgets.QHBoxLayout(folder_frame)
@@ -228,7 +228,7 @@ class FolderPage(QtWidgets.QWidget):
         folder_frame.setStyleSheet(
             "QFrame {background-color: #F5F7FA; border: 1px solid #E0E3E9; border-radius: 8px; margin: 2px;} QFrame:hover {background-color: #EBEFF5; border-color: #C2C9D6;}")
 
-        self.parent.gridLayout_6.addWidget(folder_frame)
+        self.parent.welcomeFoldersLayout.addWidget(folder_frame)
         
         def enter_event(event):
             remove_button.show()
@@ -418,7 +418,7 @@ class FolderPage(QtWidgets.QWidget):
                     except TypeError:
                         pass
                     
-                    self.parent.gridLayout_6.removeWidget(folder_frame)
+                    self.parent.welcomeFoldersLayout.removeWidget(folder_frame)
                     folder_frame.deleteLater()
                     
                     folder_path = item['path']
@@ -698,7 +698,7 @@ class FolderPage(QtWidgets.QWidget):
         refresh_action = menu.addAction("刷新列表")
         
         # 显示菜单
-        action = menu.exec(self.parent.scrollAreaWidgetContents_folds.mapToGlobal(position))
+        action = menu.exec(self.parent.scrollWelcomeContent.mapToGlobal(position))
         
         if action == select_all_action:
             self._select_all_folders(True)
