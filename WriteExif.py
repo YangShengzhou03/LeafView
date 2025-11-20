@@ -79,14 +79,13 @@ class WriteExif(QWidget):
 
     def _on_model_changed(self, index):
         if index > 0:
-            brand = self.parent.comboBox_brand.currentText()
-            model = self.parent.comboBox_model.currentText()
+            brand = self.parent.brandComboBox.currentText()
+            model = self.parent.modelComboBox.currentText()
             self.get_lens_info_for_camera(brand, model)
         
         self.update_button_state()
         self.parent.dateTimeEdit_shootTime.setDateTime(QDateTime.currentDateTime())
         self.parent.dateTimeEdit_shootTime.hide()
-
 
     def init_camera_brand_model(self):
         camera_data = self._load_camera_data()
@@ -103,37 +102,26 @@ class WriteExif(QWidget):
                 "Vivo": ["X100 Pro", "X100", "X90 Pro+", "X90 Pro", "X90", "X80 Pro", "X80", "S18 Pro"]
             }
         for brand in sorted(camera_data.keys()):
-            self.parent.comboBox_brand.addItem(brand)
+            self.parent.brandComboBox.addItem(brand)
         self.camera_data = camera_data
-        self.parent.comboBox_brand.currentIndexChanged.connect(self._on_brand_changed)
-        self.parent.comboBox_model.currentIndexChanged.connect(self._on_model_changed)
-        
-    def _load_camera_data(self):
-        try:
-            data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                    'resources', 'json', 'camera_brand_model.json')
-            if os.path.exists(data_path):
-                with open(data_path, 'r', encoding='utf-8') as f:
-                    return json.load(f)
-        except Exception as e:
-            self.log("WARNING", f"加载相机品牌型号数据失败: {str(e)}")
-        return None
+        self.parent.brandComboBox.currentIndexChanged.connect(self._on_brand_changed)
+        self.parent.modelComboBox.currentIndexChanged.connect(self._on_model_changed)
         
     def _on_brand_changed(self, index):
-        self.parent.comboBox_model.clear()
+        self.parent.modelComboBox.clear()
         if index > 0:
-            brand = self.parent.comboBox_brand.currentText()
+            brand = self.parent.brandComboBox.currentText()
             if brand in self.camera_data:
                 for model in sorted(self.camera_data[brand]):
-                    self.parent.comboBox_model.addItem(model)
+                    self.parent.modelComboBox.addItem(model)
         
 
 
     def setup_connections(self):
         self.parent.toolButton_StartEXIF.clicked.connect(self.toggle_exif_writing)
         self.parent.pushButton_Position.clicked.connect(self.update_position_by_ip)
-        self.parent.comboBox_shootTime.currentIndexChanged.connect(self.on_combobox_time_changed)
-        self.parent.comboBox_location.currentIndexChanged.connect(self.on_combobox_location_changed)
+        self.parent.shootTimeComboBox.currentIndexChanged.connect(self.on_combobox_time_changed)
+        self.parent.locationComboBox.currentIndexChanged.connect(self.on_combobox_location_changed)
         self.parent.lineEdit_EXIF_Title.textChanged.connect(self.save_exif_settings)
         self.parent.lineEdit_EXIF_Author.textChanged.connect(self.save_exif_settings)
         self.parent.lineEdit_EXIF_Theme.textChanged.connect(self.save_exif_settings)
@@ -141,10 +129,10 @@ class WriteExif(QWidget):
         self.parent.lineEdit_EXIF_Position.textChanged.connect(self.save_exif_settings)
         self.parent.lineEdit_EXIF_latitude.textChanged.connect(self.save_exif_settings)
         self.parent.lineEdit_EXIF_longitude.textChanged.connect(self.save_exif_settings)
-        self.parent.comboBox_brand.currentIndexChanged.connect(self.save_exif_settings)
-        self.parent.comboBox_model.currentIndexChanged.connect(self.save_exif_settings)
-        self.parent.comboBox_shootTime.currentIndexChanged.connect(self.save_exif_settings)
-        self.parent.comboBox_location.currentIndexChanged.connect(self.save_exif_settings)
+        self.parent.brandComboBox.currentIndexChanged.connect(self.save_exif_settings)
+        self.parent.modelComboBox.currentIndexChanged.connect(self.save_exif_settings)
+        self.parent.shootTimeComboBox.currentIndexChanged.connect(self.save_exif_settings)
+        self.parent.locationComboBox.currentIndexChanged.connect(self.save_exif_settings)
         for i in range(1, 6):
             getattr(self.parent, f'pushButton_star_{i}').clicked.connect(self.save_exif_settings)
 
@@ -292,7 +280,7 @@ class WriteExif(QWidget):
         location_info = self.get_location_by_ip()
         if location_info is not None:
             lat, lon = location_info
-            self.parent.lineEdit_EXIF_Position.setText(f"{lat}, {lon}")
+            self.parent.positionLineEdit.setText(f"{lat}, {lon}")
             self.log("WARNING", f"当前纬度={lat}, 经度={lon}，位置已加载，可直接开始。")
         else:
             self.log("ERROR", "获取位置信息失败\n\n"
@@ -336,9 +324,9 @@ class WriteExif(QWidget):
             'lensModel': self.get_lens_info_for_camera(camera_brand, camera_model)
         }
         
-        location_type = self.parent.comboBox_location.currentIndex()
+        location_type = self.parent.locationComboBox.currentIndex()
         if location_type == 0:
-            address = self.parent.lineEdit_EXIF_Position.text()
+            address = self.parent.positionLineEdit.text()
             if address:
                 import re
                 coord_pattern = r'^\s*(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)\s*$'
@@ -430,6 +418,29 @@ class WriteExif(QWidget):
         
         self.save_exif_settings()
         
+        camera_brand = self.parent.brandComboBox.currentText() if self.parent.brandComboBox.currentIndex() > 0 else None
+        camera_model = self.parent.modelComboBox.currentText() if self.parent.modelComboBox.currentIndex() > 0 else None
+        
+        if camera_brand and not camera_model:
+            camera_model = self.get_default_model_for_brand(camera_brand)
+        
+        params = {
+            'folders_dict': folders,
+            'title': self.parent.titleLineEdit.text(),
+            'author': self.parent.authorLineEdit.text(),
+            'subject': self.parent.themeLineEdit.text(),
+            'rating': str(self.selected_star),
+            'copyright': self.parent.copyrightLineEdit.text(),
+            'position': None,
+            'shootTime': self.parent.dateTimeEdit_shootTime.dateTime().toString(
+                "yyyy:MM:dd HH:mm:ss")
+            if self.parent.shootTimeComboBox.currentIndex() == 2
+            else self.parent.shootTimeComboBox.currentIndex(),
+            'cameraBrand': camera_brand,
+            'cameraModel': camera_model,
+            'lensModel': self.get_lens_info_for_camera(camera_brand, camera_model)
+        }
+        
         operation_summary = f"操作类型: EXIF信息写入"
         if params.get('title'):
             operation_summary += f", 标题: {params['title']}"
@@ -499,19 +510,19 @@ class WriteExif(QWidget):
     def load_exif_settings(self):
         try:
             if title := config_manager.get_setting("exif_title"):
-                self.parent.lineEdit_EXIF_Title.setText(title)
-            
-            if author := config_manager.get_setting("exif_author"):
-                self.parent.lineEdit_EXIF_Author.setText(author)
-                
-            if subject := config_manager.get_setting("exif_subject"):
-                self.parent.lineEdit_EXIF_Theme.setText(subject)
-                
-            if copyright := config_manager.get_setting("exif_copyright"):
-                self.parent.lineEdit_EXIF_Copyright.setText(copyright)
-            
-            if position := config_manager.get_setting("exif_position"):
-                self.parent.lineEdit_EXIF_Position.setText(position)
+                 self.parent.titleLineEdit.setText(title)
+             
+             if author := config_manager.get_setting("exif_author"):
+                 self.parent.authorLineEdit.setText(author)
+                 
+             if subject := config_manager.get_setting("exif_subject"):
+                 self.parent.themeLineEdit.setText(subject)
+                 
+             if copyright := config_manager.get_setting("exif_copyright"):
+                 self.parent.copyrightLineEdit.setText(copyright)
+             
+             if position := config_manager.get_setting("exif_position"):
+                 self.parent.positionLineEdit.setText(position)
                 
             if latitude := config_manager.get_setting("exif_latitude"):
                 self.parent.lineEdit_EXIF_latitude.setText(latitude)
@@ -520,23 +531,23 @@ class WriteExif(QWidget):
                 self.parent.lineEdit_EXIF_longitude.setText(longitude)
             
             if location_index := config_manager.get_setting("exif_location_index"):
-                self.parent.comboBox_location.setCurrentIndex(int(location_index))
-                self.on_combobox_location_changed(int(location_index))
+                 self.parent.locationComboBox.setCurrentIndex(int(location_index))
+                 self.on_combobox_location_changed(int(location_index))
             
             if camera_brand := config_manager.get_setting("exif_camera_brand"):
-                index = self.parent.comboBox_brand.findText(camera_brand)
-                if index >= 0:
-                    self.parent.comboBox_brand.setCurrentIndex(index)
-                    self._on_brand_changed(index)
-            
-            if camera_model := config_manager.get_setting("exif_camera_model"):
-                index = self.parent.comboBox_model.findText(camera_model)
-                if index >= 0:
-                    self.parent.comboBox_model.setCurrentIndex(index)
-            
-            if shoot_time_index := config_manager.get_setting("exif_shoot_time_index"):
-                self.parent.comboBox_shootTime.setCurrentIndex(int(shoot_time_index))
-                self.on_combobox_time_changed(int(shoot_time_index))
+                 index = self.parent.brandComboBox.findText(camera_brand)
+                 if index >= 0:
+                     self.parent.brandComboBox.setCurrentIndex(index)
+                     self._on_brand_changed(index)
+             
+             if camera_model := config_manager.get_setting("exif_camera_model"):
+                 index = self.parent.modelComboBox.findText(camera_model)
+                 if index >= 0:
+                     self.parent.modelComboBox.setCurrentIndex(index)
+             
+             if shoot_time_index := config_manager.get_setting("exif_shoot_time_index"):
+                 self.parent.shootTimeComboBox.setCurrentIndex(int(shoot_time_index))
+                 self.on_combobox_time_changed(int(shoot_time_index))
             
             if star_rating := config_manager.get_setting("exif_star_rating"):
                 self.set_selected_star(int(star_rating))
@@ -545,21 +556,21 @@ class WriteExif(QWidget):
 
     def save_exif_settings(self):
         try:
-            config_manager.update_setting("exif_title", self.parent.lineEdit_EXIF_Title.text())
-            config_manager.update_setting("exif_author", self.parent.lineEdit_EXIF_Author.text())
-            config_manager.update_setting("exif_subject", self.parent.lineEdit_EXIF_Theme.text())
-            config_manager.update_setting("exif_copyright", self.parent.lineEdit_EXIF_Copyright.text())
+            config_manager.update_setting("exif_title", self.parent.titleLineEdit.text())
+             config_manager.update_setting("exif_author", self.parent.authorLineEdit.text())
+             config_manager.update_setting("exif_subject", self.parent.themeLineEdit.text())
+             config_manager.update_setting("exif_copyright", self.parent.copyrightLineEdit.text())
             
-            config_manager.update_setting("exif_position", self.parent.lineEdit_EXIF_Position.text())
+            config_manager.update_setting("exif_position", self.parent.positionLineEdit.text())
             config_manager.update_setting("exif_latitude", self.parent.lineEdit_EXIF_latitude.text())
             config_manager.update_setting("exif_longitude", self.parent.lineEdit_EXIF_longitude.text())
             
-            config_manager.update_setting("exif_location_index", self.parent.comboBox_location.currentIndex())
+            config_manager.update_setting("exif_location_index", self.parent.locationComboBox.currentIndex())
             
-            config_manager.update_setting("exif_camera_brand", self.parent.comboBox_brand.currentText())
-            config_manager.update_setting("exif_camera_model", self.parent.comboBox_model.currentText())
-            
-            config_manager.update_setting("exif_shoot_time_index", self.parent.comboBox_shootTime.currentIndex())
+            config_manager.update_setting("exif_camera_brand", self.parent.brandComboBox.currentText())
+             config_manager.update_setting("exif_camera_model", self.parent.modelComboBox.currentText())
+             
+             config_manager.update_setting("exif_shoot_time_index", self.parent.shootTimeComboBox.currentIndex())
             config_manager.update_setting("exif_shoot_time", 
                                         self.parent.dateTimeEdit_shootTime.dateTime().toString("yyyy:MM:dd HH:mm:ss"))
             

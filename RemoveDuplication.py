@@ -109,10 +109,10 @@ class Contrast(QtWidgets.QWidget):
 
     def connect_signals(self):
         self.parent.horizontalSlider_levelContrast.valueChanged.connect(self.on_slider_value_changed)
-        self.parent.toolButton_startContrast.clicked.connect(self.startContrast)
-        self.parent.toolButton_move.clicked.connect(self.move_selected_images)
-        self.parent.toolButton_autoSelect.clicked.connect(self.auto_select_images)
-        self.parent.toolButton_delete.clicked.connect(self.delete_selected_images)
+        self.parent.startContrastToolButton.clicked.connect(self.startContrast)
+        self.parent.moveToolButton.clicked.connect(self.move_selected_images)
+        self.parent.autoSelectToolButton.clicked.connect(self.auto_select_images)
+        self.parent.deleteToolButton.clicked.connect(self.delete_selected_images)
 
     def move_selected_images(self):
         dest_folder = QtWidgets.QFileDialog.getExistingDirectory(self, "选择目标文件夹")
@@ -235,10 +235,10 @@ class Contrast(QtWidgets.QWidget):
                 return
 
         self.parent.verticalFrame_similar.show()
-        self.parent.toolButton_startContrast.setEnabled(False)
-        self.parent.toolButton_startContrast.setText("停止对比")
-        self.parent.toolButton_startContrast.clicked.disconnect()
-        self.parent.toolButton_startContrast.clicked.connect(self.stop_processing)
+        self.parent.startContrastToolButton.setEnabled(False)
+        self.parent.startContrastToolButton.setText("停止对比")
+        self.parent.startContrastToolButton.clicked.disconnect()
+        self.parent.startContrastToolButton.clicked.connect(self.stop_processing)
 
         self.processing_state = {
             'total_images': len(image_paths),
@@ -261,10 +261,10 @@ class Contrast(QtWidgets.QWidget):
                                               "• 图片文件损坏\n"
                                               "• 图片尺寸过小或宽高比异常")
             self._running = False
-            self.parent.toolButton_startContrast.setEnabled(True)
-            self.parent.toolButton_startContrast.setText("开始对比")
-            self.parent.toolButton_startContrast.clicked.disconnect()
-            self.parent.toolButton_startContrast.clicked.connect(self.startContrast)
+            self.parent.startContrastToolButton.setEnabled(True)
+            self.parent.startContrastToolButton.setText("开始对比")
+            self.parent.startContrastToolButton.clicked.disconnect()
+            self.parent.startContrastToolButton.clicked.connect(self.startContrast)
             return
 
         self.image_hashes = hashes
@@ -294,10 +294,10 @@ class Contrast(QtWidgets.QWidget):
                                       "• 内存不足\n"
                                       "• 系统资源限制")
         self._running = False
-        self.parent.toolButton_startContrast.setEnabled(True)
-        self.parent.toolButton_startContrast.setText("开始对比")
-        self.parent.toolButton_startContrast.clicked.disconnect()
-        self.parent.toolButton_startContrast.clicked.connect(self.startContrast)
+        self.parent.startContrastToolButton.setEnabled(True)
+        self.parent.startContrastToolButton.setText("开始对比")
+        self.parent.startContrastToolButton.clicked.disconnect()
+        self.parent.startContrastToolButton.clicked.connect(self.startContrast)
 
     def stop_processing(self):
         if hasattr(self, 'hash_worker') and self.hash_worker.isRunning():
@@ -313,10 +313,10 @@ class Contrast(QtWidgets.QWidget):
                 loader.stop()
 
         self._running = False
-        self.parent.toolButton_startContrast.setEnabled(True)
-        self.parent.toolButton_startContrast.setText("开始对比")
-        self.parent.toolButton_startContrast.clicked.disconnect()
-        self.parent.toolButton_startContrast.clicked.connect(self.startContrast)
+        self.parent.startContrastToolButton.setEnabled(True)
+        self.parent.startContrastToolButton.setText("开始对比")
+        self.parent.startContrastToolButton.clicked.disconnect()
+        self.parent.startContrastToolButton.clicked.connect(self.startContrast)
 
         QtWidgets.QMessageBox.information(self, "处理已停止",
                                           "图片处理任务已被用户中断\n\n"
@@ -359,10 +359,10 @@ class Contrast(QtWidgets.QWidget):
             QtWidgets.QMessageBox.information(self, "检测完成",
                                               "未发现重复或相似的图片\n\n"
                                               "所有图片都是唯一的，无需进行去重操作")
-        self.parent.toolButton_startContrast.setEnabled(True)
-        self.parent.toolButton_startContrast.setText("开始对比")
-        self.parent.toolButton_startContrast.clicked.disconnect()
-        self.parent.toolButton_startContrast.clicked.connect(self.startContrast)
+        self.parent.startContrastToolButton.setEnabled(True)
+        self.parent.startContrastToolButton.setText("开始对比")
+        self.parent.startContrastToolButton.clicked.disconnect()
+        self.parent.startContrastToolButton.clicked.connect(self.startContrast)
 
     def create_thumbnail(self, path, total_images):
         label = QtWidgets.QLabel()

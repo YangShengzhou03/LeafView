@@ -79,10 +79,10 @@ class Contrast(QtWidgets.QWidget):
 
     def connect_signals(self):
         self.parent.horizontalSlider_levelContrast.valueChanged.connect(self.on_slider_value_changed)
-        self.parent.toolButton_startContrast.clicked.connect(self.startContrast)
-        self.parent.toolButton_move.clicked.connect(self.move_selected_images)
-        self.parent.toolButton_autoSelect.clicked.connect(self.auto_select_images)
-        self.parent.toolButton_delete.clicked.connect(self.delete_selected_images)
+        self.parent.startContrastToolButton.clicked.connect(self.startContrast)
+        self.parent.moveToolButton.clicked.connect(self.move_selected_images)
+        self.parent.autoSelectToolButton.clicked.connect(self.auto_select_images)
+        self.parent.deleteToolButton.clicked.connect(self.delete_selected_images)
 
     def move_selected_images(self):
         dest_folder = QtWidgets.QFileDialog.getExistingDirectory(self, "选择目标文件夹")
@@ -150,7 +150,7 @@ class Contrast(QtWidgets.QWidget):
             else:
                 image_paths.extend(os.path.join(folder_path, f) for f in os.listdir(folder_path)
                                    if os.path.splitext(f)[1].lower() in supported_formats)
-        self.parent.toolButton_startContrast.setEnabled(False)
+        self.parent.startContrastToolButton.setEnabled(False)
         self.hash_worker = HashWorker(image_paths)
         self.hash_worker.hash_completed.connect(self.on_hashes_computed)
         self.hash_worker.progress_updated.connect(self.update_progress)
@@ -177,7 +177,7 @@ class Contrast(QtWidgets.QWidget):
     def on_hash_error(self, error_msg):
         QtWidgets.QMessageBox.warning(self, "图像Hash计算错误", error_msg)
         self._running = False
-        self.parent.toolButton_startContrast.setEnabled(True)
+        self.parent.startContrastToolButton.setEnabled(True)
 
     def display_all_images(self):
         layout = self.parent.gridLayout_2
@@ -210,7 +210,7 @@ class Contrast(QtWidgets.QWidget):
             self.update_progress(100)
             self.parent.verticalFrame_similar.hide()
             QtWidgets.QMessageBox.information(self, "提示", "没有找到符合相似度条件的图片")
-        self.parent.toolButton_startContrast.setEnabled(True)
+        self.parent.startContrastToolButton.setEnabled(True)
 
     def create_thumbnail(self, path, total_images):
         label = QtWidgets.QLabel()

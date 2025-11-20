@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>UpdateDialog</class>
- <widget class="QDialog" name="dlg_updateMain">
+ <widget class="QDialog" name="updateMainDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -17,7 +17,7 @@
    <iconset>
     <normaloff>:/icons/icon.ico</normaloff>:/icons/icon.ico</iconset>
   </property>
-  <layout class="QVBoxLayout" name="lyt_dialogMain">
+  <layout class="QVBoxLayout" name="dialogMainLayout">
    <property name="spacing">
     <number>0</number>
    </property>
@@ -34,7 +34,7 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QFrame" name="frm_dialogBackground">
+    <widget class="QFrame" name="dialogBackgroundFrame">
      <property name="minimumSize">
       <size>
        <width>512</width>
@@ -53,7 +53,7 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QHBoxLayout" name="lyt_dialogContent" stretch="4">
+     <layout class="QHBoxLayout" name="dialogContentLayout" stretch="4">
       <property name="spacing">
        <number>12</number>
       </property>
@@ -70,7 +70,7 @@
        <number>0</number>
       </property>
       <item>
-       <layout class="QVBoxLayout" name="lyt_dialogMessage" stretch="9">
+       <layout class="QVBoxLayout" name="dialogMessageLayout" stretch="9">
         <property name="spacing">
          <number>0</number>
         </property>
@@ -87,9 +87,9 @@
          <number>9</number>
         </property>
         <item>
-         <widget class="QWidget" name="frm_dialogHeader" native="true">
+         <widget class="QWidget" name="dialogHeaderWidget" native="true">
           <property name="styleSheet">
-           <string notr="true">QWidget#frm_dialogHeader {
+           <string notr="true">QWidget#dialogHeaderWidget {
     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                       stop: 0 #691bfd, 
                                       stop: 1 #c8a0f0);
@@ -97,7 +97,7 @@
     color: #ffffff;
 }</string>
           </property>
-          <layout class="QHBoxLayout" name="lyt_dialogHeader" stretch="5">
+          <layout class="QHBoxLayout" name="dialogHeaderLayout" stretch="5">
            <property name="spacing">
             <number>18</number>
            </property>
@@ -114,14 +114,14 @@
             <number>18</number>
            </property>
            <item>
-            <layout class="QHBoxLayout" name="lyt_dialogMessageContainer">
-             <item>
-              <layout class="QVBoxLayout" name="lyt_dialogText" stretch="1,3,1">
+            <layout class="QHBoxLayout" name="dialogMessageContainerLayout">
+              <item>
+               <layout class="QVBoxLayout" name="dialogTextLayout" stretch="1,3,1">
                <property name="spacing">
                 <number>0</number>
                </property>
                <item>
-                <widget class="QLabel" name="lbl_dialogTitle">
+                <widget class="QLabel" name="dialogTitleLabel">
                  <property name="font">
                   <font>
                    <pointsize>22</pointsize>
@@ -129,7 +129,7 @@
                   </font>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">QLabel#lbl_dialogTitle {
+                  <string notr="true">QLabel#dialogTitleLabel {
     color: #deffff;
     text-align: center;
     margin-bottom: 12px;
@@ -144,7 +144,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="lbl_dialogMessage">
+                <widget class="QLabel" name="dialogMessageLabel">
                  <property name="font">
                   <font>
                    <pointsize>12</pointsize>
@@ -152,7 +152,7 @@
                   </font>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">QLabel#lbl_dialogMessage {
+                  <string notr="true">QLabel#dialogMessageLabel {
     color: #fafafa;
     text-align: left;
 }</string>
@@ -169,7 +169,7 @@
                 </widget>
                </item>
                <item>
-                <layout class="QHBoxLayout" name="lyt_dialogButtons">
+                <layout class="QHBoxLayout" name="dialogButtonsLayout">
                  <property name="spacing">
                   <number>12</number>
                  </property>
@@ -177,7 +177,7 @@
                   <number>6</number>
                  </property>
                  <item>
-                  <spacer name="spc_dialogButtonHorizontal">
+                  <spacer name="dialogButtonHorizontalSpacer">
                    <property name="orientation">
                     <enum>Qt::Horizontal</enum>
                    </property>
@@ -190,7 +190,7 @@
                   </spacer>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="btn_dialogCloseSecondary">
+                  <widget class="QPushButton" name="dialogCloseSecondaryButton">
                    <property name="minimumSize">
                     <size>
                      <width>88</width>
@@ -204,7 +204,7 @@
                     </size>
                    </property>
                    <property name="styleSheet">
-                    <string notr="true">QPushButton#btn_dialogCloseSecondary {
+                    <string notr="true">QPushButton#dialogCloseSecondaryButton {
     background-color: rgba(250, 250, 250, 100);
     color: #ffffff;
     border: none;
@@ -214,15 +214,15 @@
     font-weight: normal;
 }
 
-QPushButton#btn_dialogCloseSecondary:hover {
+QPushButton#dialogCloseSecondaryButton:hover {
     background-color: rgba(250, 250, 250, 130);
 }
 
-QPushButton#btn_dialogCloseSecondary:pressed {
+QPushButton#dialogCloseSecondaryButton:pressed {
     background-color: rgba(250, 250, 250, 180);
 }
 
-QPushButton#btn_dialogCloseSecondary:disabled {
+QPushButton#dialogCloseSecondaryButton:disabled {
     background-color: rgba(250, 250, 250, 50);
     color: rgba(255, 255, 255, 150);
 }</string>
@@ -236,7 +236,7 @@ QPushButton#btn_dialogCloseSecondary:disabled {
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="btn_dialogUpdatePrimary">
+                  <widget class="QPushButton" name="dialogUpdatePrimaryButton">
                    <property name="minimumSize">
                     <size>
                      <width>88</width>
@@ -250,7 +250,7 @@ QPushButton#btn_dialogCloseSecondary:disabled {
                     </size>
                    </property>
                    <property name="styleSheet">
-                    <string notr="true">QPushButton#btn_dialogUpdatePrimary {
+                    <string notr="true">QPushButton#dialogUpdatePrimaryButton {
     background-color: rgba(105, 27, 253, 180);
     color: #ffffff;
     border: none;
@@ -260,15 +260,15 @@ QPushButton#btn_dialogCloseSecondary:disabled {
     font-weight: normal;
 }
 
-QPushButton#btn_dialogUpdatePrimary:hover {
+QPushButton#dialogUpdatePrimaryButton:hover {
     background-color: rgba(105, 27, 253, 120);
 }
 
-QPushButton#btn_dialogUpdatePrimary:pressed {
+QPushButton#dialogUpdatePrimaryButton:pressed {
     background-color: rgba(105, 27, 253, 250);
 }
 
-QPushButton#btn_dialogUpdatePrimary:disabled {
+QPushButton#dialogUpdatePrimaryButton:disabled {
     background-color: rgba(105, 27, 253, 50);
     color: rgba(255, 255, 255, 150);
 }</string>
