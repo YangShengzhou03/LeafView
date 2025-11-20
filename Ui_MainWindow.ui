@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>MainWindow</class>
- <widget class="QMainWindow" name="mainWindow">
+ <widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,10 +11,10 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>LeafView - 媒体管理工具</string>
   </property>
-  <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="mainLayout">
+  <widget class="QWidget" name="mainCentralWidget">
+   <layout class="QGridLayout" name="mainGridLayout">
     <property name="leftMargin">
      <number>0</number>
     </property>
@@ -31,7 +31,7 @@
      <number>0</number>
     </property>
     <item row="0" column="0">
-     <widget class="QFrame" name="frameMain">
+     <widget class="QFrame" name="mainContainerFrame">
       <property name="styleSheet">
        <string notr="true">QFrame{
 background-color: rgb(255, 255, 255);
@@ -45,7 +45,7 @@ border-radius:12px;
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,0,1">
+      <layout class="QHBoxLayout" name="mainContainerLayout" stretch="0,0,1">
        <property name="spacing">
         <number>0</number>
        </property>
@@ -62,7 +62,7 @@ border-radius:12px;
         <number>0</number>
        </property>
        <item>
-        <widget class="QFrame" name="frameNavigation">
+        <widget class="QFrame" name="sidebarFrame">
          <property name="minimumSize">
           <size>
            <width>162</width>
@@ -78,7 +78,7 @@ border-radius:12px;
          <property name="styleSheet">
           <string notr="true">background:rgba(0, 0, 0, 0);</string>
          </property>
-         <layout class="QVBoxLayout" name="navigationLayout" stretch="0,9">
+         <layout class="QVBoxLayout" name="sidebarLayout" stretch="0,9">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -95,7 +95,7 @@ border-radius:12px;
            <number>0</number>
           </property>
           <item>
-           <widget class="QFrame" name="frameLogo">
+           <widget class="QFrame" name="logoFrame">
             <property name="styleSheet">
              <string notr="true">border: none;</string>
             </property>
@@ -122,7 +122,7 @@ border-radius:12px;
               <number>0</number>
              </property>
              <item>
-              <widget class="QPushButton" name="btnLogo">
+              <widget class="QPushButton" name="appLogoButton">
                <property name="font">
                 <font>
                  <pointsize>20</pointsize>
@@ -131,28 +131,9 @@ border-radius:12px;
                <property name="styleSheet">
                 <string notr="true">QPushButton {
     color: rgba(134, 119, 253, 255);
-    padding: 8px 16px;
-    border: 2px solid rgba(134, 119, 253, 0.3);
-    border-radius: 20px;
-    background-color: rgba(255, 255, 255, 0.9);
-    font-weight: 600;
-    font-size: 20px;
+    padding: 4px;
+    border: none;
     qproperty-alignment: AlignCenter;
-    box-shadow: 0 2px 12px rgba(134, 119, 253, 0.15);
-    transition: all 0.3s ease;
-}
-
-QPushButton:hover {
-    background-color: rgba(255, 255, 255, 1);
-    border-color: rgba(134, 119, 253, 0.5);
-    box-shadow: 0 4px 20px rgba(134, 119, 253, 0.25);
-    transform: translateY(-1px);
-}
-
-QPushButton:pressed {
-    background-color: rgba(245, 245, 255, 1);
-    transform: translateY(0);
-    box-shadow: 0 1px 8px rgba(134, 119, 253, 0.2);
 }</string>
                </property>
                <property name="text">
@@ -164,7 +145,7 @@ QPushButton:pressed {
            </widget>
           </item>
           <item>
-           <widget class="QScrollArea" name="scrollNavigation">
+           <widget class="QScrollArea" name="navigationScrollArea">
             <property name="styleSheet">
              <string notr="true">QScrollBar:vertical{
     width:8px;
@@ -206,7 +187,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
             <property name="widgetResizable">
              <bool>true</bool>
             </property>
-            <widget class="QWidget" name="navigationContent">
+            <widget class="QWidget" name="navigationScrollContent">
              <property name="geometry">
               <rect>
                <x>0</x>
@@ -232,7 +213,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
                <number>0</number>
               </property>
               <item>
-               <widget class="QListWidget" name="listNavigation">
+               <widget class="QListWidget" name="navigationMenuList">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                   <horstretch>0</horstretch>
@@ -265,44 +246,41 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
     show-decoration-selected: 1;
     background-color: rgba(0, 0, 0, 0);
     border: none;
-    border-radius: 12px;
-    padding: 4px;
+    border-radius: 8px;
+    padding: 2px;
     outline: 0;
     font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
 }
 
 QListView::item {
     background-color: transparent;
-    padding: 12px 16px;
-    margin: 4px 0;
-    border-radius: 8px;
+    padding: 10px 2px;
+    margin: 2px 0;
+    border-radius: 6px;
     color: #333333;
     font-size: 14px;
-    font-weight: 500;
     border: 1px solid transparent;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
+    transition: all 0.2s ease;
 }
 
 QListView::item:hover {
-    background-color: rgba(134, 119, 253, 0.08);
-    border-color: rgba(134, 119, 253, 0.2);
-    box-shadow: 0 4px 12px rgba(134, 119, 253, 0.1);
-    transform: translateX(4px);
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
 }
 
 QListView::item:selected {
-    background-color: rgba(134, 119, 253, 0.15);
+    background-color: #f0f2ff;
     color: #6c5ce7;
-    font-weight: 600;
-    border-left: 4px solid #6c5ce7;
-    padding-left: 12px;
-    box-shadow: 0 6px 16px rgba(108, 92, 231, 0.2);
+    font-weight: 500;
+    border-left: 3px solid #6c5ce7;
+    padding-left: 8px;
+    box-shadow: 0 3px 8px rgba(108, 92, 231, 0.15);
 }
 
 QListView::item:selected:hover {
-    background-color: rgba(134, 119, 253, 0.2);
-    box-shadow: 0 8px 20px rgba(108, 92, 231, 0.25);
+    background-color: #e6e9ff;
 }
 
 QListView::item:disabled {
@@ -312,43 +290,29 @@ QListView::item:disabled {
 
 QListView::item:focus {
     outline: none;
-    border: 1px dotted rgba(134, 119, 253, 0.5);
-}
-
-QListView::icon {
-    margin-right: 12px;
+    border: 1px dotted #6c5ce7;
 }
 
 QScrollBar:vertical {
     border: none;
-    background: rgba(245, 245, 245, 0.8);
-    width: 8px;
-    border-radius: 4px;
-    margin: 4px 0;
+    background: #f1f1f1;
+    width: 10px;
+    margin: 0;
 }
 
 QScrollBar::handle:vertical {
-    background: rgba(134, 119, 253, 0.3);
-    min-height: 24px;
-    border-radius: 4px;
-    transition: background 0.3s ease;
+    background: #d1d1d1;
+    min-height: 20px;
+    border-radius: 5px;
 }
 
 QScrollBar::handle:vertical:hover {
-    background: rgba(134, 119, 253, 0.5);
-}
-
-QScrollBar::handle:vertical:pressed {
-    background: rgba(134, 119, 253, 0.7);
-}
-
-QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
-    background: transparent;
+    background: #c1c1c1;
 }
 
 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
     height: 0;
-    background: transparent;
+    background: none;
 }</string>
                 </property>
                 <property name="verticalScrollBarPolicy">
@@ -426,7 +390,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
           <number>0</number>
          </property>
          <item>
-          <widget class="Line" name="lineDivider">
+          <widget class="Line" name="sidebarDividerLine">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -456,7 +420,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
         </layout>
        </item>
        <item>
-        <widget class="QFrame" name="frameContent">
+        <widget class="QFrame" name="contentFrame">
          <property name="styleSheet">
           <string notr="true">border-radius: 12px;</string>
          </property>
@@ -477,7 +441,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
            <number>0</number>
           </property>
           <item>
-           <widget class="QFrame" name="frameHeader">
+           <widget class="QFrame" name="headerFrame">
             <property name="maximumSize">
              <size>
               <width>16777215</width>
@@ -485,7 +449,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
              </size>
             </property>
             <property name="styleSheet">
-                <string notr="true">QFrame{
+             <string notr="true">QFrame{
 background-color: qradialgradient(
 cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
 stop:0.66 rgba(134, 119, 253, 255),
@@ -495,9 +459,8 @@ border-top-left-radius:0px;
 border-top-right-radius:12px;
 border-bottom-right-radius:0px;
 border-bottom-left-radius:0px;
-box-shadow: 0 4px 20px rgba(134, 119, 253, 0.3);
 }</string>
-               </property>
+            </property>
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
@@ -521,7 +484,7 @@ box-shadow: 0 4px 20px rgba(134, 119, 253, 0.3);
               <number>9</number>
              </property>
              <item>
-              <spacer name="headerSpacer">
+              <spacer name="horizontalSpacer">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -534,7 +497,7 @@ box-shadow: 0 4px 20px rgba(134, 119, 253, 0.3);
               </spacer>
              </item>
              <item>
-              <widget class="QWidget" name="widgetVip" native="true">
+              <widget class="QWidget" name="vipBadgeWidget" native="true">
                <property name="enabled">
                 <bool>true</bool>
                </property>
@@ -567,7 +530,7 @@ border-radius:0px;</string>
               </widget>
              </item>
              <item>
-              <widget class="QToolButton" name="btnService">
+              <widget class="QToolButton" name="serviceButton">
                <property name="minimumSize">
                 <size>
                  <width>36</width>
@@ -582,31 +545,18 @@ border-radius:0px;</string>
                </property>
                <property name="styleSheet">
                 <string notr="true">QToolButton {
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 4px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+	padding: 4px;
+	border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0);
 }
 
 QToolButton:hover {
-    background: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
+    background-color: rgba(255, 255, 255, 20);
 }
 
 QToolButton:pressed {
-    background: rgba(255, 255, 255, 0.35);
-    border-color: rgba(255, 255, 255, 0.5);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transform: translateY(0);
-}
-
-QToolButton::menu-indicator {
-    image: none;
+    background-color: rgba(255, 255, 255, 50);
 }</string>
                </property>
                <property name="text">
@@ -625,7 +575,7 @@ QToolButton::menu-indicator {
               </widget>
              </item>
              <item>
-              <widget class="QToolButton" name="btnSettings">
+              <widget class="QToolButton" name="settingsButton">
                <property name="minimumSize">
                 <size>
                  <width>36</width>
@@ -640,31 +590,18 @@ QToolButton::menu-indicator {
                </property>
                <property name="styleSheet">
                 <string notr="true">QToolButton {
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 4px;
-    border-radius: 12px;
-    background-color: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+    border: none;
+	padding: 4px;
+	border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0);
 }
 
 QToolButton:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.3);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-    transform: translateY(-1px);
+    background-color: rgba(255, 255, 255, 20);
 }
 
 QToolButton:pressed {
-    background-color: rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-    transform: translateY(0);
-}
-
-QToolButton::menu-indicator {
-    image: none;
+    background-color: rgba(255, 255, 255, 50);
 }</string>
                </property>
                <property name="text">
@@ -683,7 +620,7 @@ QToolButton::menu-indicator {
               </widget>
              </item>
              <item>
-              <widget class="QToolButton" name="btnMinimize">
+              <widget class="QToolButton" name="minimizeButton">
                <property name="minimumSize">
                 <size>
                  <width>36</width>
@@ -698,31 +635,18 @@ QToolButton::menu-indicator {
                </property>
                <property name="styleSheet">
                 <string notr="true">QToolButton {
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 4px;
-    border-radius: 12px;
-    background-color: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+    border: none;
+	padding: 4px;
+	border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0);
 }
 
 QToolButton:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.3);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-    transform: translateY(-1px);
+    background-color: rgba(255, 255, 255, 20);
 }
 
 QToolButton:pressed {
-    background-color: rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-    transform: translateY(0);
-}
-
-QToolButton::menu-indicator {
-    image: none;
+    background-color: rgba(255, 255, 255, 50);
 }</string>
                </property>
                <property name="text">
@@ -741,7 +665,7 @@ QToolButton::menu-indicator {
               </widget>
              </item>
              <item>
-              <widget class="QToolButton" name="btnMaximize">
+              <widget class="QToolButton" name="maximizeButton">
                <property name="minimumSize">
                 <size>
                  <width>36</width>
@@ -756,31 +680,18 @@ QToolButton::menu-indicator {
                </property>
                <property name="styleSheet">
                 <string notr="true">QToolButton {
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 4px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+	padding: 4px;
+	border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0);
 }
 
 QToolButton:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.3);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
+    background-color: rgba(255, 255, 255, 20);
 }
 
 QToolButton:pressed {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transform: translateY(0);
-}
-
-QToolButton::menu-indicator {
-    image: none;
+    background-color: rgba(255, 255, 255, 50);
 }</string>
                </property>
                <property name="text">
@@ -799,7 +710,7 @@ QToolButton::menu-indicator {
               </widget>
              </item>
              <item>
-              <widget class="QToolButton" name="btnClose">
+              <widget class="QToolButton" name="closeButton">
                <property name="minimumSize">
                 <size>
                  <width>36</width>
@@ -814,31 +725,18 @@ QToolButton::menu-indicator {
                </property>
                <property name="styleSheet">
                 <string notr="true">QToolButton {
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 4px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+	padding: 4px;
+	border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0);
 }
 
 QToolButton:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.3);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
+    background-color: rgba(255, 255, 255, 20);
 }
 
 QToolButton:pressed {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transform: translateY(0);
-}
-
-QToolButton::menu-indicator {
-    image: none;
+    background-color: rgba(255, 255, 255, 50);
 }</string>
                </property>
                <property name="text">
@@ -860,7 +758,7 @@ QToolButton::menu-indicator {
            </widget>
           </item>
           <item>
-           <widget class="QFrame" name="frameContentArea">
+           <widget class="QFrame" name="contentAreaFrame">
             <property name="styleSheet">
              <string notr="true">border-radius: 20px;
 background:rgb(245, 246, 247);</string>
@@ -888,7 +786,7 @@ background:rgb(245, 246, 247);</string>
               <number>0</number>
              </property>
              <item>
-              <widget class="QStackedWidget" name="stackedContent">
+              <widget class="QStackedWidget" name="mainContentStack">
                <property name="styleSheet">
                 <string notr="true">${
 	background-color: rgba(255, 255, 255, 0);
@@ -936,11 +834,11 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
                <property name="currentIndex">
                 <number>0</number>
                </property>
-               <widget class="QWidget" name="pageWelcome">
+               <widget class="QWidget" name="homePage">
                 <property name="styleSheet">
                  <string notr="true">background: rgb(245, 249, 254);</string>
                 </property>
-                <layout class="QHBoxLayout" name="welcomeLayout" stretch="1,0">
+                <layout class="QHBoxLayout" name="horizontalLayout_21" stretch="1,0">
                  <property name="spacing">
                   <number>0</number>
                  </property>
@@ -957,7 +855,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
                   <number>0</number>
                  </property>
                  <item>
-                  <layout class="QVBoxLayout" name="welcomeLeftLayout">
+                  <layout class="QVBoxLayout" name="verticalLayout_32">
                    <property name="spacing">
                     <number>0</number>
                    </property>
@@ -968,7 +866,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
                     <number>0</number>
                    </property>
                    <item>
-                    <widget class="QScrollArea" name="scrollWelcomeFolders">
+                    <widget class="QScrollArea" name="homeScrollArea">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -1021,7 +919,7 @@ QScrollBar::sub-page:vertical {
                      <property name="alignment">
                       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                      </property>
-                     <widget class="QWidget" name="scrollWelcomeContent">
+                     <widget class="QWidget" name="homeScrollContent">
                       <property name="geometry">
                        <rect>
                         <x>0</x>
@@ -1030,7 +928,7 @@ QScrollBar::sub-page:vertical {
                         <height>516</height>
                        </rect>
                       </property>
-                      <layout class="QGridLayout" name="welcomeFoldersLayout">
+                      <layout class="QGridLayout" name="homeGridLayout">
                        <property name="leftMargin">
                         <number>9</number>
                        </property>
@@ -1050,7 +948,7 @@ QScrollBar::sub-page:vertical {
                   </layout>
                  </item>
                  <item>
-                  <widget class="QFrame" name="frameAddFolder">
+                  <widget class="QFrame" name="addFolderFrame">
                    <property name="styleSheet">
                     <string notr="true">QFrame {
     background: rgb(245, 249, 254);
@@ -1074,7 +972,7 @@ QScrollBar::sub-page:vertical {
                      <number>6</number>
                     </property>
                     <item>
-                     <widget class="QWidget" name="widgetAddFolder" native="true">
+                     <widget class="QWidget" name="addFolderWidget" native="true">
                       <property name="minimumSize">
                        <size>
                         <width>0</width>
@@ -1099,7 +997,7 @@ stop:0.66 rgba(134, 119, 253, 255),
 stop:1 rgba(119, 111, 252, 255)
 );</string>
                       </property>
-                      <layout class="QVBoxLayout" name="verticalLayout_6" stretch="1,0,2">
+                      <layout class="QVBoxLayout" name="addFolderWidgetLayout" stretch="1,0,2">
                        <property name="spacing">
                         <number>9</number>
                        </property>
@@ -1120,7 +1018,7 @@ stop:1 rgba(119, 111, 252, 255)
                         </spacer>
                        </item>
                        <item>
-                        <layout class="QHBoxLayout" name="horizontalLayout_31">
+                        <layout class="QHBoxLayout" name="folderIconLayout">
                          <property name="spacing">
                           <number>2</number>
                          </property>
@@ -1138,7 +1036,7 @@ stop:1 rgba(119, 111, 252, 255)
                           </spacer>
                          </item>
                          <item>
-                          <widget class="QWidget" name="widgetFolderIcon" native="true">
+                          <widget class="QWidget" name="folderIconWidget" native="true">
                            <property name="sizePolicy">
                             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                              <horstretch>0</horstretch>
@@ -1166,7 +1064,7 @@ border: 0px;</string>
                           </widget>
                          </item>
                          <item>
-                          <widget class="QPushButton" name="btnAddFolder">
+                          <widget class="QPushButton" name="addFolderButton">
                            <property name="font">
                             <font>
                              <pointsize>14</pointsize>
@@ -1199,7 +1097,7 @@ border: 0px;</string>
                         </layout>
                        </item>
                        <item>
-                        <widget class="QLabel" name="labelAddFolderHint">
+                        <widget class="QLabel" name="addFolderHintLabel">
                          <property name="font">
                           <font>
                            <pointsize>9</pointsize>
@@ -1238,7 +1136,7 @@ border: 0px;</string>
                  </item>
                 </layout>
                </widget>
-               <widget class="QWidget" name="pageGallery">
+               <widget class="QWidget" name="page_1">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -1252,7 +1150,7 @@ border-top-right-radius:0px;
 border-bottom-right-radius:12px;
 border-bottom-left-radius:0px;</string>
                 </property>
-                <layout class="QVBoxLayout" name="galleryLayout" stretch="0">
+                <layout class="QVBoxLayout" name="verticalLayout_20" stretch="0">
                  <property name="spacing">
                   <number>0</number>
                  </property>
@@ -1269,7 +1167,7 @@ border-bottom-left-radius:0px;</string>
                   <number>0</number>
                  </property>
                  <item>
-                  <widget class="QFrame" name="frameGallery">
+                  <widget class="QFrame" name="placeholderFrame">
                    <property name="styleSheet">
                     <string notr="true">background:rgb(255, 255, 255);
 border-top-left-radius:0px;
@@ -1277,7 +1175,7 @@ border-top-right-radius:0px;
 border-bottom-right-radius:12px;
 border-bottom-left-radius:0px;</string>
                    </property>
-                   <layout class="QVBoxLayout" name="galleryFrameLayout">
+                   <layout class="QVBoxLayout" name="placeholderLayout">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -1307,7 +1205,7 @@ border-bottom-left-radius:0px;</string>
                      </spacer>
                     </item>
                     <item>
-                     <widget class="QLabel" name="label">
+                     <widget class="QLabel" name="placeholderLabel">
                       <property name="styleSheet">
                        <string notr="true">QLabel {
     font-family: &quot;Microsoft YaHei&quot;, &quot;Segoe UI&quot;, sans-serif;
@@ -1385,7 +1283,7 @@ QLabel#ImageLabel:hover {
                      </widget>
                     </item>
                     <item>
-                     <spacer name="verticalSpacer_2">
+                     <spacer name="placeholderSpacer">
                       <property name="orientation">
                        <enum>Qt::Vertical</enum>
                       </property>
@@ -1402,7 +1300,7 @@ QLabel#ImageLabel:hover {
                  </item>
                 </layout>
                </widget>
-               <widget class="QWidget" name="pageViewer">
+               <widget class="QWidget" name="settingsPage">
                 <property name="styleSheet">
                  <string notr="true">border: none;</string>
                 </property>
@@ -1434,7 +1332,7 @@ QLabel#ImageLabel:hover {
                     <number>0</number>
                    </property>
                    <item>
-                    <widget class="QFrame" name="horizontalFrame_3">
+                    <widget class="QFrame" name="settingsHeaderFrame">
                      <property name="styleSheet">
                       <string notr="true">color: #333333;
 background:rgb(255, 255, 255);
@@ -1458,7 +1356,7 @@ border-radius: 0px;</string>
                        <number>9</number>
                       </property>
                       <item>
-                       <widget class="QLabel" name="label_classification">
+                       <widget class="QLabel" name="classificationLabel">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -1476,7 +1374,7 @@ border-radius: 0px;</string>
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLabel" name="label_route">
+                       <widget class="QLabel" name="routeLabel">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -1494,7 +1392,7 @@ border-radius: 0px;</string>
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLabel" name="label_25">
+                       <widget class="QLabel" name="separatorLabel">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -1512,7 +1410,7 @@ border-radius: 0px;</string>
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="comboBox_level_1">
+                       <widget class="QComboBox" name="level1ComboBox">
                         <property name="minimumSize">
                          <size>
                           <width>82</width>
@@ -1668,7 +1566,7 @@ QComboBox:focus {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLabel" name="label_17">
+                       <widget class="QLabel" name="separator2Label">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -1686,7 +1584,7 @@ QComboBox:focus {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="comboBox_level_2">
+                       <widget class="QComboBox" name="level2ComboBox">
                         <property name="minimumSize">
                          <size>
                           <width>82</width>
@@ -1842,7 +1740,7 @@ QComboBox:focus {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLabel" name="label_18">
+                       <widget class="QLabel" name="separator3Label">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -1860,7 +1758,7 @@ QComboBox:focus {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="comboBox_level_3">
+                       <widget class="QComboBox" name="level3ComboBox">
                         <property name="minimumSize">
                          <size>
                           <width>82</width>
@@ -2016,7 +1914,7 @@ QComboBox:focus {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLabel" name="label_19">
+                       <widget class="QLabel" name="separator4Label">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -2034,7 +1932,7 @@ QComboBox:focus {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="comboBox_level_4">
+                       <widget class="QComboBox" name="level4ComboBox">
                         <property name="minimumSize">
                          <size>
                           <width>82</width>
@@ -2190,7 +2088,7 @@ QComboBox:focus {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLabel" name="label_20">
+                       <widget class="QLabel" name="separator5Label">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -2208,7 +2106,7 @@ QComboBox:focus {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="comboBox_level_5">
+                       <widget class="QComboBox" name="level5ComboBox">
                         <property name="minimumSize">
                          <size>
                           <width>82</width>
@@ -2367,12 +2265,12 @@ QComboBox:focus {
                     </widget>
                    </item>
                    <item>
-                    <widget class="QFrame" name="rename_Frame">
+                    <widget class="QFrame" name="renameFrame">
                      <property name="styleSheet">
                       <string notr="true">border-radius:0px;
 background:rgb(255, 255, 255);</string>
                      </property>
-                     <layout class="QVBoxLayout" name="verticalLayout_35">
+                     <layout class="QVBoxLayout" name="renameLayout">
                       <property name="spacing">
                        <number>0</number>
                       </property>
@@ -2389,7 +2287,7 @@ background:rgb(255, 255, 255);</string>
                        <number>0</number>
                       </property>
                       <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_45">
+                       <layout class="QHBoxLayout" name="renameHeaderLayout">
                         <property name="spacing">
                          <number>4</number>
                         </property>
@@ -2406,7 +2304,7 @@ background:rgb(255, 255, 255);</string>
                          <number>6</number>
                         </property>
                         <item>
-                         <widget class="QLabel" name="label_buildName">
+                         <widget class="QLabel" name="buildNameLabel">
                           <property name="font">
                            <font>
                             <pointsize>12</pointsize>
@@ -2424,7 +2322,7 @@ background:rgb(255, 255, 255);</string>
                          </widget>
                         </item>
                         <item>
-                         <widget class="QFrame" name="frame_Rename">
+                         <widget class="QFrame" name="renameFrame">
                           <property name="minimumSize">
                            <size>
                             <width>88</width>
@@ -2459,7 +2357,7 @@ background:rgb(255, 255, 255);</string>
                           <property name="frameShadow">
                            <enum>QFrame::Raised</enum>
                           </property>
-                          <layout class="QHBoxLayout" name="horizontalLayout_53">
+                          <layout class="QHBoxLayout" name="renameFrameLayout">
                            <property name="spacing">
                             <number>9</number>
                            </property>
@@ -2479,7 +2377,7 @@ background:rgb(255, 255, 255);</string>
                          </widget>
                         </item>
                         <item>
-                         <widget class="QPushButton" name="pushButton_unique">
+                         <widget class="QPushButton" name="uniqueButton">
                           <property name="minimumSize">
                            <size>
                             <width>78</width>
@@ -2519,7 +2417,7 @@ QPushButton:hover {
                          </widget>
                         </item>
                         <item>
-                         <widget class="QLabel" name="label_point">
+                         <widget class="QLabel" name="pointLabel">
                           <property name="font">
                            <font>
                             <pointsize>12</pointsize>
@@ -2537,7 +2435,7 @@ QPushButton:hover {
                          </widget>
                         </item>
                         <item>
-                         <widget class="QPushButton" name="pushButton_extensions">
+                         <widget class="QPushButton" name="extensionsButton">
                           <property name="minimumSize">
                            <size>
                             <width>64</width>
@@ -2577,7 +2475,7 @@ QPushButton:hover {
                          </widget>
                         </item>
                         <item>
-                         <spacer name="horizontalSpacer_2">
+                         <spacer name="renameHeaderSpacer">
                           <property name="orientation">
                            <enum>Qt::Horizontal</enum>
                           </property>
@@ -2592,7 +2490,7 @@ QPushButton:hover {
                        </layout>
                       </item>
                       <item>
-                       <widget class="QFrame" name="Frame_tags">
+                       <widget class="QFrame" name="tagsFrame">
                         <property name="minimumSize">
                          <size>
                           <width>0</width>
@@ -2603,7 +2501,7 @@ QPushButton:hover {
                          <string notr="true">border: none;
 border-radius: 0px;</string>
                         </property>
-                        <layout class="QHBoxLayout" name="horizontalLayout_54">
+                        <layout class="QHBoxLayout" name="tagsLayout">
                          <property name="spacing">
                           <number>0</number>
                          </property>
@@ -2620,7 +2518,7 @@ border-radius: 0px;</string>
                           <number>0</number>
                          </property>
                          <item>
-                          <widget class="QLabel" name="label_RenamingTags">
+                          <widget class="QLabel" name="renamingTagsLabel">
                            <property name="minimumSize">
                             <size>
                              <width>0</width>
@@ -2644,7 +2542,7 @@ border-radius: 0px;</string>
                           </widget>
                          </item>
                          <item>
-                          <widget class="QFrame" name="frame_Rename_tags">
+                          <widget class="QFrame" name="renameTagsFrame">
                            <property name="minimumSize">
                             <size>
                              <width>0</width>
@@ -2675,7 +2573,7 @@ border: 0px;
                            <property name="frameShadow">
                             <enum>QFrame::Raised</enum>
                            </property>
-                           <layout class="QHBoxLayout" name="horizontalLayout_57">
+                           <layout class="QHBoxLayout" name="renameTagsLayout">
                             <property name="spacing">
                              <number>6</number>
                             </property>
@@ -2692,7 +2590,7 @@ border: 0px;
                              <number>6</number>
                             </property>
                             <item>
-                             <widget class="QPushButton" name="pushButton_original_tag">
+                             <widget class="QPushButton" name="originalTagButton">
                               <property name="maximumSize">
                                <size>
                                 <width>80</width>
@@ -2726,7 +2624,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="pushButton_year_tag">
+                             <widget class="QPushButton" name="yearTagButton">
                               <property name="maximumSize">
                                <size>
                                 <width>46</width>
@@ -2767,7 +2665,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="pushButton_month_tag">
+                             <widget class="QPushButton" name="monthTagButton">
                               <property name="maximumSize">
                                <size>
                                 <width>46</width>
@@ -2808,7 +2706,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="pushButton_date_tag">
+                             <widget class="QPushButton" name="dateTagButton">
                               <property name="maximumSize">
                                <size>
                                 <width>32</width>
@@ -2849,7 +2747,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="pushButton_day_tag">
+                             <widget class="QPushButton" name="dayTagButton">
                               <property name="maximumSize">
                                <size>
                                 <width>46</width>
@@ -2890,7 +2788,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="pushButton_time_tag">
+                             <widget class="QPushButton" name="timeTagButton">
                               <property name="maximumSize">
                                <size>
                                 <width>46</width>
@@ -2937,7 +2835,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="pushButton_make_tag">
+                             <widget class="QPushButton" name="makeTagButton">
                               <property name="maximumSize">
                                <size>
                                 <width>74</width>
@@ -2978,7 +2876,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="pushButton_model_tag">
+                             <widget class="QPushButton" name="modelTagButton">
                               <property name="maximumSize">
                                <size>
                                 <width>74</width>
@@ -3019,7 +2917,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="pushButton_address_tag">
+                             <widget class="QPushButton" name="addressTagButton">
                               <property name="maximumSize">
                                <size>
                                 <width>66</width>
@@ -3064,7 +2962,7 @@ QPushButton:pressed {
                              </widget>
                             </item>
                             <item>
-                             <widget class="QPushButton" name="pushButton_customize_tag">
+                             <widget class="QPushButton" name="customizeTagButton">
                               <property name="maximumSize">
                                <size>
                                 <width>80</width>
@@ -3116,7 +3014,7 @@ QPushButton:pressed {
                             <number>9</number>
                            </property>
                            <item>
-                            <spacer name="horizontalSpacer_3">
+                            <spacer name="tagsLayoutSpacer">
                              <property name="orientation">
                               <enum>Qt::Horizontal</enum>
                              </property>
@@ -3129,7 +3027,7 @@ QPushButton:pressed {
                             </spacer>
                            </item>
                            <item>
-                            <widget class="QLabel" name="label_operation_2">
+                            <widget class="QLabel" name="separatorLabel">
                              <property name="font">
                               <font>
                                <pointsize>12</pointsize>
@@ -3147,7 +3045,7 @@ QPushButton:pressed {
                             </widget>
                            </item>
                            <item>
-                            <widget class="QComboBox" name="comboBox_separator">
+                            <widget class="QComboBox" name="separatorComboBox">
                              <property name="minimumSize">
                               <size>
                                <width>0</width>
@@ -3266,12 +3164,12 @@ QComboBox QAbstractItemView::item {
                          <number>6</number>
                         </property>
                         <item>
-                         <layout class="QHBoxLayout" name="horizontalLayout_42">
+                         <layout class="QHBoxLayout" name="timeSourceLayout">
                           <property name="spacing">
                            <number>4</number>
                           </property>
                           <item>
-                           <widget class="QLabel" name="label_timeSources">
+                           <widget class="QLabel" name="timeSourceLabel">
                             <property name="font">
                              <font>
                               <pointsize>12</pointsize>
@@ -3289,7 +3187,7 @@ QComboBox QAbstractItemView::item {
                            </widget>
                           </item>
                           <item>
-                           <widget class="QComboBox" name="comboBox_timeSource">
+                           <widget class="QComboBox" name="timeSourceComboBox">
                             <property name="minimumSize">
                              <size>
                               <width>78</width>
@@ -3362,12 +3260,12 @@ QComboBox QAbstractItemView::item {
                          </layout>
                         </item>
                         <item>
-                         <layout class="QHBoxLayout" name="horizontalLayout_44">
+                         <layout class="QHBoxLayout" name="operationLayout">
                           <property name="spacing">
                            <number>4</number>
                           </property>
                           <item>
-                           <widget class="QLabel" name="label_operation">
+                           <widget class="QLabel" name="operationLabel">
                             <property name="font">
                              <font>
                               <pointsize>12</pointsize>
@@ -3385,7 +3283,7 @@ QComboBox QAbstractItemView::item {
                            </widget>
                           </item>
                           <item>
-                           <widget class="QComboBox" name="comboBox_operation">
+                           <widget class="QComboBox" name="operationComboBox">
                             <property name="minimumSize">
                              <size>
                               <width>78</width>
@@ -3448,7 +3346,7 @@ QComboBox QAbstractItemView::item {
                          </layout>
                         </item>
                         <item>
-                         <spacer name="horizontalSpacer_4">
+                         <spacer name="operationSpacer">
                           <property name="orientation">
                            <enum>Qt::Horizontal</enum>
                           </property>
@@ -3463,7 +3361,7 @@ QComboBox QAbstractItemView::item {
                        </layout>
                       </item>
                       <item>
-                       <widget class="Line" name="line_Arrange">
+                       <widget class="Line" name="arrangeLine">
                         <property name="minimumSize">
                          <size>
                           <width>0</width>
@@ -3509,7 +3407,7 @@ QComboBox QAbstractItemView::item {
 	border-radius: 0px;
 }</string>
                           </property>
-                          <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,0,0">
+                          <layout class="QHBoxLayout" name="arrangeLayout" stretch="0,0,0,0,0">
                            <property name="spacing">
                             <number>6</number>
                            </property>
@@ -3526,7 +3424,7 @@ QComboBox QAbstractItemView::item {
                             <number>6</number>
                            </property>
                            <item>
-                            <widget class="QLabel" name="label_CopyRoute">
+                            <widget class="QLabel" name="copyRouteLabel">
                              <property name="minimumSize">
                               <size>
                                <width>0</width>
@@ -3558,7 +3456,7 @@ QComboBox QAbstractItemView::item {
                             </widget>
                            </item>
                            <item>
-                            <widget class="QLabel" name="label_PreviewRoute">
+                            <widget class="QLabel" name="previewRouteLabel">
                              <property name="minimumSize">
                               <size>
                                <width>0</width>
@@ -3590,7 +3488,7 @@ QComboBox QAbstractItemView::item {
                             </widget>
                            </item>
                            <item>
-                            <widget class="QLabel" name="label_21">
+                            <widget class="QLabel" name="separatorLabel2">
                              <property name="font">
                               <font>
                                <pointsize>12</pointsize>
@@ -3609,7 +3507,7 @@ QComboBox QAbstractItemView::item {
                             </widget>
                            </item>
                            <item>
-                            <widget class="QLabel" name="label_PreviewName">
+                            <widget class="QLabel" name="previewNameLabel">
                              <property name="minimumSize">
                               <size>
                                <width>0</width>
@@ -3641,7 +3539,7 @@ QComboBox QAbstractItemView::item {
                             </widget>
                            </item>
                            <item>
-                            <spacer name="horizontalSpacer_5">
+                            <spacer name="arrangeSpacer">
                              <property name="orientation">
                               <enum>Qt::Horizontal</enum>
                              </property>
@@ -3668,7 +3566,7 @@ QComboBox QAbstractItemView::item {
 border: none;
 border-radius: 0px;</string>
                      </property>
-                     <layout class="QHBoxLayout" name="horizontalLayout_36" stretch="1,0">
+                     <layout class="QHBoxLayout" name="progressLayout" stretch="1,0">
                       <property name="spacing">
                        <number>6</number>
                       </property>
@@ -3685,7 +3583,7 @@ border-radius: 0px;</string>
                        <number>6</number>
                       </property>
                       <item>
-                       <widget class="QProgressBar" name="progressBar_classification">
+                       <widget class="QProgressBar" name="classificationProgressBar">
                         <property name="minimumSize">
                          <size>
                           <width>0</width>
@@ -3729,7 +3627,7 @@ QProgressBar::chunk {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QToolButton" name="toolButton_startSmartArrange">
+                       <widget class="QToolButton" name="startSmartArrangeButton">
                         <property name="minimumSize">
                          <size>
                           <width>88</width>
@@ -3747,40 +3645,29 @@ QProgressBar::chunk {
     color: white;
     border: none;
     padding: 6px 6px;
-    border-radius: 12px;
-    background: qradialgradient(
+    border-radius: 6px;
+    background-color: qradialgradient(
         cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
         stop:0.66 rgba(134, 119, 253, 255),
         stop:1 rgba(119, 111, 252, 255)
     );
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(10px);
-    font-size: 14px;
-    font-weight: 600;
-    box-shadow: 0 4px 16px rgba(134, 119, 253, 0.3);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 12px;
 }
 
 QToolButton:hover {
-    background: qradialgradient(
+    background-color: qradialgradient(
         cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
         stop:0.66 rgba(154, 139, 255, 255),
         stop:1 rgba(139, 131, 254, 255)
     );
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 0 8px 24px rgba(134, 119, 253, 0.4);
-    transform: translateY(-2px);
 }
 
 QToolButton:pressed {
-    background: qradialgradient(
+    background-color: qradialgradient(
         cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
         stop:0.66 rgba(94, 79, 253, 255),
         stop:1 rgba(79, 71, 252, 255)
     );
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 2px 8px rgba(134, 119, 253, 0.3);
-    transform: translateY(0);
 }</string>
                         </property>
                         <property name="text">
@@ -3806,7 +3693,7 @@ border-top-right-radius:0px;
 border-bottom-right-radius:20px;
 border-bottom-left-radius:0px;</string>
                      </property>
-                     <layout class="QHBoxLayout" name="horizontalLayout_37">
+                     <layout class="QHBoxLayout" name="logLayout">
                       <property name="spacing">
                        <number>0</number>
                       </property>
@@ -3823,7 +3710,7 @@ border-bottom-left-radius:0px;</string>
                        <number>9</number>
                       </property>
                       <item>
-                       <widget class="QTextEdit" name="textEdit_SmartArrange_Log">
+                       <widget class="QTextEdit" name="smartArrangeLogTextEdit">
                         <property name="minimumSize">
                          <size>
                           <width>0</width>
@@ -3846,33 +3733,17 @@ border-bottom-left-radius:0px;</string>
         stop:0.7 rgba(129, 121, 255, 220),
         stop:1 rgba(108, 97, 224, 200)
     );
-    background: rgba(245, 249, 254, 0.95);
-    padding: 12px;
-    border-radius: 12px;
+    background: rgb(245, 249, 254);
+    padding: 8px;
+    border-radius: 6px;
     font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
     font-size: 14px;
-    font-weight: 500;
     color: #333;
-    selection-background-color: rgba(134, 119, 253, 0.6);
+    selection-background-color: rgba(134, 119, 253, 0.5);
     selection-color: #fff;
-    backdrop-filter: blur(10px);
     box-shadow:
         inset 0 1px 3px rgba(0, 0, 0, 0.05),
-        0 4px 16px rgba(134, 119, 253, 0.15);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-QTextEdit:hover {
-    border: 1.5px solid qradialgradient(
-        cx:0.5, cy:0.5,
-        radius: 1.3,
-        fx:0.4, fy:0.6,
-        stop:0 rgba(154, 139, 255, 255),
-        stop:1 rgba(139, 131, 255, 240)
-    );
-    box-shadow:
-        inset 0 1px 3px rgba(0, 0, 0, 0.05),
-        0 8px 24px rgba(134, 119, 253, 0.2);
+        0 2px 8px rgba(134, 119, 253, 0.1);
 }
 
 QTextEdit QScrollBar:vertical {
@@ -3934,10 +3805,7 @@ QTextEdit:focus {
         stop:0 rgba(154, 139, 255, 255),
         stop:1 rgba(139, 131, 255, 240)
     );
-    box-shadow:
-        inset 0 1px 3px rgba(0, 0, 0, 0.05),
-        0 0 0 2px rgba(134, 119, 253, 0.15),
-        0 8px 24px rgba(134, 119, 253, 0.25);
+    box-shadow: 0 0 0 2px rgba(134, 119, 253, 0.15);
 }</string>
                         </property>
                         <property name="readOnly">
@@ -3952,7 +3820,7 @@ QTextEdit:focus {
                  </item>
                 </layout>
                </widget>
-               <widget class="QWidget" name="pageSettings">
+               <widget class="QWidget" name="page_3">
                 <layout class="QHBoxLayout" name="horizontalLayout_66" stretch="1,0">
                  <property name="spacing">
                   <number>0</number>
@@ -4013,7 +3881,7 @@ border-bottom-left-radius:0px;</string>
                         <number>6</number>
                        </property>
                        <item>
-                        <widget class="QLabel" name="label_8">
+                        <widget class="QLabel" name="similarityLabel">
                          <property name="font">
                           <font>
                            <pointsize>12</pointsize>
@@ -4031,7 +3899,7 @@ border-bottom-left-radius:0px;</string>
                         </widget>
                        </item>
                        <item>
-                        <widget class="QSlider" name="horizontalSlider_levelContrast">
+                        <widget class="QSlider" name="similaritySlider">
                          <property name="minimumSize">
                           <size>
                            <width>284</width>
@@ -4097,7 +3965,7 @@ QSlider::handle:horizontal:hover {
                         </widget>
                        </item>
                        <item>
-                        <widget class="QLabel" name="label_levelContrast">
+                        <widget class="QLabel" name="similarityValueLabel">
                          <property name="font">
                           <font>
                            <pointsize>16</pointsize>
@@ -4143,7 +4011,7 @@ border-bottom-left-radius:0px;</string>
                         <number>6</number>
                        </property>
                        <item>
-                        <widget class="QProgressBar" name="progressBar_Contrast">
+                        <widget class="QProgressBar" name="contrastProgressBar">
                          <property name="minimumSize">
                           <size>
                            <width>0</width>
@@ -4186,7 +4054,7 @@ QProgressBar::chunk {
                         </widget>
                        </item>
                        <item>
-                        <widget class="QToolButton" name="toolButton_startContrast">
+                        <widget class="QToolButton" name="startContrastButton">
                          <property name="minimumSize">
                           <size>
                            <width>88</width>
@@ -4202,41 +4070,31 @@ QProgressBar::chunk {
                          <property name="styleSheet">
                           <string notr="true">QToolButton {
     color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 8px 16px;
-    border-radius: 12px;
-    background: qradialgradient(
+    border: none;
+    padding: 6px 6px;
+    border-radius: 6px;
+    background-color: qradialgradient(
         cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
         stop:0.66 rgba(134, 119, 253, 255),
         stop:1 rgba(119, 111, 252, 255)
     );
-    font-size: 14px;
-    font-weight: 600;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 16px rgba(134, 119, 253, 0.3);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 12px;
 }
 
 QToolButton:hover {
-    background: qradialgradient(
+    background-color: qradialgradient(
         cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
         stop:0.66 rgba(154, 139, 255, 255),
         stop:1 rgba(139, 131, 254, 255)
     );
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 0 8px 24px rgba(134, 119, 253, 0.4);
-    transform: translateY(-2px);
 }
 
 QToolButton:pressed {
-    background: qradialgradient(
+    background-color: qradialgradient(
         cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,
         stop:0.66 rgba(94, 79, 253, 255),
         stop:1 rgba(79, 71, 252, 255)
     );
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 2px 8px rgba(134, 119, 253, 0.3);
-    transform: translateY(0);
 }</string>
                          </property>
                          <property name="text">
@@ -4279,7 +4137,7 @@ border-bottom-left-radius:0px;</string>
                         <number>0</number>
                        </property>
                        <item>
-                        <widget class="QLabel" name="label_image_A">
+                        <widget class="QLabel" name="imageALabel">
                          <property name="styleSheet">
                           <string notr="true"/>
                          </property>
@@ -4289,7 +4147,7 @@ border-bottom-left-radius:0px;</string>
                         </widget>
                        </item>
                        <item>
-                        <widget class="Line" name="line_contrast">
+                        <widget class="Line" name="contrastLine">
                          <property name="minimumSize">
                           <size>
                            <width>1</width>
@@ -4311,7 +4169,7 @@ border-bottom-left-radius:0px;</string>
                         </widget>
                        </item>
                        <item>
-                        <widget class="QLabel" name="label_image_B">
+                        <widget class="QLabel" name="imageBLabel">
                          <property name="styleSheet">
                           <string notr="true"/>
                          </property>
@@ -4332,7 +4190,7 @@ border-bottom-left-radius:0px;</string>
                     <string notr="true">border-radius: 12px;
 background:rgb(248, 250, 251);</string>
                    </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_38" stretch="10,0">
+                   <layout class="QVBoxLayout" name="similarLayout" stretch="10,0">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -4472,7 +4330,7 @@ border-bottom-left-radius:0px;</string>
                         <number>6</number>
                        </property>
                        <item>
-                        <widget class="QToolButton" name="toolButton_delete">
+                        <widget class="QToolButton" name="deleteButton">
                          <property name="minimumSize">
                           <size>
                            <width>68</width>
@@ -4531,7 +4389,7 @@ QToolButton:pressed {
                         </widget>
                        </item>
                        <item>
-                        <widget class="QToolButton" name="toolButton_move">
+                        <widget class="QToolButton" name="moveButton">
                          <property name="minimumSize">
                           <size>
                            <width>68</width>
@@ -4610,7 +4468,7 @@ QToolButton:disabled {
                         </widget>
                        </item>
                        <item>
-                        <widget class="QToolButton" name="toolButton_autoSelect">
+                        <widget class="QToolButton" name="autoSelectButton">
                          <property name="minimumSize">
                           <size>
                            <width>68</width>
@@ -4692,7 +4550,7 @@ QToolButton:disabled {
                  </item>
                 </layout>
                </widget>
-               <widget class="QWidget" name="pageAbout">
+               <widget class="QWidget" name="page_4">
                 <property name="styleSheet">
                  <string notr="true">background:rgb(255, 255, 255);</string>
                 </property>
@@ -4743,7 +4601,7 @@ border-bottom-left-radius:0px;</string>
                        <number>6</number>
                       </property>
                       <item>
-                       <widget class="QLabel" name="label_35">
+                       <widget class="QLabel" name="titleLabel">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -4761,7 +4619,7 @@ border-bottom-left-radius:0px;</string>
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLineEdit" name="lineEdit_EXIF_Title">
+                       <widget class="QLineEdit" name="titleLineEdit">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                           <horstretch>0</horstretch>
@@ -4814,7 +4672,7 @@ QLineEdit:disabled {
                        <number>6</number>
                       </property>
                       <item>
-                       <widget class="QLabel" name="label_star">
+                       <widget class="QLabel" name="starLabel">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -4832,7 +4690,7 @@ QLineEdit:disabled {
                        </widget>
                       </item>
                       <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_star">
+                       <layout class="QHBoxLayout" name="starLayout">
                         <item>
                          <widget class="QPushButton" name="pushButton_star_1">
                           <property name="minimumSize">
@@ -5013,7 +4871,7 @@ QLineEdit:disabled {
                        <number>6</number>
                       </property>
                       <item>
-                       <widget class="QLabel" name="label_36">
+                       <widget class="QLabel" name="brandLabel">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                           <horstretch>0</horstretch>
@@ -5037,7 +4895,7 @@ QLineEdit:disabled {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="comboBox_brand">
+                       <widget class="QComboBox" name="brandComboBox">
                         <property name="minimumSize">
                          <size>
                           <width>82</width>
@@ -5220,7 +5078,7 @@ QComboBox QAbstractItemView QScrollBar::sub-line:horizontal {
                        <number>6</number>
                       </property>
                       <item>
-                       <widget class="QLabel" name="label_37">
+                       <widget class="QLabel" name="modelLabel">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -5238,7 +5096,7 @@ QComboBox QAbstractItemView QScrollBar::sub-line:horizontal {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="comboBox_model">
+                       <widget class="QComboBox" name="modelComboBox">
                         <property name="minimumSize">
                          <size>
                           <width>82</width>
@@ -5441,7 +5299,7 @@ border-bottom-left-radius:0px;</string>
                     <item>
                      <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="0,1">
                       <item>
-                       <widget class="QLabel" name="label_38">
+                       <widget class="QLabel" name="authorLabel">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -5459,7 +5317,7 @@ border-bottom-left-radius:0px;</string>
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLineEdit" name="lineEdit_EXIF_Author">
+                       <widget class="QLineEdit" name="authorLineEdit">
                         <property name="styleSheet">
                          <string notr="true">QLineEdit {
     border: 1px solid qradialgradient(
@@ -5500,7 +5358,7 @@ QLineEdit:disabled {
                     <item>
                      <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="0,1">
                       <item>
-                       <widget class="QLabel" name="label_39">
+                       <widget class="QLabel" name="themeLabel">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -5518,7 +5376,7 @@ QLineEdit:disabled {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLineEdit" name="lineEdit_EXIF_Theme">
+                       <widget class="QLineEdit" name="themeLineEdit">
                         <property name="styleSheet">
                          <string notr="true">QLineEdit {
     border: 1px solid qradialgradient(
@@ -5559,7 +5417,7 @@ QLineEdit:disabled {
                     <item>
                      <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="0,1">
                       <item>
-                       <widget class="QLabel" name="label_40">
+                       <widget class="QLabel" name="copyrightLabel">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -5577,7 +5435,7 @@ QLineEdit:disabled {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLineEdit" name="lineEdit_EXIF_Copyright">
+                       <widget class="QLineEdit" name="copyrightLineEdit">
                         <property name="minimumSize">
                          <size>
                           <width>0</width>
@@ -5664,7 +5522,7 @@ border-bottom-left-radius:0px;</string>
                        <number>6</number>
                       </property>
                       <item>
-                       <widget class="QLabel" name="label_44">
+                       <widget class="QLabel" name="shootTimeLabel">
                         <property name="font">
                          <font>
                           <pointsize>12</pointsize>
@@ -5682,7 +5540,7 @@ border-bottom-left-radius:0px;</string>
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="comboBox_shootTime">
+                       <widget class="QComboBox" name="shootTimeComboBox">
                         <property name="minimumSize">
                          <size>
                           <width>82</width>
@@ -6164,7 +6022,7 @@ QFrame[frameShape=&quot;QFrame::StyledPanel&quot;] {
     background: rgb(249, 251, 255);
 }</string>
                         </property>
-                        <layout class="QHBoxLayout" name="horizontalLayout_2">
+                        <layout class="QHBoxLayout" name="headerLayout">
                          <property name="spacing">
                           <number>0</number>
                          </property>
@@ -6533,9 +6391,9 @@ QTextEdit:focus {
  <resources/>
  <connections>
   <connection>
-   <sender>listNavigation</sender>
+   <sender>navigationMenuList</sender>
    <signal>currentRowChanged(int)</signal>
-   <receiver>stackedContent</receiver>
+   <receiver>stackedWidget</receiver>
    <slot>setCurrentIndex(int)</slot>
    <hints>
     <hint type="sourcelabel">

@@ -10,61 +10,61 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 
 class Ui_MainWindow(object):
-    def setupUi(self, mainWindow):
-        mainWindow.setObjectName("mainWindow")
-        mainWindow.setGeometry(QtCore.QRect(0, 0, 949, 572))
-        self.centralWidget = QtWidgets.QWidget(parent=mainWindow)
-        self.centralWidget.setObjectName("centralWidget")
-        self.mainLayout = QtWidgets.QGridLayout(self.centralWidget)
-        self.mainLayout.setContentsMargins(0, 0, 0, 0)
-        self.mainLayout.setSpacing(0)
-        self.mainLayout.setObjectName("mainLayout")
-        self.frameMain = QtWidgets.QFrame(parent=self.centralWidget)
-        self.frameMain.setStyleSheet("QFrame{\n"
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(949, 572)
+        self.mainCentralWidget = QtWidgets.QWidget(parent=MainWindow)
+        self.mainCentralWidget.setObjectName("mainCentralWidget")
+        self.mainGridLayout = QtWidgets.QGridLayout(self.mainCentralWidget)
+        self.mainGridLayout.setContentsMargins(0, 0, 0, 0)
+        self.mainGridLayout.setSpacing(0)
+        self.mainGridLayout.setObjectName("mainGridLayout")
+        self.mainContainerFrame = QtWidgets.QFrame(parent=self.mainCentralWidget)
+        self.mainContainerFrame.setStyleSheet("QFrame{\n"
 "background-color: rgb(255, 255, 255);\n"
 "border:none;\n"
 "border-radius:12px;\n"
 "}")
-        self.frameMain.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frameMain.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frameMain.setObjectName("frameMain")
-        self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.frameMain)
-        self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_4.setSpacing(0)
-        self.horizontalLayout_4.setObjectName("horizontalLayout_4")
-        self.frameNavigation = QtWidgets.QFrame(parent=self.frameMain)
-        self.frameNavigation.setMinimumSize(QtCore.QSize(162, 0))
-        self.frameNavigation.setMaximumSize(QtCore.QSize(162, 16777215))
-        self.frameNavigation.setStyleSheet("background:rgba(0, 0, 0, 0);")
-        self.frameNavigation.setObjectName("frameNavigation")
-        self.navigationLayout = QtWidgets.QVBoxLayout(self.frameNavigation)
-        self.navigationLayout.setContentsMargins(6, 9, 0, 0)
-        self.navigationLayout.setSpacing(0)
-        self.navigationLayout.setObjectName("navigationLayout")
-        self.frameLogo = QtWidgets.QFrame(parent=self.frameNavigation)
-        self.frameLogo.setStyleSheet("border: none;")
-        self.frameLogo.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frameLogo.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frameLogo.setObjectName("frameLogo")
-        self.logoLayout = QtWidgets.QHBoxLayout(self.frameLogo)
+        self.mainContainerFrame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.mainContainerFrame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.mainContainerFrame.setObjectName("mainContainerFrame")
+        self.mainContainerLayout = QtWidgets.QHBoxLayout(self.mainContainerFrame)
+        self.mainContainerLayout.setContentsMargins(0, 0, 0, 0)
+        self.mainContainerLayout.setSpacing(0)
+        self.mainContainerLayout.setObjectName("mainContainerLayout")
+        self.sidebarFrame = QtWidgets.QFrame(parent=self.mainContainerFrame)
+        self.sidebarFrame.setMinimumSize(QtCore.QSize(162, 0))
+        self.sidebarFrame.setMaximumSize(QtCore.QSize(162, 16777215))
+        self.sidebarFrame.setStyleSheet("background:rgba(0, 0, 0, 0);")
+        self.sidebarFrame.setObjectName("sidebarFrame")
+        self.sidebarLayout = QtWidgets.QVBoxLayout(self.sidebarFrame)
+        self.sidebarLayout.setContentsMargins(6, 9, 0, 0)
+        self.sidebarLayout.setSpacing(0)
+        self.sidebarLayout.setObjectName("sidebarLayout")
+        self.logoFrame = QtWidgets.QFrame(parent=self.sidebarFrame)
+        self.logoFrame.setStyleSheet("border: none;")
+        self.logoFrame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.logoFrame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.logoFrame.setObjectName("logoFrame")
+        self.logoLayout = QtWidgets.QHBoxLayout(self.logoFrame)
         self.logoLayout.setContentsMargins(0, 0, 0, 0)
         self.logoLayout.setSpacing(0)
         self.logoLayout.setObjectName("logoLayout")
-        self.btnLogo = QtWidgets.QPushButton(parent=self.frameLogo)
+        self.appLogoButton = QtWidgets.QPushButton(parent=self.logoFrame)
         font = QtGui.QFont()
         font.setPointSize(20)
-        self.btnLogo.setFont(font)
-        self.btnLogo.setStyleSheet("QPushButton {\n"
+        self.appLogoButton.setFont(font)
+        self.appLogoButton.setStyleSheet("QPushButton {\n"
 "    color: rgba(134, 119, 253, 255);\n"
 "    padding: 4px;\n"
 "    border: none;\n"
 "    qproperty-alignment: AlignCenter;\n"
 "}")
-        self.btnLogo.setObjectName("btnLogo")
-        self.logoLayout.addWidget(self.btnLogo)
-        self.navigationLayout.addWidget(self.frameLogo)
-        self.scrollNavigation = QtWidgets.QScrollArea(parent=self.frameNavigation)
-        self.scrollNavigation.setStyleSheet("QScrollBar:vertical{\n"
+        self.appLogoButton.setObjectName("appLogoButton")
+        self.logoLayout.addWidget(self.appLogoButton)
+        self.sidebarLayout.addWidget(self.logoFrame)
+        self.navigationScrollArea = QtWidgets.QScrollArea(parent=self.sidebarFrame)
+        self.navigationScrollArea.setStyleSheet("QScrollBar:vertical{\n"
 "    width:8px;\n"
 "    background:rgba(0,0,0,0%);\n"
 "\n"
@@ -100,29 +100,29 @@ class Ui_MainWindow(object):
 "    background:rgba(0,0,0,0%);\n"
 "    border-radius:4px;\n"
 "}")
-        self.scrollNavigation.setWidgetResizable(True)
-        self.scrollNavigation.setObjectName("scrollNavigation")
-        self.navigationContent = QtWidgets.QWidget()
-        self.navigationContent.setGeometry(QtCore.QRect(0, 0, 156, 520))
-        self.navigationContent.setObjectName("navigationContent")
-        self.navigationContentLayout = QtWidgets.QVBoxLayout(self.navigationContent)
+        self.navigationScrollArea.setWidgetResizable(True)
+        self.navigationScrollArea.setObjectName("navigationScrollArea")
+        self.navigationScrollContent = QtWidgets.QWidget()
+        self.navigationScrollContent.setGeometry(QtCore.QRect(0, 0, 156, 520))
+        self.navigationScrollContent.setObjectName("navigationScrollContent")
+        self.navigationContentLayout = QtWidgets.QVBoxLayout(self.navigationScrollContent)
         self.navigationContentLayout.setContentsMargins(0, 12, 0, 0)
         self.navigationContentLayout.setSpacing(12)
         self.navigationContentLayout.setObjectName("navigationContentLayout")
-        self.listNavigation = QtWidgets.QListWidget(parent=self.navigationContent)
+        self.navigationMenuList = QtWidgets.QListWidget(parent=self.navigationScrollContent)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.listNavigation.sizePolicy().hasHeightForWidth())
-        self.listNavigation.setSizePolicy(sizePolicy)
-        self.listNavigation.setMinimumSize(QtCore.QSize(0, 0))
-        self.listNavigation.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        sizePolicy.setHeightForWidth(self.navigationMenuList.sizePolicy().hasHeightForWidth())
+        self.navigationMenuList.setSizePolicy(sizePolicy)
+        self.navigationMenuList.setMinimumSize(QtCore.QSize(0, 0))
+        self.navigationMenuList.setMaximumSize(QtCore.QSize(16777215, 16777215))
         font = QtGui.QFont()
         font.setFamily("Segoe UI")
         font.setPointSize(12)
-        self.listNavigation.setFont(font)
-        self.listNavigation.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
-        self.listNavigation.setStyleSheet("QListView {\n"
+        self.navigationMenuList.setFont(font)
+        self.navigationMenuList.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
+        self.navigationMenuList.setStyleSheet("QListView {\n"
 "    show-decoration-selected: 1;\n"
 "    background-color: rgba(0, 0, 0, 0);\n"
 "    border: none;\n"
@@ -194,67 +194,67 @@ class Ui_MainWindow(object):
 "    height: 0;\n"
 "    background: none;\n"
 "}")
-        self.listNavigation.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self.listNavigation.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self.listNavigation.setIconSize(QtCore.QSize(22, 22))
-        self.listNavigation.setObjectName("listNavigation")
+        self.navigationMenuList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.navigationMenuList.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.navigationMenuList.setIconSize(QtCore.QSize(22, 22))
+        self.navigationMenuList.setObjectName("navigationMenuList")
         item = QtWidgets.QListWidgetItem()
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("resources/img/list/媒体导入.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         item.setIcon(icon)
-        self.listNavigation.addItem(item)
+        self.navigationMenuList.addItem(item)
         item = QtWidgets.QListWidgetItem()
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap("resources/img/list/图像识别.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         item.setIcon(icon1)
-        self.listNavigation.addItem(item)
+        self.navigationMenuList.addItem(item)
         item = QtWidgets.QListWidgetItem()
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap("resources/img/list/智能整理.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         item.setIcon(icon2)
-        self.listNavigation.addItem(item)
+        self.navigationMenuList.addItem(item)
         item = QtWidgets.QListWidgetItem()
         icon3 = QtGui.QIcon()
         icon3.addPixmap(QtGui.QPixmap("resources/img/list/文件去重.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         item.setIcon(icon3)
-        self.listNavigation.addItem(item)
+        self.navigationMenuList.addItem(item)
         item = QtWidgets.QListWidgetItem()
         icon4 = QtGui.QIcon()
         icon4.addPixmap(QtGui.QPixmap("resources/img/list/属性写入.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         item.setIcon(icon4)
-        self.listNavigation.addItem(item)
-        self.navigationContentLayout.addWidget(self.listNavigation)
-        self.scrollNavigation.setWidget(self.navigationContent)
-        self.navigationLayout.addWidget(self.scrollNavigation)
-        self.navigationLayout.setStretch(1, 9)
-        self.horizontalLayout_4.addWidget(self.frameNavigation)
+        self.navigationMenuList.addItem(item)
+        self.navigationContentLayout.addWidget(self.navigationMenuList)
+        self.navigationScrollArea.setWidget(self.navigationScrollContent)
+        self.sidebarLayout.addWidget(self.navigationScrollArea)
+        self.sidebarLayout.setStretch(1, 9)
+        self.mainContainerLayout.addWidget(self.sidebarFrame)
         self.dividerLayout = QtWidgets.QHBoxLayout()
         self.dividerLayout.setSpacing(0)
         self.dividerLayout.setObjectName("dividerLayout")
-        self.lineDivider = QtWidgets.QFrame(parent=self.frameMain)
+        self.sidebarDividerLine = QtWidgets.QFrame(parent=self.mainContainerFrame)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.lineDivider.sizePolicy().hasHeightForWidth())
-        self.lineDivider.setSizePolicy(sizePolicy)
-        self.lineDivider.setMinimumSize(QtCore.QSize(1, 0))
-        self.lineDivider.setMaximumSize(QtCore.QSize(1, 16777215))
-        self.lineDivider.setStyleSheet("background-color: rgb(235, 236, 237);")
-        self.lineDivider.setFrameShape(QtWidgets.QFrame.Shape.HLine)
-        self.lineDivider.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
-        self.lineDivider.setObjectName("lineDivider")
-        self.dividerLayout.addWidget(self.lineDivider)
-        self.horizontalLayout_4.addLayout(self.dividerLayout)
-        self.frameContent = QtWidgets.QFrame(parent=self.frameMain)
-        self.frameContent.setStyleSheet("border-radius: 12px;")
-        self.frameContent.setObjectName("frameContent")
-        self.contentLayout = QtWidgets.QVBoxLayout(self.frameContent)
+        sizePolicy.setHeightForWidth(self.sidebarDividerLine.sizePolicy().hasHeightForWidth())
+        self.sidebarDividerLine.setSizePolicy(sizePolicy)
+        self.sidebarDividerLine.setMinimumSize(QtCore.QSize(1, 0))
+        self.sidebarDividerLine.setMaximumSize(QtCore.QSize(1, 16777215))
+        self.sidebarDividerLine.setStyleSheet("background-color: rgb(235, 236, 237);")
+        self.sidebarDividerLine.setFrameShape(QtWidgets.QFrame.Shape.HLine)
+        self.sidebarDividerLine.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
+        self.sidebarDividerLine.setObjectName("sidebarDividerLine")
+        self.dividerLayout.addWidget(self.sidebarDividerLine)
+        self.mainContainerLayout.addLayout(self.dividerLayout)
+        self.contentFrame = QtWidgets.QFrame(parent=self.mainContainerFrame)
+        self.contentFrame.setStyleSheet("border-radius: 12px;")
+        self.contentFrame.setObjectName("contentFrame")
+        self.contentLayout = QtWidgets.QVBoxLayout(self.contentFrame)
         self.contentLayout.setContentsMargins(0, 0, 0, 0)
         self.contentLayout.setSpacing(0)
         self.contentLayout.setObjectName("contentLayout")
-        self.frameHeader = QtWidgets.QFrame(parent=self.frameContent)
-        self.frameHeader.setMaximumSize(QtCore.QSize(16777215, 16777215))
-        self.frameHeader.setStyleSheet("QFrame{\n"
+        self.headerFrame = QtWidgets.QFrame(parent=self.contentFrame)
+        self.headerFrame.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        self.headerFrame.setStyleSheet("QFrame{\n"
 "background-color: qradialgradient(\n"
 "cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
 "stop:0.66 rgba(134, 119, 253, 255),\n"
@@ -265,34 +265,34 @@ class Ui_MainWindow(object):
 "border-bottom-right-radius:0px;\n"
 "border-bottom-left-radius:0px;\n"
 "}")
-        self.frameHeader.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frameHeader.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frameHeader.setObjectName("frameHeader")
-        self.headerLayout = QtWidgets.QHBoxLayout(self.frameHeader)
+        self.headerFrame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.headerFrame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.headerFrame.setObjectName("headerFrame")
+        self.headerLayout = QtWidgets.QHBoxLayout(self.headerFrame)
         self.headerLayout.setContentsMargins(9, 9, 9, 9)
         self.headerLayout.setSpacing(9)
         self.headerLayout.setObjectName("headerLayout")
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
         self.headerLayout.addItem(spacerItem)
-        self.widgetVip = QtWidgets.QWidget(parent=self.frameHeader)
-        self.widgetVip.setEnabled(True)
+        self.vipBadgeWidget = QtWidgets.QWidget(parent=self.headerFrame)
+        self.vipBadgeWidget.setEnabled(True)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.widgetVip.sizePolicy().hasHeightForWidth())
-        self.widgetVip.setSizePolicy(sizePolicy)
-        self.widgetVip.setMinimumSize(QtCore.QSize(100, 36))
-        self.widgetVip.setMaximumSize(QtCore.QSize(100, 36))
-        self.widgetVip.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
-        self.widgetVip.setStyleSheet("image: url(resources/img/头标/头标-银色标准会员.svg);\n"
+        sizePolicy.setHeightForWidth(self.vipBadgeWidget.sizePolicy().hasHeightForWidth())
+        self.vipBadgeWidget.setSizePolicy(sizePolicy)
+        self.vipBadgeWidget.setMinimumSize(QtCore.QSize(100, 36))
+        self.vipBadgeWidget.setMaximumSize(QtCore.QSize(100, 36))
+        self.vipBadgeWidget.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
+        self.vipBadgeWidget.setStyleSheet("image: url(resources/img/头标/头标-银色标准会员.svg);\n"
 "background-color: rgba(0, 0, 0,0);\n"
 "border-radius:0px;")
-        self.widgetVip.setObjectName("widgetVip")
-        self.headerLayout.addWidget(self.widgetVip)
-        self.btnService = QtWidgets.QToolButton(parent=self.frameHeader)
-        self.btnService.setMinimumSize(QtCore.QSize(36, 36))
-        self.btnService.setMaximumSize(QtCore.QSize(36, 36))
-        self.btnService.setStyleSheet("QToolButton {\n"
+        self.vipBadgeWidget.setObjectName("vipBadgeWidget")
+        self.headerLayout.addWidget(self.vipBadgeWidget)
+        self.serviceButton = QtWidgets.QToolButton(parent=self.headerFrame)
+        self.serviceButton.setMinimumSize(QtCore.QSize(36, 36))
+        self.serviceButton.setMaximumSize(QtCore.QSize(36, 36))
+        self.serviceButton.setStyleSheet("QToolButton {\n"
 "    border: none;\n"
 "    padding: 4px;\n"
 "    border-radius: 12px;\n"
@@ -306,17 +306,17 @@ class Ui_MainWindow(object):
 "QToolButton:pressed {\n"
 "    background-color: rgba(255, 255, 255, 50);\n"
 "}")
-        self.btnService.setText("")
+        self.serviceButton.setText("")
         icon5 = QtGui.QIcon()
         icon5.addPixmap(QtGui.QPixmap("resources/img/窗口控制/服务.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.btnService.setIcon(icon5)
-        self.btnService.setIconSize(QtCore.QSize(16, 16))
-        self.btnService.setObjectName("btnService")
-        self.headerLayout.addWidget(self.btnService)
-        self.btnSettings = QtWidgets.QToolButton(parent=self.frameHeader)
-        self.btnSettings.setMinimumSize(QtCore.QSize(36, 36))
-        self.btnSettings.setMaximumSize(QtCore.QSize(36, 36))
-        self.btnSettings.setStyleSheet("QToolButton {\n"
+        self.serviceButton.setIcon(icon5)
+        self.serviceButton.setIconSize(QtCore.QSize(16, 16))
+        self.serviceButton.setObjectName("serviceButton")
+        self.headerLayout.addWidget(self.serviceButton)
+        self.settingsButton = QtWidgets.QToolButton(parent=self.headerFrame)
+        self.settingsButton.setMinimumSize(QtCore.QSize(36, 36))
+        self.settingsButton.setMaximumSize(QtCore.QSize(36, 36))
+        self.settingsButton.setStyleSheet("QToolButton {\n"
 "    border: none;\n"
 "    padding: 4px;\n"
 "    border-radius: 12px;\n"
@@ -330,17 +330,17 @@ class Ui_MainWindow(object):
 "QToolButton:pressed {\n"
 "    background-color: rgba(255, 255, 255, 50);\n"
 "}")
-        self.btnSettings.setText("")
+        self.settingsButton.setText("")
         icon6 = QtGui.QIcon()
         icon6.addPixmap(QtGui.QPixmap("resources/img/窗口控制/设置.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.btnSettings.setIcon(icon6)
-        self.btnSettings.setIconSize(QtCore.QSize(17, 17))
-        self.btnSettings.setObjectName("btnSettings")
-        self.headerLayout.addWidget(self.btnSettings)
-        self.btnMinimize = QtWidgets.QToolButton(parent=self.frameHeader)
-        self.btnMinimize.setMinimumSize(QtCore.QSize(36, 36))
-        self.btnMinimize.setMaximumSize(QtCore.QSize(36, 36))
-        self.btnMinimize.setStyleSheet("QToolButton {\n"
+        self.settingsButton.setIcon(icon6)
+        self.settingsButton.setIconSize(QtCore.QSize(17, 17))
+        self.settingsButton.setObjectName("settingsButton")
+        self.headerLayout.addWidget(self.settingsButton)
+        self.minimizeButton = QtWidgets.QToolButton(parent=self.headerFrame)
+        self.minimizeButton.setMinimumSize(QtCore.QSize(36, 36))
+        self.minimizeButton.setMaximumSize(QtCore.QSize(36, 36))
+        self.minimizeButton.setStyleSheet("QToolButton {\n"
 "    border: none;\n"
 "    padding: 4px;\n"
 "    border-radius: 12px;\n"
@@ -354,17 +354,17 @@ class Ui_MainWindow(object):
 "QToolButton:pressed {\n"
 "    background-color: rgba(255, 255, 255, 50);\n"
 "}")
-        self.btnMinimize.setText("")
+        self.minimizeButton.setText("")
         icon7 = QtGui.QIcon()
         icon7.addPixmap(QtGui.QPixmap("resources/img/窗口控制/最小化.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.btnMinimize.setIcon(icon7)
-        self.btnMinimize.setIconSize(QtCore.QSize(14, 14))
-        self.btnMinimize.setObjectName("btnMinimize")
-        self.headerLayout.addWidget(self.btnMinimize)
-        self.btnMaximize = QtWidgets.QToolButton(parent=self.frameHeader)
-        self.btnMaximize.setMinimumSize(QtCore.QSize(36, 36))
-        self.btnMaximize.setMaximumSize(QtCore.QSize(36, 36))
-        self.btnMaximize.setStyleSheet("QToolButton {\n"
+        self.minimizeButton.setIcon(icon7)
+        self.minimizeButton.setIconSize(QtCore.QSize(14, 14))
+        self.minimizeButton.setObjectName("minimizeButton")
+        self.headerLayout.addWidget(self.minimizeButton)
+        self.maximizeButton = QtWidgets.QToolButton(parent=self.headerFrame)
+        self.maximizeButton.setMinimumSize(QtCore.QSize(36, 36))
+        self.maximizeButton.setMaximumSize(QtCore.QSize(36, 36))
+        self.maximizeButton.setStyleSheet("QToolButton {\n"
 "    border: none;\n"
 "    padding: 4px;\n"
 "    border-radius: 12px;\n"
@@ -378,17 +378,17 @@ class Ui_MainWindow(object):
 "QToolButton:pressed {\n"
 "    background-color: rgba(255, 255, 255, 50);\n"
 "}")
-        self.btnMaximize.setText("")
+        self.maximizeButton.setText("")
         icon8 = QtGui.QIcon()
         icon8.addPixmap(QtGui.QPixmap("resources/img/窗口控制/最大化.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.btnMaximize.setIcon(icon8)
-        self.btnMaximize.setIconSize(QtCore.QSize(14, 14))
-        self.btnMaximize.setObjectName("btnMaximize")
-        self.headerLayout.addWidget(self.btnMaximize)
-        self.btnClose = QtWidgets.QToolButton(parent=self.frameHeader)
-        self.btnClose.setMinimumSize(QtCore.QSize(36, 36))
-        self.btnClose.setMaximumSize(QtCore.QSize(36, 36))
-        self.btnClose.setStyleSheet("QToolButton {\n"
+        self.maximizeButton.setIcon(icon8)
+        self.maximizeButton.setIconSize(QtCore.QSize(14, 14))
+        self.maximizeButton.setObjectName("maximizeButton")
+        self.headerLayout.addWidget(self.maximizeButton)
+        self.closeButton = QtWidgets.QToolButton(parent=self.headerFrame)
+        self.closeButton.setMinimumSize(QtCore.QSize(36, 36))
+        self.closeButton.setMaximumSize(QtCore.QSize(36, 36))
+        self.closeButton.setStyleSheet("QToolButton {\n"
 "    border: none;\n"
 "    padding: 4px;\n"
 "    border-radius: 12px;\n"
@@ -402,26 +402,26 @@ class Ui_MainWindow(object):
 "QToolButton:pressed {\n"
 "    background-color: rgba(255, 255, 255, 50);\n"
 "}")
-        self.btnClose.setText("")
+        self.closeButton.setText("")
         icon9 = QtGui.QIcon()
         icon9.addPixmap(QtGui.QPixmap("resources/img/窗口控制/关闭.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.btnClose.setIcon(icon9)
-        self.btnClose.setIconSize(QtCore.QSize(14, 14))
-        self.btnClose.setObjectName("btnClose")
-        self.headerLayout.addWidget(self.btnClose)
-        self.contentLayout.addWidget(self.frameHeader)
-        self.frameContentArea = QtWidgets.QFrame(parent=self.frameContent)
-        self.frameContentArea.setStyleSheet("border-radius: 20px;\n"
+        self.closeButton.setIcon(icon9)
+        self.closeButton.setIconSize(QtCore.QSize(14, 14))
+        self.closeButton.setObjectName("closeButton")
+        self.headerLayout.addWidget(self.closeButton)
+        self.contentLayout.addWidget(self.headerFrame)
+        self.contentAreaFrame = QtWidgets.QFrame(parent=self.contentFrame)
+        self.contentAreaFrame.setStyleSheet("border-radius: 20px;\n"
 "background:rgb(245, 246, 247);")
-        self.frameContentArea.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frameContentArea.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frameContentArea.setObjectName("frameContentArea")
-        self.contentAreaLayout = QtWidgets.QVBoxLayout(self.frameContentArea)
+        self.contentAreaFrame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.contentAreaFrame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.contentAreaFrame.setObjectName("contentAreaFrame")
+        self.contentAreaLayout = QtWidgets.QVBoxLayout(self.contentAreaFrame)
         self.contentAreaLayout.setContentsMargins(0, 0, 0, 0)
         self.contentAreaLayout.setSpacing(0)
         self.contentAreaLayout.setObjectName("contentAreaLayout")
-        self.stackedContent = QtWidgets.QStackedWidget(parent=self.frameContentArea)
-        self.stackedContent.setStyleSheet("${\n"
+        self.mainContentStack = QtWidgets.QStackedWidget(parent=self.contentAreaFrame)
+        self.mainContentStack.setStyleSheet("${\n"
 "    background-color: rgba(255, 255, 255, 0);\n"
 "    border-bottom-right-radius:20px;\n"
 "}\n"
@@ -463,27 +463,27 @@ class Ui_MainWindow(object):
 "    background:rgba(0,0,0,0%);\n"
 "    border-radius:4px;\n"
 "}")
-        self.stackedContent.setObjectName("stackedContent")
-        self.pageWelcome = QtWidgets.QWidget()
-        self.pageWelcome.setStyleSheet("background: rgb(245, 249, 254);")
-        self.pageWelcome.setObjectName("pageWelcome")
-        self.welcomeLayout = QtWidgets.QHBoxLayout(self.pageWelcome)
-        self.welcomeLayout.setContentsMargins(0, 0, 0, 0)
-        self.welcomeLayout.setSpacing(0)
-        self.welcomeLayout.setObjectName("welcomeLayout")
-        self.welcomeLeftLayout = QtWidgets.QVBoxLayout()
-        self.welcomeLeftLayout.setContentsMargins(0, 0, -1, -1)
-        self.welcomeLeftLayout.setSpacing(0)
-        self.welcomeLeftLayout.setObjectName("welcomeLeftLayout")
-        self.scrollWelcomeFolders = QtWidgets.QScrollArea(parent=self.pageWelcome)
+        self.mainContentStack.setObjectName("mainContentStack")
+        self.homePage = QtWidgets.QWidget()
+        self.homePage.setStyleSheet("background: rgb(245, 249, 254);")
+        self.homePage.setObjectName("homePage")
+        self.horizontalLayout_21 = QtWidgets.QHBoxLayout(self.homePage)
+        self.horizontalLayout_21.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_21.setSpacing(0)
+        self.horizontalLayout_21.setObjectName("horizontalLayout_21")
+        self.verticalLayout_32 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_32.setContentsMargins(0, 0, -1, -1)
+        self.verticalLayout_32.setSpacing(0)
+        self.verticalLayout_32.setObjectName("verticalLayout_32")
+        self.homeScrollArea = QtWidgets.QScrollArea(parent=self.homePage)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.scrollWelcomeFolders.sizePolicy().hasHeightForWidth())
-        self.scrollWelcomeFolders.setSizePolicy(sizePolicy)
-        self.scrollWelcomeFolders.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
-        self.scrollWelcomeFolders.setLayoutDirection(QtCore.Qt.LayoutDirection.LeftToRight)
-        self.scrollWelcomeFolders.setStyleSheet("QWidget {\n"
+        sizePolicy.setHeightForWidth(self.homeScrollArea.sizePolicy().hasHeightForWidth())
+        self.homeScrollArea.setSizePolicy(sizePolicy)
+        self.homeScrollArea.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
+        self.homeScrollArea.setLayoutDirection(QtCore.Qt.LayoutDirection.LeftToRight)
+        self.homeScrollArea.setStyleSheet("QWidget {\n"
 "    background-color: rgb(255, 255, 255);\n"
 "}\n"
 "\n"
@@ -515,129 +515,129 @@ class Ui_MainWindow(object):
 "QScrollBar::sub-page:vertical {\n"
 "    background: transparent;\n"
 "}")
-        self.scrollWelcomeFolders.setWidgetResizable(True)
-        self.scrollWelcomeFolders.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignVCenter)
-        self.scrollWelcomeFolders.setObjectName("scrollWelcomeFolders")
-        self.scrollWelcomeContent = QtWidgets.QWidget()
-        self.scrollWelcomeContent.setGeometry(QtCore.QRect(0, 0, 533, 516))
-        self.scrollWelcomeContent.setObjectName("scrollWelcomeContent")
-        self.welcomeFoldersLayout = QtWidgets.QGridLayout(self.scrollWelcomeContent)
-        self.welcomeFoldersLayout.setContentsMargins(9, 9, 9, 9)
-        self.welcomeFoldersLayout.setObjectName("welcomeFoldersLayout")
-        self.scrollWelcomeFolders.setWidget(self.scrollWelcomeContent)
-        self.welcomeLeftLayout.addWidget(self.scrollWelcomeFolders)
-        self.welcomeLayout.addLayout(self.welcomeLeftLayout)
-        self.frameAddFolder = QtWidgets.QFrame(parent=self.pageWelcome)
-        self.frameAddFolder.setStyleSheet("QFrame {\n"
+        self.homeScrollArea.setWidgetResizable(True)
+        self.homeScrollArea.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignVCenter)
+        self.homeScrollArea.setObjectName("homeScrollArea")
+        self.homeScrollContent = QtWidgets.QWidget()
+        self.homeScrollContent.setGeometry(QtCore.QRect(0, 0, 533, 516))
+        self.homeScrollContent.setObjectName("homeScrollContent")
+        self.homeGridLayout = QtWidgets.QGridLayout(self.homeScrollContent)
+        self.homeGridLayout.setContentsMargins(9, 9, 9, 9)
+        self.homeGridLayout.setObjectName("homeGridLayout")
+        self.homeScrollArea.setWidget(self.homeScrollContent)
+        self.verticalLayout_32.addWidget(self.homeScrollArea)
+        self.horizontalLayout_21.addLayout(self.verticalLayout_32)
+        self.addFolderFrame = QtWidgets.QFrame(parent=self.homePage)
+        self.addFolderFrame.setStyleSheet("QFrame {\n"
 "    background: rgb(245, 249, 254);\n"
 "    border-radius: 12px;\n"
 "}")
-        self.frameAddFolder.setObjectName("frameAddFolder")
-        self.addFolderLayout = QtWidgets.QVBoxLayout(self.frameAddFolder)
+        self.addFolderFrame.setObjectName("addFolderFrame")
+        self.addFolderLayout = QtWidgets.QVBoxLayout(self.addFolderFrame)
         self.addFolderLayout.setContentsMargins(6, 12, 6, 6)
         self.addFolderLayout.setSpacing(6)
         self.addFolderLayout.setObjectName("addFolderLayout")
-        self.widgetAddFolder = QtWidgets.QWidget(parent=self.frameAddFolder)
-        self.widgetAddFolder.setMinimumSize(QtCore.QSize(0, 0))
-        self.widgetAddFolder.setMaximumSize(QtCore.QSize(16777215, 16777215))
-        self.widgetAddFolder.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
-        self.widgetAddFolder.setStyleSheet("background-color: rgb(255, 255, 255);\n"
+        self.addFolderWidget = QtWidgets.QWidget(parent=self.addFolderFrame)
+        self.addFolderWidget.setMinimumSize(QtCore.QSize(0, 0))
+        self.addFolderWidget.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        self.addFolderWidget.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
+        self.addFolderWidget.setStyleSheet("background-color: rgb(255, 255, 255);\n"
 "border-radius:18px;\n"
 "border: 2px dashed qradialgradient(\n"
 "cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
 "stop:0.66 rgba(134, 119, 253, 255),\n"
 "stop:1 rgba(119, 111, 252, 255)\n"
 ");")
-        self.widgetAddFolder.setObjectName("widgetAddFolder")
-        self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.widgetAddFolder)
-        self.verticalLayout_6.setContentsMargins(-1, 9, -1, -1)
-        self.verticalLayout_6.setSpacing(9)
-        self.verticalLayout_6.setObjectName("verticalLayout_6")
+        self.addFolderWidget.setObjectName("addFolderWidget")
+        self.addFolderWidgetLayout = QtWidgets.QVBoxLayout(self.addFolderWidget)
+        self.addFolderWidgetLayout.setContentsMargins(-1, 9, -1, -1)
+        self.addFolderWidgetLayout.setSpacing(9)
+        self.addFolderWidgetLayout.setObjectName("addFolderWidgetLayout")
         spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
-        self.verticalLayout_6.addItem(spacerItem1)
-        self.horizontalLayout_31 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_31.setSpacing(2)
-        self.horizontalLayout_31.setObjectName("horizontalLayout_31")
+        self.addFolderWidgetLayout.addItem(spacerItem1)
+        self.folderIconLayout = QtWidgets.QHBoxLayout()
+        self.folderIconLayout.setSpacing(2)
+        self.folderIconLayout.setObjectName("folderIconLayout")
         spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
-        self.horizontalLayout_31.addItem(spacerItem2)
-        self.widgetFolderIcon = QtWidgets.QWidget(parent=self.widgetAddFolder)
+        self.folderIconLayout.addItem(spacerItem2)
+        self.folderIconWidget = QtWidgets.QWidget(parent=self.addFolderWidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.widgetFolderIcon.sizePolicy().hasHeightForWidth())
-        self.widgetFolderIcon.setSizePolicy(sizePolicy)
-        self.widgetFolderIcon.setMinimumSize(QtCore.QSize(36, 36))
-        self.widgetFolderIcon.setMaximumSize(QtCore.QSize(36, 36))
-        self.widgetFolderIcon.setStyleSheet("image: url(resources/img/page_0/导入文件夹.svg);\n"
+        sizePolicy.setHeightForWidth(self.folderIconWidget.sizePolicy().hasHeightForWidth())
+        self.folderIconWidget.setSizePolicy(sizePolicy)
+        self.folderIconWidget.setMinimumSize(QtCore.QSize(36, 36))
+        self.folderIconWidget.setMaximumSize(QtCore.QSize(36, 36))
+        self.folderIconWidget.setStyleSheet("image: url(resources/img/page_0/导入文件夹.svg);\n"
 "background-color: rgba(0, 0, 0, 0);\n"
 "border-radius:0px;\n"
 "border: 0px;")
-        self.widgetFolderIcon.setObjectName("widgetFolderIcon")
-        self.horizontalLayout_31.addWidget(self.widgetFolderIcon)
-        self.btnAddFolder = QtWidgets.QPushButton(parent=self.widgetAddFolder)
+        self.folderIconWidget.setObjectName("folderIconWidget")
+        self.folderIconLayout.addWidget(self.folderIconWidget)
+        self.addFolderButton = QtWidgets.QPushButton(parent=self.addFolderWidget)
         font = QtGui.QFont()
         font.setPointSize(14)
-        self.btnAddFolder.setFont(font)
-        self.btnAddFolder.setStyleSheet("QPushButton {\n"
+        self.addFolderButton.setFont(font)
+        self.addFolderButton.setStyleSheet("QPushButton {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.btnAddFolder.setObjectName("btnAddFolder")
-        self.horizontalLayout_31.addWidget(self.btnAddFolder)
+        self.addFolderButton.setObjectName("addFolderButton")
+        self.folderIconLayout.addWidget(self.addFolderButton)
         spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
-        self.horizontalLayout_31.addItem(spacerItem3)
-        self.verticalLayout_6.addLayout(self.horizontalLayout_31)
-        self.labelAddFolderHint = QtWidgets.QLabel(parent=self.widgetAddFolder)
+        self.folderIconLayout.addItem(spacerItem3)
+        self.addFolderWidgetLayout.addLayout(self.folderIconLayout)
+        self.addFolderHintLabel = QtWidgets.QLabel(parent=self.addFolderWidget)
         font = QtGui.QFont()
         font.setPointSize(9)
-        self.labelAddFolderHint.setFont(font)
-        self.labelAddFolderHint.setStyleSheet("QLabel {\n"
+        self.addFolderHintLabel.setFont(font)
+        self.addFolderHintLabel.setStyleSheet("QLabel {\n"
 "    color: rgb(150, 150, 150);\n"
 "    qproperty-alignment: AlignCenter;\n"
 "    border: none;\n"
 "}")
-        self.labelAddFolderHint.setObjectName("labelAddFolderHint")
-        self.verticalLayout_6.addWidget(self.labelAddFolderHint)
-        self.verticalLayout_6.setStretch(0, 1)
-        self.verticalLayout_6.setStretch(2, 2)
-        self.addFolderLayout.addWidget(self.widgetAddFolder)
+        self.addFolderHintLabel.setObjectName("addFolderHintLabel")
+        self.addFolderWidgetLayout.addWidget(self.addFolderHintLabel)
+        self.addFolderWidgetLayout.setStretch(0, 1)
+        self.addFolderWidgetLayout.setStretch(2, 2)
+        self.addFolderLayout.addWidget(self.addFolderWidget)
         spacerItem4 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
         self.addFolderLayout.addItem(spacerItem4)
         self.addFolderLayout.setStretch(1, 1)
-        self.welcomeLayout.addWidget(self.frameAddFolder)
-        self.welcomeLayout.setStretch(0, 1)
-        self.stackedContent.addWidget(self.pageWelcome)
-        self.pageGallery = QtWidgets.QWidget()
+        self.horizontalLayout_21.addWidget(self.addFolderFrame)
+        self.horizontalLayout_21.setStretch(0, 1)
+        self.mainContentStack.addWidget(self.homePage)
+        self.page_1 = QtWidgets.QWidget()
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pageGallery.sizePolicy().hasHeightForWidth())
-        self.pageGallery.setSizePolicy(sizePolicy)
-        self.pageGallery.setStyleSheet("background:rgb(255, 255, 255);\n"
+        sizePolicy.setHeightForWidth(self.page_1.sizePolicy().hasHeightForWidth())
+        self.page_1.setSizePolicy(sizePolicy)
+        self.page_1.setStyleSheet("background:rgb(255, 255, 255);\n"
 "border-top-left-radius:0px;\n"
 "border-top-right-radius:0px;\n"
 "border-bottom-right-radius:12px;\n"
 "border-bottom-left-radius:0px;")
-        self.pageGallery.setObjectName("pageGallery")
-        self.galleryLayout = QtWidgets.QVBoxLayout(self.pageGallery)
-        self.galleryLayout.setContentsMargins(0, 0, 0, 0)
-        self.galleryLayout.setSpacing(0)
-        self.galleryLayout.setObjectName("galleryLayout")
-        self.frameGallery = QtWidgets.QFrame(parent=self.pageGallery)
-        self.frameGallery.setStyleSheet("background:rgb(255, 255, 255);\n"
+        self.page_1.setObjectName("page_1")
+        self.verticalLayout_20 = QtWidgets.QVBoxLayout(self.page_1)
+        self.verticalLayout_20.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_20.setSpacing(0)
+        self.verticalLayout_20.setObjectName("verticalLayout_20")
+        self.placeholderFrame = QtWidgets.QFrame(parent=self.page_1)
+        self.placeholderFrame.setStyleSheet("background:rgb(255, 255, 255);\n"
 "border-top-left-radius:0px;\n"
 "border-top-right-radius:0px;\n"
 "border-bottom-right-radius:12px;\n"
 "border-bottom-left-radius:0px;")
-        self.frameGallery.setObjectName("frameGallery")
-        self.galleryFrameLayout = QtWidgets.QVBoxLayout(self.frameGallery)
-        self.galleryFrameLayout.setContentsMargins(0, 0, 0, 0)
-        self.galleryFrameLayout.setSpacing(0)
-        self.galleryFrameLayout.setObjectName("galleryFrameLayout")
+        self.placeholderFrame.setObjectName("placeholderFrame")
+        self.placeholderLayout = QtWidgets.QVBoxLayout(self.placeholderFrame)
+        self.placeholderLayout.setContentsMargins(0, 0, 0, 0)
+        self.placeholderLayout.setSpacing(0)
+        self.placeholderLayout.setObjectName("placeholderLayout")
         spacerItem5 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
-        self.galleryFrameLayout.addItem(spacerItem5)
-        self.label = QtWidgets.QLabel(parent=self.frameGallery)
-        self.label.setStyleSheet("QLabel {\n"
+        self.placeholderLayout.addItem(spacerItem5)
+        self.placeholderLabel = QtWidgets.QLabel(parent=self.placeholderFrame)
+        self.placeholderLabel.setStyleSheet("QLabel {\n"
 "    font-family: \"Microsoft YaHei\", \"Segoe UI\", sans-serif;\n"
 "    font-size: 18px;\n"
 "    color: #333740;\n"
@@ -706,16 +706,16 @@ class Ui_MainWindow(object):
 "    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);\n"
 "}\n"
 "    ")
-        self.label.setObjectName("label")
-        self.galleryFrameLayout.addWidget(self.label)
+        self.placeholderLabel.setObjectName("placeholderLabel")
+        self.placeholderLayout.addWidget(self.placeholderLabel)
         spacerItem6 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
-        self.galleryFrameLayout.addItem(spacerItem6)
-        self.galleryLayout.addWidget(self.frameGallery)
-        self.stackedContent.addWidget(self.pageGallery)
-        self.pageViewer = QtWidgets.QWidget()
-        self.pageViewer.setStyleSheet("border: none;")
-        self.pageViewer.setObjectName("pageViewer")
-        self.verticalLayout_29 = QtWidgets.QVBoxLayout(self.pageViewer)
+        self.placeholderLayout.addItem(spacerItem6)
+        self.verticalLayout_20.addWidget(self.placeholderFrame)
+        self.mainContentStack.addWidget(self.page_1)
+        self.settingsPage = QtWidgets.QWidget()
+        self.settingsPage.setStyleSheet("border: none;")
+        self.settingsPage.setObjectName("settingsPage")
+        self.verticalLayout_29 = QtWidgets.QVBoxLayout(self.settingsPage)
         self.verticalLayout_29.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_29.setSpacing(0)
         self.verticalLayout_29.setObjectName("verticalLayout_29")
@@ -723,53 +723,53 @@ class Ui_MainWindow(object):
         self.verticalLayout_34.setContentsMargins(-1, 0, -1, 0)
         self.verticalLayout_34.setSpacing(0)
         self.verticalLayout_34.setObjectName("verticalLayout_34")
-        self.horizontalFrame_3 = QtWidgets.QFrame(parent=self.pageViewer)
-        self.horizontalFrame_3.setStyleSheet("color: #333333;\n"
+        self.settingsHeaderFrame = QtWidgets.QFrame(parent=self.settingsPage)
+        self.settingsHeaderFrame.setStyleSheet("color: #333333;\n"
 "background:rgb(255, 255, 255);\n"
 "border: none;\n"
 "border-radius: 0px;")
-        self.horizontalFrame_3.setObjectName("horizontalFrame_3")
-        self.horizontalLayout_38 = QtWidgets.QHBoxLayout(self.horizontalFrame_3)
+        self.settingsHeaderFrame.setObjectName("settingsHeaderFrame")
+        self.horizontalLayout_38 = QtWidgets.QHBoxLayout(self.settingsHeaderFrame)
         self.horizontalLayout_38.setContentsMargins(9, 9, 9, 9)
         self.horizontalLayout_38.setSpacing(6)
         self.horizontalLayout_38.setObjectName("horizontalLayout_38")
-        self.label_classification = QtWidgets.QLabel(parent=self.horizontalFrame_3)
+        self.classificationLabel = QtWidgets.QLabel(parent=self.settingsHeaderFrame)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_classification.setFont(font)
-        self.label_classification.setStyleSheet("QLabel {\n"
+        self.classificationLabel.setFont(font)
+        self.classificationLabel.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_classification.setObjectName("label_classification")
-        self.horizontalLayout_38.addWidget(self.label_classification)
-        self.label_route = QtWidgets.QLabel(parent=self.horizontalFrame_3)
+        self.classificationLabel.setObjectName("classificationLabel")
+        self.horizontalLayout_38.addWidget(self.classificationLabel)
+        self.routeLabel = QtWidgets.QLabel(parent=self.settingsHeaderFrame)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_route.setFont(font)
-        self.label_route.setStyleSheet("QLabel {\n"
+        self.routeLabel.setFont(font)
+        self.routeLabel.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_route.setObjectName("label_route")
-        self.horizontalLayout_38.addWidget(self.label_route)
-        self.label_25 = QtWidgets.QLabel(parent=self.horizontalFrame_3)
+        self.routeLabel.setObjectName("routeLabel")
+        self.horizontalLayout_38.addWidget(self.routeLabel)
+        self.separatorLabel = QtWidgets.QLabel(parent=self.settingsHeaderFrame)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_25.setFont(font)
-        self.label_25.setStyleSheet("QLabel {\n"
+        self.separatorLabel.setFont(font)
+        self.separatorLabel.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_25.setObjectName("label_25")
-        self.horizontalLayout_38.addWidget(self.label_25)
-        self.comboBox_level_1 = QtWidgets.QComboBox(parent=self.horizontalFrame_3)
-        self.comboBox_level_1.setMinimumSize(QtCore.QSize(82, 30))
+        self.separatorLabel.setObjectName("separatorLabel")
+        self.horizontalLayout_38.addWidget(self.separatorLabel)
+        self.level1ComboBox = QtWidgets.QComboBox(parent=self.settingsHeaderFrame)
+        self.level1ComboBox.setMinimumSize(QtCore.QSize(82, 30))
         font = QtGui.QFont()
         font.setFamily("Microsoft YaHei")
         font.setPointSize(-1)
-        self.comboBox_level_1.setFont(font)
-        self.comboBox_level_1.setStyleSheet("QComboBox {\n"
+        self.level1ComboBox.setFont(font)
+        self.level1ComboBox.setStyleSheet("QComboBox {\n"
 "    background-color: #ffffff;\n"
 "    border: 1px solid #d1d5db;\n"
 "    border-radius: 6px;\n"
@@ -872,32 +872,32 @@ class Ui_MainWindow(object):
 "    outline: none;\n"
 "    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
 "}")
-        self.comboBox_level_1.setObjectName("comboBox_level_1")
-        self.comboBox_level_1.addItem("")
-        self.comboBox_level_1.addItem("")
-        self.comboBox_level_1.addItem("")
-        self.comboBox_level_1.addItem("")
-        self.comboBox_level_1.addItem("")
-        self.comboBox_level_1.addItem("")
-        self.comboBox_level_1.addItem("")
-        self.horizontalLayout_38.addWidget(self.comboBox_level_1)
-        self.label_17 = QtWidgets.QLabel(parent=self.horizontalFrame_3)
+        self.level1ComboBox.setObjectName("level1ComboBox")
+        self.level1ComboBox.addItem("")
+        self.level1ComboBox.addItem("")
+        self.level1ComboBox.addItem("")
+        self.level1ComboBox.addItem("")
+        self.level1ComboBox.addItem("")
+        self.level1ComboBox.addItem("")
+        self.level1ComboBox.addItem("")
+        self.horizontalLayout_38.addWidget(self.level1ComboBox)
+        self.separator2Label = QtWidgets.QLabel(parent=self.settingsHeaderFrame)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_17.setFont(font)
-        self.label_17.setStyleSheet("QLabel {\n"
+        self.separator2Label.setFont(font)
+        self.separator2Label.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_17.setObjectName("label_17")
-        self.horizontalLayout_38.addWidget(self.label_17)
-        self.comboBox_level_2 = QtWidgets.QComboBox(parent=self.horizontalFrame_3)
-        self.comboBox_level_2.setMinimumSize(QtCore.QSize(82, 30))
+        self.separator2Label.setObjectName("separator2Label")
+        self.horizontalLayout_38.addWidget(self.separator2Label)
+        self.level2ComboBox = QtWidgets.QComboBox(parent=self.settingsHeaderFrame)
+        self.level2ComboBox.setMinimumSize(QtCore.QSize(82, 30))
         font = QtGui.QFont()
         font.setFamily("Microsoft YaHei")
         font.setPointSize(-1)
-        self.comboBox_level_2.setFont(font)
-        self.comboBox_level_2.setStyleSheet("QComboBox {\n"
+        self.level2ComboBox.setFont(font)
+        self.level2ComboBox.setStyleSheet("QComboBox {\n"
 "    background-color: #ffffff;\n"
 "    border: 1px solid #d1d5db;\n"
 "    border-radius: 6px;\n"
@@ -1000,32 +1000,32 @@ class Ui_MainWindow(object):
 "    outline: none;\n"
 "    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
 "}")
-        self.comboBox_level_2.setObjectName("comboBox_level_2")
-        self.comboBox_level_2.addItem("")
-        self.comboBox_level_2.addItem("")
-        self.comboBox_level_2.addItem("")
-        self.comboBox_level_2.addItem("")
-        self.comboBox_level_2.addItem("")
-        self.comboBox_level_2.addItem("")
-        self.comboBox_level_2.addItem("")
-        self.horizontalLayout_38.addWidget(self.comboBox_level_2)
-        self.label_18 = QtWidgets.QLabel(parent=self.horizontalFrame_3)
+        self.level2ComboBox.setObjectName("level2ComboBox")
+        self.level2ComboBox.addItem("")
+        self.level2ComboBox.addItem("")
+        self.level2ComboBox.addItem("")
+        self.level2ComboBox.addItem("")
+        self.level2ComboBox.addItem("")
+        self.level2ComboBox.addItem("")
+        self.level2ComboBox.addItem("")
+        self.horizontalLayout_38.addWidget(self.level2ComboBox)
+        self.separator3Label = QtWidgets.QLabel(parent=self.settingsHeaderFrame)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_18.setFont(font)
-        self.label_18.setStyleSheet("QLabel {\n"
+        self.separator3Label.setFont(font)
+        self.separator3Label.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_18.setObjectName("label_18")
-        self.horizontalLayout_38.addWidget(self.label_18)
-        self.comboBox_level_3 = QtWidgets.QComboBox(parent=self.horizontalFrame_3)
-        self.comboBox_level_3.setMinimumSize(QtCore.QSize(82, 30))
+        self.separator3Label.setObjectName("separator3Label")
+        self.horizontalLayout_38.addWidget(self.separator3Label)
+        self.level3ComboBox = QtWidgets.QComboBox(parent=self.settingsHeaderFrame)
+        self.level3ComboBox.setMinimumSize(QtCore.QSize(82, 30))
         font = QtGui.QFont()
         font.setFamily("Microsoft YaHei")
         font.setPointSize(-1)
-        self.comboBox_level_3.setFont(font)
-        self.comboBox_level_3.setStyleSheet("QComboBox {\n"
+        self.level3ComboBox.setFont(font)
+        self.level3ComboBox.setStyleSheet("QComboBox {\n"
 "    background-color: #ffffff;\n"
 "    border: 1px solid #d1d5db;\n"
 "    border-radius: 6px;\n"
@@ -1128,32 +1128,32 @@ class Ui_MainWindow(object):
 "    outline: none;\n"
 "    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
 "}")
-        self.comboBox_level_3.setObjectName("comboBox_level_3")
-        self.comboBox_level_3.addItem("")
-        self.comboBox_level_3.addItem("")
-        self.comboBox_level_3.addItem("")
-        self.comboBox_level_3.addItem("")
-        self.comboBox_level_3.addItem("")
-        self.comboBox_level_3.addItem("")
-        self.comboBox_level_3.addItem("")
-        self.horizontalLayout_38.addWidget(self.comboBox_level_3)
-        self.label_19 = QtWidgets.QLabel(parent=self.horizontalFrame_3)
+        self.level3ComboBox.setObjectName("level3ComboBox")
+        self.level3ComboBox.addItem("")
+        self.level3ComboBox.addItem("")
+        self.level3ComboBox.addItem("")
+        self.level3ComboBox.addItem("")
+        self.level3ComboBox.addItem("")
+        self.level3ComboBox.addItem("")
+        self.level3ComboBox.addItem("")
+        self.horizontalLayout_38.addWidget(self.level3ComboBox)
+        self.separator4Label = QtWidgets.QLabel(parent=self.settingsHeaderFrame)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_19.setFont(font)
-        self.label_19.setStyleSheet("QLabel {\n"
+        self.separator4Label.setFont(font)
+        self.separator4Label.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_19.setObjectName("label_19")
-        self.horizontalLayout_38.addWidget(self.label_19)
-        self.comboBox_level_4 = QtWidgets.QComboBox(parent=self.horizontalFrame_3)
-        self.comboBox_level_4.setMinimumSize(QtCore.QSize(82, 30))
+        self.separator4Label.setObjectName("separator4Label")
+        self.horizontalLayout_38.addWidget(self.separator4Label)
+        self.level4ComboBox = QtWidgets.QComboBox(parent=self.settingsHeaderFrame)
+        self.level4ComboBox.setMinimumSize(QtCore.QSize(82, 30))
         font = QtGui.QFont()
         font.setFamily("Microsoft YaHei")
         font.setPointSize(-1)
-        self.comboBox_level_4.setFont(font)
-        self.comboBox_level_4.setStyleSheet("QComboBox {\n"
+        self.level4ComboBox.setFont(font)
+        self.level4ComboBox.setStyleSheet("QComboBox {\n"
 "    background-color: #ffffff;\n"
 "    border: 1px solid #d1d5db;\n"
 "    border-radius: 6px;\n"
@@ -1256,32 +1256,32 @@ class Ui_MainWindow(object):
 "    outline: none;\n"
 "    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
 "}")
-        self.comboBox_level_4.setObjectName("comboBox_level_4")
-        self.comboBox_level_4.addItem("")
-        self.comboBox_level_4.addItem("")
-        self.comboBox_level_4.addItem("")
-        self.comboBox_level_4.addItem("")
-        self.comboBox_level_4.addItem("")
-        self.comboBox_level_4.addItem("")
-        self.comboBox_level_4.addItem("")
-        self.horizontalLayout_38.addWidget(self.comboBox_level_4)
-        self.label_20 = QtWidgets.QLabel(parent=self.horizontalFrame_3)
+        self.level4ComboBox.setObjectName("level4ComboBox")
+        self.level4ComboBox.addItem("")
+        self.level4ComboBox.addItem("")
+        self.level4ComboBox.addItem("")
+        self.level4ComboBox.addItem("")
+        self.level4ComboBox.addItem("")
+        self.level4ComboBox.addItem("")
+        self.level4ComboBox.addItem("")
+        self.horizontalLayout_38.addWidget(self.level4ComboBox)
+        self.separator5Label = QtWidgets.QLabel(parent=self.settingsHeaderFrame)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_20.setFont(font)
-        self.label_20.setStyleSheet("QLabel {\n"
+        self.separator5Label.setFont(font)
+        self.separator5Label.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_20.setObjectName("label_20")
-        self.horizontalLayout_38.addWidget(self.label_20)
-        self.comboBox_level_5 = QtWidgets.QComboBox(parent=self.horizontalFrame_3)
-        self.comboBox_level_5.setMinimumSize(QtCore.QSize(82, 30))
+        self.separator5Label.setObjectName("separator5Label")
+        self.horizontalLayout_38.addWidget(self.separator5Label)
+        self.level5ComboBox = QtWidgets.QComboBox(parent=self.settingsHeaderFrame)
+        self.level5ComboBox.setMinimumSize(QtCore.QSize(82, 30))
         font = QtGui.QFont()
         font.setFamily("Microsoft YaHei")
         font.setPointSize(-1)
-        self.comboBox_level_5.setFont(font)
-        self.comboBox_level_5.setStyleSheet("QComboBox {\n"
+        self.level5ComboBox.setFont(font)
+        self.level5ComboBox.setStyleSheet("QComboBox {\n"
 "    background-color: #ffffff;\n"
 "    border: 1px solid #d1d5db;\n"
 "    border-radius: 6px;\n"
@@ -1384,43 +1384,43 @@ class Ui_MainWindow(object):
 "    outline: none;\n"
 "    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
 "}")
-        self.comboBox_level_5.setObjectName("comboBox_level_5")
-        self.comboBox_level_5.addItem("")
-        self.comboBox_level_5.addItem("")
-        self.comboBox_level_5.addItem("")
-        self.comboBox_level_5.addItem("")
-        self.comboBox_level_5.addItem("")
-        self.comboBox_level_5.addItem("")
-        self.comboBox_level_5.addItem("")
-        self.horizontalLayout_38.addWidget(self.comboBox_level_5)
-        self.verticalLayout_34.addWidget(self.horizontalFrame_3)
-        self.rename_Frame = QtWidgets.QFrame(parent=self.pageViewer)
-        self.rename_Frame.setStyleSheet("border-radius:0px;\n"
+        self.level5ComboBox.setObjectName("level5ComboBox")
+        self.level5ComboBox.addItem("")
+        self.level5ComboBox.addItem("")
+        self.level5ComboBox.addItem("")
+        self.level5ComboBox.addItem("")
+        self.level5ComboBox.addItem("")
+        self.level5ComboBox.addItem("")
+        self.level5ComboBox.addItem("")
+        self.horizontalLayout_38.addWidget(self.level5ComboBox)
+        self.verticalLayout_34.addWidget(self.settingsHeaderFrame)
+        self.renameFrame = QtWidgets.QFrame(parent=self.settingsPage)
+        self.renameFrame.setStyleSheet("border-radius:0px;\n"
 "background:rgb(255, 255, 255);")
-        self.rename_Frame.setObjectName("rename_Frame")
-        self.verticalLayout_35 = QtWidgets.QVBoxLayout(self.rename_Frame)
-        self.verticalLayout_35.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout_35.setSpacing(0)
-        self.verticalLayout_35.setObjectName("verticalLayout_35")
-        self.horizontalLayout_45 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_45.setContentsMargins(9, 6, 9, 6)
-        self.horizontalLayout_45.setSpacing(4)
-        self.horizontalLayout_45.setObjectName("horizontalLayout_45")
-        self.label_buildName = QtWidgets.QLabel(parent=self.rename_Frame)
+        self.renameFrame.setObjectName("renameFrame")
+        self.renameLayout = QtWidgets.QVBoxLayout(self.renameFrame)
+        self.renameLayout.setContentsMargins(0, 0, 0, 0)
+        self.renameLayout.setSpacing(0)
+        self.renameLayout.setObjectName("renameLayout")
+        self.renameHeaderLayout = QtWidgets.QHBoxLayout()
+        self.renameHeaderLayout.setContentsMargins(9, 6, 9, 6)
+        self.renameHeaderLayout.setSpacing(4)
+        self.renameHeaderLayout.setObjectName("renameHeaderLayout")
+        self.buildNameLabel = QtWidgets.QLabel(parent=self.renameFrame)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_buildName.setFont(font)
-        self.label_buildName.setStyleSheet("QLabel {\n"
+        self.buildNameLabel.setFont(font)
+        self.buildNameLabel.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_buildName.setObjectName("label_buildName")
-        self.horizontalLayout_45.addWidget(self.label_buildName)
-        self.frame_Rename = QtWidgets.QFrame(parent=self.rename_Frame)
-        self.frame_Rename.setMinimumSize(QtCore.QSize(88, 36))
-        self.frame_Rename.setMaximumSize(QtCore.QSize(800, 36))
-        self.frame_Rename.setSizeIncrement(QtCore.QSize(0, 32))
-        self.frame_Rename.setStyleSheet("QFrame {\n"
+        self.buildNameLabel.setObjectName("buildNameLabel")
+        self.renameHeaderLayout.addWidget(self.buildNameLabel)
+        self.renameFrame1 = QtWidgets.QFrame(parent=self.renameFrame)
+        self.renameFrame1.setMinimumSize(QtCore.QSize(88, 36))
+        self.renameFrame1.setMaximumSize(QtCore.QSize(800, 36))
+        self.renameFrame1.setSizeIncrement(QtCore.QSize(0, 32))
+        self.renameFrame1.setStyleSheet("QFrame {\n"
 "    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, \n"
 "                              stop:0 rgb(251, 253, 254), \n"
 "                              stop:0.4 rgb(248, 250, 251), \n"
@@ -1428,18 +1428,18 @@ class Ui_MainWindow(object):
 "    border-radius: 6px;\n"
 "    border: 1px solid rgba(230, 235, 240, 0.8);\n"
 "}")
-        self.frame_Rename.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frame_Rename.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frame_Rename.setObjectName("frame_Rename")
-        self.horizontalLayout_53 = QtWidgets.QHBoxLayout(self.frame_Rename)
-        self.horizontalLayout_53.setContentsMargins(9, 0, 9, 0)
-        self.horizontalLayout_53.setSpacing(9)
-        self.horizontalLayout_53.setObjectName("horizontalLayout_53")
-        self.horizontalLayout_45.addWidget(self.frame_Rename)
-        self.pushButton_unique = QtWidgets.QPushButton(parent=self.rename_Frame)
-        self.pushButton_unique.setMinimumSize(QtCore.QSize(78, 28))
-        self.pushButton_unique.setMaximumSize(QtCore.QSize(78, 28))
-        self.pushButton_unique.setStyleSheet("QPushButton {\n"
+        self.renameFrame1.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.renameFrame1.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.renameFrame1.setObjectName("renameFrame1")
+        self.renameFrameLayout = QtWidgets.QHBoxLayout(self.renameFrame1)
+        self.renameFrameLayout.setContentsMargins(9, 0, 9, 0)
+        self.renameFrameLayout.setSpacing(9)
+        self.renameFrameLayout.setObjectName("renameFrameLayout")
+        self.renameHeaderLayout.addWidget(self.renameFrame1)
+        self.uniqueButton = QtWidgets.QPushButton(parent=self.renameFrame)
+        self.uniqueButton.setMinimumSize(QtCore.QSize(78, 28))
+        self.uniqueButton.setMaximumSize(QtCore.QSize(78, 28))
+        self.uniqueButton.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
 "  color: #2c3e50;\n"
 "  border: 1px solid #d4d4d4;\n"
@@ -1458,22 +1458,22 @@ class Ui_MainWindow(object):
 "  color: #2c3e50;\n"
 "  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
 "}")
-        self.pushButton_unique.setObjectName("pushButton_unique")
-        self.horizontalLayout_45.addWidget(self.pushButton_unique)
-        self.label_point = QtWidgets.QLabel(parent=self.rename_Frame)
+        self.uniqueButton.setObjectName("uniqueButton")
+        self.renameHeaderLayout.addWidget(self.uniqueButton)
+        self.pointLabel = QtWidgets.QLabel(parent=self.renameFrame)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_point.setFont(font)
-        self.label_point.setStyleSheet("QLabel {\n"
+        self.pointLabel.setFont(font)
+        self.pointLabel.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_point.setObjectName("label_point")
-        self.horizontalLayout_45.addWidget(self.label_point)
-        self.pushButton_extensions = QtWidgets.QPushButton(parent=self.rename_Frame)
-        self.pushButton_extensions.setMinimumSize(QtCore.QSize(64, 28))
-        self.pushButton_extensions.setMaximumSize(QtCore.QSize(64, 28))
-        self.pushButton_extensions.setStyleSheet("QPushButton {\n"
+        self.pointLabel.setObjectName("pointLabel")
+        self.renameHeaderLayout.addWidget(self.pointLabel)
+        self.extensionsButton = QtWidgets.QPushButton(parent=self.renameFrame)
+        self.extensionsButton.setMinimumSize(QtCore.QSize(64, 28))
+        self.extensionsButton.setMaximumSize(QtCore.QSize(64, 28))
+        self.extensionsButton.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
 "  color: #2c3e50;\n"
 "  border: 1px solid #d4d4d4;\n"
@@ -1492,49 +1492,49 @@ class Ui_MainWindow(object):
 "  color: #2c3e50;\n"
 "  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
 "}")
-        self.pushButton_extensions.setObjectName("pushButton_extensions")
-        self.horizontalLayout_45.addWidget(self.pushButton_extensions)
+        self.extensionsButton.setObjectName("extensionsButton")
+        self.renameHeaderLayout.addWidget(self.extensionsButton)
         spacerItem7 = QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
-        self.horizontalLayout_45.addItem(spacerItem7)
-        self.verticalLayout_35.addLayout(self.horizontalLayout_45)
-        self.Frame_tags = QtWidgets.QFrame(parent=self.rename_Frame)
-        self.Frame_tags.setMinimumSize(QtCore.QSize(0, 54))
-        self.Frame_tags.setStyleSheet("border: none;\n"
+        self.renameHeaderLayout.addItem(spacerItem7)
+        self.renameLayout.addLayout(self.renameHeaderLayout)
+        self.tagsFrame = QtWidgets.QFrame(parent=self.renameFrame)
+        self.tagsFrame.setMinimumSize(QtCore.QSize(0, 54))
+        self.tagsFrame.setStyleSheet("border: none;\n"
 "border-radius: 0px;")
-        self.Frame_tags.setObjectName("Frame_tags")
-        self.horizontalLayout_54 = QtWidgets.QHBoxLayout(self.Frame_tags)
-        self.horizontalLayout_54.setContentsMargins(9, 0, 0, 0)
-        self.horizontalLayout_54.setSpacing(0)
-        self.horizontalLayout_54.setObjectName("horizontalLayout_54")
-        self.label_RenamingTags = QtWidgets.QLabel(parent=self.Frame_tags)
-        self.label_RenamingTags.setMinimumSize(QtCore.QSize(0, 40))
+        self.tagsFrame.setObjectName("tagsFrame")
+        self.tagsLayout = QtWidgets.QHBoxLayout(self.tagsFrame)
+        self.tagsLayout.setContentsMargins(9, 0, 0, 0)
+        self.tagsLayout.setSpacing(0)
+        self.tagsLayout.setObjectName("tagsLayout")
+        self.renamingTagsLabel = QtWidgets.QLabel(parent=self.tagsFrame)
+        self.renamingTagsLabel.setMinimumSize(QtCore.QSize(0, 40))
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_RenamingTags.setFont(font)
-        self.label_RenamingTags.setStyleSheet("QLabel {\n"
+        self.renamingTagsLabel.setFont(font)
+        self.renamingTagsLabel.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_RenamingTags.setObjectName("label_RenamingTags")
-        self.horizontalLayout_54.addWidget(self.label_RenamingTags)
-        self.frame_Rename_tags = QtWidgets.QFrame(parent=self.Frame_tags)
-        self.frame_Rename_tags.setMinimumSize(QtCore.QSize(0, 40))
-        self.frame_Rename_tags.setMaximumSize(QtCore.QSize(16777215, 16777215))
-        self.frame_Rename_tags.setSizeIncrement(QtCore.QSize(0, 32))
-        self.frame_Rename_tags.setStyleSheet("QFrame{\n"
+        self.renamingTagsLabel.setObjectName("renamingTagsLabel")
+        self.tagsLayout.addWidget(self.renamingTagsLabel)
+        self.renameTagsFrame = QtWidgets.QFrame(parent=self.tagsFrame)
+        self.renameTagsFrame.setMinimumSize(QtCore.QSize(0, 40))
+        self.renameTagsFrame.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        self.renameTagsFrame.setSizeIncrement(QtCore.QSize(0, 32))
+        self.renameTagsFrame.setStyleSheet("QFrame{\n"
 "background:rgba(0, 0, 0, 0);\n"
 "border: 0px;\n"
 "}")
-        self.frame_Rename_tags.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frame_Rename_tags.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frame_Rename_tags.setObjectName("frame_Rename_tags")
-        self.horizontalLayout_57 = QtWidgets.QHBoxLayout(self.frame_Rename_tags)
-        self.horizontalLayout_57.setContentsMargins(6, 6, 0, 6)
-        self.horizontalLayout_57.setSpacing(6)
-        self.horizontalLayout_57.setObjectName("horizontalLayout_57")
-        self.pushButton_original_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_original_tag.setMaximumSize(QtCore.QSize(80, 28))
-        self.pushButton_original_tag.setStyleSheet("QPushButton {\n"
+        self.renameTagsFrame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.renameTagsFrame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.renameTagsFrame.setObjectName("renameTagsFrame")
+        self.renameTagsLayout = QtWidgets.QHBoxLayout(self.renameTagsFrame)
+        self.renameTagsLayout.setContentsMargins(6, 6, 0, 6)
+        self.renameTagsLayout.setSpacing(6)
+        self.renameTagsLayout.setObjectName("renameTagsLayout")
+        self.originalTagButton = QtWidgets.QPushButton(parent=self.renameTagsFrame)
+        self.originalTagButton.setMaximumSize(QtCore.QSize(80, 28))
+        self.originalTagButton.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
 "  color: #2c3e50;\n"
 "  border: 1px solid #d4d4d4;\n"
@@ -1553,41 +1553,11 @@ class Ui_MainWindow(object):
 "  background-color: #ececec;\n"
 "  color: #34495e;\n"
 "}")
-        self.pushButton_original_tag.setObjectName("pushButton_original_tag")
-        self.horizontalLayout_57.addWidget(self.pushButton_original_tag)
-        self.pushButton_year_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_year_tag.setMaximumSize(QtCore.QSize(46, 28))
-        self.pushButton_year_tag.setStyleSheet("QPushButton {\n"
-"  background-color: #ffffff;\n"
-"  color: #2c3e50;\n"
-"  border: 1px solid #d4d4d4;\n"
-"  text-align: center;\n"
-"  font-size: 14px;\n"
-"  cursor: pointer;\n"
-"  border-radius: 12px;\n"
-"  padding: 4px 8px;\n"
-"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
-"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
-"  text-transform: uppercase;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"  background-color: #f7f7f7;\n"
-"  color: #2c3e50;\n"
-"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"  background-color: #ececec;\n"
-"  color: #34495e;\n"
-"  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
-"  transform: translateY(2px);\n"
-"}")
-        self.pushButton_year_tag.setObjectName("pushButton_year_tag")
-        self.horizontalLayout_57.addWidget(self.pushButton_year_tag)
-        self.pushButton_month_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_month_tag.setMaximumSize(QtCore.QSize(46, 28))
-        self.pushButton_month_tag.setStyleSheet("QPushButton {\n"
+        self.originalTagButton.setObjectName("originalTagButton")
+        self.renameTagsLayout.addWidget(self.originalTagButton)
+        self.yearTagButton = QtWidgets.QPushButton(parent=self.renameTagsFrame)
+        self.yearTagButton.setMaximumSize(QtCore.QSize(46, 28))
+        self.yearTagButton.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
 "  color: #2c3e50;\n"
 "  border: 1px solid #d4d4d4;\n"
@@ -1613,11 +1583,11 @@ class Ui_MainWindow(object):
 "  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
 "  transform: translateY(2px);\n"
 "}")
-        self.pushButton_month_tag.setObjectName("pushButton_month_tag")
-        self.horizontalLayout_57.addWidget(self.pushButton_month_tag)
-        self.pushButton_date_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_date_tag.setMaximumSize(QtCore.QSize(32, 28))
-        self.pushButton_date_tag.setStyleSheet("QPushButton {\n"
+        self.yearTagButton.setObjectName("yearTagButton")
+        self.renameTagsLayout.addWidget(self.yearTagButton)
+        self.monthTagButton = QtWidgets.QPushButton(parent=self.renameTagsFrame)
+        self.monthTagButton.setMaximumSize(QtCore.QSize(46, 28))
+        self.monthTagButton.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
 "  color: #2c3e50;\n"
 "  border: 1px solid #d4d4d4;\n"
@@ -1643,11 +1613,11 @@ class Ui_MainWindow(object):
 "  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
 "  transform: translateY(2px);\n"
 "}")
-        self.pushButton_date_tag.setObjectName("pushButton_date_tag")
-        self.horizontalLayout_57.addWidget(self.pushButton_date_tag)
-        self.pushButton_day_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_day_tag.setMaximumSize(QtCore.QSize(46, 28))
-        self.pushButton_day_tag.setStyleSheet("QPushButton {\n"
+        self.monthTagButton.setObjectName("monthTagButton")
+        self.renameTagsLayout.addWidget(self.monthTagButton)
+        self.dateTagButton = QtWidgets.QPushButton(parent=self.renameTagsFrame)
+        self.dateTagButton.setMaximumSize(QtCore.QSize(32, 28))
+        self.dateTagButton.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
 "  color: #2c3e50;\n"
 "  border: 1px solid #d4d4d4;\n"
@@ -1673,11 +1643,11 @@ class Ui_MainWindow(object):
 "  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
 "  transform: translateY(2px);\n"
 "}")
-        self.pushButton_day_tag.setObjectName("pushButton_day_tag")
-        self.horizontalLayout_57.addWidget(self.pushButton_day_tag)
-        self.pushButton_time_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_time_tag.setMaximumSize(QtCore.QSize(46, 28))
-        self.pushButton_time_tag.setStyleSheet("QPushButton {\n"
+        self.dateTagButton.setObjectName("dateTagButton")
+        self.renameTagsLayout.addWidget(self.dateTagButton)
+        self.dayTagButton = QtWidgets.QPushButton(parent=self.renameTagsFrame)
+        self.dayTagButton.setMaximumSize(QtCore.QSize(46, 28))
+        self.dayTagButton.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
 "  color: #2c3e50;\n"
 "  border: 1px solid #d4d4d4;\n"
@@ -1703,12 +1673,11 @@ class Ui_MainWindow(object):
 "  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
 "  transform: translateY(2px);\n"
 "}")
-        self.pushButton_time_tag.setIconSize(QtCore.QSize(16, 16))
-        self.pushButton_time_tag.setObjectName("pushButton_time_tag")
-        self.horizontalLayout_57.addWidget(self.pushButton_time_tag)
-        self.pushButton_make_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_make_tag.setMaximumSize(QtCore.QSize(74, 28))
-        self.pushButton_make_tag.setStyleSheet("QPushButton {\n"
+        self.dayTagButton.setObjectName("dayTagButton")
+        self.renameTagsLayout.addWidget(self.dayTagButton)
+        self.timeTagButton = QtWidgets.QPushButton(parent=self.renameTagsFrame)
+        self.timeTagButton.setMaximumSize(QtCore.QSize(46, 28))
+        self.timeTagButton.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
 "  color: #2c3e50;\n"
 "  border: 1px solid #d4d4d4;\n"
@@ -1734,11 +1703,12 @@ class Ui_MainWindow(object):
 "  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
 "  transform: translateY(2px);\n"
 "}")
-        self.pushButton_make_tag.setObjectName("pushButton_make_tag")
-        self.horizontalLayout_57.addWidget(self.pushButton_make_tag)
-        self.pushButton_model_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_model_tag.setMaximumSize(QtCore.QSize(74, 28))
-        self.pushButton_model_tag.setStyleSheet("QPushButton {\n"
+        self.timeTagButton.setIconSize(QtCore.QSize(16, 16))
+        self.timeTagButton.setObjectName("timeTagButton")
+        self.renameTagsLayout.addWidget(self.timeTagButton)
+        self.makeTagButton = QtWidgets.QPushButton(parent=self.renameTagsFrame)
+        self.makeTagButton.setMaximumSize(QtCore.QSize(74, 28))
+        self.makeTagButton.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
 "  color: #2c3e50;\n"
 "  border: 1px solid #d4d4d4;\n"
@@ -1764,11 +1734,41 @@ class Ui_MainWindow(object):
 "  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
 "  transform: translateY(2px);\n"
 "}")
-        self.pushButton_model_tag.setObjectName("pushButton_model_tag")
-        self.horizontalLayout_57.addWidget(self.pushButton_model_tag)
-        self.pushButton_address_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_address_tag.setMaximumSize(QtCore.QSize(66, 28))
-        self.pushButton_address_tag.setStyleSheet("QPushButton {\n"
+        self.makeTagButton.setObjectName("makeTagButton")
+        self.renameTagsLayout.addWidget(self.makeTagButton)
+        self.modelTagButton = QtWidgets.QPushButton(parent=self.renameTagsFrame)
+        self.modelTagButton.setMaximumSize(QtCore.QSize(74, 28))
+        self.modelTagButton.setStyleSheet("QPushButton {\n"
+"  background-color: #ffffff;\n"
+"  color: #2c3e50;\n"
+"  border: 1px solid #d4d4d4;\n"
+"  text-align: center;\n"
+"  font-size: 14px;\n"
+"  cursor: pointer;\n"
+"  border-radius: 12px;\n"
+"  padding: 4px 8px;\n"
+"  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;\n"
+"  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);\n"
+"  text-transform: uppercase;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"  background-color: #f7f7f7;\n"
+"  color: #2c3e50;\n"
+"  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"  background-color: #ececec;\n"
+"  color: #34495e;\n"
+"  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
+"  transform: translateY(2px);\n"
+"}")
+        self.modelTagButton.setObjectName("modelTagButton")
+        self.renameTagsLayout.addWidget(self.modelTagButton)
+        self.addressTagButton = QtWidgets.QPushButton(parent=self.renameTagsFrame)
+        self.addressTagButton.setMaximumSize(QtCore.QSize(66, 28))
+        self.addressTagButton.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
 "  color: #2c3e50;\n"
 "  border: 1px solid #d4d4d4;\n"
@@ -1796,12 +1796,12 @@ class Ui_MainWindow(object):
 "}")
         icon10 = QtGui.QIcon()
         icon10.addPixmap(QtGui.QPixmap("resources/img/page_2/位置.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.pushButton_address_tag.setIcon(icon10)
-        self.pushButton_address_tag.setObjectName("pushButton_address_tag")
-        self.horizontalLayout_57.addWidget(self.pushButton_address_tag)
-        self.pushButton_customize_tag = QtWidgets.QPushButton(parent=self.frame_Rename_tags)
-        self.pushButton_customize_tag.setMaximumSize(QtCore.QSize(80, 28))
-        self.pushButton_customize_tag.setStyleSheet("QPushButton {\n"
+        self.addressTagButton.setIcon(icon10)
+        self.addressTagButton.setObjectName("addressTagButton")
+        self.renameTagsLayout.addWidget(self.addressTagButton)
+        self.customizeTagButton = QtWidgets.QPushButton(parent=self.renameTagsFrame)
+        self.customizeTagButton.setMaximumSize(QtCore.QSize(80, 28))
+        self.customizeTagButton.setStyleSheet("QPushButton {\n"
 "  background-color: #ffffff;\n"
 "  color: #2c3e50;\n"
 "  border: 1px solid #d4d4d4;\n"
@@ -1827,35 +1827,35 @@ class Ui_MainWindow(object):
 "  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\n"
 "  transform: translateY(2px);\n"
 "}")
-        self.pushButton_customize_tag.setObjectName("pushButton_customize_tag")
-        self.horizontalLayout_57.addWidget(self.pushButton_customize_tag)
-        self.horizontalLayout_54.addWidget(self.frame_Rename_tags)
+        self.customizeTagButton.setObjectName("customizeTagButton")
+        self.renameTagsLayout.addWidget(self.customizeTagButton)
+        self.tagsLayout.addWidget(self.renameTagsFrame)
         self.horizontalLayout_46 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_46.setContentsMargins(-1, -1, 9, -1)
         self.horizontalLayout_46.setSpacing(4)
         self.horizontalLayout_46.setObjectName("horizontalLayout_46")
         spacerItem8 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
         self.horizontalLayout_46.addItem(spacerItem8)
-        self.label_operation_2 = QtWidgets.QLabel(parent=self.Frame_tags)
+        self.separatorLabel1 = QtWidgets.QLabel(parent=self.tagsFrame)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_operation_2.setFont(font)
-        self.label_operation_2.setStyleSheet("QLabel {\n"
+        self.separatorLabel1.setFont(font)
+        self.separatorLabel1.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_operation_2.setObjectName("label_operation_2")
-        self.horizontalLayout_46.addWidget(self.label_operation_2)
-        self.comboBox_separator = QtWidgets.QComboBox(parent=self.Frame_tags)
-        self.comboBox_separator.setMinimumSize(QtCore.QSize(0, 0))
-        self.comboBox_separator.setMaximumSize(QtCore.QSize(87, 16777215))
+        self.separatorLabel1.setObjectName("separatorLabel1")
+        self.horizontalLayout_46.addWidget(self.separatorLabel1)
+        self.separatorComboBox = QtWidgets.QComboBox(parent=self.tagsFrame)
+        self.separatorComboBox.setMinimumSize(QtCore.QSize(0, 0))
+        self.separatorComboBox.setMaximumSize(QtCore.QSize(87, 16777215))
         font = QtGui.QFont()
         font.setFamily("Microsoft YaHei")
         font.setPointSize(-1)
         font.setBold(False)
         font.setItalic(False)
-        self.comboBox_separator.setFont(font)
-        self.comboBox_separator.setStyleSheet("QComboBox {\n"
+        self.separatorComboBox.setFont(font)
+        self.separatorComboBox.setStyleSheet("QComboBox {\n"
 "    border: 1px solid rgba(134, 119, 253, 0.8);\n"
 "    background: rgb(245, 249, 254);\n"
 "    border-radius: 4px;\n"
@@ -1886,45 +1886,45 @@ class Ui_MainWindow(object):
 "    color: #333333;\n"
 "    font: 12px \"Microsoft YaHei\";\n"
 "}")
-        self.comboBox_separator.setObjectName("comboBox_separator")
-        self.comboBox_separator.addItem("")
-        self.comboBox_separator.addItem("")
-        self.comboBox_separator.addItem("")
-        self.comboBox_separator.addItem("")
-        self.comboBox_separator.addItem("")
-        self.comboBox_separator.addItem("")
-        self.comboBox_separator.addItem("")
-        self.comboBox_separator.addItem("")
-        self.horizontalLayout_46.addWidget(self.comboBox_separator)
+        self.separatorComboBox.setObjectName("separatorComboBox")
+        self.separatorComboBox.addItem("")
+        self.separatorComboBox.addItem("")
+        self.separatorComboBox.addItem("")
+        self.separatorComboBox.addItem("")
+        self.separatorComboBox.addItem("")
+        self.separatorComboBox.addItem("")
+        self.separatorComboBox.addItem("")
+        self.separatorComboBox.addItem("")
+        self.horizontalLayout_46.addWidget(self.separatorComboBox)
         self.horizontalLayout_46.setStretch(2, 1)
-        self.horizontalLayout_54.addLayout(self.horizontalLayout_46)
-        self.verticalLayout_35.addWidget(self.Frame_tags)
+        self.tagsLayout.addLayout(self.horizontalLayout_46)
+        self.renameLayout.addWidget(self.tagsFrame)
         self.horizontalLayout_55 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_55.setContentsMargins(9, 6, 9, 6)
         self.horizontalLayout_55.setSpacing(6)
         self.horizontalLayout_55.setObjectName("horizontalLayout_55")
-        self.horizontalLayout_42 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_42.setSpacing(4)
-        self.horizontalLayout_42.setObjectName("horizontalLayout_42")
-        self.label_timeSources = QtWidgets.QLabel(parent=self.rename_Frame)
+        self.timeSourceLayout = QtWidgets.QHBoxLayout()
+        self.timeSourceLayout.setSpacing(4)
+        self.timeSourceLayout.setObjectName("timeSourceLayout")
+        self.timeSourceLabel = QtWidgets.QLabel(parent=self.renameFrame)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_timeSources.setFont(font)
-        self.label_timeSources.setStyleSheet("QLabel {\n"
+        self.timeSourceLabel.setFont(font)
+        self.timeSourceLabel.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_timeSources.setObjectName("label_timeSources")
-        self.horizontalLayout_42.addWidget(self.label_timeSources)
-        self.comboBox_timeSource = QtWidgets.QComboBox(parent=self.rename_Frame)
-        self.comboBox_timeSource.setMinimumSize(QtCore.QSize(78, 0))
+        self.timeSourceLabel.setObjectName("timeSourceLabel")
+        self.timeSourceLayout.addWidget(self.timeSourceLabel)
+        self.timeSourceComboBox = QtWidgets.QComboBox(parent=self.renameFrame)
+        self.timeSourceComboBox.setMinimumSize(QtCore.QSize(78, 0))
         font = QtGui.QFont()
         font.setFamily("Microsoft YaHei")
         font.setPointSize(-1)
         font.setBold(False)
         font.setItalic(False)
-        self.comboBox_timeSource.setFont(font)
-        self.comboBox_timeSource.setStyleSheet("QComboBox {\n"
+        self.timeSourceComboBox.setFont(font)
+        self.timeSourceComboBox.setStyleSheet("QComboBox {\n"
 "    border: 1px solid rgba(134, 119, 253, 0.8);\n"
 "    background: rgb(245, 249, 254);\n"
 "    border-radius: 4px;\n"
@@ -1955,35 +1955,35 @@ class Ui_MainWindow(object):
 "    color: #333333;\n"
 "    font: 12px \"Microsoft YaHei\";\n"
 "}")
-        self.comboBox_timeSource.setObjectName("comboBox_timeSource")
-        self.comboBox_timeSource.addItem("")
-        self.comboBox_timeSource.addItem("")
-        self.comboBox_timeSource.addItem("")
-        self.comboBox_timeSource.addItem("")
-        self.horizontalLayout_42.addWidget(self.comboBox_timeSource)
-        self.horizontalLayout_55.addLayout(self.horizontalLayout_42)
-        self.horizontalLayout_44 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_44.setSpacing(4)
-        self.horizontalLayout_44.setObjectName("horizontalLayout_44")
-        self.label_operation = QtWidgets.QLabel(parent=self.rename_Frame)
+        self.timeSourceComboBox.setObjectName("timeSourceComboBox")
+        self.timeSourceComboBox.addItem("")
+        self.timeSourceComboBox.addItem("")
+        self.timeSourceComboBox.addItem("")
+        self.timeSourceComboBox.addItem("")
+        self.timeSourceLayout.addWidget(self.timeSourceComboBox)
+        self.horizontalLayout_55.addLayout(self.timeSourceLayout)
+        self.operationLayout = QtWidgets.QHBoxLayout()
+        self.operationLayout.setSpacing(4)
+        self.operationLayout.setObjectName("operationLayout")
+        self.operationLabel = QtWidgets.QLabel(parent=self.renameFrame)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_operation.setFont(font)
-        self.label_operation.setStyleSheet("QLabel {\n"
+        self.operationLabel.setFont(font)
+        self.operationLabel.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_operation.setObjectName("label_operation")
-        self.horizontalLayout_44.addWidget(self.label_operation)
-        self.comboBox_operation = QtWidgets.QComboBox(parent=self.rename_Frame)
-        self.comboBox_operation.setMinimumSize(QtCore.QSize(78, 0))
+        self.operationLabel.setObjectName("operationLabel")
+        self.operationLayout.addWidget(self.operationLabel)
+        self.operationComboBox = QtWidgets.QComboBox(parent=self.renameFrame)
+        self.operationComboBox.setMinimumSize(QtCore.QSize(78, 0))
         font = QtGui.QFont()
         font.setFamily("Microsoft YaHei")
         font.setPointSize(-1)
         font.setBold(False)
         font.setItalic(False)
-        self.comboBox_operation.setFont(font)
-        self.comboBox_operation.setStyleSheet("QComboBox {\n"
+        self.operationComboBox.setFont(font)
+        self.operationComboBox.setStyleSheet("QComboBox {\n"
 "    border: 1px solid rgba(134, 119, 253, 0.8);\n"
 "    background: rgb(245, 249, 254);\n"
 "    border-radius: 4px;\n"
@@ -2014,108 +2014,108 @@ class Ui_MainWindow(object):
 "    color: #333333;\n"
 "    font: 12px \"Microsoft YaHei\";\n"
 "}")
-        self.comboBox_operation.setObjectName("comboBox_operation")
-        self.comboBox_operation.addItem("")
-        self.comboBox_operation.addItem("")
-        self.horizontalLayout_44.addWidget(self.comboBox_operation)
-        self.horizontalLayout_55.addLayout(self.horizontalLayout_44)
+        self.operationComboBox.setObjectName("operationComboBox")
+        self.operationComboBox.addItem("")
+        self.operationComboBox.addItem("")
+        self.operationLayout.addWidget(self.operationComboBox)
+        self.horizontalLayout_55.addLayout(self.operationLayout)
         spacerItem9 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
         self.horizontalLayout_55.addItem(spacerItem9)
-        self.verticalLayout_35.addLayout(self.horizontalLayout_55)
-        self.line_Arrange = QtWidgets.QFrame(parent=self.rename_Frame)
-        self.line_Arrange.setMinimumSize(QtCore.QSize(0, 1))
-        self.line_Arrange.setMaximumSize(QtCore.QSize(16777215, 1))
-        self.line_Arrange.setStyleSheet("background-color: rgb(235, 236, 237);")
-        self.line_Arrange.setFrameShape(QtWidgets.QFrame.Shape.HLine)
-        self.line_Arrange.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
-        self.line_Arrange.setObjectName("line_Arrange")
-        self.verticalLayout_35.addWidget(self.line_Arrange)
+        self.renameLayout.addLayout(self.horizontalLayout_55)
+        self.arrangeLine = QtWidgets.QFrame(parent=self.renameFrame)
+        self.arrangeLine.setMinimumSize(QtCore.QSize(0, 1))
+        self.arrangeLine.setMaximumSize(QtCore.QSize(16777215, 1))
+        self.arrangeLine.setStyleSheet("background-color: rgb(235, 236, 237);")
+        self.arrangeLine.setFrameShape(QtWidgets.QFrame.Shape.HLine)
+        self.arrangeLine.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
+        self.arrangeLine.setObjectName("arrangeLine")
+        self.renameLayout.addWidget(self.arrangeLine)
         self.horizontalLayout_58 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_58.setContentsMargins(9, 6, 9, 6)
         self.horizontalLayout_58.setSpacing(6)
         self.horizontalLayout_58.setObjectName("horizontalLayout_58")
-        self.rename_Frame_2 = QtWidgets.QFrame(parent=self.rename_Frame)
+        self.rename_Frame_2 = QtWidgets.QFrame(parent=self.renameFrame)
         self.rename_Frame_2.setStyleSheet("QFrame{\n"
 "    border: none;\n"
 "    border-radius: 0px;\n"
 "}")
         self.rename_Frame_2.setObjectName("rename_Frame_2")
-        self.horizontalLayout = QtWidgets.QHBoxLayout(self.rename_Frame_2)
-        self.horizontalLayout.setContentsMargins(0, 6, 0, 6)
-        self.horizontalLayout.setSpacing(6)
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.label_CopyRoute = QtWidgets.QLabel(parent=self.rename_Frame_2)
-        self.label_CopyRoute.setMinimumSize(QtCore.QSize(0, 0))
-        self.label_CopyRoute.setMaximumSize(QtCore.QSize(530, 16777215))
+        self.arrangeLayout = QtWidgets.QHBoxLayout(self.rename_Frame_2)
+        self.arrangeLayout.setContentsMargins(0, 6, 0, 6)
+        self.arrangeLayout.setSpacing(6)
+        self.arrangeLayout.setObjectName("arrangeLayout")
+        self.copyRouteLabel = QtWidgets.QLabel(parent=self.rename_Frame_2)
+        self.copyRouteLabel.setMinimumSize(QtCore.QSize(0, 0))
+        self.copyRouteLabel.setMaximumSize(QtCore.QSize(530, 16777215))
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_CopyRoute.setFont(font)
-        self.label_CopyRoute.setStyleSheet("QLabel {\n"
+        self.copyRouteLabel.setFont(font)
+        self.copyRouteLabel.setStyleSheet("QLabel {\n"
 "    qproperty-alignment: \'AlignLeft | AlignVCenter\';\n"
 "    background:rgba(0, 0, 0, 0);\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_CopyRoute.setText("")
-        self.label_CopyRoute.setObjectName("label_CopyRoute")
-        self.horizontalLayout.addWidget(self.label_CopyRoute)
-        self.label_PreviewRoute = QtWidgets.QLabel(parent=self.rename_Frame_2)
-        self.label_PreviewRoute.setMinimumSize(QtCore.QSize(0, 0))
-        self.label_PreviewRoute.setMaximumSize(QtCore.QSize(530, 16777215))
+        self.copyRouteLabel.setText("")
+        self.copyRouteLabel.setObjectName("copyRouteLabel")
+        self.arrangeLayout.addWidget(self.copyRouteLabel)
+        self.previewRouteLabel = QtWidgets.QLabel(parent=self.rename_Frame_2)
+        self.previewRouteLabel.setMinimumSize(QtCore.QSize(0, 0))
+        self.previewRouteLabel.setMaximumSize(QtCore.QSize(530, 16777215))
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_PreviewRoute.setFont(font)
-        self.label_PreviewRoute.setStyleSheet("QLabel {\n"
+        self.previewRouteLabel.setFont(font)
+        self.previewRouteLabel.setStyleSheet("QLabel {\n"
 "    qproperty-alignment: \'AlignLeft | AlignVCenter\';\n"
 "    background:rgba(0, 0, 0, 0);\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_PreviewRoute.setObjectName("label_PreviewRoute")
-        self.horizontalLayout.addWidget(self.label_PreviewRoute)
-        self.label_21 = QtWidgets.QLabel(parent=self.rename_Frame_2)
+        self.previewRouteLabel.setObjectName("previewRouteLabel")
+        self.arrangeLayout.addWidget(self.previewRouteLabel)
+        self.separatorLabel2 = QtWidgets.QLabel(parent=self.rename_Frame_2)
         font = QtGui.QFont()
         font.setPointSize(12)
         font.setBold(False)
-        self.label_21.setFont(font)
-        self.label_21.setStyleSheet("QLabel {\n"
+        self.separatorLabel2.setFont(font)
+        self.separatorLabel2.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_21.setObjectName("label_21")
-        self.horizontalLayout.addWidget(self.label_21)
-        self.label_PreviewName = QtWidgets.QLabel(parent=self.rename_Frame_2)
-        self.label_PreviewName.setMinimumSize(QtCore.QSize(0, 0))
-        self.label_PreviewName.setMaximumSize(QtCore.QSize(530, 16777215))
+        self.separatorLabel2.setObjectName("separatorLabel2")
+        self.arrangeLayout.addWidget(self.separatorLabel2)
+        self.previewNameLabel = QtWidgets.QLabel(parent=self.rename_Frame_2)
+        self.previewNameLabel.setMinimumSize(QtCore.QSize(0, 0))
+        self.previewNameLabel.setMaximumSize(QtCore.QSize(530, 16777215))
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_PreviewName.setFont(font)
-        self.label_PreviewName.setStyleSheet("QLabel {\n"
+        self.previewNameLabel.setFont(font)
+        self.previewNameLabel.setStyleSheet("QLabel {\n"
 "    qproperty-alignment: \'AlignLeft | AlignVCenter\';\n"
 "    background:rgba(0, 0, 0, 0);\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_PreviewName.setObjectName("label_PreviewName")
-        self.horizontalLayout.addWidget(self.label_PreviewName)
+        self.previewNameLabel.setObjectName("previewNameLabel")
+        self.arrangeLayout.addWidget(self.previewNameLabel)
         spacerItem10 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
-        self.horizontalLayout.addItem(spacerItem10)
+        self.arrangeLayout.addItem(spacerItem10)
         self.horizontalLayout_58.addWidget(self.rename_Frame_2)
-        self.verticalLayout_35.addLayout(self.horizontalLayout_58)
-        self.verticalLayout_34.addWidget(self.rename_Frame)
-        self.verticalFrame_2 = QtWidgets.QFrame(parent=self.pageViewer)
+        self.renameLayout.addLayout(self.horizontalLayout_58)
+        self.verticalLayout_34.addWidget(self.renameFrame)
+        self.verticalFrame_2 = QtWidgets.QFrame(parent=self.settingsPage)
         self.verticalFrame_2.setStyleSheet("background:rgb(255, 255, 255);\n"
 "border: none;\n"
 "border-radius: 0px;")
         self.verticalFrame_2.setObjectName("verticalFrame_2")
-        self.horizontalLayout_36 = QtWidgets.QHBoxLayout(self.verticalFrame_2)
-        self.horizontalLayout_36.setContentsMargins(9, 6, 9, 6)
-        self.horizontalLayout_36.setSpacing(6)
-        self.horizontalLayout_36.setObjectName("horizontalLayout_36")
-        self.progressBar_classification = QtWidgets.QProgressBar(parent=self.verticalFrame_2)
-        self.progressBar_classification.setMinimumSize(QtCore.QSize(0, 0))
-        self.progressBar_classification.setMaximumSize(QtCore.QSize(16777215, 1111111))
-        self.progressBar_classification.setStyleSheet("QProgressBar {\n"
+        self.progressLayout = QtWidgets.QHBoxLayout(self.verticalFrame_2)
+        self.progressLayout.setContentsMargins(9, 6, 9, 6)
+        self.progressLayout.setSpacing(6)
+        self.progressLayout.setObjectName("progressLayout")
+        self.classificationProgressBar = QtWidgets.QProgressBar(parent=self.verticalFrame_2)
+        self.classificationProgressBar.setMinimumSize(QtCore.QSize(0, 0))
+        self.classificationProgressBar.setMaximumSize(QtCore.QSize(16777215, 1111111))
+        self.classificationProgressBar.setStyleSheet("QProgressBar {\n"
 "  text-align: center;\n"
 "  background-color: #FFFFFF;\n"
 "  border: 1px solid #D4D4D4;\n"
@@ -2138,13 +2138,13 @@ class Ui_MainWindow(object):
 "  margin: 0.5px;\n"
 "  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);\n"
 "}")
-        self.progressBar_classification.setProperty("value", 0)
-        self.progressBar_classification.setObjectName("progressBar_classification")
-        self.horizontalLayout_36.addWidget(self.progressBar_classification)
-        self.toolButton_startSmartArrange = QtWidgets.QToolButton(parent=self.verticalFrame_2)
-        self.toolButton_startSmartArrange.setMinimumSize(QtCore.QSize(88, 0))
-        self.toolButton_startSmartArrange.setMaximumSize(QtCore.QSize(16777215, 29))
-        self.toolButton_startSmartArrange.setStyleSheet("QToolButton {\n"
+        self.classificationProgressBar.setProperty("value", 0)
+        self.classificationProgressBar.setObjectName("classificationProgressBar")
+        self.progressLayout.addWidget(self.classificationProgressBar)
+        self.startSmartArrangeButton = QtWidgets.QToolButton(parent=self.verticalFrame_2)
+        self.startSmartArrangeButton.setMinimumSize(QtCore.QSize(88, 0))
+        self.startSmartArrangeButton.setMaximumSize(QtCore.QSize(16777215, 29))
+        self.startSmartArrangeButton.setStyleSheet("QToolButton {\n"
 "    color: white;\n"
 "    border: none;\n"
 "    padding: 6px 6px;\n"
@@ -2172,29 +2172,29 @@ class Ui_MainWindow(object):
 "        stop:1 rgba(79, 71, 252, 255)\n"
 "    );\n"
 "}")
-        self.toolButton_startSmartArrange.setIconSize(QtCore.QSize(24, 24))
-        self.toolButton_startSmartArrange.setObjectName("toolButton_startSmartArrange")
-        self.horizontalLayout_36.addWidget(self.toolButton_startSmartArrange)
-        self.horizontalLayout_36.setStretch(0, 1)
+        self.startSmartArrangeButton.setIconSize(QtCore.QSize(24, 24))
+        self.startSmartArrangeButton.setObjectName("startSmartArrangeButton")
+        self.progressLayout.addWidget(self.startSmartArrangeButton)
+        self.progressLayout.setStretch(0, 1)
         self.verticalLayout_34.addWidget(self.verticalFrame_2)
-        self.horizontalFrame_2 = QtWidgets.QFrame(parent=self.pageViewer)
+        self.horizontalFrame_2 = QtWidgets.QFrame(parent=self.settingsPage)
         self.horizontalFrame_2.setStyleSheet("background:rgb(255, 255, 255);\n"
 "border-top-left-radius:0px;\n"
 "border-top-right-radius:0px;\n"
 "border-bottom-right-radius:20px;\n"
 "border-bottom-left-radius:0px;")
         self.horizontalFrame_2.setObjectName("horizontalFrame_2")
-        self.horizontalLayout_37 = QtWidgets.QHBoxLayout(self.horizontalFrame_2)
-        self.horizontalLayout_37.setContentsMargins(9, 6, 9, 9)
-        self.horizontalLayout_37.setSpacing(0)
-        self.horizontalLayout_37.setObjectName("horizontalLayout_37")
-        self.textEdit_SmartArrange_Log = QtWidgets.QTextEdit(parent=self.horizontalFrame_2)
-        self.textEdit_SmartArrange_Log.setMinimumSize(QtCore.QSize(0, 0))
+        self.logLayout = QtWidgets.QHBoxLayout(self.horizontalFrame_2)
+        self.logLayout.setContentsMargins(9, 6, 9, 9)
+        self.logLayout.setSpacing(0)
+        self.logLayout.setObjectName("logLayout")
+        self.smartArrangeLogTextEdit = QtWidgets.QTextEdit(parent=self.horizontalFrame_2)
+        self.smartArrangeLogTextEdit.setMinimumSize(QtCore.QSize(0, 0))
         font = QtGui.QFont()
         font.setFamily("Segoe UI")
         font.setPointSize(-1)
-        self.textEdit_SmartArrange_Log.setFont(font)
-        self.textEdit_SmartArrange_Log.setStyleSheet("QTextEdit {\n"
+        self.smartArrangeLogTextEdit.setFont(font)
+        self.smartArrangeLogTextEdit.setStyleSheet("QTextEdit {\n"
 "    border: 1.5px solid qradialgradient(\n"
 "        cx:0.5, cy:0.5,\n"
 "        radius: 1.2,\n"
@@ -2277,19 +2277,19 @@ class Ui_MainWindow(object):
 "    );\n"
 "    box-shadow: 0 0 0 2px rgba(134, 119, 253, 0.15);\n"
 "}")
-        self.textEdit_SmartArrange_Log.setReadOnly(True)
-        self.textEdit_SmartArrange_Log.setObjectName("textEdit_SmartArrange_Log")
-        self.horizontalLayout_37.addWidget(self.textEdit_SmartArrange_Log)
+        self.smartArrangeLogTextEdit.setReadOnly(True)
+        self.smartArrangeLogTextEdit.setObjectName("smartArrangeLogTextEdit")
+        self.logLayout.addWidget(self.smartArrangeLogTextEdit)
         self.verticalLayout_34.addWidget(self.horizontalFrame_2)
         self.verticalLayout_29.addLayout(self.verticalLayout_34)
-        self.stackedContent.addWidget(self.pageViewer)
-        self.pageSettings = QtWidgets.QWidget()
-        self.pageSettings.setObjectName("pageSettings")
-        self.horizontalLayout_66 = QtWidgets.QHBoxLayout(self.pageSettings)
+        self.mainContentStack.addWidget(self.settingsPage)
+        self.page_3 = QtWidgets.QWidget()
+        self.page_3.setObjectName("page_3")
+        self.horizontalLayout_66 = QtWidgets.QHBoxLayout(self.page_3)
         self.horizontalLayout_66.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_66.setSpacing(0)
         self.horizontalLayout_66.setObjectName("horizontalLayout_66")
-        self.verticalWidget = QtWidgets.QWidget(parent=self.pageSettings)
+        self.verticalWidget = QtWidgets.QWidget(parent=self.page_3)
         self.verticalWidget.setObjectName("verticalWidget")
         self.verticalLayout_37 = QtWidgets.QVBoxLayout(self.verticalWidget)
         self.verticalLayout_37.setContentsMargins(0, 0, 0, 0)
@@ -2306,19 +2306,19 @@ class Ui_MainWindow(object):
         self.horizontalLayout_64.setContentsMargins(9, 6, 9, 6)
         self.horizontalLayout_64.setSpacing(12)
         self.horizontalLayout_64.setObjectName("horizontalLayout_64")
-        self.label_8 = QtWidgets.QLabel(parent=self.verticalFrame_12)
+        self.similarityLabel = QtWidgets.QLabel(parent=self.verticalFrame_12)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_8.setFont(font)
-        self.label_8.setStyleSheet("QLabel {\n"
+        self.similarityLabel.setFont(font)
+        self.similarityLabel.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_8.setObjectName("label_8")
-        self.horizontalLayout_64.addWidget(self.label_8)
-        self.horizontalSlider_levelContrast = QtWidgets.QSlider(parent=self.verticalFrame_12)
-        self.horizontalSlider_levelContrast.setMinimumSize(QtCore.QSize(284, 32))
-        self.horizontalSlider_levelContrast.setStyleSheet("QSlider {\n"
+        self.similarityLabel.setObjectName("similarityLabel")
+        self.horizontalLayout_64.addWidget(self.similarityLabel)
+        self.similaritySlider = QtWidgets.QSlider(parent=self.verticalFrame_12)
+        self.similaritySlider.setMinimumSize(QtCore.QSize(284, 32))
+        self.similaritySlider.setStyleSheet("QSlider {\n"
 "    min-width: 280px;\n"
 "    min-height: 32px;\n"
 "    antialiasing: true;\n"
@@ -2351,25 +2351,25 @@ class Ui_MainWindow(object):
 "    background: #FDF2F8;\n"
 "    transform: scale(1.15);\n"
 "}")
-        self.horizontalSlider_levelContrast.setMinimum(0)
-        self.horizontalSlider_levelContrast.setMaximum(100)
-        self.horizontalSlider_levelContrast.setSingleStep(0)
-        self.horizontalSlider_levelContrast.setPageStep(0)
-        self.horizontalSlider_levelContrast.setProperty("value", 100)
-        self.horizontalSlider_levelContrast.setSliderPosition(100)
-        self.horizontalSlider_levelContrast.setOrientation(QtCore.Qt.Orientation.Horizontal)
-        self.horizontalSlider_levelContrast.setObjectName("horizontalSlider_levelContrast")
-        self.horizontalLayout_64.addWidget(self.horizontalSlider_levelContrast)
-        self.label_levelContrast = QtWidgets.QLabel(parent=self.verticalFrame_12)
+        self.similaritySlider.setMinimum(0)
+        self.similaritySlider.setMaximum(100)
+        self.similaritySlider.setSingleStep(0)
+        self.similaritySlider.setPageStep(0)
+        self.similaritySlider.setProperty("value", 100)
+        self.similaritySlider.setSliderPosition(100)
+        self.similaritySlider.setOrientation(QtCore.Qt.Orientation.Horizontal)
+        self.similaritySlider.setObjectName("similaritySlider")
+        self.horizontalLayout_64.addWidget(self.similaritySlider)
+        self.similarityValueLabel = QtWidgets.QLabel(parent=self.verticalFrame_12)
         font = QtGui.QFont()
         font.setPointSize(16)
         font.setBold(False)
-        self.label_levelContrast.setFont(font)
-        self.label_levelContrast.setStyleSheet("QLabel {\n"
+        self.similarityValueLabel.setFont(font)
+        self.similarityValueLabel.setStyleSheet("QLabel {\n"
 "    color: rgb(134, 139, 253);\n"
 "}")
-        self.label_levelContrast.setObjectName("label_levelContrast")
-        self.horizontalLayout_64.addWidget(self.label_levelContrast)
+        self.similarityValueLabel.setObjectName("similarityValueLabel")
+        self.horizontalLayout_64.addWidget(self.similarityValueLabel)
         self.horizontalLayout_64.setStretch(1, 1)
         self.verticalLayout_37.addWidget(self.verticalFrame_12)
         self.verticalFrame_9 = QtWidgets.QFrame(parent=self.verticalWidget)
@@ -2383,10 +2383,10 @@ class Ui_MainWindow(object):
         self.horizontalLayout_60.setContentsMargins(9, 6, 9, 6)
         self.horizontalLayout_60.setSpacing(9)
         self.horizontalLayout_60.setObjectName("horizontalLayout_60")
-        self.progressBar_Contrast = QtWidgets.QProgressBar(parent=self.verticalFrame_9)
-        self.progressBar_Contrast.setMinimumSize(QtCore.QSize(0, 0))
-        self.progressBar_Contrast.setMaximumSize(QtCore.QSize(16777215, 16777215))
-        self.progressBar_Contrast.setStyleSheet("QProgressBar {\n"
+        self.contrastProgressBar = QtWidgets.QProgressBar(parent=self.verticalFrame_9)
+        self.contrastProgressBar.setMinimumSize(QtCore.QSize(0, 0))
+        self.contrastProgressBar.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        self.contrastProgressBar.setStyleSheet("QProgressBar {\n"
 "  text-align: center;\n"
 "  background-color: #FFFFFF;\n"
 "  border: 1px solid #D4D4D4;\n"
@@ -2408,13 +2408,13 @@ class Ui_MainWindow(object):
 "  margin: 2px;\n"
 "  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);\n"
 "}")
-        self.progressBar_Contrast.setProperty("value", 0)
-        self.progressBar_Contrast.setObjectName("progressBar_Contrast")
-        self.horizontalLayout_60.addWidget(self.progressBar_Contrast)
-        self.toolButton_startContrast = QtWidgets.QToolButton(parent=self.verticalFrame_9)
-        self.toolButton_startContrast.setMinimumSize(QtCore.QSize(88, 32))
-        self.toolButton_startContrast.setMaximumSize(QtCore.QSize(88, 16777215))
-        self.toolButton_startContrast.setStyleSheet("QToolButton {\n"
+        self.contrastProgressBar.setProperty("value", 0)
+        self.contrastProgressBar.setObjectName("contrastProgressBar")
+        self.horizontalLayout_60.addWidget(self.contrastProgressBar)
+        self.startContrastButton = QtWidgets.QToolButton(parent=self.verticalFrame_9)
+        self.startContrastButton.setMinimumSize(QtCore.QSize(88, 32))
+        self.startContrastButton.setMaximumSize(QtCore.QSize(88, 16777215))
+        self.startContrastButton.setStyleSheet("QToolButton {\n"
 "    color: white;\n"
 "    border: none;\n"
 "    padding: 6px 6px;\n"
@@ -2442,9 +2442,9 @@ class Ui_MainWindow(object):
 "        stop:1 rgba(79, 71, 252, 255)\n"
 "    );\n"
 "}")
-        self.toolButton_startContrast.setIconSize(QtCore.QSize(24, 24))
-        self.toolButton_startContrast.setObjectName("toolButton_startContrast")
-        self.horizontalLayout_60.addWidget(self.toolButton_startContrast)
+        self.startContrastButton.setIconSize(QtCore.QSize(24, 24))
+        self.startContrastButton.setObjectName("startContrastButton")
+        self.horizontalLayout_60.addWidget(self.startContrastButton)
         self.horizontalLayout_60.setStretch(0, 1)
         self.verticalLayout_37.addWidget(self.verticalFrame_9)
         self.verticalFrame_13 = QtWidgets.QFrame(parent=self.verticalWidget)
@@ -2458,35 +2458,35 @@ class Ui_MainWindow(object):
         self.horizontalLayout_65.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_65.setSpacing(0)
         self.horizontalLayout_65.setObjectName("horizontalLayout_65")
-        self.label_image_A = QtWidgets.QLabel(parent=self.verticalFrame_13)
-        self.label_image_A.setStyleSheet("")
-        self.label_image_A.setText("")
-        self.label_image_A.setObjectName("label_image_A")
-        self.horizontalLayout_65.addWidget(self.label_image_A)
-        self.line_contrast = QtWidgets.QFrame(parent=self.verticalFrame_13)
-        self.line_contrast.setMinimumSize(QtCore.QSize(1, 0))
-        self.line_contrast.setMaximumSize(QtCore.QSize(1, 16777215))
-        self.line_contrast.setStyleSheet("background-color: rgb(235, 236, 237);")
-        self.line_contrast.setFrameShape(QtWidgets.QFrame.Shape.VLine)
-        self.line_contrast.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
-        self.line_contrast.setObjectName("line_contrast")
-        self.horizontalLayout_65.addWidget(self.line_contrast)
-        self.label_image_B = QtWidgets.QLabel(parent=self.verticalFrame_13)
-        self.label_image_B.setStyleSheet("")
-        self.label_image_B.setText("")
-        self.label_image_B.setObjectName("label_image_B")
-        self.horizontalLayout_65.addWidget(self.label_image_B)
+        self.imageALabel = QtWidgets.QLabel(parent=self.verticalFrame_13)
+        self.imageALabel.setStyleSheet("")
+        self.imageALabel.setText("")
+        self.imageALabel.setObjectName("imageALabel")
+        self.horizontalLayout_65.addWidget(self.imageALabel)
+        self.contrastLine = QtWidgets.QFrame(parent=self.verticalFrame_13)
+        self.contrastLine.setMinimumSize(QtCore.QSize(1, 0))
+        self.contrastLine.setMaximumSize(QtCore.QSize(1, 16777215))
+        self.contrastLine.setStyleSheet("background-color: rgb(235, 236, 237);")
+        self.contrastLine.setFrameShape(QtWidgets.QFrame.Shape.VLine)
+        self.contrastLine.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
+        self.contrastLine.setObjectName("contrastLine")
+        self.horizontalLayout_65.addWidget(self.contrastLine)
+        self.imageBLabel = QtWidgets.QLabel(parent=self.verticalFrame_13)
+        self.imageBLabel.setStyleSheet("")
+        self.imageBLabel.setText("")
+        self.imageBLabel.setObjectName("imageBLabel")
+        self.horizontalLayout_65.addWidget(self.imageBLabel)
         self.verticalLayout_37.addWidget(self.verticalFrame_13)
         self.verticalLayout_37.setStretch(2, 3)
         self.horizontalLayout_66.addWidget(self.verticalWidget)
-        self.verticalFrame_similar = QtWidgets.QFrame(parent=self.pageSettings)
+        self.verticalFrame_similar = QtWidgets.QFrame(parent=self.page_3)
         self.verticalFrame_similar.setStyleSheet("border-radius: 12px;\n"
 "background:rgb(248, 250, 251);")
         self.verticalFrame_similar.setObjectName("verticalFrame_similar")
-        self.verticalLayout_38 = QtWidgets.QVBoxLayout(self.verticalFrame_similar)
-        self.verticalLayout_38.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout_38.setSpacing(0)
-        self.verticalLayout_38.setObjectName("verticalLayout_38")
+        self.similarLayout = QtWidgets.QVBoxLayout(self.verticalFrame_similar)
+        self.similarLayout.setContentsMargins(0, 0, 0, 0)
+        self.similarLayout.setSpacing(0)
+        self.similarLayout.setObjectName("similarLayout")
         self.scrollArea_pageSimilar = QtWidgets.QScrollArea(parent=self.verticalFrame_similar)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -2567,7 +2567,7 @@ class Ui_MainWindow(object):
         self.gridLayout_2 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents_Contrast)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.scrollArea_pageSimilar.setWidget(self.scrollAreaWidgetContents_Contrast)
-        self.verticalLayout_38.addWidget(self.scrollArea_pageSimilar)
+        self.similarLayout.addWidget(self.scrollArea_pageSimilar)
         self.horizontalWidget_nav = QtWidgets.QWidget(parent=self.verticalFrame_similar)
         self.horizontalWidget_nav.setStyleSheet("background-color: rgb(255, 255, 255);\n"
 "border-top-left-radius:0px;\n"
@@ -2579,10 +2579,10 @@ class Ui_MainWindow(object):
         self.horizontalLayout_63.setContentsMargins(6, 6, 6, 6)
         self.horizontalLayout_63.setSpacing(6)
         self.horizontalLayout_63.setObjectName("horizontalLayout_63")
-        self.toolButton_delete = QtWidgets.QToolButton(parent=self.horizontalWidget_nav)
-        self.toolButton_delete.setMinimumSize(QtCore.QSize(68, 32))
-        self.toolButton_delete.setMaximumSize(QtCore.QSize(88, 16777215))
-        self.toolButton_delete.setStyleSheet("QToolButton {\n"
+        self.deleteButton = QtWidgets.QToolButton(parent=self.horizontalWidget_nav)
+        self.deleteButton.setMinimumSize(QtCore.QSize(68, 32))
+        self.deleteButton.setMaximumSize(QtCore.QSize(88, 16777215))
+        self.deleteButton.setStyleSheet("QToolButton {\n"
 "    color: white;\n"
 "    border: none;\n"
 "    padding: 6px 6px;\n"
@@ -2614,13 +2614,13 @@ class Ui_MainWindow(object):
 "    /* 按下时阴影内缩，增强按压感 */\n"
 "    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);\n"
 "}")
-        self.toolButton_delete.setIconSize(QtCore.QSize(24, 24))
-        self.toolButton_delete.setObjectName("toolButton_delete")
-        self.horizontalLayout_63.addWidget(self.toolButton_delete)
-        self.toolButton_move = QtWidgets.QToolButton(parent=self.horizontalWidget_nav)
-        self.toolButton_move.setMinimumSize(QtCore.QSize(68, 32))
-        self.toolButton_move.setMaximumSize(QtCore.QSize(88, 16777215))
-        self.toolButton_move.setStyleSheet("QToolButton {\n"
+        self.deleteButton.setIconSize(QtCore.QSize(24, 24))
+        self.deleteButton.setObjectName("deleteButton")
+        self.horizontalLayout_63.addWidget(self.deleteButton)
+        self.moveButton = QtWidgets.QToolButton(parent=self.horizontalWidget_nav)
+        self.moveButton.setMinimumSize(QtCore.QSize(68, 32))
+        self.moveButton.setMaximumSize(QtCore.QSize(88, 16777215))
+        self.moveButton.setStyleSheet("QToolButton {\n"
 "    color: white;\n"
 "    border: none;\n"
 "    padding: 6px 12px; /* 增加水平内边距，视觉更平衡 */\n"
@@ -2672,13 +2672,13 @@ class Ui_MainWindow(object):
 "    box-shadow: none;\n"
 "    transform: none;\n"
 "}")
-        self.toolButton_move.setIconSize(QtCore.QSize(24, 24))
-        self.toolButton_move.setObjectName("toolButton_move")
-        self.horizontalLayout_63.addWidget(self.toolButton_move)
-        self.toolButton_autoSelect = QtWidgets.QToolButton(parent=self.horizontalWidget_nav)
-        self.toolButton_autoSelect.setMinimumSize(QtCore.QSize(68, 32))
-        self.toolButton_autoSelect.setMaximumSize(QtCore.QSize(88, 16777215))
-        self.toolButton_autoSelect.setStyleSheet("QToolButton {\n"
+        self.moveButton.setIconSize(QtCore.QSize(24, 24))
+        self.moveButton.setObjectName("moveButton")
+        self.horizontalLayout_63.addWidget(self.moveButton)
+        self.autoSelectButton = QtWidgets.QToolButton(parent=self.horizontalWidget_nav)
+        self.autoSelectButton.setMinimumSize(QtCore.QSize(68, 32))
+        self.autoSelectButton.setMaximumSize(QtCore.QSize(88, 16777215))
+        self.autoSelectButton.setStyleSheet("QToolButton {\n"
 "    color: white;\n"
 "    border: none;\n"
 "    padding: 2px 4px; /* 优化内边距比例 */\n"
@@ -2726,22 +2726,22 @@ class Ui_MainWindow(object):
 "    box-shadow: none;\n"
 "    transform: none;\n"
 "}")
-        self.toolButton_autoSelect.setIconSize(QtCore.QSize(24, 24))
-        self.toolButton_autoSelect.setObjectName("toolButton_autoSelect")
-        self.horizontalLayout_63.addWidget(self.toolButton_autoSelect)
-        self.verticalLayout_38.addWidget(self.horizontalWidget_nav)
-        self.verticalLayout_38.setStretch(0, 10)
+        self.autoSelectButton.setIconSize(QtCore.QSize(24, 24))
+        self.autoSelectButton.setObjectName("autoSelectButton")
+        self.horizontalLayout_63.addWidget(self.autoSelectButton)
+        self.similarLayout.addWidget(self.horizontalWidget_nav)
+        self.similarLayout.setStretch(0, 10)
         self.horizontalLayout_66.addWidget(self.verticalFrame_similar)
         self.horizontalLayout_66.setStretch(0, 1)
-        self.stackedContent.addWidget(self.pageSettings)
-        self.pageAbout = QtWidgets.QWidget()
-        self.pageAbout.setStyleSheet("background:rgb(255, 255, 255);")
-        self.pageAbout.setObjectName("pageAbout")
-        self.verticalLayout_47 = QtWidgets.QVBoxLayout(self.pageAbout)
+        self.mainContentStack.addWidget(self.page_3)
+        self.page_4 = QtWidgets.QWidget()
+        self.page_4.setStyleSheet("background:rgb(255, 255, 255);")
+        self.page_4.setObjectName("page_4")
+        self.verticalLayout_47 = QtWidgets.QVBoxLayout(self.page_4)
         self.verticalLayout_47.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_47.setSpacing(4)
         self.verticalLayout_47.setObjectName("verticalLayout_47")
-        self.horizontalFrame_9 = QtWidgets.QFrame(parent=self.pageAbout)
+        self.horizontalFrame_9 = QtWidgets.QFrame(parent=self.page_4)
         self.horizontalFrame_9.setStyleSheet("background:rgb(255, 255, 255);\n"
 "border-top-left-radius:0px;\n"
 "border-top-right-radius:0px;\n"
@@ -2755,23 +2755,23 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setSpacing(6)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.label_35 = QtWidgets.QLabel(parent=self.horizontalFrame_9)
+        self.titleLabel = QtWidgets.QLabel(parent=self.horizontalFrame_9)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_35.setFont(font)
-        self.label_35.setStyleSheet("QLabel {\n"
+        self.titleLabel.setFont(font)
+        self.titleLabel.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_35.setObjectName("label_35")
-        self.horizontalLayout_3.addWidget(self.label_35)
-        self.lineEdit_EXIF_Title = QtWidgets.QLineEdit(parent=self.horizontalFrame_9)
+        self.titleLabel.setObjectName("titleLabel")
+        self.horizontalLayout_3.addWidget(self.titleLabel)
+        self.titleLineEdit = QtWidgets.QLineEdit(parent=self.horizontalFrame_9)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.lineEdit_EXIF_Title.sizePolicy().hasHeightForWidth())
-        self.lineEdit_EXIF_Title.setSizePolicy(sizePolicy)
-        self.lineEdit_EXIF_Title.setStyleSheet("QLineEdit {\n"
+        sizePolicy.setHeightForWidth(self.titleLineEdit.sizePolicy().hasHeightForWidth())
+        self.titleLineEdit.setSizePolicy(sizePolicy)
+        self.titleLineEdit.setStyleSheet("QLineEdit {\n"
 "    border: 1px solid qradialgradient(\n"
 "        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
 "        stop:0.66 rgba(134, 119, 253, 255),\n"
@@ -2799,26 +2799,26 @@ class Ui_MainWindow(object):
 "    background: #eaeaea;\n"
 "    color: #aaa;\n"
 "}")
-        self.lineEdit_EXIF_Title.setInputMask("")
-        self.lineEdit_EXIF_Title.setObjectName("lineEdit_EXIF_Title")
-        self.horizontalLayout_3.addWidget(self.lineEdit_EXIF_Title)
+        self.titleLineEdit.setInputMask("")
+        self.titleLineEdit.setObjectName("titleLineEdit")
+        self.horizontalLayout_3.addWidget(self.titleLineEdit)
         self.horizontalLayout_3.setStretch(1, 1)
         self.horizontalLayout_69.addLayout(self.horizontalLayout_3)
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_5.setSpacing(6)
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        self.label_star = QtWidgets.QLabel(parent=self.horizontalFrame_9)
+        self.starLabel = QtWidgets.QLabel(parent=self.horizontalFrame_9)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_star.setFont(font)
-        self.label_star.setStyleSheet("QLabel {\n"
+        self.starLabel.setFont(font)
+        self.starLabel.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_star.setObjectName("label_star")
-        self.horizontalLayout_5.addWidget(self.label_star)
-        self.horizontalLayout_star = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_star.setObjectName("horizontalLayout_star")
+        self.starLabel.setObjectName("starLabel")
+        self.horizontalLayout_5.addWidget(self.starLabel)
+        self.starLayout = QtWidgets.QHBoxLayout()
+        self.starLayout.setObjectName("starLayout")
         self.pushButton_star_1 = QtWidgets.QPushButton(parent=self.horizontalFrame_9)
         self.pushButton_star_1.setMinimumSize(QtCore.QSize(22, 22))
         self.pushButton_star_1.setMaximumSize(QtCore.QSize(22, 22))
@@ -2831,7 +2831,7 @@ class Ui_MainWindow(object):
         self.pushButton_star_1.setIcon(icon11)
         self.pushButton_star_1.setIconSize(QtCore.QSize(20, 20))
         self.pushButton_star_1.setObjectName("pushButton_star_1")
-        self.horizontalLayout_star.addWidget(self.pushButton_star_1)
+        self.starLayout.addWidget(self.pushButton_star_1)
         self.pushButton_star_2 = QtWidgets.QPushButton(parent=self.horizontalFrame_9)
         self.pushButton_star_2.setMinimumSize(QtCore.QSize(22, 22))
         self.pushButton_star_2.setMaximumSize(QtCore.QSize(22, 22))
@@ -2842,7 +2842,7 @@ class Ui_MainWindow(object):
         self.pushButton_star_2.setIcon(icon11)
         self.pushButton_star_2.setIconSize(QtCore.QSize(20, 20))
         self.pushButton_star_2.setObjectName("pushButton_star_2")
-        self.horizontalLayout_star.addWidget(self.pushButton_star_2)
+        self.starLayout.addWidget(self.pushButton_star_2)
         self.pushButton_star_3 = QtWidgets.QPushButton(parent=self.horizontalFrame_9)
         self.pushButton_star_3.setMinimumSize(QtCore.QSize(22, 22))
         self.pushButton_star_3.setMaximumSize(QtCore.QSize(22, 22))
@@ -2853,7 +2853,7 @@ class Ui_MainWindow(object):
         self.pushButton_star_3.setIcon(icon11)
         self.pushButton_star_3.setIconSize(QtCore.QSize(20, 20))
         self.pushButton_star_3.setObjectName("pushButton_star_3")
-        self.horizontalLayout_star.addWidget(self.pushButton_star_3)
+        self.starLayout.addWidget(self.pushButton_star_3)
         self.pushButton_star_4 = QtWidgets.QPushButton(parent=self.horizontalFrame_9)
         self.pushButton_star_4.setMinimumSize(QtCore.QSize(22, 22))
         self.pushButton_star_4.setMaximumSize(QtCore.QSize(22, 22))
@@ -2864,7 +2864,7 @@ class Ui_MainWindow(object):
         self.pushButton_star_4.setIcon(icon11)
         self.pushButton_star_4.setIconSize(QtCore.QSize(20, 20))
         self.pushButton_star_4.setObjectName("pushButton_star_4")
-        self.horizontalLayout_star.addWidget(self.pushButton_star_4)
+        self.starLayout.addWidget(self.pushButton_star_4)
         self.pushButton_star_5 = QtWidgets.QPushButton(parent=self.horizontalFrame_9)
         self.pushButton_star_5.setMinimumSize(QtCore.QSize(22, 22))
         self.pushButton_star_5.setMaximumSize(QtCore.QSize(22, 22))
@@ -2875,31 +2875,31 @@ class Ui_MainWindow(object):
         self.pushButton_star_5.setIcon(icon11)
         self.pushButton_star_5.setIconSize(QtCore.QSize(20, 20))
         self.pushButton_star_5.setObjectName("pushButton_star_5")
-        self.horizontalLayout_star.addWidget(self.pushButton_star_5)
-        self.horizontalLayout_5.addLayout(self.horizontalLayout_star)
+        self.starLayout.addWidget(self.pushButton_star_5)
+        self.horizontalLayout_5.addLayout(self.starLayout)
         self.horizontalLayout_5.setStretch(1, 1)
         self.horizontalLayout_69.addLayout(self.horizontalLayout_5)
         self.horizontalLayout_7 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_7.setSpacing(6)
         self.horizontalLayout_7.setObjectName("horizontalLayout_7")
-        self.label_36 = QtWidgets.QLabel(parent=self.horizontalFrame_9)
+        self.brandLabel = QtWidgets.QLabel(parent=self.horizontalFrame_9)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_36.sizePolicy().hasHeightForWidth())
-        self.label_36.setSizePolicy(sizePolicy)
+        sizePolicy.setHeightForWidth(self.brandLabel.sizePolicy().hasHeightForWidth())
+        self.brandLabel.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_36.setFont(font)
-        self.label_36.setStyleSheet("QLabel {\n"
+        self.brandLabel.setFont(font)
+        self.brandLabel.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_36.setObjectName("label_36")
-        self.horizontalLayout_7.addWidget(self.label_36)
-        self.comboBox_brand = QtWidgets.QComboBox(parent=self.horizontalFrame_9)
-        self.comboBox_brand.setMinimumSize(QtCore.QSize(82, 30))
-        self.comboBox_brand.setStyleSheet("QComboBox {\n"
+        self.brandLabel.setObjectName("brandLabel")
+        self.horizontalLayout_7.addWidget(self.brandLabel)
+        self.brandComboBox = QtWidgets.QComboBox(parent=self.horizontalFrame_9)
+        self.brandComboBox.setMinimumSize(QtCore.QSize(82, 30))
+        self.brandComboBox.setStyleSheet("QComboBox {\n"
 "    background-color: #ffffff;\n"
 "    border: 1px solid #d1d5db;\n"
 "    border-radius: 6px;\n"
@@ -3058,27 +3058,27 @@ class Ui_MainWindow(object):
 "    background: transparent;\n"
 "}\n"
 "")
-        self.comboBox_brand.setObjectName("comboBox_brand")
-        self.comboBox_brand.addItem("")
-        self.horizontalLayout_7.addWidget(self.comboBox_brand)
+        self.brandComboBox.setObjectName("brandComboBox")
+        self.brandComboBox.addItem("")
+        self.horizontalLayout_7.addWidget(self.brandComboBox)
         self.horizontalLayout_7.setStretch(1, 1)
         self.horizontalLayout_69.addLayout(self.horizontalLayout_7)
         self.horizontalLayout_13 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_13.setSpacing(6)
         self.horizontalLayout_13.setObjectName("horizontalLayout_13")
-        self.label_37 = QtWidgets.QLabel(parent=self.horizontalFrame_9)
+        self.modelLabel = QtWidgets.QLabel(parent=self.horizontalFrame_9)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_37.setFont(font)
-        self.label_37.setStyleSheet("QLabel {\n"
+        self.modelLabel.setFont(font)
+        self.modelLabel.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_37.setObjectName("label_37")
-        self.horizontalLayout_13.addWidget(self.label_37)
-        self.comboBox_model = QtWidgets.QComboBox(parent=self.horizontalFrame_9)
-        self.comboBox_model.setMinimumSize(QtCore.QSize(82, 30))
-        self.comboBox_model.setStyleSheet("QComboBox {\n"
+        self.modelLabel.setObjectName("modelLabel")
+        self.horizontalLayout_13.addWidget(self.modelLabel)
+        self.modelComboBox = QtWidgets.QComboBox(parent=self.horizontalFrame_9)
+        self.modelComboBox.setMinimumSize(QtCore.QSize(82, 30))
+        self.modelComboBox.setStyleSheet("QComboBox {\n"
 "    background-color: #ffffff;\n"
 "    border: 1px solid #d1d5db;\n"
 "    border-radius: 6px;\n"
@@ -3237,12 +3237,12 @@ class Ui_MainWindow(object):
 "    background: transparent;\n"
 "}\n"
 "")
-        self.comboBox_model.setObjectName("comboBox_model")
-        self.horizontalLayout_13.addWidget(self.comboBox_model)
+        self.modelComboBox.setObjectName("modelComboBox")
+        self.horizontalLayout_13.addWidget(self.modelComboBox)
         self.horizontalLayout_13.setStretch(1, 1)
         self.horizontalLayout_69.addLayout(self.horizontalLayout_13)
         self.verticalLayout_47.addWidget(self.horizontalFrame_9)
-        self.horizontalFrame_8 = QtWidgets.QFrame(parent=self.pageAbout)
+        self.horizontalFrame_8 = QtWidgets.QFrame(parent=self.page_4)
         self.horizontalFrame_8.setStyleSheet("background:rgb(255, 255, 255);\n"
 "border-top-left-radius:0px;\n"
 "border-top-right-radius:0px;\n"
@@ -3255,18 +3255,18 @@ class Ui_MainWindow(object):
         self.horizontalLayout_68.setObjectName("horizontalLayout_68")
         self.horizontalLayout_9 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_9.setObjectName("horizontalLayout_9")
-        self.label_38 = QtWidgets.QLabel(parent=self.horizontalFrame_8)
+        self.authorLabel = QtWidgets.QLabel(parent=self.horizontalFrame_8)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_38.setFont(font)
-        self.label_38.setStyleSheet("QLabel {\n"
+        self.authorLabel.setFont(font)
+        self.authorLabel.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_38.setObjectName("label_38")
-        self.horizontalLayout_9.addWidget(self.label_38)
-        self.lineEdit_EXIF_Author = QtWidgets.QLineEdit(parent=self.horizontalFrame_8)
-        self.lineEdit_EXIF_Author.setStyleSheet("QLineEdit {\n"
+        self.authorLabel.setObjectName("authorLabel")
+        self.horizontalLayout_9.addWidget(self.authorLabel)
+        self.authorLineEdit = QtWidgets.QLineEdit(parent=self.horizontalFrame_8)
+        self.authorLineEdit.setStyleSheet("QLineEdit {\n"
 "    border: 1px solid qradialgradient(\n"
 "        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
 "        stop:0.66 rgba(134, 119, 253, 255),\n"
@@ -3294,24 +3294,24 @@ class Ui_MainWindow(object):
 "    background: #eaeaea;\n"
 "    color: #aaa;\n"
 "}")
-        self.lineEdit_EXIF_Author.setObjectName("lineEdit_EXIF_Author")
-        self.horizontalLayout_9.addWidget(self.lineEdit_EXIF_Author)
+        self.authorLineEdit.setObjectName("authorLineEdit")
+        self.horizontalLayout_9.addWidget(self.authorLineEdit)
         self.horizontalLayout_9.setStretch(1, 1)
         self.horizontalLayout_68.addLayout(self.horizontalLayout_9)
         self.horizontalLayout_10 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_10.setObjectName("horizontalLayout_10")
-        self.label_39 = QtWidgets.QLabel(parent=self.horizontalFrame_8)
+        self.themeLabel = QtWidgets.QLabel(parent=self.horizontalFrame_8)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_39.setFont(font)
-        self.label_39.setStyleSheet("QLabel {\n"
+        self.themeLabel.setFont(font)
+        self.themeLabel.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_39.setObjectName("label_39")
-        self.horizontalLayout_10.addWidget(self.label_39)
-        self.lineEdit_EXIF_Theme = QtWidgets.QLineEdit(parent=self.horizontalFrame_8)
-        self.lineEdit_EXIF_Theme.setStyleSheet("QLineEdit {\n"
+        self.themeLabel.setObjectName("themeLabel")
+        self.horizontalLayout_10.addWidget(self.themeLabel)
+        self.themeLineEdit = QtWidgets.QLineEdit(parent=self.horizontalFrame_8)
+        self.themeLineEdit.setStyleSheet("QLineEdit {\n"
 "    border: 1px solid qradialgradient(\n"
 "        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
 "        stop:0.66 rgba(134, 119, 253, 255),\n"
@@ -3339,25 +3339,25 @@ class Ui_MainWindow(object):
 "    background: #eaeaea;\n"
 "    color: #aaa;\n"
 "}")
-        self.lineEdit_EXIF_Theme.setObjectName("lineEdit_EXIF_Theme")
-        self.horizontalLayout_10.addWidget(self.lineEdit_EXIF_Theme)
+        self.themeLineEdit.setObjectName("themeLineEdit")
+        self.horizontalLayout_10.addWidget(self.themeLineEdit)
         self.horizontalLayout_10.setStretch(1, 1)
         self.horizontalLayout_68.addLayout(self.horizontalLayout_10)
         self.horizontalLayout_11 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_11.setObjectName("horizontalLayout_11")
-        self.label_40 = QtWidgets.QLabel(parent=self.horizontalFrame_8)
+        self.copyrightLabel = QtWidgets.QLabel(parent=self.horizontalFrame_8)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_40.setFont(font)
-        self.label_40.setStyleSheet("QLabel {\n"
+        self.copyrightLabel.setFont(font)
+        self.copyrightLabel.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_40.setObjectName("label_40")
-        self.horizontalLayout_11.addWidget(self.label_40)
-        self.lineEdit_EXIF_Copyright = QtWidgets.QLineEdit(parent=self.horizontalFrame_8)
-        self.lineEdit_EXIF_Copyright.setMinimumSize(QtCore.QSize(0, 0))
-        self.lineEdit_EXIF_Copyright.setStyleSheet("QLineEdit {\n"
+        self.copyrightLabel.setObjectName("copyrightLabel")
+        self.horizontalLayout_11.addWidget(self.copyrightLabel)
+        self.copyrightLineEdit = QtWidgets.QLineEdit(parent=self.horizontalFrame_8)
+        self.copyrightLineEdit.setMinimumSize(QtCore.QSize(0, 0))
+        self.copyrightLineEdit.setStyleSheet("QLineEdit {\n"
 "    border: 1px solid qradialgradient(\n"
 "        cx:0.5, cy:0.5, radius:1, fx:0.5, fy:0.5,\n"
 "        stop:0.66 rgba(134, 119, 253, 255),\n"
@@ -3385,12 +3385,12 @@ class Ui_MainWindow(object):
 "    background: #eaeaea;\n"
 "    color: #aaa;\n"
 "}")
-        self.lineEdit_EXIF_Copyright.setObjectName("lineEdit_EXIF_Copyright")
-        self.horizontalLayout_11.addWidget(self.lineEdit_EXIF_Copyright)
+        self.copyrightLineEdit.setObjectName("copyrightLineEdit")
+        self.horizontalLayout_11.addWidget(self.copyrightLineEdit)
         self.horizontalLayout_11.setStretch(1, 1)
         self.horizontalLayout_68.addLayout(self.horizontalLayout_11)
         self.verticalLayout_47.addWidget(self.horizontalFrame_8)
-        self.horizontalFrame_10 = QtWidgets.QFrame(parent=self.pageAbout)
+        self.horizontalFrame_10 = QtWidgets.QFrame(parent=self.page_4)
         self.horizontalFrame_10.setStyleSheet("background:rgb(255, 255, 255);\n"
 "border-top-left-radius:0px;\n"
 "border-top-right-radius:0px;\n"
@@ -3404,19 +3404,19 @@ class Ui_MainWindow(object):
         self.horizontalLayout_15 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_15.setContentsMargins(6, 6, 6, 6)
         self.horizontalLayout_15.setObjectName("horizontalLayout_15")
-        self.label_44 = QtWidgets.QLabel(parent=self.horizontalFrame_10)
+        self.shootTimeLabel = QtWidgets.QLabel(parent=self.horizontalFrame_10)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label_44.setFont(font)
-        self.label_44.setStyleSheet("QLabel {\n"
+        self.shootTimeLabel.setFont(font)
+        self.shootTimeLabel.setStyleSheet("QLabel {\n"
 "    color: #333333;\n"
 "    border: none;\n"
 "}")
-        self.label_44.setObjectName("label_44")
-        self.horizontalLayout_15.addWidget(self.label_44)
-        self.comboBox_shootTime = QtWidgets.QComboBox(parent=self.horizontalFrame_10)
-        self.comboBox_shootTime.setMinimumSize(QtCore.QSize(82, 30))
-        self.comboBox_shootTime.setStyleSheet("QComboBox {\n"
+        self.shootTimeLabel.setObjectName("shootTimeLabel")
+        self.horizontalLayout_15.addWidget(self.shootTimeLabel)
+        self.shootTimeComboBox = QtWidgets.QComboBox(parent=self.horizontalFrame_10)
+        self.shootTimeComboBox.setMinimumSize(QtCore.QSize(82, 30))
+        self.shootTimeComboBox.setStyleSheet("QComboBox {\n"
 "    background-color: #ffffff;\n"
 "    border: 1px solid #d1d5db;\n"
 "    border-radius: 6px;\n"
@@ -3520,11 +3520,11 @@ class Ui_MainWindow(object):
 "    outline: none;\n"
 "    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);\n"
 "}")
-        self.comboBox_shootTime.setObjectName("comboBox_shootTime")
-        self.comboBox_shootTime.addItem("")
-        self.comboBox_shootTime.addItem("")
-        self.comboBox_shootTime.addItem("")
-        self.horizontalLayout_15.addWidget(self.comboBox_shootTime)
+        self.shootTimeComboBox.setObjectName("shootTimeComboBox")
+        self.shootTimeComboBox.addItem("")
+        self.shootTimeComboBox.addItem("")
+        self.shootTimeComboBox.addItem("")
+        self.horizontalLayout_15.addWidget(self.shootTimeComboBox)
         self.dateTimeEdit_shootTime = QtWidgets.QDateTimeEdit(parent=self.horizontalFrame_10)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -3818,10 +3818,10 @@ class Ui_MainWindow(object):
 "    background: rgb(249, 251, 255);\n"
 "}")
         self.horizontalFrame.setObjectName("horizontalFrame")
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.horizontalFrame)
-        self.horizontalLayout_2.setContentsMargins(4, 4, 4, 4)
-        self.horizontalLayout_2.setSpacing(0)
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.headerLayout1 = QtWidgets.QHBoxLayout(self.horizontalFrame)
+        self.headerLayout1.setContentsMargins(4, 4, 4, 4)
+        self.headerLayout1.setSpacing(0)
+        self.headerLayout1.setObjectName("headerLayout1")
         self.lineEdit_EXIF_Position = QtWidgets.QLineEdit(parent=self.horizontalFrame)
         self.lineEdit_EXIF_Position.setMinimumSize(QtCore.QSize(0, 0))
         self.lineEdit_EXIF_Position.setStyleSheet("QLineEdit {\n"
@@ -3843,7 +3843,7 @@ class Ui_MainWindow(object):
 "}")
         self.lineEdit_EXIF_Position.setInputMask("")
         self.lineEdit_EXIF_Position.setObjectName("lineEdit_EXIF_Position")
-        self.horizontalLayout_2.addWidget(self.lineEdit_EXIF_Position)
+        self.headerLayout1.addWidget(self.lineEdit_EXIF_Position)
         self.pushButton_Position = QtWidgets.QPushButton(parent=self.horizontalFrame)
         self.pushButton_Position.setMinimumSize(QtCore.QSize(20, 20))
         self.pushButton_Position.setMaximumSize(QtCore.QSize(20, 20))
@@ -3854,12 +3854,12 @@ class Ui_MainWindow(object):
         self.pushButton_Position.setIcon(icon12)
         self.pushButton_Position.setIconSize(QtCore.QSize(20, 20))
         self.pushButton_Position.setObjectName("pushButton_Position")
-        self.horizontalLayout_2.addWidget(self.pushButton_Position)
+        self.headerLayout1.addWidget(self.pushButton_Position)
         self.horizontalLayout_12.addWidget(self.horizontalFrame)
         self.horizontalLayout_12.setStretch(4, 1)
         self.horizontalLayout_72.addLayout(self.horizontalLayout_12)
         self.verticalLayout_47.addWidget(self.horizontalFrame_10)
-        self.verticalFrame_15 = QtWidgets.QFrame(parent=self.pageAbout)
+        self.verticalFrame_15 = QtWidgets.QFrame(parent=self.page_4)
         self.verticalFrame_15.setStyleSheet("background:rgb(255, 255, 255);\n"
 "border-top-left-radius:0px;\n"
 "border-top-right-radius:0px;\n"
@@ -3935,7 +3935,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_70.addWidget(self.toolButton_StartEXIF)
         self.horizontalLayout_70.setStretch(0, 1)
         self.verticalLayout_47.addWidget(self.verticalFrame_15)
-        self.horizontalFrame_log = QtWidgets.QFrame(parent=self.pageAbout)
+        self.horizontalFrame_log = QtWidgets.QFrame(parent=self.page_4)
         self.horizontalFrame_log.setStyleSheet("background:rgb(255, 255, 255);\n"
 "border-top-left-radius:0px;\n"
 "border-top-right-radius:0px;\n"
@@ -4039,141 +4039,141 @@ class Ui_MainWindow(object):
         self.textEdit_WriteEXIF_Log.setObjectName("textEdit_WriteEXIF_Log")
         self.horizontalLayout_71.addWidget(self.textEdit_WriteEXIF_Log)
         self.verticalLayout_47.addWidget(self.horizontalFrame_log)
-        self.stackedContent.addWidget(self.pageAbout)
-        self.contentAreaLayout.addWidget(self.stackedContent)
-        self.contentLayout.addWidget(self.frameContentArea)
+        self.mainContentStack.addWidget(self.page_4)
+        self.contentAreaLayout.addWidget(self.mainContentStack)
+        self.contentLayout.addWidget(self.contentAreaFrame)
         self.contentLayout.setStretch(1, 12)
-        self.horizontalLayout_4.addWidget(self.frameContent)
-        self.horizontalLayout_4.setStretch(2, 1)
-        self.mainLayout.addWidget(self.frameMain, 0, 0, 1, 1)
-        mainWindow.setCentralWidget(self.centralWidget)
+        self.mainContainerLayout.addWidget(self.contentFrame)
+        self.mainContainerLayout.setStretch(2, 1)
+        self.mainGridLayout.addWidget(self.mainContainerFrame, 0, 0, 1, 1)
+        MainWindow.setCentralWidget(self.mainCentralWidget)
 
-        self.retranslateUi(mainWindow)
-        self.listNavigation.setCurrentRow(0)
-        self.stackedContent.setCurrentIndex(0)
-        self.listNavigation.currentRowChanged['int'].connect(self.stackedContent.setCurrentIndex) # type: ignore
-        QtCore.QMetaObject.connectSlotsByName(mainWindow)
+        self.retranslateUi(MainWindow)
+        self.navigationMenuList.setCurrentRow(0)
+        self.mainContentStack.setCurrentIndex(0)
+        self.navigationMenuList.currentRowChanged['int'].connect(MainWindow.stackedWidget.setCurrentIndex) # type: ignore
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-    def retranslateUi(self, mainWindow):
+    def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        mainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.btnLogo.setText(_translate("MainWindow", "LeafView"))
-        __sortingEnabled = self.listNavigation.isSortingEnabled()
-        self.listNavigation.setSortingEnabled(False)
-        item = self.listNavigation.item(0)
+        MainWindow.setWindowTitle(_translate("MainWindow", "LeafView - 媒体管理工具"))
+        self.appLogoButton.setText(_translate("MainWindow", "LeafView"))
+        __sortingEnabled = self.navigationMenuList.isSortingEnabled()
+        self.navigationMenuList.setSortingEnabled(False)
+        item = self.navigationMenuList.item(0)
         item.setText(_translate("MainWindow", "媒体导入"))
-        item = self.listNavigation.item(1)
+        item = self.navigationMenuList.item(1)
         item.setText(_translate("MainWindow", "识字整理"))
-        item = self.listNavigation.item(2)
+        item = self.navigationMenuList.item(2)
         item.setText(_translate("MainWindow", "智能整理"))
-        item = self.listNavigation.item(3)
+        item = self.navigationMenuList.item(3)
         item.setText(_translate("MainWindow", "文件去重"))
-        item = self.listNavigation.item(4)
+        item = self.navigationMenuList.item(4)
         item.setText(_translate("MainWindow", "属性写入"))
-        self.listNavigation.setSortingEnabled(__sortingEnabled)
-        self.btnAddFolder.setText(_translate("MainWindow", "添加文件夹"))
-        self.labelAddFolderHint.setText(_translate("MainWindow", "点击添加或拖动文件夹到此处"))
-        self.label.setText(_translate("MainWindow", "正在建设中..."))
-        self.label_classification.setText(_translate("MainWindow", "文件夹整理："))
-        self.label_route.setText(_translate("MainWindow", "目录"))
-        self.label_25.setText(_translate("MainWindow", "\\"))
-        self.comboBox_level_1.setItemText(0, _translate("MainWindow", "不分类"))
-        self.comboBox_level_1.setItemText(1, _translate("MainWindow", "年份"))
-        self.comboBox_level_1.setItemText(2, _translate("MainWindow", "月份"))
-        self.comboBox_level_1.setItemText(3, _translate("MainWindow", "拍摄设备"))
-        self.comboBox_level_1.setItemText(4, _translate("MainWindow", "相机型号"))
-        self.comboBox_level_1.setItemText(5, _translate("MainWindow", "拍摄省份"))
-        self.comboBox_level_1.setItemText(6, _translate("MainWindow", "拍摄城市"))
-        self.label_17.setText(_translate("MainWindow", "\\"))
-        self.comboBox_level_2.setItemText(0, _translate("MainWindow", "不分类"))
-        self.comboBox_level_2.setItemText(1, _translate("MainWindow", "年份"))
-        self.comboBox_level_2.setItemText(2, _translate("MainWindow", "月份"))
-        self.comboBox_level_2.setItemText(3, _translate("MainWindow", "拍摄设备"))
-        self.comboBox_level_2.setItemText(4, _translate("MainWindow", "相机型号"))
-        self.comboBox_level_2.setItemText(5, _translate("MainWindow", "拍摄省份"))
-        self.comboBox_level_2.setItemText(6, _translate("MainWindow", "拍摄城市"))
-        self.label_18.setText(_translate("MainWindow", "\\"))
-        self.comboBox_level_3.setItemText(0, _translate("MainWindow", "不分类"))
-        self.comboBox_level_3.setItemText(1, _translate("MainWindow", "年份"))
-        self.comboBox_level_3.setItemText(2, _translate("MainWindow", "月份"))
-        self.comboBox_level_3.setItemText(3, _translate("MainWindow", "拍摄设备"))
-        self.comboBox_level_3.setItemText(4, _translate("MainWindow", "相机型号"))
-        self.comboBox_level_3.setItemText(5, _translate("MainWindow", "拍摄省份"))
-        self.comboBox_level_3.setItemText(6, _translate("MainWindow", "拍摄城市"))
-        self.label_19.setText(_translate("MainWindow", "\\"))
-        self.comboBox_level_4.setItemText(0, _translate("MainWindow", "不分类"))
-        self.comboBox_level_4.setItemText(1, _translate("MainWindow", "年份"))
-        self.comboBox_level_4.setItemText(2, _translate("MainWindow", "月份"))
-        self.comboBox_level_4.setItemText(3, _translate("MainWindow", "拍摄设备"))
-        self.comboBox_level_4.setItemText(4, _translate("MainWindow", "相机型号"))
-        self.comboBox_level_4.setItemText(5, _translate("MainWindow", "拍摄省份"))
-        self.comboBox_level_4.setItemText(6, _translate("MainWindow", "拍摄城市"))
-        self.label_20.setText(_translate("MainWindow", "\\"))
-        self.comboBox_level_5.setItemText(0, _translate("MainWindow", "不分类"))
-        self.comboBox_level_5.setItemText(1, _translate("MainWindow", "年份"))
-        self.comboBox_level_5.setItemText(2, _translate("MainWindow", "月份"))
-        self.comboBox_level_5.setItemText(3, _translate("MainWindow", "拍摄设备"))
-        self.comboBox_level_5.setItemText(4, _translate("MainWindow", "相机型号"))
-        self.comboBox_level_5.setItemText(5, _translate("MainWindow", "拍摄省份"))
-        self.comboBox_level_5.setItemText(6, _translate("MainWindow", "拍摄城市"))
-        self.label_buildName.setText(_translate("MainWindow", "文件名构建："))
-        self.pushButton_unique.setText(_translate("MainWindow", "唯一标识"))
-        self.label_point.setText(_translate("MainWindow", "."))
-        self.pushButton_extensions.setText(_translate("MainWindow", "扩展名"))
-        self.label_RenamingTags.setText(_translate("MainWindow", "命名标签："))
-        self.pushButton_original_tag.setText(_translate("MainWindow", "原名"))
-        self.pushButton_year_tag.setText(_translate("MainWindow", "年份"))
-        self.pushButton_month_tag.setText(_translate("MainWindow", "月份"))
-        self.pushButton_date_tag.setText(_translate("MainWindow", "日"))
-        self.pushButton_day_tag.setText(_translate("MainWindow", "星期"))
-        self.pushButton_time_tag.setText(_translate("MainWindow", "时间"))
-        self.pushButton_make_tag.setText(_translate("MainWindow", "品牌"))
-        self.pushButton_model_tag.setText(_translate("MainWindow", "型号"))
-        self.pushButton_address_tag.setText(_translate("MainWindow", "位置"))
-        self.pushButton_customize_tag.setText(_translate("MainWindow", "自定义"))
-        self.label_operation_2.setText(_translate("MainWindow", "分隔"))
-        self.comboBox_separator.setItemText(0, _translate("MainWindow", "-"))
-        self.comboBox_separator.setItemText(1, _translate("MainWindow", "无"))
-        self.comboBox_separator.setItemText(2, _translate("MainWindow", "空格"))
-        self.comboBox_separator.setItemText(3, _translate("MainWindow", "_"))
-        self.comboBox_separator.setItemText(4, _translate("MainWindow", "."))
-        self.comboBox_separator.setItemText(5, _translate("MainWindow", ","))
-        self.comboBox_separator.setItemText(6, _translate("MainWindow", "|"))
-        self.comboBox_separator.setItemText(7, _translate("MainWindow", "~"))
-        self.label_timeSources.setText(_translate("MainWindow", "时间"))
-        self.comboBox_timeSource.setItemText(0, _translate("MainWindow", "最早时间"))
-        self.comboBox_timeSource.setItemText(1, _translate("MainWindow", "拍摄日期"))
-        self.comboBox_timeSource.setItemText(2, _translate("MainWindow", "创建时间"))
-        self.comboBox_timeSource.setItemText(3, _translate("MainWindow", "修改时间"))
-        self.label_operation.setText(_translate("MainWindow", "整理方式"))
-        self.comboBox_operation.setItemText(0, _translate("MainWindow", "移动文件"))
-        self.comboBox_operation.setItemText(1, _translate("MainWindow", "复制文件"))
-        self.label_PreviewRoute.setText(_translate("MainWindow", "不分类"))
-        self.label_21.setText(_translate("MainWindow", "/"))
-        self.label_PreviewName.setText(_translate("MainWindow", "文件名不变"))
-        self.toolButton_startSmartArrange.setText(_translate("MainWindow", "开始整理"))
-        self.label_8.setText(_translate("MainWindow", "相似度"))
-        self.label_levelContrast.setText(_translate("MainWindow", "完全一致（100%）"))
-        self.toolButton_startContrast.setText(_translate("MainWindow", "开始对比"))
-        self.toolButton_delete.setText(_translate("MainWindow", "删除"))
-        self.toolButton_move.setText(_translate("MainWindow", "移动"))
-        self.toolButton_autoSelect.setText(_translate("MainWindow", "自动选择"))
-        self.label_35.setText(_translate("MainWindow", "标题"))
-        self.lineEdit_EXIF_Title.setPlaceholderText(_translate("MainWindow", "图像标题"))
-        self.label_star.setText(_translate("MainWindow", "星级"))
-        self.label_36.setText(_translate("MainWindow", "品牌"))
-        self.comboBox_brand.setItemText(0, _translate("MainWindow", "不写入"))
-        self.label_37.setText(_translate("MainWindow", "机型"))
-        self.label_38.setText(_translate("MainWindow", "作者"))
-        self.lineEdit_EXIF_Author.setPlaceholderText(_translate("MainWindow", "YangShengzhou"))
-        self.label_39.setText(_translate("MainWindow", "主题"))
-        self.lineEdit_EXIF_Theme.setPlaceholderText(_translate("MainWindow", "图像主题"))
-        self.label_40.setText(_translate("MainWindow", "版权"))
-        self.lineEdit_EXIF_Copyright.setPlaceholderText(_translate("MainWindow", "©2025 LeafView. "))
-        self.label_44.setText(_translate("MainWindow", "拍摄时间"))
-        self.comboBox_shootTime.setItemText(0, _translate("MainWindow", "不写入"))
-        self.comboBox_shootTime.setItemText(1, _translate("MainWindow", "从文件名"))
-        self.comboBox_shootTime.setItemText(2, _translate("MainWindow", "指定时间"))
+        self.navigationMenuList.setSortingEnabled(__sortingEnabled)
+        self.addFolderButton.setText(_translate("MainWindow", "添加文件夹"))
+        self.addFolderHintLabel.setText(_translate("MainWindow", "点击添加或拖动文件夹到此处"))
+        self.placeholderLabel.setText(_translate("MainWindow", "正在建设中..."))
+        self.classificationLabel.setText(_translate("MainWindow", "文件夹整理："))
+        self.routeLabel.setText(_translate("MainWindow", "目录"))
+        self.separatorLabel.setText(_translate("MainWindow", "\\"))
+        self.level1ComboBox.setItemText(0, _translate("MainWindow", "不分类"))
+        self.level1ComboBox.setItemText(1, _translate("MainWindow", "年份"))
+        self.level1ComboBox.setItemText(2, _translate("MainWindow", "月份"))
+        self.level1ComboBox.setItemText(3, _translate("MainWindow", "拍摄设备"))
+        self.level1ComboBox.setItemText(4, _translate("MainWindow", "相机型号"))
+        self.level1ComboBox.setItemText(5, _translate("MainWindow", "拍摄省份"))
+        self.level1ComboBox.setItemText(6, _translate("MainWindow", "拍摄城市"))
+        self.separator2Label.setText(_translate("MainWindow", "\\"))
+        self.level2ComboBox.setItemText(0, _translate("MainWindow", "不分类"))
+        self.level2ComboBox.setItemText(1, _translate("MainWindow", "年份"))
+        self.level2ComboBox.setItemText(2, _translate("MainWindow", "月份"))
+        self.level2ComboBox.setItemText(3, _translate("MainWindow", "拍摄设备"))
+        self.level2ComboBox.setItemText(4, _translate("MainWindow", "相机型号"))
+        self.level2ComboBox.setItemText(5, _translate("MainWindow", "拍摄省份"))
+        self.level2ComboBox.setItemText(6, _translate("MainWindow", "拍摄城市"))
+        self.separator3Label.setText(_translate("MainWindow", "\\"))
+        self.level3ComboBox.setItemText(0, _translate("MainWindow", "不分类"))
+        self.level3ComboBox.setItemText(1, _translate("MainWindow", "年份"))
+        self.level3ComboBox.setItemText(2, _translate("MainWindow", "月份"))
+        self.level3ComboBox.setItemText(3, _translate("MainWindow", "拍摄设备"))
+        self.level3ComboBox.setItemText(4, _translate("MainWindow", "相机型号"))
+        self.level3ComboBox.setItemText(5, _translate("MainWindow", "拍摄省份"))
+        self.level3ComboBox.setItemText(6, _translate("MainWindow", "拍摄城市"))
+        self.separator4Label.setText(_translate("MainWindow", "\\"))
+        self.level4ComboBox.setItemText(0, _translate("MainWindow", "不分类"))
+        self.level4ComboBox.setItemText(1, _translate("MainWindow", "年份"))
+        self.level4ComboBox.setItemText(2, _translate("MainWindow", "月份"))
+        self.level4ComboBox.setItemText(3, _translate("MainWindow", "拍摄设备"))
+        self.level4ComboBox.setItemText(4, _translate("MainWindow", "相机型号"))
+        self.level4ComboBox.setItemText(5, _translate("MainWindow", "拍摄省份"))
+        self.level4ComboBox.setItemText(6, _translate("MainWindow", "拍摄城市"))
+        self.separator5Label.setText(_translate("MainWindow", "\\"))
+        self.level5ComboBox.setItemText(0, _translate("MainWindow", "不分类"))
+        self.level5ComboBox.setItemText(1, _translate("MainWindow", "年份"))
+        self.level5ComboBox.setItemText(2, _translate("MainWindow", "月份"))
+        self.level5ComboBox.setItemText(3, _translate("MainWindow", "拍摄设备"))
+        self.level5ComboBox.setItemText(4, _translate("MainWindow", "相机型号"))
+        self.level5ComboBox.setItemText(5, _translate("MainWindow", "拍摄省份"))
+        self.level5ComboBox.setItemText(6, _translate("MainWindow", "拍摄城市"))
+        self.buildNameLabel.setText(_translate("MainWindow", "文件名构建："))
+        self.uniqueButton.setText(_translate("MainWindow", "唯一标识"))
+        self.pointLabel.setText(_translate("MainWindow", "."))
+        self.extensionsButton.setText(_translate("MainWindow", "扩展名"))
+        self.renamingTagsLabel.setText(_translate("MainWindow", "命名标签："))
+        self.originalTagButton.setText(_translate("MainWindow", "原名"))
+        self.yearTagButton.setText(_translate("MainWindow", "年份"))
+        self.monthTagButton.setText(_translate("MainWindow", "月份"))
+        self.dateTagButton.setText(_translate("MainWindow", "日"))
+        self.dayTagButton.setText(_translate("MainWindow", "星期"))
+        self.timeTagButton.setText(_translate("MainWindow", "时间"))
+        self.makeTagButton.setText(_translate("MainWindow", "品牌"))
+        self.modelTagButton.setText(_translate("MainWindow", "型号"))
+        self.addressTagButton.setText(_translate("MainWindow", "位置"))
+        self.customizeTagButton.setText(_translate("MainWindow", "自定义"))
+        self.separatorLabel1.setText(_translate("MainWindow", "分隔"))
+        self.separatorComboBox.setItemText(0, _translate("MainWindow", "-"))
+        self.separatorComboBox.setItemText(1, _translate("MainWindow", "无"))
+        self.separatorComboBox.setItemText(2, _translate("MainWindow", "空格"))
+        self.separatorComboBox.setItemText(3, _translate("MainWindow", "_"))
+        self.separatorComboBox.setItemText(4, _translate("MainWindow", "."))
+        self.separatorComboBox.setItemText(5, _translate("MainWindow", ","))
+        self.separatorComboBox.setItemText(6, _translate("MainWindow", "|"))
+        self.separatorComboBox.setItemText(7, _translate("MainWindow", "~"))
+        self.timeSourceLabel.setText(_translate("MainWindow", "时间"))
+        self.timeSourceComboBox.setItemText(0, _translate("MainWindow", "最早时间"))
+        self.timeSourceComboBox.setItemText(1, _translate("MainWindow", "拍摄日期"))
+        self.timeSourceComboBox.setItemText(2, _translate("MainWindow", "创建时间"))
+        self.timeSourceComboBox.setItemText(3, _translate("MainWindow", "修改时间"))
+        self.operationLabel.setText(_translate("MainWindow", "整理方式"))
+        self.operationComboBox.setItemText(0, _translate("MainWindow", "移动文件"))
+        self.operationComboBox.setItemText(1, _translate("MainWindow", "复制文件"))
+        self.previewRouteLabel.setText(_translate("MainWindow", "不分类"))
+        self.separatorLabel2.setText(_translate("MainWindow", "/"))
+        self.previewNameLabel.setText(_translate("MainWindow", "文件名不变"))
+        self.startSmartArrangeButton.setText(_translate("MainWindow", "开始整理"))
+        self.similarityLabel.setText(_translate("MainWindow", "相似度"))
+        self.similarityValueLabel.setText(_translate("MainWindow", "完全一致（100%）"))
+        self.startContrastButton.setText(_translate("MainWindow", "开始对比"))
+        self.deleteButton.setText(_translate("MainWindow", "删除"))
+        self.moveButton.setText(_translate("MainWindow", "移动"))
+        self.autoSelectButton.setText(_translate("MainWindow", "自动选择"))
+        self.titleLabel.setText(_translate("MainWindow", "标题"))
+        self.titleLineEdit.setPlaceholderText(_translate("MainWindow", "图像标题"))
+        self.starLabel.setText(_translate("MainWindow", "星级"))
+        self.brandLabel.setText(_translate("MainWindow", "品牌"))
+        self.brandComboBox.setItemText(0, _translate("MainWindow", "不写入"))
+        self.modelLabel.setText(_translate("MainWindow", "机型"))
+        self.authorLabel.setText(_translate("MainWindow", "作者"))
+        self.authorLineEdit.setPlaceholderText(_translate("MainWindow", "YangShengzhou"))
+        self.themeLabel.setText(_translate("MainWindow", "主题"))
+        self.themeLineEdit.setPlaceholderText(_translate("MainWindow", "图像主题"))
+        self.copyrightLabel.setText(_translate("MainWindow", "版权"))
+        self.copyrightLineEdit.setPlaceholderText(_translate("MainWindow", "©2025 LeafView. "))
+        self.shootTimeLabel.setText(_translate("MainWindow", "拍摄时间"))
+        self.shootTimeComboBox.setItemText(0, _translate("MainWindow", "不写入"))
+        self.shootTimeComboBox.setItemText(1, _translate("MainWindow", "从文件名"))
+        self.shootTimeComboBox.setItemText(2, _translate("MainWindow", "指定时间"))
         self.dateTimeEdit_shootTime.setDisplayFormat(_translate("MainWindow", "yyyy/MM/dd HH:mm:ss"))
         self.label_41.setText(_translate("MainWindow", "拍摄地点 "))
         self.comboBox_location.setItemText(0, _translate("MainWindow", "搜位置"))
